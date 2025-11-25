@@ -99,13 +99,13 @@ System12/sys12WarnWindow.cpp:
 	.sdata2     start:0x8066D650 end:0x8066D680
 
 System12/sys12ControllerBatteryMgr.cpp:
-	.text       start:0x80013AD4 end:0x80013F5C
+	.text       start:0x80013AD4 end:0x80013E60
 	.rodata     start:0x80536768 end:0x80536838
 	.data       start:0x8055F170 end:0x8055F180
 	.sbss       start:0x8066B910 end:0x8066B920
 
 System12/system12DvdLoader.cpp:
-	.text       start:0x80013F5C end:0x800140EC
+	.text       start:0x80013E60 end:0x800140EC
 	.rodata     start:0x80536838 end:0x80536908
 
 System12/system12FrameCounter.cpp:
@@ -115,7 +115,7 @@ System12/system12FrameCounter.cpp:
 	.sdata2     start:0x8066D680 end:0x8066D688
 
 System12/system12Layout.cpp:
-	.text       start:0x80014738 end:0x80017E0C
+	.text       start:0x80014738 end:0x80017784
 	.ctors      start:0x80534C8C end:0x80534C90
 	.rodata     start:0x80536980 end:0x80536C48
 	.data       start:0x8055F1B0 end:0x8055F580
@@ -140,7 +140,7 @@ System12/system12WPTagProcessor.cpp:
 	.sdata2     start:0x8066D6A8 end:0x8066D6D0
 
 System12/system12WPWideTextWriter.cpp:
-	.text       start:0x8001AB7C end:0x8001BCEC
+	.text       start:0x8001AB7C end:0x8001B598
 	.ctors      start:0x80534C94 end:0x80534C98
 	.rodata     start:0x80537030 end:0x80537090
 	.data       start:0x8055F890 end:0x8055F8B0
@@ -148,7 +148,7 @@ System12/system12WPWideTextWriter.cpp:
 	.sdata2     start:0x8066D6D0 end:0x8066D6D8
 
 System12/sys12CursorMgr.cpp:
-	.text       start:0x8001BCEC end:0x8001E218
+	.text       start:0x8001B598 end:0x8001E218
 	.rodata     start:0x80537090 end:0x80537150
 	.data       start:0x8055F8B0 end:0x8055F978
 	.sbss       start:0x8066B930 end:0x8066B940
@@ -2831,7 +2831,7 @@ plugProjectKandoU/creature.cpp:
 	.sdata2     start:0x8066F410 end:0x8066F440
 
 plugProjectKandoU/fakePiki.cpp:
-	.text       start:0x801CF91C end:0x801D266C
+	.text       start:0x801CF91C end:0x801D262C
 	.ctors      start:0x80534D64 end:0x80534D68
 	.rodata     start:0x805479E0 end:0x80547A50
 	.data       start:0x8058FEA8 end:0x805900E8
@@ -2840,7 +2840,7 @@ plugProjectKandoU/fakePiki.cpp:
 	.sdata2     start:0x8066F440 end:0x8066F4D0
 
 plugProjectKandoU/navi.cpp:
-	.text       start:0x801D266C end:0x801DB870
+	.text       start:0x801D262C end:0x801DB870
 	.ctors      start:0x80534D68 end:0x80534D6C
 	.rodata     start:0x80547A50 end:0x80547B18
 	.data       start:0x805900E8 end:0x80590520
@@ -5931,11 +5931,11 @@ sysGCU/graphics.cpp:
 	.sdata2     start:0x80675678 end:0x806756D0
 
 sysGCU/matMath.cpp:
-	.text       start:0x804AE03C end:0x804AEF6C
+	.text       start:0x804AE03C end:0x804AEEDC
 	.sdata2     start:0x806756D0 end:0x806756E8
 
 sysGCU/sysShape.cpp:
-	.text       start:0x804AEF6C end:0x804AFFCC
+	.text       start:0x804AEEDC end:0x804AFFCC
 	.ctors      start:0x80535024 end:0x80535028
 	.rodata     start:0x805596B0 end:0x80559770
 	.data       start:0x805CCD28 end:0x805CCD68
@@ -5944,13 +5944,13 @@ sysGCU/sysShape.cpp:
 	.sdata2     start:0x806756E8 end:0x80675700
 
 sysGCU/reset.cpp:
-	.text       start:0x804AFFCC end:0x804B07B8
+	.text       start:0x804AFFCC end:0x804B07A8
 	.rodata     start:0x80559770 end:0x80559A48
 	.data       start:0x805CCD68 end:0x805CCD78
 	.sdata2     start:0x80675700 end:0x80675728
 
 sysGCU/dvdStatus.cpp:
-	.text       start:0x804B07B8 end:0x804B12F4
+	.text       start:0x804B07A8 end:0x804B12F4
 	.rodata     start:0x80559A48 end:0x80559AA0
 	.sdata2     start:0x80675728 end:0x80675748
 
