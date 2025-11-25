@@ -1190,7 +1190,7 @@ JSystem/JUtility/JUTVideo.cpp:
 	.data       start:0x80569128 end:0x80569138
 	.sbss       start:0x8066BE48 end:0x8066BE60
 
-JSystem/JUtility/JUTFontData_Ascfont_fix12.s: comment:0
+JSystem/JUtility/JUTFontData_Ascfont_fix12.cpp:
 	.rodata     start:0x8053AA20 end:0x8053EB80
 
 JSystem/JUtility/JUTXfb.cpp:
@@ -1360,7 +1360,7 @@ JSystem/J3D/J3DTevs.cpp:
 	.sdata2     start:0x8066E1C8 end:0x8066E218
 	.sbss2      start:0x806762C8 end:0x806762D0
 
-RevoSDK/bta_dm_cfg.c:
+RevoSDK/bte/bta_dm_cfg.c:
 	.sbss2      start:0x806762D0 end:0x806762E0
 
 JSystem/J3D/J3DDrawBuffer.cpp:
@@ -1555,10 +1555,10 @@ JSystem/JParticle/JPATexture.cpp:
 	.text       start:0x800FE0CC end:0x800FE18C
 	.data       start:0x8056BBE8 end:0x8056BBF8
 
-RevoSDK/locale.c:
+RevoSDK/MSL_C/MSL_Common/locale.c:
 	.data       start:0x8056BFE0 end:0x8056C1D8
 
-RevoSDK/AXComp.c:
+RevoSDK/ax/AXComp.c:
 	.data       start:0x8056C700 end:0x8056D6C0
 
 JSystem/JStage/JSGSystem.cpp:
@@ -1575,925 +1575,925 @@ JSystem/JStage/JSGActor.cpp:
 	.text       start:0x800FE328 end:0x800FE3B4
 	.sdata2     start:0x8066E4A0 end:0x8066E4A8
 
-RevoSDK/mainloop.c:
+RevoSDK/TRK_Hollywood_Revolution/mainloop.c:
 	.text       start:0x800FE3B4 end:0x800FE4AC
 
-RevoSDK/nubevent.c:
+RevoSDK/TRK_Hollywood_Revolution/nubevent.c:
 	.text       start:0x800FE4AC end:0x800FE6D4
 	.bss        start:0x805D5860 end:0x805D5888
 
-RevoSDK/nubinit.c:
+RevoSDK/TRK_Hollywood_Revolution/nubinit.c:
 	.text       start:0x800FE6D4 end:0x800FE858
 	.bss        start:0x805D5888 end:0x805D5890
 
-RevoSDK/msg.c:
+RevoSDK/TRK_Hollywood_Revolution/msg.c:
 	.text       start:0x800FE858 end:0x800FE884
 
-RevoSDK/msgbuf.c:
+RevoSDK/TRK_Hollywood_Revolution/msgbuf.c:
 	.text       start:0x800FE884 end:0x800FF0C0
 	.bss        start:0x805D5890 end:0x805D7240
 
-RevoSDK/serpoll.c:
+RevoSDK/TRK_Hollywood_Revolution/serpoll.c:
 	.text       start:0x800FF0C0 end:0x800FF26C
 	.bss        start:0x805D7240 end:0x805D7258
 	.sbss       start:0x8066BF38 end:0x8066BF58
 
-RevoSDK/errno.c:
+RevoSDK/TRK_Hollywood_Revolution/errno.c:
 	.sbss       start:0x8066BF58 end:0x8066BF80
 
-RevoSDK/usr_put.c:
+RevoSDK/TRK_Hollywood_Revolution/usr_put.c:
 	.text       start:0x800FF26C end:0x800FF2F8
 
-RevoSDK/dispatch.c:
+RevoSDK/TRK_Hollywood_Revolution/dispatch.c:
 	.text       start:0x800FF2F8 end:0x800FF440
 
-RevoSDK/msghndlr.c:
+RevoSDK/TRK_Hollywood_Revolution/msghndlr.c:
 	.text       start:0x800FF440 end:0x8010051C
 	.bss        start:0x805D7258 end:0x805D7260
 
-RevoSDK/support.c:
+RevoSDK/TRK_Hollywood_Revolution/support.c:
 	.text       start:0x8010051C end:0x80100BD0
 
-RevoSDK/mutex_TRK.c:
+RevoSDK/TRK_Hollywood_Revolution/mutex_TRK.c:
 	.text       start:0x80100BD0 end:0x80100BE8
 
-RevoSDK/notify.c:
+RevoSDK/TRK_Hollywood_Revolution/notify.c:
 	.text       start:0x80100BE8 end:0x80100C80
 
-RevoSDK/flush_cache.c:
+RevoSDK/TRK_Hollywood_Revolution/flush_cache.c:
 	.text       start:0x80100C80 end:0x80100CB8
 
-RevoSDK/mem_TRK.c:
+RevoSDK/TRK_Hollywood_Revolution/mem_TRK.c:
 	.init       start:0x80004000 end:0x80004054
 	.text       start:0x80100CB8 end:0x80100D70
 
-RevoSDK/string_TRK.c:
+RevoSDK/TRK_Hollywood_Revolution/string_TRK.c:
 	.text       start:0x80100D70 end:0x80100D8C
 
-RevoSDK/targimpl.c:
+RevoSDK/TRK_Hollywood_Revolution/targimpl.c:
 	.text       start:0x80100D8C end:0x801027B0
 	.bss        start:0x805D7260 end:0x805D77E0
 
-RevoSDK/targsupp.s: comment:0
+RevoSDK/TRK_Hollywood_Revolution/targsupp.s: comment:0
 	.text       start:0x801027B0 end:0x801027D0
 
-RevoSDK/mpc_7xx_603e.c:
+RevoSDK/TRK_Hollywood_Revolution/mpc_7xx_603e.c:
 	.text       start:0x801027D0 end:0x80102B40
 
-RevoSDK/mslsupp.c:
+RevoSDK/TRK_Hollywood_Revolution/mslsupp.c:
 	.text       start:0x80102B40 end:0x80102D3C
 
-RevoSDK/__exception.s: comment:0
+RevoSDK/TRK_Hollywood_Revolution/__exception.s: comment:0
 	.init       start:0x80004054 end:0x80005F88
 
-RevoSDK/dolphin_trk.c:
+RevoSDK/TRK_Hollywood_Revolution/dolphin_trk.c:
 	.init       start:0x80005F88 end:0x80005FB4
 	.text       start:0x80102D3C end:0x80103058
 	.bss        start:0x805D77E0 end:0x805D77E8
 
-RevoSDK/main_TRK.c:
+RevoSDK/TRK_Hollywood_Revolution/main_TRK.c:
 	.text       start:0x80103058 end:0x8010309C
 	.bss        start:0x805D77E8 end:0x805D77F0
 
-RevoSDK/dolphin_trk_glue.c:
+RevoSDK/TRK_Hollywood_Revolution/dolphin_trk_glue.c:
 	.text       start:0x8010309C end:0x8010355C
 	.bss        start:0x805D77F0 end:0x805D7800
 
-RevoSDK/targcont.c:
+RevoSDK/TRK_Hollywood_Revolution/targcont.c:
 	.text       start:0x8010355C end:0x80103590
 
-RevoSDK/target_options.c:
+RevoSDK/TRK_Hollywood_Revolution/target_options.c:
 	.text       start:0x80103590 end:0x801035AC
 
-RevoSDK/UDP_Stubs.c:
+RevoSDK/TRK_Hollywood_Revolution/UDP_Stubs.c:
 	.text       start:0x801035AC end:0x801035F4
 
-RevoSDK/main.c:
+RevoSDK/TRK_Hollywood_Revolution/main.c:
 	.text       start:0x801035F4 end:0x801038B4
 	.bss        start:0x805D7800 end:0x805D7D20
 
-RevoSDK/CircleBuffer.c:
+RevoSDK/TRK_Hollywood_Revolution/CircleBuffer.c:
 	.text       start:0x801038B4 end:0x80103B1C
 
-RevoSDK/MWCriticalSection_gc.c:
+RevoSDK/TRK_Hollywood_Revolution/MWCriticalSection_gc.c:
 	.text       start:0x80103B1C end:0x80103B74
 
-RevoSDK/__mem.c:
+RevoSDK/runtime/__mem.c:
 	.init       start:0x80005FB4 end:0x800060E8
 	.text       start:0x80103B74 end:0x80103B90
 
-RevoSDK/__va_arg.c:
+RevoSDK/runtime/__va_arg.c:
 	.text       start:0x80103B90 end:0x80103C58
 
-RevoSDK/global_destructor_chain.c:
+RevoSDK/runtime/global_destructor_chain.c:
 	.text       start:0x80103C58 end:0x80103CB8
 
-RevoSDK/NMWException.cp:
+RevoSDK/runtime/NMWException.cp:
 	extab       start:0x800064E0 end:0x80006528
 	extabindex  start:0x80006920 end:0x8000695C
 	.text       start:0x80103CB8 end:0x80104068
 
-RevoSDK/ptmf.c:
+RevoSDK/runtime/ptmf.c:
 	.text       start:0x80104068 end:0x801040C0
 
-RevoSDK/runtime.c:
+RevoSDK/runtime/runtime.c:
 	.text       start:0x801040C0 end:0x8010496C
 
-RevoSDK/__init_cpp_exceptions.cpp:
+RevoSDK/runtime/__init_cpp_exceptions.cpp:
 	.text       start:0x8010496C end:0x801049DC
 	.ctors      start:0x80534C80 end:0x80534C84 rename:.ctors$10
 	.dtors      start:0x805350E0 end:0x805350E4 rename:.dtors$10
 	.dtors      start:0x805350E4 end:0x805350E8 rename:.dtors$15
 	.sdata      start:0x8066AA90 end:0x8066AA98
 
-RevoSDK/float.c:
+RevoSDK/MSL_C/MSL_Common/float.c:
 	.sdata      start:0x8066AAA8 end:0x8066AAB8
 
-RevoSDK/DSPCode.c:
+RevoSDK/dsp/DSPCode.c:
 	.data       start:0x8056D6C0 end:0x8056F6C0
 	.sdata      start:0x8066AAC8 end:0x8066AAD8
 
-RevoSDK/Gecko_ExceptionPPC.cp:
+RevoSDK/Runtime/Gecko_ExceptionPPC.cp:
 	.text       start:0x801049DC end:0x80104A40
 	.bss        start:0x805D7D20 end:0x805DC1C0
 
-RevoSDK/GCN_mem_alloc.c:
+RevoSDK/Runtime/GCN_mem_alloc.c:
 	.text       start:0x80104A40 end:0x80104AF8
 
-RevoSDK/alloc.c:
+RevoSDK/MSL_C/MSL_Common/alloc.c:
 	extab       start:0x80006528 end:0x80006540
 	extabindex  start:0x8000695C end:0x80006980
 	.text       start:0x80104AF8 end:0x8010500C
 
-RevoSDK/ansi_files.c:
+RevoSDK/MSL_C/MSL_Common/ansi_files.c:
 	extab       start:0x80006540 end:0x80006550
 	extabindex  start:0x80006980 end:0x80006998
 	.text       start:0x8010500C end:0x8010511C
 
-RevoSDK/ansi_fp.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/ansi_fp.c:
 	extab       start:0x80006550 end:0x80006588
 	extabindex  start:0x80006998 end:0x800069EC
 	.text       start:0x8010511C end:0x80106A8C
 
-RevoSDK/arith.c:
+RevoSDK/MSL_C/MSL_Common/arith.c:
 	extab       start:0x80006588 end:0x80006590
 	extabindex  start:0x800069EC end:0x800069F8
 	.text       start:0x80106A8C end:0x80106AF8
 
-RevoSDK/buffer_io.c:
+RevoSDK/MSL_C/MSL_Common/buffer_io.c:
 	extab       start:0x80006590 end:0x80006598
 	extabindex  start:0x800069F8 end:0x80006A04
 	.text       start:0x80106AF8 end:0x80106BD8
 
-RevoSDK/ctype.c:
+RevoSDK/MSL_C/MSL_Common/ctype.c:
 	.text       start:0x80106BD8 end:0x80106C10
 	.rodata     start:0x8053F3A8 end:0x8053F918
 
-RevoSDK/wctype.c:
+RevoSDK/MSL_C/MSL_Common/wctype.c:
 	.rodata     start:0x8053F918 end:0x80540840
 
-RevoSDK/direct_io.c:
+RevoSDK/MSL_C/MSL_Common/direct_io.c:
 	extab       start:0x80006598 end:0x800065A0
 	extabindex  start:0x80006A04 end:0x80006A10
 	.text       start:0x80106C10 end:0x80106F18
 
-RevoSDK/file_io.c:
+RevoSDK/MSL_C/MSL_Common/file_io.c:
 	extab       start:0x800065A0 end:0x800065B0
 	extabindex  start:0x80006A10 end:0x80006A28
 	.text       start:0x80106F18 end:0x80107108
 
-RevoSDK/FILE_POS.c:
+RevoSDK/MSL_C/MSL_Common/FILE_POS.c:
 	extab       start:0x800065B0 end:0x800065B8
 	extabindex  start:0x80006A28 end:0x80006A34
 	.text       start:0x80107108 end:0x80107378
 
-RevoSDK/mbstring.c:
+RevoSDK/MSL_C/MSL_Common/mbstring.c:
 	extab       start:0x800065B8 end:0x800065C0
 	extabindex  start:0x80006A34 end:0x80006A40
 	.text       start:0x80107378 end:0x801074B0
 
-RevoSDK/mem.c:
+RevoSDK/MSL_C/MSL_Common/mem.c:
 	extab       start:0x800065C0 end:0x800065C8
 	extabindex  start:0x80006A40 end:0x80006A4C
 	.text       start:0x801074B0 end:0x80107620
 
-RevoSDK/mem_funcs.c:
+RevoSDK/MSL_C/MSL_Common/mem_funcs.c:
 	.text       start:0x80107620 end:0x801078F0
 
-RevoSDK/math_api.c:
+RevoSDK/MSL_C/MSL_Common/math_api.c:
 	extab       start:0x800065C8 end:0x800065E0
 	extabindex  start:0x80006A4C end:0x80006A70
 	.text       start:0x801078F0 end:0x801079EC
 
-RevoSDK/misc_io.c:
+RevoSDK/MSL_C/MSL_Common/misc_io.c:
 	.text       start:0x801079EC end:0x801079FC
 
-RevoSDK/printf.c:
+RevoSDK/MSL_C/MSL_Common/printf.c:
 	extab       start:0x800065E0 end:0x80006640
 	extabindex  start:0x80006A70 end:0x80006B00
 	.text       start:0x801079FC end:0x80109DC4
 
-RevoSDK/rand.c:
+RevoSDK/MSL_C/MSL_Common/rand.c:
 	.text       start:0x80109DC4 end:0x80109DEC
 
-RevoSDK/scanf.c:
+RevoSDK/MSL_C/MSL_Common/scanf.c:
 	extab       start:0x80006640 end:0x80006658
 	extabindex  start:0x80006B00 end:0x80006B24
 	.text       start:0x80109DEC end:0x8010B358
 
-RevoSDK/string.c:
+RevoSDK/MSL_C/MSL_Common/string.c:
 	.text       start:0x8010B358 end:0x8010B6A8
 
-RevoSDK/strtold.c:
+RevoSDK/MSL_C/MSL_Common/strtold.c:
 	extab       start:0x80006658 end:0x80006660
 	extabindex  start:0x80006B24 end:0x80006B30
 	.text       start:0x8010B6A8 end:0x8010CA9C
 
-RevoSDK/strtoul.c:
+RevoSDK/MSL_C/MSL_Common/strtoul.c:
 	extab       start:0x80006660 end:0x80006688
 	extabindex  start:0x80006B30 end:0x80006B6C
 	.text       start:0x8010CA9C end:0x8010D5E8
 
-RevoSDK/wstring.c:
+RevoSDK/MSL_C/MSL_Common/wstring.c:
 	.text       start:0x8010D5E8 end:0x8010D67C
 
-RevoSDK/wchar_io.c:
+RevoSDK/MSL_C/MSL_Common/wchar_io.c:
 	.text       start:0x8010D67C end:0x8010D700
 
-RevoSDK/uart_console_io_gcn.c:
+RevoSDK/MSL_C/PPC_EABI/uart_console_io_gcn.c:
 	extab       start:0x80006688 end:0x80006690
 	extabindex  start:0x80006B6C end:0x80006B78
 	.text       start:0x8010D700 end:0x8010D7D0
 
-RevoSDK/math_sun.c:
+RevoSDK/MSL_C/MSL_Common/math_sun.c:
 	extab       start:0x80006690 end:0x80006698
 	extabindex  start:0x80006B78 end:0x80006B84
 	.text       start:0x8010D7D0 end:0x8010D810
 
-RevoSDK/extras.c:
+RevoSDK/MSL_C/MSL_Common/extras.c:
 	.text       start:0x8010D810 end:0x8010D8B8
 
-RevoSDK/e_asin.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/e_asin.c:
 	.text       start:0x8010D8B8 end:0x8010DB50
 
-RevoSDK/e_atan2.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/e_atan2.c:
 	.text       start:0x8010DB50 end:0x8010DDC0
 
-RevoSDK/e_exp.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/e_exp.c:
 	.text       start:0x8010DDC0 end:0x8010DFF4
 
-RevoSDK/e_fmod.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/e_fmod.c:
 	.text       start:0x8010DFF4 end:0x8010E324
 
-RevoSDK/e_log.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/e_log.c:
 	.text       start:0x8010E324 end:0x8010E5D8
 
-RevoSDK/e_log10.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/e_log10.c:
 	.text       start:0x8010E5D8 end:0x8010E6EC
 
-RevoSDK/e_pow.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/e_pow.c:
 	.text       start:0x8010E6EC end:0x8010EF34
 
-RevoSDK/e_rem_pio2.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/e_rem_pio2.c:
 	.text       start:0x8010EF34 end:0x8010F2CC
 
-RevoSDK/k_cos.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/k_cos.c:
 	.text       start:0x8010F2CC end:0x8010F3DC
 
-RevoSDK/k_rem_pio2.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/k_rem_pio2.c:
 	.text       start:0x8010F3DC end:0x80110AE8
 
-RevoSDK/k_sin.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/k_sin.c:
 	.text       start:0x80110AE8 end:0x80110BA8
 
-RevoSDK/k_tan.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/k_tan.c:
 	.text       start:0x80110BA8 end:0x80110E00
 
-RevoSDK/s_atan.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/s_atan.c:
 	.text       start:0x80110E00 end:0x80111040
 
-RevoSDK/s_ceil.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/s_ceil.c:
 	.text       start:0x80111040 end:0x80111180
 
-RevoSDK/s_copysign.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/s_copysign.c:
 	.text       start:0x80111180 end:0x801111AC
 
-RevoSDK/s_cos.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/s_cos.c:
 	.text       start:0x801111AC end:0x80111280
 
-RevoSDK/s_floor.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/s_floor.c:
 	.text       start:0x80111280 end:0x801113C4
 
-RevoSDK/s_frexp.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/s_frexp.c:
 	.text       start:0x801113C4 end:0x8011144C
 
-RevoSDK/s_ldexp.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/s_ldexp.c:
 	.text       start:0x8011144C end:0x801115B8
 
-RevoSDK/s_modf.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/s_modf.c:
 	.text       start:0x801115B8 end:0x801116B4
 
-RevoSDK/s_sin.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/s_sin.c:
 	.text       start:0x801116B4 end:0x8011178C
 
-RevoSDK/s_tan.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/s_tan.c:
 	.text       start:0x8011178C end:0x80111804
 
-RevoSDK/w_asin.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/w_asin.c:
 	.text       start:0x80111804 end:0x80111808
 
-RevoSDK/w_atan2.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/w_atan2.c:
 	.text       start:0x80111808 end:0x8011180C
 
-RevoSDK/w_exp.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/w_exp.c:
 	.text       start:0x8011180C end:0x80111810
 
-RevoSDK/w_fmod.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/w_fmod.c:
 	.text       start:0x80111810 end:0x80111814
 
-RevoSDK/w_log10.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/w_log10.c:
 	.text       start:0x80111814 end:0x80111818
 
-RevoSDK/w_pow.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/w_pow.c:
 	.text       start:0x80111818 end:0x8011181C
 
-RevoSDK/e_sqrt.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/e_sqrt.c:
 	.text       start:0x8011181C end:0x80111A64
 
-RevoSDK/math_ppc.c:
+RevoSDK/MSL_C/PPC_EABI/math_ppc.c:
 	.text       start:0x80111A64 end:0x80111A68
 
-RevoSDK/w_sqrt.c:
+RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/w_sqrt.c:
 	.text       start:0x80111A68 end:0x80111A6C
 
-RevoSDK/ai.c:
+RevoSDK/ai/ai.c:
 	.text       start:0x80111A6C end:0x80112070
 	.sbss       start:0x8066BF80 end:0x8066BFC0
 
-RevoSDK/AX.c:
+RevoSDK/ax/AX.c:
 	.text       start:0x80112070 end:0x801120CC
 	.sbss       start:0x8066BFC0 end:0x8066BFC8
 
-RevoSDK/AXAlloc.c:
+RevoSDK/ax/AXAlloc.c:
 	.text       start:0x801120CC end:0x801124E8
 	.sbss       start:0x8066BFC8 end:0x8066BFD0
 
-RevoSDK/AXAux.c:
+RevoSDK/ax/AXAux.c:
 	.text       start:0x801124E8 end:0x80112C10
 	.sbss       start:0x8066BFD0 end:0x8066C018
 
-RevoSDK/AXCL.c:
+RevoSDK/ax/AXCL.c:
 	.text       start:0x80112C10 end:0x80113674
 	.sbss       start:0x8066C018 end:0x8066C030
 
-RevoSDK/AXOut.c:
+RevoSDK/ax/AXOut.c:
 	.text       start:0x80113674 end:0x80113D24
 	.bss        start:0x805DC1C0 end:0x805F4A10
 	.sbss       start:0x8066C038 end:0x8066C078
 
-RevoSDK/AXSPB.c:
+RevoSDK/ax/AXSPB.c:
 	.text       start:0x80113D24 end:0x80114144
 	.sbss       start:0x8066C078 end:0x8066C0C8
 
-RevoSDK/AXVPB.c:
+RevoSDK/ax/AXVPB.c:
 	.text       start:0x80114144 end:0x80114CAC
 	.sbss       start:0x8066C0C8 end:0x8066C0E8
 
-RevoSDK/AXProf.c:
+RevoSDK/ax/AXProf.c:
 	.text       start:0x80114CAC end:0x80114CEC
 	.sbss       start:0x8066C0E8 end:0x8066C0F8
 
-RevoSDK/AXFXReverbHi.c:
+RevoSDK/axfx/AXFXReverbHi.c:
 	.text       start:0x80114CEC end:0x80114D78
 
-RevoSDK/AXFXReverbHiExp.c:
+RevoSDK/axfx/AXFXReverbHiExp.c:
 	.text       start:0x80114D78 end:0x80115B54
 
-RevoSDK/AXFXHooks.c:
+RevoSDK/axfx/AXFXHooks.c:
 	.text       start:0x80115B54 end:0x80115B8C
 
-RevoSDK/PPCArch.c:
+RevoSDK/base/PPCArch.c:
 	.text       start:0x80115B8C end:0x80115CF0
 
-RevoSDK/db.c:
+RevoSDK/db/db.c:
 	.text       start:0x80115CF0 end:0x80115DD8
 	.sbss       start:0x8066C0F8 end:0x8066C100
 
-RevoSDK/dsp.c:
+RevoSDK/dsp/dsp.c:
 	.text       start:0x80115DD8 end:0x80115FE0
 	.sdata      start:0x8066AAD8 end:0x8066ABD8
 	.sbss       start:0x8066C100 end:0x8066C100
 
-RevoSDK/dsp_debug.c:
+RevoSDK/dsp/dsp_debug.c:
 	.text       start:0x80115FE0 end:0x80116030
 
-RevoSDK/dsp_task.c:
+RevoSDK/dsp/dsp_task.c:
 	.text       start:0x80116030 end:0x80116490
 	.sbss       start:0x8066C100 end:0x8066C120
 
-RevoSDK/dvdfs.c:
+RevoSDK/dvd/dvdfs.c:
 	.text       start:0x80116490 end:0x80117250
 	.sbss       start:0x8066C120 end:0x8066C140
 
-RevoSDK/dvd.c:
+RevoSDK/dvd/dvd.c:
 	.text       start:0x80117250 end:0x8011BF60
 	.sbss       start:0x8066C140 end:0x8066C1D8
 
-RevoSDK/dvdqueue.c:
+RevoSDK/dvd/dvdqueue.c:
 	.text       start:0x8011BF60 end:0x8011C1B8
 
-RevoSDK/dvderror.c:
+RevoSDK/dvd/dvderror.c:
 	.text       start:0x8011C1B8 end:0x8011CABC
 	.sbss       start:0x8066C1D8 end:0x8066C1E8
 
-RevoSDK/dvdidutils.c:
+RevoSDK/dvd/dvdidutils.c:
 	.text       start:0x8011CABC end:0x8011CBAC
 
-RevoSDK/dvdFatal.c:
+RevoSDK/dvd/dvdFatal.c:
 	.text       start:0x8011CBAC end:0x8011CD04
 	.sbss       start:0x8066C1E8 end:0x8066C1F0
 
-RevoSDK/dvdDeviceError.c:
+RevoSDK/dvd/dvdDeviceError.c:
 	.text       start:0x8011CD04 end:0x8011CF9C
 	.sbss       start:0x8066C1F0 end:0x8066C1F8
 
-RevoSDK/dvd_broadway.c:
+RevoSDK/dvd/dvd_broadway.c:
 	.text       start:0x8011CF9C end:0x8011F3E8
 	.sbss       start:0x8066C1F8 end:0x8066C220
 
-RevoSDK/EXIBios.c:
+RevoSDK/exi/EXIBios.c:
 	.text       start:0x8011F3E8 end:0x80120C7C
 	.sbss       start:0x8066C220 end:0x8066C238
 
-RevoSDK/EXIUart.c:
+RevoSDK/exi/EXIUart.c:
 	.text       start:0x80120C7C end:0x80120FB0
 
-RevoSDK/EXICommon.c:
+RevoSDK/exi/EXICommon.c:
 	.text       start:0x80120FB0 end:0x8012113C
 
-RevoSDK/GDBase.c:
+RevoSDK/gd/GDBase.c:
 	.text       start:0x8012113C end:0x80121294
 	.sbss       start:0x8066C238 end:0x8066C240
 
-RevoSDK/GDGeometry.c:
+RevoSDK/gd/GDGeometry.c:
 	.text       start:0x80121294 end:0x80121C7C
 
-RevoSDK/GXInit.c:
+RevoSDK/gx/GXInit.c:
 	.text       start:0x80121C7C end:0x80122E48
 	.sbss       start:0x8066C240 end:0x8066C268
 	.sdata2     start:0x8066EA78 end:0x8066EAA0
 
-RevoSDK/GXFifo.c:
+RevoSDK/gx/GXFifo.c:
 	.text       start:0x80122E48 end:0x80123A48
 	.sbss       start:0x8066C268 end:0x8066C288
 
-RevoSDK/GXAttr.c:
+RevoSDK/gx/GXAttr.c:
 	.text       start:0x80123A48 end:0x8012453C
 
-RevoSDK/GXMisc.c:
+RevoSDK/gx/GXMisc.c:
 	.text       start:0x8012453C end:0x80124EBC
 	.sbss       start:0x8066C288 end:0x8066C2A0
 
-RevoSDK/GXGeometry.c:
+RevoSDK/gx/GXGeometry.c:
 	.text       start:0x80124EBC end:0x8012547C
 
-RevoSDK/GXFrameBuf.c:
+RevoSDK/gx/GXFrameBuf.c:
 	.text       start:0x8012547C end:0x80125F48
 	.data       start:0x805719D0 end:0x80571B00
 
-RevoSDK/GXLight.c:
+RevoSDK/gx/GXLight.c:
 	.text       start:0x80125F48 end:0x80126638
 
-RevoSDK/GXTexture.c:
+RevoSDK/gx/GXTexture.c:
 	.text       start:0x80126638 end:0x801275E4
 
-RevoSDK/GXBump.c:
+RevoSDK/gx/GXBump.c:
 	.text       start:0x801275E4 end:0x80127A84
 
-RevoSDK/GXTev.c:
+RevoSDK/gx/GXTev.c:
 	.text       start:0x80127A84 end:0x80128104
 
-RevoSDK/GXPixel.c:
+RevoSDK/gx/GXPixel.c:
 	.text       start:0x80128104 end:0x80128868
 
-RevoSDK/GXDisplayList.c:
+RevoSDK/gx/GXDisplayList.c:
 	.text       start:0x80128868 end:0x801288DC
 
-RevoSDK/GXTransform.c:
+RevoSDK/gx/GXTransform.c:
 	.text       start:0x801288DC end:0x80128E40
 
-RevoSDK/GXPerf.c:
+RevoSDK/gx/GXPerf.c:
 	.text       start:0x80128E40 end:0x80129720
 
-RevoSDK/mtx.c:
+RevoSDK/mtx/mtx.c:
 	.text       start:0x80129720 end:0x8012A388
 
-RevoSDK/mtxvec.c:
+RevoSDK/mtx/mtxvec.c:
 	.text       start:0x8012A388 end:0x8012A4B8
 
-RevoSDK/mtx44.c:
+RevoSDK/mtx/mtx44.c:
 	.text       start:0x8012A4B8 end:0x8012A71C
 
-RevoSDK/mtx44vec.c:
+RevoSDK/mtx/mtx44vec.c:
 	.text       start:0x8012A71C end:0x8012A794
 
-RevoSDK/vec.c:
+RevoSDK/mtx/vec.c:
 	.text       start:0x8012A794 end:0x8012A9EC
 
-RevoSDK/DebuggerDriver.c:
+RevoSDK/NdevExi2A/DebuggerDriver.c:
 	.text       start:0x8012A9EC end:0x8012AD20
 	.sbss       start:0x8066C2A0 end:0x8066C2B8
 
-RevoSDK/exi2.c:
+RevoSDK/NdevExi2A/exi2.c:
 	.text       start:0x8012AD20 end:0x8012B4AC
 
-RevoSDK/OS.c:
+RevoSDK/os/OS.c:
 	.text       start:0x8012B4AC end:0x8012C8BC
 	.sbss       start:0x8066C2B8 end:0x8066C300
 
-RevoSDK/OSAlarm.c:
+RevoSDK/os/OSAlarm.c:
 	.text       start:0x8012C8BC end:0x8012D098
 	.sbss       start:0x8066C300 end:0x8066C308
 
-RevoSDK/OSAlloc.c:
+RevoSDK/os/OSAlloc.c:
 	.text       start:0x8012D098 end:0x8012D3A0
 	.sbss       start:0x8066C308 end:0x8066C318
 
-RevoSDK/OSArena.c:
+RevoSDK/os/OSArena.c:
 	.text       start:0x8012D3A0 end:0x8012D434
 	.sbss       start:0x8066C318 end:0x8066C320
 
-RevoSDK/OSAudioSystem.c:
+RevoSDK/os/OSAudioSystem.c:
 	.text       start:0x8012D434 end:0x8012D8E8
 
-RevoSDK/OSCache.c:
+RevoSDK/os/OSCache.c:
 	.text       start:0x8012D8E8 end:0x8012DF18
 
-RevoSDK/OSContext.c:
+RevoSDK/os/OSContext.c:
 	.text       start:0x8012DF18 end:0x8012E8CC
 
-RevoSDK/OSError.c:
+RevoSDK/os/OSError.c:
 	.text       start:0x8012E8CC end:0x8012EF74
 	.sdata      start:0x8066ABD8 end:0x8066AC60
 
-RevoSDK/OSExec.c:
+RevoSDK/os/OSExec.c:
 	.text       start:0x8012EF74 end:0x801305E4
 	.sbss       start:0x8066C320 end:0x8066C338
 
-RevoSDK/OSFatal.c:
+RevoSDK/os/OSFatal.c:
 	.text       start:0x801305E4 end:0x8013121C
 
-RevoSDK/OSFont.c:
+RevoSDK/os/OSFont.c:
 	.text       start:0x8013121C end:0x8013259C
 	.sbss       start:0x8066C338 end:0x8066C348
 
-RevoSDK/OSInterrupt.c:
+RevoSDK/os/OSInterrupt.c:
 	.text       start:0x8013259C end:0x80132D20
 	.sbss       start:0x8066C348 end:0x8066C360
 
-RevoSDK/OSLink.c:
+RevoSDK/os/OSLink.c:
 	.text       start:0x80132D20 end:0x80132D38
 
-RevoSDK/OSMessage.c:
+RevoSDK/os/OSMessage.c:
 	.text       start:0x80132D38 end:0x8013300C
 
-RevoSDK/OSMemory.c:
+RevoSDK/os/OSMemory.c:
 	.text       start:0x8013300C end:0x801338E8
 
-RevoSDK/OSMutex.c:
+RevoSDK/os/OSMutex.c:
 	.text       start:0x801338E8 end:0x80133CD0
 
-RevoSDK/OSReboot.c:
+RevoSDK/os/OSReboot.c:
 	.text       start:0x80133CD0 end:0x80133D50
 	.sbss       start:0x8066C360 end:0x8066C368
 
-RevoSDK/OSReset.c:
+RevoSDK/os/OSReset.c:
 	.text       start:0x80133D50 end:0x801345F8
 	.sbss       start:0x8066C368 end:0x8066C378
 
-RevoSDK/OSRtc.c:
+RevoSDK/os/OSRtc.c:
 	.text       start:0x801345F8 end:0x80135084
 
-RevoSDK/OSSync.c:
+RevoSDK/os/OSSync.c:
 	.text       start:0x80135084 end:0x80135104
 
-RevoSDK/OSThread.c:
+RevoSDK/os/OSThread.c:
 	.text       start:0x80135104 end:0x8013668C
 	.sbss       start:0x8066C378 end:0x8066C388
 
-RevoSDK/OSTime.c:
+RevoSDK/os/OSTime.c:
 	.text       start:0x8013668C end:0x80136AA0
 
-RevoSDK/OSUtf.c:
+RevoSDK/os/OSUtf.c:
 	.text       start:0x80136AA0 end:0x80136CD8
 
-RevoSDK/OSIpc.c:
+RevoSDK/os/OSIpc.c:
 	.text       start:0x80136CD8 end:0x80136D00
 	.sbss       start:0x8066C388 end:0x8066C390
 
-RevoSDK/OSStateTM.c:
+RevoSDK/os/OSStateTM.c:
 	.text       start:0x80136D00 end:0x80137378
 	.sbss       start:0x8066C390 end:0x8066C3B0
 
-RevoSDK/init/__start.c:
+RevoSDK/os/init/__start.c:
 	.init       start:0x800060E8 end:0x800063C8
 	.sbss       start:0x8066C3B0 end:0x8066C3B8
 
-RevoSDK/OSPlayRecord.c:
+RevoSDK/os/OSPlayRecord.c:
 	.text       start:0x80137378 end:0x80137A70
 	.sbss       start:0x8066C3B8 end:0x8066C3E8
 
-RevoSDK/OSStateFlags.c:
+RevoSDK/os/OSStateFlags.c:
 	.text       start:0x80137A70 end:0x80137C7C
 
-RevoSDK/OSNet.c:
+RevoSDK/os/OSNet.c:
 	.text       start:0x80137C7C end:0x801381E0
 
-RevoSDK/OSNandbootInfo.c:
+RevoSDK/os/OSNandbootInfo.c:
 	.text       start:0x801381E0 end:0x801383E8
 
-RevoSDK/OSPlayTime.c:
+RevoSDK/os/OSPlayTime.c:
 	.text       start:0x801383E8 end:0x80138C80
 	.sbss       start:0x8066C3E8 end:0x8066C400
 
-RevoSDK/OSLaunch.c:
+RevoSDK/os/OSLaunch.c:
 	.text       start:0x80138C80 end:0x80139A40
 	.sbss       start:0x8066C400 end:0x8066C410
 
-RevoSDK/__ppc_eabi_init.c:
+RevoSDK/os/__ppc_eabi_init.c:
 	.text       start:0x80139A40 end:0x80139AF4
 
-RevoSDK/Padclamp.c:
+RevoSDK/pad/Padclamp.c:
 	.text       start:0x80139AF4 end:0x80139CF8
 
-RevoSDK/Pad.c:
+RevoSDK/pad/Pad.c:
 	.text       start:0x80139CF8 end:0x8013B610
 	.sbss       start:0x8066C410 end:0x8066C448
 
-RevoSDK/SIBios.c:
+RevoSDK/si/SIBios.c:
 	.text       start:0x8013B610 end:0x8013CB80
 
-RevoSDK/SISamplingRate.c:
+RevoSDK/si/SISamplingRate.c:
 	.text       start:0x8013CB80 end:0x8013CC60
 	.sbss       start:0x8066C448 end:0x8066C480
 
-RevoSDK/vi.c:
+RevoSDK/vi/vi.c:
 	.text       start:0x8013CC60 end:0x8013F6AC
 	.data       start:0x8057FDC0 end:0x80589A80
 	.sdata      start:0x8066AC60 end:0x8066ACC0
 	.sbss       start:0x8066C480 end:0x8066C660
 
-RevoSDK/i2c.c:
+RevoSDK/vi/i2c.c:
 	.text       start:0x8013F6AC end:0x801400C8
 
-RevoSDK/vi3in1.c:
+RevoSDK/vi/vi3in1.c:
 	.text       start:0x801400C8 end:0x8014176C
 
-RevoSDK/THPDec.c:
+RevoSDK/thp/THPDec.c:
 	.text       start:0x8014176C end:0x80144B3C
 
-RevoSDK/THPAudio.c:
+RevoSDK/thp/THPAudio.c:
 	.text       start:0x80144B3C end:0x80144FD0
 
-RevoSDK/TPL.c:
+RevoSDK/tpl/TPL.c:
 	.text       start:0x80144FD0 end:0x801451E4
 
-RevoSDK/usb.c:
+RevoSDK/usb/usb.c:
 	.text       start:0x801451E4 end:0x80146310
 
-RevoSDK/wenc.c:
+RevoSDK/wenc/wenc.c:
 	.text       start:0x80146310 end:0x801465E8
 
-RevoSDK/WPAD.c:
+RevoSDK/wpad/WPAD.c:
 	.text       start:0x801465E8 end:0x8014DE14
 	.bss        start:0x805F4A10 end:0x8062ED20
 	.sdata      start:0x8066ACC0 end:0x8066AFF0
 	.sbss       start:0x8066C660 end:0x8066C690
 
-RevoSDK/WPADHIDParser.c:
+RevoSDK/wpad/WPADHIDParser.c:
 	.text       start:0x8014DE14 end:0x801532B4
 	.sbss       start:0x8066C690 end:0x8066C798
 
-RevoSDK/WPADEncrypt.c:
+RevoSDK/wpad/WPADEncrypt.c:
 	.text       start:0x801532B4 end:0x8015435C
 
-RevoSDK/debug_msg.c:
+RevoSDK/wpad/debug_msg.c:
 	.text       start:0x8015435C end:0x801543AC
 
-RevoSDK/WUD.c:
+RevoSDK/wud/WUD.c:
 	.text       start:0x801543AC end:0x80158D64
 
-RevoSDK/WUDHidHost.c:
+RevoSDK/wud/WUDHidHost.c:
 	.text       start:0x80158D64 end:0x80159360
 
-RevoSDK/wdebug_msg.c:
+RevoSDK/wud/debug_msg.c:
 	.text       start:0x80159360 end:0x801593B0
 
-RevoSDK/arc.c:
+RevoSDK/arc/arc.c:
 	.text       start:0x801593B0 end:0x80159D30
 
-RevoSDK/gki_buffer.c:
+RevoSDK/bte/gki_buffer.c:
 	.text       start:0x80159D30 end:0x8015B174
 
-RevoSDK/gki_time.c:
+RevoSDK/bte/gki_time.c:
 	.text       start:0x8015B174 end:0x8015B6CC
 
-RevoSDK/gki_ppc.c:
+RevoSDK/bte/gki_ppc.c:
 	.text       start:0x8015B6CC end:0x8015B95C
 
-RevoSDK/hcisu_h2.c:
+RevoSDK/bte/hcisu_h2.c:
 	.text       start:0x8015B95C end:0x8015BFF8
 
-RevoSDK/uusb_ppc.c:
+RevoSDK/bte/uusb_ppc.c:
 	.text       start:0x8015BFF8 end:0x8015CBFC
 
-RevoSDK/bte_hcisu.c:
+RevoSDK/bte/bte_hcisu.c:
 	.text       start:0x8015CBFC end:0x8015CCB4
 
-RevoSDK/bte_init.c:
+RevoSDK/bte/bte_init.c:
 	.text       start:0x8015CCB4 end:0x8015CCE0
 
-RevoSDK/bte_logmsg.c:
+RevoSDK/bte/bte_logmsg.c:
 	.text       start:0x8015CCE0 end:0x8015CE44
 
-RevoSDK/bte_main.c:
+RevoSDK/bte/bte_main.c:
 	.text       start:0x8015CE44 end:0x8015CF9C
 
-RevoSDK/btu_task1.c:
+RevoSDK/bte/btu_task1.c:
 	.text       start:0x8015CF9C end:0x8015D3EC
 
-RevoSDK/bd.c:
+RevoSDK/bte/bd.c:
 	.text       start:0x8015D3EC end:0x8015D4C0
 
-RevoSDK/bta_sys_conn.c:
+RevoSDK/bte/bta_sys_conn.c:
 	.text       start:0x8015D4C0 end:0x8015D714
 
-RevoSDK/bta_sys_main.c:
+RevoSDK/bte/bta_sys_main.c:
 	.text       start:0x8015D714 end:0x8015D958
 
-RevoSDK/ptim.c:
+RevoSDK/bte/ptim.c:
 	.text       start:0x8015D958 end:0x8015DB38
 
-RevoSDK/utl.c:
+RevoSDK/bte/utl.c:
 	.text       start:0x8015DB38 end:0x8015DB7C
 
-RevoSDK/bta_dm_act.c:
+RevoSDK/bte/bta_dm_act.c:
 	.text       start:0x8015DB7C end:0x8015FEB8
 
-RevoSDK/bta_dm_api.c:
+RevoSDK/bte/bta_dm_api.c:
 	.text       start:0x8015FEB8 end:0x80160324
 
-RevoSDK/bta_dm_main.c:
+RevoSDK/bte/bta_dm_main.c:
 	.text       start:0x80160324 end:0x80160484
 
-RevoSDK/bta_dm_pm.c:
+RevoSDK/bte/bta_dm_pm.c:
 	.text       start:0x80160484 end:0x80160EA0
 
-RevoSDK/bta_hh_act.c:
+RevoSDK/bte/bta_hh_act.c:
 	.text       start:0x80160EA0 end:0x801625E8
 
-RevoSDK/bta_hh_api.c:
+RevoSDK/bte/bta_hh_api.c:
 	.text       start:0x801625E8 end:0x801629B8
 
-RevoSDK/bta_hh_main.c:
+RevoSDK/bte/bta_hh_main.c:
 	.text       start:0x801629B8 end:0x80162F0C
 
-RevoSDK/bta_hh_utils.c:
+RevoSDK/bte/bta_hh_utils.c:
 	.text       start:0x80162F0C end:0x801632B8
 
-RevoSDK/btm_acl.c:
+RevoSDK/bte/btm_acl.c:
 	.text       start:0x801632B8 end:0x80164FFC
 
-RevoSDK/btm_dev.c:
+RevoSDK/bte/btm_dev.c:
 	.text       start:0x80164FFC end:0x801656C8
 
-RevoSDK/btm_devctl.c:
+RevoSDK/bte/btm_devctl.c:
 	.text       start:0x801656C8 end:0x80167050
 
-RevoSDK/btm_discovery.c:
+RevoSDK/bte/btm_discovery.c:
 	.text       start:0x80167050 end:0x80167184
 
-RevoSDK/btm_inq.c:
+RevoSDK/bte/btm_inq.c:
 	.text       start:0x80167184 end:0x80168C1C
 
-RevoSDK/btm_main.c:
+RevoSDK/bte/btm_main.c:
 	.text       start:0x80168C1C end:0x80168C78
 
-RevoSDK/btm_pm.c:
+RevoSDK/bte/btm_pm.c:
 	.text       start:0x80168C78 end:0x8016990C
 
-RevoSDK/btm_sco.c:
+RevoSDK/bte/btm_sco.c:
 	.text       start:0x8016990C end:0x8016A744
 
-RevoSDK/btm_sec.c:
+RevoSDK/bte/btm_sec.c:
 	.text       start:0x8016A744 end:0x8016D708
 
-RevoSDK/btu_hcif.c:
+RevoSDK/bte/btu_hcif.c:
 	.text       start:0x8016D708 end:0x8016E964
 
-RevoSDK/btu_init.c:
+RevoSDK/bte/btu_init.c:
 	.text       start:0x8016E964 end:0x8016E9DC
 
-RevoSDK/wbt_ext.c:
+RevoSDK/bte/wbt_ext.c:
 	.text       start:0x8016E9DC end:0x8016EABC
 
-RevoSDK/gap_api.c:
+RevoSDK/bte/gap_api.c:
 	.text       start:0x8016EABC end:0x8016EB1C
 
-RevoSDK/gap_conn.c:
+RevoSDK/bte/gap_conn.c:
 	.text       start:0x8016EB1C end:0x8016F658
 
-RevoSDK/gap_utils.c:
+RevoSDK/bte/gap_utils.c:
 	.text       start:0x8016F658 end:0x8016FC74
 
-RevoSDK/hcicmds.c:
+RevoSDK/bte/hcicmds.c:
 	.text       start:0x8016FC74 end:0x80172390
 
-RevoSDK/hidd_api.c:
+RevoSDK/bte/hidd_api.c:
 	.text       start:0x80172390 end:0x801723F8
 
-RevoSDK/hidd_conn.c:
+RevoSDK/bte/hidd_conn.c:
 	.text       start:0x801723F8 end:0x801724B8
 
-RevoSDK/hidd_mgmt.c:
+RevoSDK/bte/hidd_mgmt.c:
 	.text       start:0x801724B8 end:0x801872DC
 
-RevoSDK/encutility.c:
+RevoSDK/enc/encutility.c:
 	.text       start:0x801872DC end:0x80187518
 
-RevoSDK/encjapanese.c:
+RevoSDK/enc/encjapanese.c:
 	.text       start:0x80187518 end:0x801879DC
 	.rodata     start:0x80540840 end:0x80546280
 
-RevoSDK/euart.c:
+RevoSDK/euart/euart.c:
 	.text       start:0x801879DC end:0x80187D4C
 
-RevoSDK/fs.c:
+RevoSDK/fs/fs.c:
 	.text       start:0x80187D4C end:0x80189354
 
-RevoSDK/ipcMain.c:
+RevoSDK/ipc/ipcMain.c:
 	.text       start:0x80189354 end:0x80189420
 
-RevoSDK/ipcclt.c:
+RevoSDK/ipc/ipcclt.c:
 	.text       start:0x80189420 end:0x8018AD90
 	.bss        start:0x8062ED20 end:0x8062EDC0
 
-RevoSDK/memory.c:
+RevoSDK/ipc/memory.c:
 	.text       start:0x8018AD90 end:0x8018B2B4
 	.bss        start:0x8062EDC0 end:0x8062EE40
 
-RevoSDK/ipcProfile.c:
+RevoSDK/ipc/ipcProfile.c:
 	.text       start:0x8018B2B4 end:0x8018B478
 	.bss        start:0x8062EE40 end:0x80630480
 
-RevoSDK/KPAD.c:
+RevoSDK/kpad/KPAD.c:
 	.text       start:0x8018B478 end:0x8018E540
 
-RevoSDK/mem_heapCommon.c:
+RevoSDK/mem/mem_heapCommon.c:
 	.text       start:0x8018E540 end:0x8018EAEC
 
-RevoSDK/mem_expHeap.c:
+RevoSDK/mem/mem_expHeap.c:
 	.text       start:0x8018EAEC end:0x8018F684
 
-RevoSDK/mem_allocator.c:
+RevoSDK/mem/mem_allocator.c:
 	.text       start:0x8018F684 end:0x8018F6D8
 
-RevoSDK/mem_list.c:
+RevoSDK/mem/mem_list.c:
 	.text       start:0x8018F6D8 end:0x8018F7EC
 
-RevoSDK/nand.c:
+RevoSDK/nand/nand.c:
 	.text       start:0x8018F7EC end:0x801907B8
 
-RevoSDK/NANDOpenClose.c:
+RevoSDK/nand/NANDOpenClose.c:
 	.text       start:0x801907B8 end:0x80190C9C
 
-RevoSDK/NANDCore.c:
+RevoSDK/nand/NANDCore.c:
 	.text       start:0x80190C9C end:0x80191AAC
 	.bss        start:0x80630480 end:0x806304C0
 	.sbss       start:0x8066C798 end:0x8066C7A0
 
-RevoSDK/NANDCheck.c:
+RevoSDK/nand/NANDCheck.c:
 	.text       start:0x80191AAC end:0x80191C70
 
-RevoSDK/NANDLogging.c:
+RevoSDK/nand/NANDLogging.c:
 	.text       start:0x80191C70 end:0x80192240
 	.bss        start:0x806304C0 end:0x806307C0
 	.sbss       start:0x8066C7A0 end:0x8066C7A8
 
-RevoSDK/scsystem.c:
+RevoSDK/sc/scsystem.c:
 	.text       start:0x80192240 end:0x80193BA4
 	.rodata     start:0x80546280 end:0x805462D8
 	.bss        start:0x806307C0 end:0x80638960
 	.sbss       start:0x8066C7A8 end:0x8066C7C0
 
-RevoSDK/scapi.c:
+RevoSDK/sc/scapi.c:
 	.text       start:0x80193BA4 end:0x80194028
 
-RevoSDK/scapi_prdinfo.c:
+RevoSDK/sc/scapi_prdinfo.c:
 	.text       start:0x80194028 end:0x8019429C
 	.data       start:0x80589A80 end:0x80589AD8
 
-RevoSDK/esp.c:
+RevoSDK/esp/esp.c:
 	.text       start:0x8019429C end:0x80194990
 
 plugProjectYamashitaU/enemyBase.cpp:
@@ -5609,12 +5609,9 @@ plugProjectEbisawaU/ebiSaveMgr.cpp:
 	.sbss       start:0x8066D0D0 end:0x8066D108
 
 plugProjectEbisawaU/ebiScreenSaveMenu.cpp:
-	.text       start:0x80461DC8 end:0x804638F4
-	.data       start:0x805C9E80 end:0x805C9ED8
-
-plugProjectEbisawaU/ebibiScreenSaveMenu.cpp:
-	.text       start:0x804638F4 end:0x80463D94
+	.text       start:0x80461DC8 end:0x80463D94
 	.ctors      start:0x80534FC8 end:0x80534FCC
+	.data       start:0x805C9E80 end:0x805C9ED8
 
 plugProjectEbisawaU/ebiScreenFileSelect_Mgr.cpp:
 	.text       start:0x80463D94 end:0x80466450
@@ -6397,7 +6394,7 @@ utilityU/PSMainSide_ObjCalc.cpp:
 	.data       start:0x805D0B28 end:0x805D0B70
 	.sdata2     start:0x80675DE8 end:0x80675DF0
 
-egg/eggCamera.cpp:
+egg/gfx/eggCamera.cpp:
 	extab       start:0x80006698 end:0x80006700
 	extabindex  start:0x80006B84 end:0x80006BD8
 	.text       start:0x804F8384 end:0x804F87D8
@@ -6405,7 +6402,7 @@ egg/eggCamera.cpp:
 	.data       start:0x805D0B70 end:0x805D0BB0
 	.sdata      start:0x8066B7C0 end:0x8066B7D8
 
-egg/eggDrawHelper.cpp:
+egg/gfx/eggDrawHelper.cpp:
 	extab       start:0x80006700 end:0x80006798
 	extabindex  start:0x80006BD8 end:0x80006C08
 	.text       start:0x804F87D8 end:0x804F900C
@@ -6413,18 +6410,18 @@ egg/eggDrawHelper.cpp:
 	.sbss       start:0x8066D3B0 end:0x8066D3B8
 	.sdata2     start:0x80675DF0 end:0x80675E00
 
-egg/eggTexture.cpp:
+egg/gfx/eggTexture.cpp:
 	extab       start:0x80006798 end:0x800067D0
 	extabindex  start:0x80006C08 end:0x80006C44
 	.text       start:0x804F900C end:0x804F95C8
 	.sdata2     start:0x80675E00 end:0x80675E18
 
-egg/eggPalette.cpp:
+egg/gfx/eggPalette.cpp:
 	extab       start:0x800067D0 end:0x800067D8
 	extabindex  start:0x80006C44 end:0x80006C50
 	.text       start:0x804F95C8 end:0x804F9630
 
-egg/eggProjection.cpp:
+egg/gfx/eggProjection.cpp:
 	extab       start:0x800067D8 end:0x80006898
 	extabindex  start:0x80006C50 end:0x80006CD4
 	.text       start:0x804F9630 end:0x804FA3D8
@@ -6434,13 +6431,13 @@ egg/eggProjection.cpp:
 	.sbss       start:0x8066D3B8 end:0x8066D3C0
 	.sdata2     start:0x80675E18 end:0x80675E58
 
-egg/eggViewport.cpp:
+egg/gfx/eggViewport.cpp:
 	extab       start:0x80006898 end:0x800068B0
 	extabindex  start:0x80006CD4 end:0x80006CF8
 	.text       start:0x804FA3D8 end:0x804FA5C4
 	.sdata2     start:0x80675E58 end:0x80675E68
 
-egg/eggAssert.cpp:
+egg/prim/eggAssert.cpp:
 	extab       start:0x800068B0 end:0x800068C0
 	extabindex  start:0x80006CF8 end:0x80006D10
 	.text       start:0x804FA5C4 end:0x804FAAAC
@@ -6448,15 +6445,15 @@ egg/eggAssert.cpp:
 	.bss        start:0x8063E580 end:0x80640D80
 	.sbss       start:0x8066D3C0 end:0x8066D3C8
 
-egg/eggList.cpp:
+egg/prim/eggList.cpp:
 	.text       start:0x804FAAAC end:0x804FAAFC
 
-egg/eggMath.cpp:
+egg/math/eggMath.cpp:
 	extab       start:0x800068C0 end:0x800068E8
 	extabindex  start:0x80006D10 end:0x80006D4C
 	.text       start:0x804FAAFC end:0x804FAC64
 
-egg/eggMatrix.cpp:
+egg/math/eggMatrix.cpp:
 	extab       start:0x800068E8 end:0x80006918
 	extabindex  start:0x80006D4C end:0x80006D7C
 	.text       start:0x804FAC64 end:0x804FB224
@@ -6464,7 +6461,7 @@ egg/eggMatrix.cpp:
 	.bss        start:0x80640D80 end:0x80640DE0
 	.sdata2     start:0x80675E70 end:0x80675E78
 
-egg/eggVector.cpp:
+egg/math/eggVector.cpp:
 	extab       start:0x80006918 end:0x80006920
 	extabindex  start:0x80006D7C end:0x80006D88
 	.text       start:0x804FB224 end:0x804FB3BC
@@ -6473,16 +6470,16 @@ egg/eggVector.cpp:
 	.sbss       start:0x8066D3C8 end:0x8066D3E0
 	.sdata2     start:0x80675E78 end:0x80675E80
 
-egg/eggBoundBox.cpp:
+egg/math/eggBoundBox.cpp:
 	.text       start:0x804FB3BC end:0x804FB430
 	.sdata2     start:0x80675E80 end:0x80675E88
 
-egg/eggExpHeap.cpp:
+egg/core/eggExpHeap.cpp:
 	.text       start:0x804FB430 end:0x804FB7D4
 	.rodata     start:0x8055D298 end:0x8055D2B8
 	.data       start:0x805D0C30 end:0x805D0C60
 
-egg/eggHeap.cpp:
+egg/core/eggHeap.cpp:
 	.text       start:0x804FB7D4 end:0x804FBFA8
 	.rodata     start:0x8055D2B8 end:0x8055D398
 	.data       start:0x805D0C60 end:0x805D0C90
@@ -6490,20 +6487,20 @@ egg/eggHeap.cpp:
 	.sbss       start:0x8066D3E0 end:0x8066D408
 	.sdata2     start:0x80675E88 end:0x80675EA0
 
-egg/eggAllocator.cpp:
+egg/core/eggAllocator.cpp:
 	.text       start:0x804FBFA8 end:0x804FC068
 	.data       start:0x805D0C90 end:0x805D0CA8
 
-egg/eggThread.cpp:
+egg/core/eggThread.cpp:
 	.text       start:0x804FC068 end:0x804FC0CC
 	.bss        start:0x80640E60 end:0x80640E80
 
-egg/eggSystem.cpp:
+egg/core/eggSystem.cpp:
 	.text       start:0x804FC0CC end:0x804FC4B0
 	.rodata     start:0x8055D398 end:0x8055D3C8
 	.sbss       start:0x8066D408 end:0x8066D410
 
-egg/eggController.cpp:
+egg/core/eggController.cpp:
 	.text       start:0x804FC4B0 end:0x804FE388
 	.ctors      start:0x805350A4 end:0x805350A8
 	.rodata     start:0x8055D3C8 end:0x8055D3F8
@@ -6513,225 +6510,225 @@ egg/eggController.cpp:
 	.sbss       start:0x8066D410 end:0x8066D430
 	.sdata2     start:0x80675EA0 end:0x80675F20
 
-egg/eggStream.cpp:
+egg/core/eggStream.cpp:
 	.text       start:0x804FE388 end:0x805000C0
 	.rodata     start:0x8055D3F8 end:0x8055D470
 	.data       start:0x805D0E48 end:0x805D0E70
 	.bss        start:0x80641820 end:0x80641C20
 
-egg/eggDvdRipper.cpp:
+egg/core/eggDvdRipper.cpp:
 	.text       start:0x805000C0 end:0x8050032C
 	.sdata      start:0x8066B7F8 end:0x8066B800
 	.sbss       start:0x8066D430 end:0x8066D438
 
-egg/eggDvdFile.cpp:
+egg/core/eggDvdFile.cpp:
 	.text       start:0x8050032C end:0x80500684
 	.data       start:0x805D0E70 end:0x805D0E98
 	.bss        start:0x80641C20 end:0x80641C30
 	.sbss       start:0x8066D438 end:0x8066D440
 
-egg/eggDisposer.cpp:
+egg/core/eggDisposer.cpp:
 	.text       start:0x80500684 end:0x8050074C
 	.data       start:0x805D0E98 end:0x805D0EA8
 
-egg/eggArchive.cpp:
+egg/core/eggArchive.cpp:
 	.text       start:0x8050074C end:0x805009CC
 	.data       start:0x805D0EA8 end:0x805D0EB8
 	.bss        start:0x80641C30 end:0x80641F20
 	.sbss       start:0x8066D440 end:0x8066D448
 
-egg/eggLongStopWatch.cpp:
+egg/core/eggLongStopWatch.cpp:
 	.text       start:0x805009CC end:0x80500AFC
 
-egg/eggDecomp.cpp:
+egg/core/eggDecomp.cpp:
 	.text       start:0x80500AFC end:0x80500E30
 
-egg/eggSaveBanner.cpp:
+egg/core/eggSaveBanner.cpp:
 	.text       start:0x80500E30 end:0x80501238
 	.rodata     start:0x8055D470 end:0x8055D490
 	.data       start:0x805D0EB8 end:0x805D0EC8
 	.sdata      start:0x8066B800 end:0x8066B808
 	.sbss       start:0x8066D448 end:0x8066D450
 
-nw4r/ut_list.cpp:
+nw4r/ut/ut_list.cpp:
 	.text       start:0x80501264 end:0x80501378
 
-nw4r/ut_LinkList.cpp:
+nw4r/ut/ut_LinkList.cpp:
 	.text       start:0x80501378 end:0x805014A0
 
-nw4r/ut_binaryFileFormat.cpp:
+nw4r/ut/ut_binaryFileFormat.cpp:
 	.text       start:0x805014A0 end:0x80501514
 
-nw4r/ut_CharStrmReader.cpp:
+nw4r/ut/ut_CharStrmReader.cpp:
 	.text       start:0x80501514 end:0x80501624
 
-nw4r/ut_TagProcessorBase.cpp:
+nw4r/ut/ut_TagProcessorBase.cpp:
 	.text       start:0x80501624 end:0x80501CF4
 	.data       start:0x805D0EC8 end:0x805D0EF0
 	.sdata2     start:0x80675F20 end:0x80675F28
 
-nw4r/ut_LockedCache.cpp:
+nw4r/ut/ut_LockedCache.cpp:
 	.text       start:0x80501CF4 end:0x80501EA0
 	.ctors      start:0x805350A8 end:0x805350AC
 
-nw4r/ut_Font.cpp:
+nw4r/ut/ut_Font.cpp:
 	.text       start:0x80501EA0 end:0x80501F48
 	.data       start:0x805D0EF0 end:0x805D0F20
 
-nw4r/ut_RomFont.cpp:
+nw4r/ut/ut_RomFont.cpp:
 	.text       start:0x80501F48 end:0x805025A8
 	.data       start:0x805D0F20 end:0x805D0FE8
 	.sdata      start:0x8066B808 end:0x8066B810
 
-nw4r/ut_ResFontBase.cpp:
+nw4r/ut/ut_ResFontBase.cpp:
 	.text       start:0x805025A8 end:0x80502CA8
 	.data       start:0x805D0FE8 end:0x805D1050
 
-nw4r/ut_ResFont.cpp:
+nw4r/ut/ut_ResFont.cpp:
 	.text       start:0x80502CA8 end:0x80502FAC
 	.data       start:0x805D1050 end:0x805D10B0
 
-nw4r/ut_CharWriter.cpp:
+nw4r/ut/ut_CharWriter.cpp:
 	.text       start:0x80502FAC end:0x805046D4
 	.sbss       start:0x8066D450 end:0x8066D458
 	.sdata2     start:0x80675F28 end:0x80675F48
 
-nw4r/ut_TextWriterBase.cpp:
+nw4r/ut/ut_TextWriterBase.cpp:
 	.text       start:0x805046D4 end:0x80508B4C
 	.ctors      start:0x805350AC end:0x805350B0
 	.sdata      start:0x8066B810 end:0x8066B818
 	.sbss       start:0x8066D458 end:0x8066D470
 	.sdata2     start:0x80675F48 end:0x80675F60
 
-nw4r/math_arithmetic.cpp:
+nw4r/math/math_arithmetic.cpp:
 	.text       start:0x80508B4C end:0x80508B70
 	.sdata2     start:0x80675F60 end:0x80675F68
 
-nw4r/math_triangular.cpp:
+nw4r/math/math_triangular.cpp:
 	.text       start:0x80508B70 end:0x80508C9C
 	.rodata     start:0x8055D490 end:0x8055E4A0
 	.sdata2     start:0x80675F68 end:0x80675F70
 
-nw4r/math_types.cpp:
+nw4r/math/math_types.cpp:
 	.text       start:0x80508C9C end:0x805090E0
 	.sdata2     start:0x80675F70 end:0x80675F80
 
-nw4r/math_geometry.cpp:
+nw4r/math/math_geometry.cpp:
 	.text       start:0x805090E0 end:0x80509C74
 	.sdata2     start:0x80675F80 end:0x80675F90
 
-nw4r/db_directPrint.cpp:
+nw4r/db/db_directPrint.cpp:
 	.text       start:0x80509C74 end:0x80509CC4
 
-nw4r/db_console.cpp:
+nw4r/db/db_console.cpp:
 	.text       start:0x80509CC4 end:0x80509D98
 
-nw4r/db_assert.cpp:
+nw4r/db/db_assert.cpp:
 	.text       start:0x80509D98 end:0x8050A228
 	.data       start:0x805D10B0 end:0x805D1140
 	.sdata      start:0x8066B818 end:0x8066B820
 	.sbss       start:0x8066D470 end:0x8066D480
 
-nw4r/g3d_rescommon.cpp:
+nw4r/g3d/g3d_rescommon.cpp:
 	.text       start:0x8050A228 end:0x8050A2CC
 
-nw4r/g3d_resdict.cpp:
+nw4r/g3d/g3d_resdict.cpp:
 	.text       start:0x8050A2CC end:0x8050A5CC
 
-nw4r/g3d_resfile.cpp:
+nw4r/g3d/g3d_resfile.cpp:
 	.text       start:0x8050A5CC end:0x8050B360
 	.data       start:0x805D1140 end:0x805D12A0
 
-nw4r/g3d_resmdl.cpp:
+nw4r/g3d/g3d_resmdl.cpp:
 	.text       start:0x8050B360 end:0x8050C0B8
 
-nw4r/g3d_resshp.cpp:
+nw4r/g3d/g3d_resshp.cpp:
 	.text       start:0x8050C0B8 end:0x8050C6E4
 
-nw4r/g3d_restev.cpp:
+nw4r/g3d/g3d_restev.cpp:
 	.text       start:0x8050C6E4 end:0x8050C7B8
 	.rodata     start:0x8055E4A0 end:0x8055E4E0
 
-nw4r/g3d_resmat.cpp:
+nw4r/g3d/g3d_resmat.cpp:
 	.text       start:0x8050C7B8 end:0x8050DDE4
 
-nw4r/g3d_resvtx.cpp:
+nw4r/g3d/g3d_resvtx.cpp:
 	.text       start:0x8050DDE4 end:0x8050E1A4
 
-nw4r/g3d_restex.cpp:
+nw4r/g3d/g3d_restex.cpp:
 	.text       start:0x8050E1A4 end:0x8050E340
 
-nw4r/g3d_resnode.cpp:
+nw4r/g3d/g3d_resnode.cpp:
 	.text       start:0x8050E340 end:0x8050E644
 
-nw4r/g3d_resanm.cpp:
+nw4r/g3d/g3d_resanm.cpp:
 	.text       start:0x8050E644 end:0x8050E870
 
-nw4r/g3d_resanmvis.cpp:
+nw4r/g3d/g3d_resanmvis.cpp:
 	.text       start:0x8050E870 end:0x8050E990
 
-nw4r/g3d_resanmclr.cpp:
+nw4r/g3d/g3d_resanmclr.cpp:
 	.text       start:0x8050E990 end:0x8050EAFC
 
-nw4r/g3d_resanmtexpat.cpp:
+nw4r/g3d/g3d_resanmtexpat.cpp:
 	.text       start:0x8050EAFC end:0x8050EE98
 
-nw4r/g3d_resanmtexsrt.cpp:
+nw4r/g3d/g3d_resanmtexsrt.cpp:
 	.text       start:0x8050EE98 end:0x8050F2AC
 
-nw4r/g3d_resanmchr.cpp:
+nw4r/g3d/g3d_resanmchr.cpp:
 	.text       start:0x8050F2AC end:0x80510AF0
 	.rodata     start:0x8055E4E0 end:0x8055E500
 
-nw4r/g3d_anmvis.cpp:
+nw4r/g3d/g3d_anmvis.cpp:
 	.text       start:0x80510AF0 end:0x80511210
 	.rodata     start:0x8055E500 end:0x8055E528
 	.data       start:0x805D12A0 end:0x805D1328
 
-nw4r/g3d_anmclr.cpp:
+nw4r/g3d/g3d_anmclr.cpp:
 	.text       start:0x80511210 end:0x80511F94
 	.rodata     start:0x8055E528 end:0x8055E558
 	.data       start:0x805D1328 end:0x805D13B8
 
-nw4r/g3d_anmtexpat.cpp:
+nw4r/g3d/g3d_anmtexpat.cpp:
 	.text       start:0x80511F94 end:0x805129C0
 	.rodata     start:0x8055E558 end:0x8055E588
 	.data       start:0x805D13B8 end:0x805D1448
 
-nw4r/g3d_anmtexsrt.cpp:
+nw4r/g3d/g3d_anmtexsrt.cpp:
 	.text       start:0x805129C0 end:0x8051343C
 	.rodata     start:0x8055E588 end:0x8055E5B8
 	.data       start:0x805D1448 end:0x805D14D8
 
-nw4r/g3d_anmchr.cpp:
+nw4r/g3d/g3d_anmchr.cpp:
 	.text       start:0x8051343C end:0x80514030
 	.rodata     start:0x8055E5B8 end:0x8055E5E0
 	.data       start:0x805D14D8 end:0x805D1588
 
-nw4r/g3d_anmshp.cpp:
+nw4r/g3d/g3d_anmshp.cpp:
 	.text       start:0x80514030 end:0x8051404C
 	.rodata     start:0x8055E5E0 end:0x8055E5F0
 
-nw4r/g3d_anmscn.cpp:
+nw4r/g3d/g3d_anmscn.cpp:
 	.text       start:0x8051404C end:0x80514360
 
-nw4r/g3d_obj.cpp:
+nw4r/g3d/g3d_obj.cpp:
 	.text       start:0x80514360 end:0x805143E8
 	.rodata     start:0x8055E5F0 end:0x8055E600
 	.data       start:0x805D1588 end:0x805D15A8
 
-nw4r/g3d_anmobj.cpp:
+nw4r/g3d/g3d_anmobj.cpp:
 	.text       start:0x805143E8 end:0x805144A0
 	.rodata     start:0x8055E600 end:0x8055E650
 	.sdata      start:0x8066B820 end:0x8066B828
 
-nw4r/g3d_gpu.cpp:
+nw4r/g3d/g3d_gpu.cpp:
 	.text       start:0x805144A0 end:0x805149B0
 
-nw4r/g3d_cpu.cpp:
+nw4r/g3d/g3d_cpu.cpp:
 	.text       start:0x805149B0 end:0x80514B54
 
-nw4r/g3d_state.cpp:
+nw4r/g3d/g3d_state.cpp:
 	.text       start:0x80514B54 end:0x80518420
 	.ctors      start:0x805350B0 end:0x805350B4
 	.data       start:0x805D15A8 end:0x805D15C0
@@ -6739,109 +6736,109 @@ nw4r/g3d_state.cpp:
 	.sdata      start:0x8066B828 end:0x8066B830
 	.sbss       start:0x8066D480 end:0x8066D4A0
 
-nw4r/g3d_draw1mat1shp.cpp:
+nw4r/g3d/g3d_draw1mat1shp.cpp:
 	.text       start:0x80518420 end:0x80519154
 
-nw4r/g3d_calcview.cpp:
+nw4r/g3d/g3d_calcview.cpp:
 	.text       start:0x80519154 end:0x8051AFF4
 	.rodata     start:0x8055E650 end:0x8055E718
 
-nw4r/g3d_dcc.cpp:
+nw4r/g3d/g3d_dcc.cpp:
 	.text       start:0x8051AFF4 end:0x8051B0D0
 
-nw4r/g3d_workmem.cpp:
+nw4r/g3d/g3d_workmem.cpp:
 	.text       start:0x8051B0D0 end:0x8051B110
 	.bss        start:0x80647300 end:0x8065F300
 
-nw4r/g3d_calcworld.cpp:
+nw4r/g3d/g3d_calcworld.cpp:
 	.text       start:0x8051B110 end:0x8051B9B0
 	.data       start:0x805D15C0 end:0x805D15D0
 	.sdata      start:0x8066B830 end:0x8066B838
 
-nw4r/g3d_draw.cpp:
+nw4r/g3d/g3d_draw.cpp:
 	.text       start:0x8051B9B0 end:0x8051D7E0
 	.sdata      start:0x8066B838 end:0x8066B840
 
-nw4r/g3d_camera.cpp:
+nw4r/g3d/g3d_camera.cpp:
 	.text       start:0x8051D7E0 end:0x8051E374
 
-nw4r/g3d_basic.cpp:
+nw4r/g3d/g3d_basic.cpp:
 	.text       start:0x8051E374 end:0x8051E638
 
-nw4r/g3d_maya.cpp:
+nw4r/g3d/g3d_maya.cpp:
 	.text       start:0x8051E638 end:0x8051F2F8
 
-nw4r/g3d_xsi.cpp:
+nw4r/g3d/g3d_xsi.cpp:
 	.text       start:0x8051F2F8 end:0x8051FEB8
 
-nw4r/g3d_3dsmax.cpp:
+nw4r/g3d/g3d_3dsmax.cpp:
 	.text       start:0x8051FEB8 end:0x80520968
 
-nw4r/g3d_scnobj.cpp:
+nw4r/g3d/g3d_scnobj.cpp:
 	.text       start:0x80520968 end:0x80522070
 	.rodata     start:0x8055E718 end:0x8055E748
 	.data       start:0x805D15D0 end:0x805D16C8
 	.sbss       start:0x8066D4A0 end:0x8066D4A8
 
-nw4r/g3d_scnroot.cpp:
+nw4r/g3d/g3d_scnroot.cpp:
 	.text       start:0x80522070 end:0x80523924
 	.rodata     start:0x8055E748 end:0x8055E758
 	.data       start:0x805D16C8 end:0x805D1708
 	.sdata      start:0x8066B840 end:0x8066B850
 
-nw4r/g3d_scnmdlsmpl.cpp:
+nw4r/g3d/g3d_scnmdlsmpl.cpp:
 	.text       start:0x80523924 end:0x8052566C
 	.rodata     start:0x8055E758 end:0x8055E770
 	.data       start:0x805D1708 end:0x805D1778
 	.sdata      start:0x8066B850 end:0x8066B868
 
-nw4r/g3d_scnmdl.cpp:
+nw4r/g3d/g3d_scnmdl.cpp:
 	.text       start:0x8052566C end:0x80527D70
 	.rodata     start:0x8055E770 end:0x8055E77C
 	.data       start:0x805D1778 end:0x805D17C0
 
-nw4r/g3d_calcmaterial.cpp:
+nw4r/g3d/g3d_calcmaterial.cpp:
 	.text       start:0x80527D70 end:0x80528180
 
-nw4r/g3d_init.cpp:
+nw4r/g3d/g3d_init.cpp:
 	.text       start:0x80528180 end:0x8052827C
 	.data       start:0x805D17C0 end:0x805D1808
 	.sdata      start:0x8066B868 end:0x8066B870
 
-nw4r/g3d_fog.cpp:
+nw4r/g3d/g3d_fog.cpp:
 	.text       start:0x8052827C end:0x805283F0
 
-nw4r/g3d_light.cpp:
+nw4r/g3d/g3d_light.cpp:
 	.text       start:0x805283F0 end:0x80528B14
 
-nw4r/g3d_calcvtx.cpp:
+nw4r/g3d/g3d_calcvtx.cpp:
 	.text       start:0x80528B14 end:0x8052930C
 	.sdata2     start:0x806761F8 end:0x80676200
 
-nw4r/lyt_pane.cpp:
+nw4r/lyt/lyt_pane.cpp:
 	.text       start:0x8052930C end:0x8052A184
 	.ctors      start:0x805350B4 end:0x805350B8
 	.data       start:0x805D1808 end:0x805D1880
 	.sbss       start:0x8066D4A8 end:0x8066D4B0
 	.sdata2     start:0x80676200 end:0x80676220
 
-nw4r/lyt_group.cpp:
+nw4r/lyt/lyt_group.cpp:
 	.text       start:0x8052A184 end:0x8052A4C4
 	.data       start:0x805D1880 end:0x805D1890
 
-nw4r/lyt_layout.cpp:
+nw4r/lyt/lyt_layout.cpp:
 	.text       start:0x8052A4C4 end:0x8052B4A4
 	.data       start:0x805D1890 end:0x805D18D0
 	.sbss       start:0x8066D4B0 end:0x8066D4B8
 	.sdata2     start:0x80676220 end:0x80676230
 
-nw4r/lyt_picture.cpp:
+nw4r/lyt/lyt_picture.cpp:
 	.text       start:0x8052B4A4 end:0x8052BA00
 	.ctors      start:0x805350B8 end:0x805350BC
 	.data       start:0x805D18D0 end:0x805D1948
 	.sbss       start:0x8066D4B8 end:0x8066D4C0
 
-nw4r/lyt_textBox.cpp:
+nw4r/lyt/lyt_textBox.cpp:
 	.text       start:0x8052BA00 end:0x8052D1C0
 	.ctors      start:0x805350BC end:0x805350C0
 	.data       start:0x805D1948 end:0x805D19D0
@@ -6849,56 +6846,56 @@ nw4r/lyt_textBox.cpp:
 	.sbss       start:0x8066D4C0 end:0x8066D4C8
 	.sdata2     start:0x80676230 end:0x80676248
 
-nw4r/lyt_window.cpp:
+nw4r/lyt/lyt_window.cpp:
 	.text       start:0x8052D1C0 end:0x8052F774
 	.ctors      start:0x805350C0 end:0x805350C4
 	.data       start:0x805D19D0 end:0x805D1A98
 	.sbss       start:0x8066D4C8 end:0x8066D4D0
 	.sdata2     start:0x80676248 end:0x80676260
 
-nw4r/lyt_bounding.cpp:
+nw4r/lyt/lyt_bounding.cpp:
 	.text       start:0x8052F774 end:0x8052F820
 	.ctors      start:0x805350C4 end:0x805350C8
 	.data       start:0x805D1A98 end:0x805D1B10
 	.sbss       start:0x8066D4D0 end:0x8066D4D8
 
-nw4r/lyt_material.cpp:
+nw4r/lyt/lyt_material.cpp:
 	.text       start:0x8052F820 end:0x805325C8
 	.data       start:0x805D1B10 end:0x805D1B80
 	.sdata2     start:0x80676260 end:0x80676280
 	.sbss2      start:0x806762F0 end:0x806762F8
 
-nw4r/lyt_texMap.cpp:
+nw4r/lyt/lyt_texMap.cpp:
 	.text       start:0x805325C8 end:0x805327A0
 	.sdata2     start:0x80676280 end:0x80676290
 
-nw4r/lyt_drawInfo.cpp:
+nw4r/lyt/lyt_drawInfo.cpp:
 	.text       start:0x805327A0 end:0x80532854
 	.data       start:0x805D1B80 end:0x805D1B90
 	.sdata2     start:0x80676290 end:0x80676298
 
-nw4r/lyt_animation.cpp:
+nw4r/lyt/lyt_animation.cpp:
 	.text       start:0x80532854 end:0x80533D38
 	.data       start:0x805D1B90 end:0x805D1BB8
 	.sdata2     start:0x80676298 end:0x806762B8
 
-nw4r/lyt_resourceAccessor.cpp:
+nw4r/lyt/lyt_resourceAccessor.cpp:
 	.text       start:0x80533D38 end:0x80533D90
 	.data       start:0x805D1BB8 end:0x805D1BD0
 
-nw4r/lyt_arcResourceAccessor.cpp:
+nw4r/lyt/lyt_arcResourceAccessor.cpp:
 	.text       start:0x80533D90 end:0x80534104
 	.data       start:0x805D1BD0 end:0x805D1BE4
 	.sdata      start:0x8066B878 end:0x8066B880
 
-nw4r/lyt_common.cpp:
+nw4r/lyt/lyt_common.cpp:
 	.text       start:0x80534104 end:0x80534BF4
 	.bss        start:0x8065F300 end:0x8065F320
 	.sbss       start:0x8066D4D8 end:0x8066D4DC
 	.sdata2     start:0x806762B8 end:0x806762C0
 
-nw4r/lyt_util.cpp:
+nw4r/lyt/lyt_util.cpp:
 	.text       start:0x80534BF4 end:0x80534C64
 
-RevoSDK/init/__ppc_eabi_init.cpp:
+RevoSDK/os/init/__ppc_eabi_init.cpp:
 	.init       start:0x800063C8 end:0x80006420
