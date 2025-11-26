@@ -408,7 +408,7 @@ Quat::Quat(RPY& rpy)
 {
 	Quat quat(0.0f, Vector3f(0.0f, 0.0f, 0.0f));
 	Quat quat2(0.0f, Vector3f(0.0f, 0.0f, 0.0f));
-	*this = quat * quat2;
+	// *this = quat * quat2;
 }
 
 /**
@@ -433,8 +433,8 @@ void Quat::set(Vector3f& vec)
 	f32 sinHalfZ = pikmin2_sinf(0.5f * vec.z);
 	quatZ.set(cosHalfZ, 0.0f, 0.0f, sinHalfZ);
 
-	*this = quatZ * quatY;
-	*this = *this * quatX;
+	// *this = quatZ * quatY;
+	// *this = *this * quatX;
 }
 
 /**

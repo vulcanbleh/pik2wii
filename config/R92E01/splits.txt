@@ -1636,7 +1636,7 @@ RevoSDK/TRK_Hollywood_Revolution/targimpl.c:
 	.text       start:0x80100D8C end:0x801027B0
 	.bss        start:0x805D7260 end:0x805D77E0
 
-RevoSDK/TRK_Hollywood_Revolution/targsupp.s: comment:0
+RevoSDK/TRK_Hollywood_Revolution/targsupp.c: comment:0
 	.text       start:0x801027B0 end:0x801027D0
 
 RevoSDK/TRK_Hollywood_Revolution/mpc_7xx_603e.c:
@@ -1715,11 +1715,11 @@ RevoSDK/dsp/DSPCode.c:
 	.data       start:0x8056D6C0 end:0x8056F6C0
 	.sdata      start:0x8066AAC8 end:0x8066AAD8
 
-RevoSDK/Runtime/Gecko_ExceptionPPC.cp:
+RevoSDK/runtime/Gecko_ExceptionPPC.cp:
 	.text       start:0x801049DC end:0x80104A40
 	.bss        start:0x805D7D20 end:0x805DC1C0
 
-RevoSDK/Runtime/GCN_mem_alloc.c:
+RevoSDK/runtime/GCN_mem_alloc.c:
 	.text       start:0x80104A40 end:0x80104AF8
 
 RevoSDK/MSL_C/MSL_Common/alloc.c:
@@ -2222,7 +2222,8 @@ RevoSDK/os/OSLaunch.c:
 	.text       start:0x80138C80 end:0x80139A40
 	.sbss       start:0x8066C400 end:0x8066C410
 
-RevoSDK/os/__ppc_eabi_init.c:
+RevoSDK/os/init/__ppc_eabi_init.cpp:
+	.init       start:0x800063C8 end:0x80006420
 	.text       start:0x80139A40 end:0x80139AF4
 
 RevoSDK/pad/Padclamp.c:
@@ -6899,6 +6900,3 @@ nw4r/lyt/lyt_common.cpp:
 
 nw4r/lyt/lyt_util.cpp:
 	.text       start:0x80534BF4 end:0x80534C64
-
-RevoSDK/os/init/__ppc_eabi_init.cpp:
-	.init       start:0x800063C8 end:0x80006420

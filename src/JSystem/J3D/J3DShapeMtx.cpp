@@ -391,7 +391,7 @@ void J3DShapeMtx::load() const
  */
 void J3DShapeMtx::calcNBTScale(const Vec& scale, Mtx33* srcArray, Mtx33* dstArray)
 {
-	J3DPSMtx33Copy(srcArray[mUseMtxIndex], dstArray[mUseMtxIndex]);
+	// J3DPSMtx33Copy(srcArray[mUseMtxIndex], dstArray[mUseMtxIndex]);
 	J3DScaleNrmMtx33(dstArray[mUseMtxIndex], scale);
 }
 
@@ -424,7 +424,7 @@ void J3DShapeMtxConcatView::loadNrmMtx(int slot, u16 drawIdx, Mtx nrmMtx) const
 		} else {
 			Mtx33 mtx;
 			Vec* scale = j3dSys.getNBTScale();
-			J3DPSMtx33CopyFrom34(nrmMtx, mtx);
+			// J3DPSMtx33CopyFrom34(nrmMtx, mtx);
 			J3DScaleNrmMtx33(mtx, *scale);
 			J3DFifoLoadNrmMtxImm3x3(mtx, 0);
 		}

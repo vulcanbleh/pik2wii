@@ -51,6 +51,7 @@ __pycache__
 .ninja_log
 newlines.py
 objdiff.json
+compile_commands.json
 
 .idea
 .ninja_*

@@ -80,7 +80,7 @@ void DirectorMgr_Scene::initTrackMap(PSSystem::DirectedBgm& bgm)
 	}
 
 	file.onlyLoad(path, JKRDvdRipper::ALLOC_DIR_BOTTOM);
-	mBgmTrackMap = file.readTrackMap(bms);
+	// mBgmTrackMap = file.readTrackMap(bms);
 }
 
 /**

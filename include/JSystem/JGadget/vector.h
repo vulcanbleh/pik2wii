@@ -23,7 +23,10 @@ struct TVector {
 			mPointer   = pointer;
 		}
 
-		~TDestructed_deallocate_() { mAllocator->deallocate(mPointer, 0); }
+		~TDestructed_deallocate_()
+		{
+			// mAllocator->deallocate(mPointer, 0);
+		}
 
 		void set(T* p) { mPointer = p; }
 
