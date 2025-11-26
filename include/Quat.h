@@ -151,6 +151,12 @@ struct Quat {
 		return result;
 	}
 
+	inline void operator=(const Quat& other)
+	{
+		w = other.w;
+		v = other.v;
+	}
+
 	f32 w;      // _00
 	Vector3f v; // _04
 };
@@ -160,7 +166,7 @@ inline Quat operator*(Quat& q1, Quat& q2)
 	Quat result;
 	result.w = q1.w * q2.w - q1.v.dot(q2.v);
 	result.v = q1.v.cross(q2.v) + q2.v * q1.w + q1.v * q2.w;
-	return Quat(result.w, result.v);
+	return result;
 }
 
 #endif

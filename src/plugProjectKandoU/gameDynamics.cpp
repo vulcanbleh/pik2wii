@@ -118,12 +118,12 @@ static f32 getYDegree(Quat& quat, Vector3f& vec)
 	Quat intermediateQuat;
 
 	Quat inverseQuat;
-	inverseQuat = quat.inverse();
+	// inverseQuat = quat.inverse();
 
 	// Issues are here
-	intermediateQuat = quat * yAxisQuat;
+	// intermediateQuat = quat * yAxisQuat;
 
-	intermediateQuat = intermediateQuat * inverseQuat;
+	// intermediateQuat = intermediateQuat * inverseQuat;
 
 	vec = intermediateQuat.v;
 
@@ -317,14 +317,14 @@ void Game::Rigid::integrate(f32 timeStep, int configIdx)
 	Quat primaryQ;                                             // 0x160
 	Quat rotatedMomentumQ(0.0f, thisConfig->mRotatedMomentum); // 0x150
 
-	primaryQ = rotatedMomentumQ * thisConfig->mPrimaryRotation;
+	// primaryQ = rotatedMomentumQ * thisConfig->mPrimaryRotation;
 
 	if (mFlags.typeView & 1) {
 		Quat halfTimeQ; // 0x140
-		halfTimeQ = Quat((0.5f * timeStep) * primaryQ.w, primaryQ.v * (0.5f * timeStep));
+		// halfTimeQ = Quat((0.5f * timeStep) * primaryQ.w, primaryQ.v * (0.5f * timeStep));
 
 		Quat primaryRotatedQ; // 0x130
-		primaryRotatedQ = halfTimeQ + thisConfig->mPrimaryRotation;
+		// primaryRotatedQ = halfTimeQ + thisConfig->mPrimaryRotation;
 
 		Vector3f vec1; // 0x124
 		f32 yDeg48 = getYDegree(thisConfig->mPrimaryRotation, vec1);
@@ -345,12 +345,12 @@ void Game::Rigid::integrate(f32 timeStep, int configIdx)
 				thisConfig->mPrimaryRotation = primaryRotatedQ;
 			}
 		} else {
-			thisConfig->mPrimaryRotation = thisConfig->mPrimaryRotation + halfTimeQ;
+			// thisConfig->mPrimaryRotation = thisConfig->mPrimaryRotation + halfTimeQ;
 		}
 	} else {
 		Quat q5; // 0x108
-		q5                           = Quat((0.5f * timeStep) * primaryQ.w, primaryQ.v * (0.5f * timeStep));
-		thisConfig->mPrimaryRotation = thisConfig->mPrimaryRotation + q5;
+		         // q5                           = Quat((0.5f * timeStep) * primaryQ.w, primaryQ.v * (0.5f * timeStep));
+		         // thisConfig->mPrimaryRotation = thisConfig->mPrimaryRotation + q5;
 	}
 
 	thisConfig->mPrimaryRotation.normalise();
