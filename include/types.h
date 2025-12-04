@@ -41,6 +41,7 @@ typedef volatile f128 vf128;
 
 typedef u32 size_t;
 typedef u32 unknown;
+typedef u32 uintptr_t;
 
 #ifndef __cplusplus
 typedef u16 wchar_t;
@@ -67,6 +68,9 @@ typedef u16 wchar_t;
 #define IS_ALIGNED(X, N)     ((X & ((N) - 1)) == 0)
 #define IS_NOT_ALIGNED(X, N) (((X) & ((N) - 1)) != 0)
 #define ATTRIBUTE_ALIGN(num) __attribute__((aligned(num)))
+
+#define ROUND_UP(x, align)     (((x) + (align) - 1) & (-(align)))
+#define ROUND_UP_PTR(x, align) ((void*)((((u32)(x)) + (align) - 1) & (~((align) - 1))))
 
 #define ASSERT_HANG(cond) \
 	if (!(cond)) {        \
