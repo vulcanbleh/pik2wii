@@ -81,7 +81,12 @@ u16 __ARGetInterruptStatus();
 #define ARQ_PRIORITY_LOW  0
 #define ARQ_PRIORITY_HIGH 1
 
+#define __AR_ARAM_BASE_MEMORY_TOP (0x90000800)
+
 ////////////////////////////////////////////
+
+// im not sure what the deal with this label is, linker option?
+extern const void* lbl_8066A9C0;
 
 #ifdef __cplusplus
 };
