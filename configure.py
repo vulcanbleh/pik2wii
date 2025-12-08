@@ -249,6 +249,7 @@ cflags_egg = [
     *cflags_base,
     "-enc SJIS",
     "-ipa file",
+    "-str reuse,readonly",
 ]
 
 # NW4R library flags
@@ -2376,7 +2377,7 @@ config.libs = [
             ),
             Object(NonMatching, "egg/gfx/eggDrawHelper.cpp"),
             Object(NonMatching, "egg/gfx/eggTexture.cpp"),
-            Object(NonMatching, "egg/gfx/eggPalette.cpp"),
+            Object(Matching, "egg/gfx/eggPalette.cpp"),
             Object(
                 NonMatching,
                 "egg/gfx/eggProjection.cpp",
@@ -2416,13 +2417,13 @@ config.libs = [
             Object(NonMatching, "egg/core/eggExpHeap.cpp"),
             Object(NonMatching, "egg/core/eggHeap.cpp"),
             Object(NonMatching, "egg/core/eggAllocator.cpp"),
-            Object(NonMatching, "egg/core/eggThread.cpp"),
+            Object(Matching, "egg/core/eggThread.cpp"),
             Object(NonMatching, "egg/core/eggSystem.cpp"),
             Object(NonMatching, "egg/core/eggController.cpp"),
             Object(NonMatching, "egg/core/eggStream.cpp"),
             Object(NonMatching, "egg/core/eggDvdRipper.cpp"),
             Object(NonMatching, "egg/core/eggDvdFile.cpp"),
-            Object(NonMatching, "egg/core/eggDisposer.cpp"),
+            Object(Matching, "egg/core/eggDisposer.cpp"),
             Object(NonMatching, "egg/core/eggArchive.cpp"),
             Object(NonMatching, "egg/core/eggLongStopWatch.cpp"),
             Object(NonMatching, "egg/core/eggDecomp.cpp"),
