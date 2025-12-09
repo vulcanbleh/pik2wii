@@ -6652,7 +6652,7 @@ egg/core/eggLongStopWatch.cpp:
 egg/core/eggDecomp.cpp:
 	.text       start:0x80500AFC end:0x80500E30
 
-egg/core/eggSaveBanner.cpp:
+egg/util/eggSaveBanner.cpp:
 	.text       start:0x80500E30 end:0x80501238
 	.rodata     start:0x8055D470 end:0x8055D490
 	.data       start:0x805D0EB8 end:0x805D0EC8

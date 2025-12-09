@@ -2427,7 +2427,15 @@ config.libs = [
             Object(NonMatching, "egg/core/eggArchive.cpp"),
             Object(NonMatching, "egg/core/eggLongStopWatch.cpp"),
             Object(NonMatching, "egg/core/eggDecomp.cpp"),
-            Object(NonMatching, "egg/core/eggSaveBanner.cpp"),
+        ],
+    },
+    {
+        "lib": "egg_util",
+        "cflags": cflags_egg,
+        "mw_version": "GC/3.0a3p1",  # unknown
+        "progress_category": "egg",
+        "objects": [
+            Object(NonMatching, "egg/util/eggSaveBanner.cpp"),
             # TODO: one extra function exists here - new file or in eggSaveBanner?
         ],
     },
