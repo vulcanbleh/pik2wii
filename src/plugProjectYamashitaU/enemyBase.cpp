@@ -408,7 +408,7 @@ void AppearState::update(EnemyBase* enemy)
  */
 void AppearState::cleanup(EnemyBase* enemy)
 {
-	enemy->mScale         = 1.0f;
+	enemy->mScale.set(1.0f, 1.0f, 1.0f);
 	enemy->mStunAnimTimer = 0.0f;
 }
 
@@ -437,8 +437,6 @@ void EnemyBaseFSM::LivingState::simulation(EnemyBase* enemy, f32 frameRate)
 	Creature::CheckHellArg hellArg;
 	hellArg.mIsKillPiki = false;
 	if (enemy->checkHell(hellArg) == HELL_Death) {
-		enemy->getCreatureName();
-		enemy->getCreatureID();
 		enemy->gotoHell();
 	}
 }
@@ -558,8 +556,8 @@ void EnemyBaseFSM::FitState::init(EnemyBase* enemy, StateArg* arg)
 	enemy->stopMotion();
 	enemy->enableEvent(0, EB_Constrained);
 
-	enemy->mTargetVelocity  = 0.0f;
-	enemy->mCurrentVelocity = 0.0f;
+	enemy->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
+	enemy->mCurrentVelocity.set(0.0f, 0.0f, 0.0f);
 	enemy->doStartEarthquakeFitState();
 
 	mEnemyPiyo.mPosition         = enemy->getFitEffectPos();
@@ -1975,7 +1973,7 @@ void EnemyBase::createSplashDownEffect(const Vector3f& position, f32 scale)
 {
 	Vector3f effectPosition;
 	if (mWaterBox) {
-		effectPosition = Vector3f(position.x, *mWaterBox->getSeaHeightPtr(), position.z);
+		effectPosition.set(position.x, *mWaterBox->getSeaHeightPtr(), position.z);
 	} else {
 		effectPosition = position;
 	}
@@ -2057,7 +2055,7 @@ void EnemyBase::finishDropping(bool latchToMap)
 	createBounceEffect(pos, getDownSmokeScale());
 
 	disableEvent(1, EB2_Dropping);
-	mCurrentVelocity = 0.0f;
+	mCurrentVelocity.set(0.0f, 0.0f, 0.0f);
 }
 
 /**
@@ -2345,41 +2343,7 @@ void EnemyBase::startBlend(int start, int end, SysShape::BlendFunction* blendFun
 	disableEvent(0, EB_PS1 + EB_PS2 + EB_PS3 + EB_PS4);
 	enableEvent(0, EB_PS3);
 
-	if (isEvent(0, EB_PS1)) {
-		int idx                  = getCurrAnimIndex();
-		SysShape::AnimInfo* info = static_cast<SysShape::AnimInfo*>(mAnimator->getAnimator(0).mAnimMgr->mAnimInfo.mChild)->getInfoByID(idx);
-		JAIAnimeFrameSoundData* file = info->mBasFile;
-
-		if (file) {
-			SysShape::KeyEvent* event1 = info->getAnimKeyByType(0);
-			SysShape::KeyEvent* event2 = info->getAnimKeyByType(1);
-
-			if (event1 && event2) {
-				f32 val1 = (f32)event1->mFrame;
-				f32 val2 = (f32)event2->mFrame;
-				mSoundObj->setAnime((JAIAnimeSoundData*)file, 1, val1, val2);
-				return;
-			}
-
-			mSoundObj->setAnime((JAIAnimeSoundData*)file, 1, 0.0f, 0.0f);
-			return;
-		}
-
-		mSoundObj->setAnime(nullptr, 1, 0.0f, 0.0f);
-		return;
-	}
-
-	if (isEvent(0, EB_PS2)) {
-		mSoundObj->setAnime((JAIAnimeSoundData*)-1, 1, 0.0f, 0.0f);
-		return;
-	}
-
-	if (isEvent(0, EB_PS3)) {
-		mSoundObj->setAnime((JAIAnimeSoundData*)-1, 1, 0.0f, 0.0f);
-		return;
-	}
-
-	mSoundObj->setAnime(nullptr, 1, 0.0f, 0.0f);
+	setPSEnemyBaseAnime();
 }
 
 /**
@@ -2413,41 +2377,7 @@ void EnemyBase::startMotion(int id, SysShape::MotionListener* inputListener)
 	disableEvent(0, EB_PS1 + EB_PS2 + EB_PS3 + EB_PS4);
 	enableEvent(0, EB_PS1);
 
-	if (isEvent(0, EB_PS1)) {
-		int idx                  = getCurrAnimIndex();
-		SysShape::AnimInfo* info = static_cast<SysShape::AnimInfo*>(mAnimator->getAnimator(0).mAnimMgr->mAnimInfo.mChild)->getInfoByID(idx);
-		JAIAnimeFrameSoundData* file = info->mBasFile;
-
-		if (file) {
-			SysShape::KeyEvent* event1 = info->getAnimKeyByType(0);
-			SysShape::KeyEvent* event2 = info->getAnimKeyByType(1);
-
-			if (event1 && event2) {
-				f32 val1 = (f32)event1->mFrame;
-				f32 val2 = (f32)event2->mFrame;
-				mSoundObj->setAnime((JAIAnimeSoundData*)file, 1, val1, val2);
-				return;
-			}
-
-			mSoundObj->setAnime((JAIAnimeSoundData*)file, 1, 0.0f, 0.0f);
-			return;
-		}
-
-		mSoundObj->setAnime(nullptr, 1, 0.0f, 0.0f);
-		return;
-	}
-
-	if (isEvent(0, EB_PS2)) {
-		mSoundObj->setAnime((JAIAnimeSoundData*)-1, 1, 0.0f, 0.0f);
-		return;
-	}
-
-	if (isEvent(0, EB_PS3)) {
-		mSoundObj->setAnime((JAIAnimeSoundData*)-1, 1, 0.0f, 0.0f);
-		return;
-	}
-
-	mSoundObj->setAnime(nullptr, 1, 0.0f, 0.0f);
+	setPSEnemyBaseAnime();
 }
 
 /**
@@ -2675,7 +2605,7 @@ void EnemyBase::getThrowupItemPosition(Vector3f* throwupItemPosition)
  */
 void EnemyBase::getThrowupItemVelocity(Vector3f* throwupItemVelocity)
 {
-	*throwupItemVelocity = Vector3f(0.0f, 200.0f, 0.0f);
+	throwupItemVelocity->set(0.0f, 200.0f, 0.0f);
 }
 
 /**
@@ -2809,7 +2739,7 @@ void EnemyBase::doGetLifeGaugeParam(LifeGaugeParam& param)
 	f32 z            = mPosition.z;
 	f32 x            = mPosition.x;
 
-	param.mPosition        = Vector3f(x, heightOffset, z);
+	param.mPosition.set(x, heightOffset, z);
 	param.mCurrHealthRatio = mHealth / mMaxHealth;
 	param.mRadius          = 10.0f;
 }
@@ -3504,7 +3434,7 @@ void EnemyBase::hardConstraintOff()
  */
 void EnemyBase::startMovie()
 {
-	if (mLifecycleFSM->getCurrID(this) >= EnemyBaseFSM::EBS_Appear) {
+	if (!isBeforeAppearState()) {
 		fadeEffects();
 		doStartMovie();
 	}
@@ -3516,7 +3446,7 @@ void EnemyBase::startMovie()
  */
 void EnemyBase::endMovie()
 {
-	if (mLifecycleFSM->getCurrID(this) >= EnemyBaseFSM::EBS_Appear) {
+	if (!isBeforeAppearState()) {
 		createEffects();
 		doEndMovie();
 	}
@@ -3600,7 +3530,7 @@ void EnemyBase::doFinishWaitingBirthTypeDrop()
 	if (!isFlying()) {
 		enableEvent(1, EB2_Dropping);
 		setDroppingMassZero();
-		mScale = Vector3f(1.0f);
+		mScale.set(1.0f, 1.0f, 1.0f);
 	}
 }
 

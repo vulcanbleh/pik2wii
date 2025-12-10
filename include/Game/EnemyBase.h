@@ -219,7 +219,7 @@ struct EnemyBase : public Creature, public SysShape::MotionListener, virtual pub
 	virtual Vector3f getVelocity() { return mCurrentVelocity; }                                                  // _6C (weak)
 	virtual void getVelocityAt(Vector3f& velSrc, Vector3f& velDest)                                              // _184 (weak)
 	{
-		velSrc  = mCurrentVelocity;
+		//velSrc  = mCurrentVelocity;
 		velDest = mCurrentVelocity;
 	}
 	virtual bool isTeki() { return true; }                                           // _7C (weak)
@@ -291,42 +291,7 @@ struct EnemyBase : public Creature, public SysShape::MotionListener, virtual pub
 		disableEvent(0, EB_PS1 + EB_PS2 + EB_PS3 + EB_PS4);
 		enableEvent(0, EB_PS1);
 
-		if (isEvent(0, EB_PS1)) {
-			int idx = getCurrAnimIndex();
-			SysShape::AnimInfo* info
-			    = static_cast<SysShape::AnimInfo*>(mAnimator->getAnimator(0).mAnimMgr->mAnimInfo.mChild)->getInfoByID(idx);
-			JAIAnimeFrameSoundData* file = info->mBasFile;
-
-			if (file) {
-				SysShape::KeyEvent* event1 = info->getAnimKeyByType(0);
-				SysShape::KeyEvent* event2 = info->getAnimKeyByType(1);
-
-				if (event1 != nullptr && event2) {
-					f32 val1 = (f32)event1->mFrame;
-					f32 val2 = (f32)event2->mFrame;
-					mSoundObj->setAnime((JAIAnimeSoundData*)file, 1, val1, val2);
-					return;
-				}
-
-				mSoundObj->setAnime((JAIAnimeSoundData*)file, 1, 0.0f, 0.0f);
-				return;
-			}
-
-			mSoundObj->setAnime(nullptr, 1, 0.0f, 0.0f);
-			return;
-		}
-
-		if (isEvent(0, EB_PS2)) {
-			mSoundObj->setAnime((JAIAnimeSoundData*)-1, 1, 0.0f, 0.0f);
-			return;
-		}
-
-		if (isEvent(0, EB_PS3)) {
-			mSoundObj->setAnime((JAIAnimeSoundData*)-1, 1, 0.0f, 0.0f);
-			return;
-		}
-
-		mSoundObj->setAnime(nullptr, 1, 0.0f, 0.0f);
+		setPSEnemyBaseAnime();
 	}
 	virtual void setCarcassArg(PelletViewArg& settings);                  // _2CC
 	virtual f32 getCarcassArgHeight() { return mBoundingSphere.mRadius; } // _2D0 (weak)
