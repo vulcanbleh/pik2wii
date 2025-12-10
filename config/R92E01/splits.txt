@@ -6602,7 +6602,7 @@ egg/core/eggAllocator.cpp:
 
 egg/core/eggThread.cpp:
 	.text       start:0x804FC068 end:0x804FC0CC
-	.bss        start:0x80640E60 end:0x80640E80
+	.bss        start:0x80640E60 end:0x80640E6C
 
 egg/core/eggSystem.cpp:
 	.text       start:0x804FC0CC end:0x804FC4B0
@@ -6614,7 +6614,7 @@ egg/core/eggController.cpp:
 	.ctors      start:0x805350A4 end:0x805350A8
 	.rodata     start:0x8055D3C8 end:0x8055D3F8
 	.data       start:0x805D0CA8 end:0x805D0E48
-	.bss        start:0x80640E80 end:0x80641820
+	.bss        start:0x80640E70 end:0x80641820
 	.sdata      start:0x8066B7F0 end:0x8066B7F8
 	.sbss       start:0x8066D410 end:0x8066D430
 	.sdata2     start:0x80675EA0 end:0x80675F20
@@ -6638,7 +6638,7 @@ egg/core/eggDvdFile.cpp:
 
 egg/core/eggDisposer.cpp:
 	.text       start:0x80500684 end:0x8050074C
-	.data       start:0x805D0E98 end:0x805D0EA8
+	.data       start:0x805D0E98 end:0x805D0EA4
 
 egg/core/eggArchive.cpp:
 	.text       start:0x8050074C end:0x805009CC
@@ -6652,7 +6652,7 @@ egg/core/eggLongStopWatch.cpp:
 egg/core/eggDecomp.cpp:
 	.text       start:0x80500AFC end:0x80500E30
 
-egg/core/eggSaveBanner.cpp:
+egg/util/eggSaveBanner.cpp:
 	.text       start:0x80500E30 end:0x80501238
 	.rodata     start:0x8055D470 end:0x8055D490
 	.data       start:0x805D0EB8 end:0x805D0EC8
