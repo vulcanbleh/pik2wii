@@ -2270,12 +2270,12 @@ RevoSDK/wenc/wenc.c:
 RevoSDK/wpad/WPAD.c:
 	.text       start:0x801465E8 end:0x8014DE14
 	.bss        start:0x805F4A10 end:0x8062ED20
-	.sdata      start:0x8066ACC0 end:0x8066AFF0
+	.sdata      start:0x8066ACC0 end:0x8066ACD0
 	.sbss       start:0x8066C660 end:0x8066C690
 
 RevoSDK/wpad/WPADHIDParser.c:
 	.text       start:0x8014DE14 end:0x801532B4
-	.sbss       start:0x8066C690 end:0x8066C798
+	.sbss       start:0x8066C690 end:0x8066C6A8
 
 RevoSDK/wpad/WPADEncrypt.c:
 	.text       start:0x801532B4 end:0x8015435C
@@ -2426,7 +2426,7 @@ RevoSDK/enc/encutility.c:
 
 RevoSDK/enc/encjapanese.c:
 	.text       start:0x80187518 end:0x801879DC
-	.rodata     start:0x80540840 end:0x80546280
+	.rodata     start:0x80540840 end:0x80546138
 
 RevoSDK/euart/euart.c:
 	.text       start:0x801879DC end:0x80187D4C
@@ -2505,6 +2505,7 @@ plugProjectYamashitaU/enemyBase.cpp:
 	.rodata     start:0x805462D8 end:0x80546330
 	.data       start:0x80589AD8 end:0x8058A378
 	.bss        start:0x80638960 end:0x80638970
+	.sdata      start:0x8066AF90 end:0x8066AFB0
 	.sbss       start:0x8066C7C0 end:0x8066C7D0
 	.sdata2     start:0x8066ED98 end:0x8066EE28
 
@@ -2512,6 +2513,7 @@ plugProjectYamashitaU/pelplant.cpp:
 	.text       start:0x8019CDF0 end:0x8019EFF8
 	.rodata     start:0x80546330 end:0x805463E0
 	.data       start:0x8058A378 end:0x8058AD30
+	.sdata      start:0x8066AFB0 end:0x8066AFF0
 	.sbss       start:0x8066C7D0 end:0x8066C7D8
 	.sdata2     start:0x8066EE28 end:0x8066EEE0
 
@@ -2523,13 +2525,13 @@ plugProjectYamashitaU/pelplantState.cpp:
 
 plugProjectYamashitaU/enemyInteractBattle.cpp:
 	.text       start:0x8019FD40 end:0x801A00B4
-	.data       start:0x8058AEC0 end:0x8058B158
+	.data       start:0x8058AEC0 end:0x8058AF78
 	.sdata2     start:0x8066EF08 end:0x8066EF10
 
 plugProjectYamashitaU/generalEnemyMgr.cpp:
 	.text       start:0x801A00B4 end:0x801A352C
 	.rodata     start:0x80546440 end:0x805464C8
-	.data       start:0x8058B158 end:0x8058B210
+	.data       start:0x8058AF78 end:0x8058B210
 	.sbss       start:0x8066C7D8 end:0x8066C7E8
 	.sdata2     start:0x8066EF10 end:0x8066EF38
 
@@ -2554,7 +2556,7 @@ plugProjectYamashitaU/kochappyState.cpp:
 plugProjectYamashitaU/kochappyMgr.cpp:
 	.text       start:0x801A63F4 end:0x801A67A8
 	.rodata     start:0x80546518 end:0x80546570
-	.data       start:0x8058B708 end:0x8058B848
+	.data       start:0x8058B708 end:0x8058B838
 	.sdata      start:0x8066AFF0 end:0x8066AFF8
 	.sdata2     start:0x8066EF78 end:0x8066EF98
 
@@ -2562,7 +2564,7 @@ plugProjectYamashitaU/enemyAction.cpp:
 	.text       start:0x801A67A8 end:0x801A9FE4
 	.ctors      start:0x80534D3C end:0x80534D40
 	.rodata     start:0x80546570 end:0x80546590
-	.data       start:0x8058B848 end:0x8058B8A0
+	.data       start:0x8058B838 end:0x8058B8A0
 	.bss        start:0x80638980 end:0x80638990
 	.sbss       start:0x8066C7F0 end:0x8066C7F8
 	.sdata2     start:0x8066EF98 end:0x8066EFC0
@@ -2586,7 +2588,7 @@ plugProjectYamashitaU/chappyMgr.cpp:
 	.text       start:0x801ACFA0 end:0x801AD3A8
 	.rodata     start:0x805465E8 end:0x80546650
 	.data       start:0x8058BD78 end:0x8058BEA0
-	.sdata      start:0x8066AFF8 end:0x8066B030
+	.sdata      start:0x8066AFF8 end:0x8066B000
 	.sdata2     start:0x8066F000 end:0x8066F018
 
 plugProjectYamashitaU/lifeGaugeMgr.cpp:
@@ -2604,6 +2606,7 @@ plugProjectYamashitaU/carryInfoMgr.cpp:
 	.rodata     start:0x80546690 end:0x80546710
 	.data       start:0x8058BEB0 end:0x8058BF80
 	.bss        start:0x806389A0 end:0x806389B0
+	.sdata      start:0x8066B000 end:0x8066B008
 	.sbss       start:0x8066C808 end:0x8066C818
 	.sdata2     start:0x8066F050 end:0x8066F0D0
 
@@ -2613,6 +2616,7 @@ plugProjectYamashitaU/gameLightMgr.cpp:
 	.rodata     start:0x80546710 end:0x805467F8
 	.data       start:0x8058BF80 end:0x8058C0F8
 	.bss        start:0x806389B0 end:0x806389C0
+	.sdata      start:0x8066B008 end:0x8066B030
 	.sbss       start:0x8066C818 end:0x8066C820
 	.sdata2     start:0x8066F0D0 end:0x8066F150
 
@@ -2625,18 +2629,20 @@ plugProjectYamashitaU/vtxAnm.cpp:
 plugProjectYamashitaU/enemyInfo.cpp:
 	.text       start:0x801B5944 end:0x801B5BD4
 	.rodata     start:0x80546820 end:0x80546B98
-	.data       start:0x8058C118 end:0x8058D790
-	.sdata      start:0x8066B030 end:0x8066B040
+	.data       start:0x8058C118 end:0x8058D568
+	.sdata      start:0x8066B030 end:0x8066B034
 
 plugProjectYamashitaU/farm.cpp:
 	.text       start:0x801B5BD4 end:0x801B65F0
 	.rodata     start:0x80546B98 end:0x80546BE8
+	.data       start:0x8058D568 end:0x8058D5A8
 	.sdata2     start:0x8066F178 end:0x8066F188
 
 plugProjectYamashitaU/farmMgr.cpp:
 	.text       start:0x801B65F0 end:0x801B6D1C
 	.ctors      start:0x80534D4C end:0x80534D50
 	.rodata     start:0x80546BE8 end:0x80546C18
+	.data       start:0x8058D5A8 end:0x8058D5F8
 	.bss        start:0x806389C0 end:0x806389D0
 	.sbss       start:0x8066C820 end:0x8066C828
 	.sdata2     start:0x8066F188 end:0x8066F190
@@ -2644,18 +2650,20 @@ plugProjectYamashitaU/farmMgr.cpp:
 plugProjectYamashitaU/genEnemy.cpp:
 	.text       start:0x801B6D1C end:0x801BA5C4
 	.rodata     start:0x80546C18 end:0x80547168
-	.data       start:0x8058D790 end:0x8058D820
+	.data       start:0x8058D5F8 end:0x8058D820
+	.sdata      start:0x8066B038 end:0x8066B040
 	.sdata2     start:0x8066F190 end:0x8066F1D0
 
 plugProjectYamashitaU/timeMgr.cpp:
 	.text       start:0x801BA5C4 end:0x801BADBC
 	.rodata     start:0x80547168 end:0x80547188
-	.data       start:0x8058D820 end:0x8058D948
+	.data       start:0x8058D820 end:0x8058D8F8
 	.sdata2     start:0x8066F1D0 end:0x8066F208
 
 plugProjectYamashitaU/pelplantGenerator.cpp:
 	.text       start:0x801BADBC end:0x801BB070
 	.rodata     start:0x80547188 end:0x805471C0
+	.data       start:0x8058D8F8 end:0x8058D920
 
 plugProjectYamashitaU/enemyInteractActions.cpp:
 	.text       start:0x801BB070 end:0x801BB144
@@ -2663,26 +2671,33 @@ plugProjectYamashitaU/enemyInteractActions.cpp:
 
 plugProjectYamashitaU/enemyAnimatorBase.cpp:
 	.text       start:0x801BB144 end:0x801BB388
+	.data       start:0x8058D920 end:0x8058D948
 	.sdata2     start:0x8066F210 end:0x8066F230
 
 plugProjectYamashitaU/enemyStoneMgr.cpp:
 	.text       start:0x801BB388 end:0x801BB880
+	.rodata     start:0x805471C0 end:0x80547260
 	.sdata      start:0x8066B040 end:0x8066B048
 
 plugProjectYamashitaU/enemyStoenInfo.cpp:
 	.text       start:0x801BB880 end:0x801BB9F8
+	.sdata2     start:0x8066F230 end:0x8066F238
 
 plugProjectYamashitaU/enemyStoneDrawInfo.cpp:
 	.text       start:0x801BB9F8 end:0x801BD05C
-	.data       start:0x8058D948 end:0x8058DAC0
+	.rodata     start:0x80547260 end:0x80547268
+	.data       start:0x8058D948 end:0x8058DAB0
 	.sbss       start:0x8066C828 end:0x8066C830
+	.sdata2     start:0x8066F238 end:0x8066F2A8
 
 plugProjectYamashitaU/enemyStoneObj.cpp:
 	.text       start:0x801BD05C end:0x801BD754
 	.ctors      start:0x80534D50 end:0x80534D54
-	.rodata     start:0x805471C0 end:0x80547290
+	.rodata     start:0x80547268 end:0x80547290
+	.data       start:0x8058DAB0 end:0x8058DAC0
 	.bss        start:0x806389D0 end:0x806389E0
 	.sbss       start:0x8066C830 end:0x8066C838
+	.sdata2     start:0x8066F2A8 end:0x8066F2B8
 
 plugProjectYamashitaU/enemyParmsBase.cpp:
 	.text       start:0x801BD754 end:0x801BD828
@@ -2690,6 +2705,7 @@ plugProjectYamashitaU/enemyParmsBase.cpp:
 plugProjectYamashitaU/walkSmokeEffect.cpp:
 	.text       start:0x801BD828 end:0x801BDBB0
 	.rodata     start:0x80547290 end:0x805472C8
+	.sdata2     start:0x8066F2B8 end:0x8066F2C0
 
 plugProjectYamashitaU/ChappyBaseMgr.cpp:
 	.text       start:0x801BDBB0 end:0x801BDE90
@@ -2700,6 +2716,7 @@ plugProjectYamashitaU/ChappyBase.cpp:
 	.text       start:0x801BDE90 end:0x801BEC98
 	.rodata     start:0x80547338 end:0x80547378
 	.data       start:0x8058DBA8 end:0x8058DF60
+	.sdata2     start:0x8066F2C0 end:0x8066F2F0
 
 plugProjectYamashitaU/BlueChappyMgr.cpp:
 	.text       start:0x801BEC98 end:0x801BEF60
@@ -2721,6 +2738,7 @@ plugProjectYamashitaU/YellowChappy.cpp:
 	.text       start:0x801BF650 end:0x801BFECC
 	.rodata     start:0x80547470 end:0x805474A0
 	.data       start:0x8058E498 end:0x8058E830
+	.sdata2     start:0x8066F2F0 end:0x8066F2F8
 
 plugProjectYamashitaU/BlueKochappyMgr.cpp:
 	.text       start:0x801BFECC end:0x801C0158
@@ -5140,7 +5158,7 @@ plugProjectHikinoU/PSBgmTask.cpp:
 	.rodata     start:0x80552B00 end:0x80552BB8
 	.data       start:0x805BB238 end:0x805BB270
 	.sbss       start:0x8066CE90 end:0x8066CE98
-	.sdata2     start:0x80673968 end:0x80673970
+	.sdata2     start:0x80673960 end:0x80673970
 
 plugProjectHikinoU/PSCreatureMgr.cpp:
 	.text       start:0x803BDF58 end:0x803BDF5C
