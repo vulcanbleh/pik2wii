@@ -3530,7 +3530,7 @@ void EnemyBase::doFinishWaitingBirthTypeDrop()
 	if (!isFlying()) {
 		enableEvent(1, EB2_Dropping);
 		setDroppingMassZero();
-		mScale.set(0.0f, 0.0f, 0.0f);
+		mScale.set(1.0f, 1.0f, 1.0f);
 	}
 }
 
