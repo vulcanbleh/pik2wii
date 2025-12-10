@@ -268,7 +268,7 @@ Equivalent = (
     config.non_matching
 )  # Object should be linked when configured with --non-matching
 
-config.warn_missing_config = True
+config.warn_missing_config = Truez
 config.warn_missing_source = False
 config.libs = [
     {
@@ -2028,12 +2028,12 @@ config.libs = [
             Object(NonMatching, "plugProjectHikinoU/PSBnkMgr.cpp"),
             Object(NonMatching, "plugProjectHikinoU/PSTaskBase.cpp"),
             Object(NonMatching, "plugProjectHikinoU/PSBgmTask.cpp"),
-            Object(NonMatching, "plugProjectHikinoU/PSCreatureMgr.cpp"),
+            Object(Matching, "plugProjectHikinoU/PSCreatureMgr.cpp"),
             Object(NonMatching, "plugProjectHikinoU/PSAutoBgm_MeloArranger.cpp"),
             Object(NonMatching, "plugProjectHikinoU/PSSe.cpp"),
             Object(NonMatching, "plugProjectHikinoU/PSSeBase.cpp"),
             Object(NonMatching, "plugProjectHikinoU/PSScene.cpp"),
-            Object(NonMatching, "plugProjectHikinoU/PSBgmTrack.cpp"),
+            Object(Matching, "plugProjectHikinoU/PSBgmTrack.cpp"),
             Object(NonMatching, "plugProjectHikinoU/PSDirector.cpp"),
         ],
     },
