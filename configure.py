@@ -268,7 +268,7 @@ Equivalent = (
     config.non_matching
 )  # Object should be linked when configured with --non-matching
 
-config.warn_missing_config = Truez
+config.warn_missing_config = True
 config.warn_missing_source = False
 config.libs = [
     {
