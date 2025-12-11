@@ -2935,7 +2935,7 @@ plugProjectKandoU/mapMgr.cpp:
 	.sdata2     start:0x8066F8A0 end:0x8066F900
 
 plugProjectKandoU/baseHIOSection.cpp:
-	.text       start:0x801F5E14 end:0x801F64A8
+	.text       start:0x801F5E14 end:0x801F6268
 	.ctors      start:0x80534D80 end:0x80534D84
 	.rodata     start:0x805485C8 end:0x80548630
 	.data       start:0x80592190 end:0x805921F8
@@ -2943,7 +2943,7 @@ plugProjectKandoU/baseHIOSection.cpp:
 	.sbss       start:0x8066C918 end:0x8066C920
 
 plugProjectKandoU/naviWhistle.cpp:
-	.text       start:0x801F64A8 end:0x801F7188
+	.text       start:0x801F6268 end:0x801F7188
 	.rodata     start:0x80548630 end:0x80548670
 	.data       start:0x805921F8 end:0x80592408
 	.sdata2     start:0x8066F900 end:0x8066F940
@@ -6585,7 +6585,7 @@ egg/math/eggMatrix.cpp:
 	extabindex  start:0x80006D4C end:0x80006D7C
 	.text       start:0x804FAC64 end:0x804FB224
 	.ctors      start:0x8053509C end:0x805350A0
-	.bss        start:0x80640D80 end:0x80640DE0
+	.bss        start:0x80640D80 end:0x80640DB0
 	.sdata2     start:0x80675E70 end:0x80675E78
 
 egg/math/eggVector.cpp:
@@ -6593,7 +6593,7 @@ egg/math/eggVector.cpp:
 	extabindex  start:0x80006D7C end:0x80006D88
 	.text       start:0x804FB224 end:0x804FB3BC
 	.ctors      start:0x805350A0 end:0x805350A4
-	.bss        start:0x80640DE0 end:0x80640E38
+	.bss        start:0x80640DB0 end:0x80640E38
 	.sbss       start:0x8066D3C8 end:0x8066D3E0
 	.sdata2     start:0x80675E78 end:0x80675E80
 
