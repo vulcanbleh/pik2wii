@@ -11,19 +11,26 @@ namespace JMessage {
  * @note Address: 0x80006D0C
  * @note Size: 0x48
  */
-TReference::~TReference() { }
+TReference::~TReference()
+{
+}
 
 /**
  * @note Address: 0x80006D54
  * @note Size: 0x8
  */
-char* TReference::do_word(u32) const { return nullptr; }
+char* TReference::do_word(u32) const
+{
+	return nullptr;
+}
 
 /**
  * @note Address: 0x80006D5C
  * @note Size: 0x48
  */
-TProcessor::~TProcessor() { }
+TProcessor::~TProcessor()
+{
+}
 
 /**
  * @note Address: 0x80006DA4
@@ -32,8 +39,7 @@ TProcessor::~TProcessor() { }
  */
 void TProcessor::setBegin_messageCode(u16 groupID, u16 messageIndex)
 {
-	const TResource* resource = getResource_groupID(groupID);
-	void* entry               = (resource == nullptr) ? nullptr : resource->getMessageEntry_messageIndex(messageIndex);
+	void* entry = getMessageEntry_messageCode(groupID, messageIndex);
 
 	if (entry) {
 		const char* text = mResourceCache->getMessageText_messageEntry(entry);
@@ -295,43 +301,57 @@ unknown TProcessor::on_select_separate()
  * @note Address: 0x80007134
  * @note Size: 0x4
  */
-void TProcessor::do_reset() { }
+void TProcessor::do_reset()
+{
+}
 
+void TProcessor::do_begin(const void* arg0, const char* arg1)
+{
+}
+
+void TProcessor::do_end()
+{
+}
 /**
  * @note Address: 0x80007138
  * @note Size: 0x4
  */
-void TProcessor::do_character(int) { }
+void TProcessor::do_character(int)
+{
+}
 
 /**
  * @note Address: 0x8000713C
  * @note Size: 0x8
  */
-bool TProcessor::do_tag(u32, const void*, u32) { return false; }
-
-/**
- * @note Address: 0x80007144
- * @note Size: 0x8
- */
-bool TProcessor::do_systemTagCode(u16, const void*, u32) { return false; }
+bool TProcessor::do_tag(u32, const void*, u32)
+{
+	return false;
+}
 
 /**
  * @note Address: 0x8000714C
  * @note Size: 0x4
  */
-void TProcessor::do_select_begin(u32) { }
+void TProcessor::do_select_begin(u32)
+{
+}
 
 /**
  * @note Address: 0x80007150
  * @note Size: 0x4
  */
-void TProcessor::do_select_end() { }
+void TProcessor::do_select_end()
+{
+}
 
 /**
  * @note Address: 0x80007154
  * @note Size: 0x4
  */
-void TProcessor::do_select_separate() { }
+void TProcessor::do_select_separate()
+{
+}
 
 /**
  * @note Address: 0x80007158
@@ -343,7 +363,7 @@ void TProcessor::reset_(const char* p1)
 	mCurrent              = p1;
 	mStack.mSize          = 0;
 	mProcess.mEndCallback = process_onCharacterEnd_normal_;
-	do_reset_(p1);
+	do_resetStatus_(p1);
 	do_reset();
 }
 
@@ -354,24 +374,42 @@ void TProcessor::reset_(const char* p1)
  */
 void TProcessor::on_tag_()
 {
-	// this is very funky and wrong
-	u8* psz = (u8*)getCurrent();
-	u8 size = mCurrent[0];
+	// funky shit here, definitely doesnt match what TP has
+	u32 uSize;
+	char* psz = (char*)getCurrent();
+	psz++;
 
-	mCurrent = size + (char*)psz + -1;
+	uSize    = *(u8*)psz;
+	mCurrent = uSize + psz - 1;
+	psz++;
 
-	u32 tag = (psz[1] << 0x8) | psz[2];
-	tag <<= 8;
-	tag |= psz[3];
+	u32 uTag = *(u8*)psz & 0xFF;
+	psz++;
 
-	on_tag(tag, &psz[4], size - 5);
+	uTag <<= 8;
+	uTag |= *(u8*)psz & 0xFF;
+	psz++;
+
+	uTag <<= 8;
+	uTag |= *(u8*)psz & 0xFF;
+	psz++;
+
+	on_tag(uTag, psz, uSize);
 }
+
+void TProcessor::do_resetStatus_(const char*)
+{
+}
+
 
 /**
  * @note Address: 0x800071BC
  * @note Size: 0x8
  */
-bool TProcessor::do_setBegin_isReady_() const { return true; }
+bool TProcessor::do_setBegin_isReady_() const
+{
+	return true;
+}
 
 /**
  * @note Address: 0x800071C4
@@ -384,9 +422,6 @@ bool TProcessor::do_tag_(u32 tag, const void* data, u32 size)
 	u16 code  = data::getTagCode(tag);
 	switch (group) {
 	case 0xFF:
-		if (do_systemTagCode(code, data, size) == false) {
-			do_systemTagCode_(code, data, size);
-		}
 		break;
 	case 0xFE:
 		pushCurrent(mReference->do_word(code));
@@ -587,23 +622,9 @@ lbl_80007404:
  * @note Address: 0x80007424
  * @note Size: 0x50
  */
-const char* TProcessor::on_message_limited(u16 messageIndex) const { return mResourceCache->getMessageText_messageIndex(messageIndex); }
-
-/**
- * @note Address: 0x80007474
- * @note Size: 0xD0
- * do_systemTagCode___Q28JMessage10TProcessorFUsPCvUl
- */
-void TProcessor::do_systemTagCode_(u16 p1, const void* p2, u32 p3)
+const char* TProcessor::on_message_limited(u16 messageIndex) const
 {
-	switch (p1) {
-	case 4:
-		pushCurrent(mReference->do_word(*(u32*)p2));
-		break;
-	case 5:
-		pushCurrent(on_message(*(u32*)p2));
-		break;
-	}
+	return mResourceCache->getMessageText_messageIndex(messageIndex);
 }
 
 /**
@@ -611,7 +632,10 @@ void TProcessor::do_systemTagCode_(u16 p1, const void* p2, u32 p3)
  * @note Size: 0x20
  * on_message__Q28JMessage10TProcessorCFUl
  */
-const char* TProcessor::on_message(u32 code) const { return getMessageText_messageCode(code); }
+const char* TProcessor::on_message(u32 code) const
+{
+	return getMessageText_messageCode(code);
+}
 
 /**
  * @note Address: 0x80007564
@@ -636,7 +660,7 @@ const char* TProcessor::getMessageText_messageCode(u32 tag) const
  */
 bool TProcessor::process_character_()
 {
-	u32 character = mCurrent[0];
+	int character = mCurrent[0];
 
 	switch (character) {
 	case 0:
@@ -644,17 +668,17 @@ bool TProcessor::process_character_()
 			return false;
 		}
 		break;
-	case 26:
-		on_tag_(); // this is wrong
+	case data::gcTagBegin:
+		on_tag_();
 		break;
 	default:
-		if (mReference->mResource->isLeadByte(character)) {
+		if (on_parseCharacter(character)) {
 			mCurrent++;
 			character <<= 8;
-			character |= ((u8*)mCurrent)[0];
+			character |= *mCurrent;
 		}
 		mCurrent++;
-		on_character(character);
+		do_character(character);
 	}
 
 	return true;
@@ -710,19 +734,15 @@ bool TProcessor::process_onCharacterEnd_select_(TProcessor* processor)
  */
 const char* TProcessor::process_onSelect_limited_(TProcessor* processor)
 {
+	TProcess::TProcessData& pdata = processor->mProcess.mData;
 
-	u32 next                          = *(u16*)processor->mProcess.mData.mOffset;
-	processor->mProcess.mData.mOffset = (void*)((u8*)processor->mProcess.mData.mOffset + 2);
-	return processor->mProcess.mData.mBase + next;
-	/*
-	lwz      r5, 0x30(r3)
-	lhz      r4, 0(r5)
-	addi     r0, r5, 2
-	stw      r0, 0x30(r3)
-	lwz      r0, 0x2c(r3)
-	add      r3, r0, r4
-	blr
-	*/
+	u16* puOffset = (u16*)pdata.mOffset;
+	// clang-format off
+	u16 uData     = JGadget::binary::TParseValue<JGadget::binary::TParseValue_endian_big_<u16> >::parse(puOffset);
+	// clang-format on
+
+	pdata.mOffset = (void*)(puOffset + 1);
+	return &pdata.mBase[uData];
 }
 
 /**
@@ -732,18 +752,15 @@ const char* TProcessor::process_onSelect_limited_(TProcessor* processor)
  */
 const char* TProcessor::process_onSelect_(TProcessor* processor)
 {
-	u32 next                          = *(u32*)processor->mProcess.mData.mOffset;
-	processor->mProcess.mData.mOffset = (void*)((u8*)processor->mProcess.mData.mOffset + 4);
-	return processor->mProcess.mData.mBase + next;
-	/*
-	lwz      r5, 0x30(r3)
-	lwz      r4, 0(r5)
-	addi     r0, r5, 4
-	stw      r0, 0x30(r3)
-	lwz      r0, 0x2c(r3)
-	add      r3, r0, r4
-	blr
-	*/
+	TProcess::TProcessData& pdata = processor->mProcess.mData;
+
+	u32* puOffset = (u32*)pdata.mOffset;
+	// clang-format off
+	u32 uData     = JGadget::binary::TParseValue<JGadget::binary::TParseValue_endian_big_<u32> >::parse(puOffset);
+	// clang-format on
+
+	pdata.mOffset = (void*)(puOffset + 1);
+	return &pdata.mBase[uData];
 }
 
 /**
@@ -781,7 +798,9 @@ TSequenceProcessor::TSequenceProcessor(const TReference* ref, TControl* control)
  * @note Address: 0x80007828
  * @note Size: 0x5C
  */
-TSequenceProcessor::~TSequenceProcessor() { }
+TSequenceProcessor::~TSequenceProcessor()
+{
+}
 
 /**
  * @note Address: 0x80007884
@@ -1040,7 +1059,10 @@ lbl_80007AE8:
  * @note Address: 0x80007AFC
  * @note Size: 0x2C
  */
-bool TSequenceProcessor::on_isReady() { return do_isReady(); }
+bool TSequenceProcessor::on_isReady()
+{
+	return do_isReady();
+}
 
 /**
  * @note Address: N/A
@@ -1056,7 +1078,10 @@ unknown TSequenceProcessor::on_jump_register(OnJumpRegisterCallBack*, const void
  * @note Address: 0x80007B28
  * @note Size: 0x2C
  */
-bool TSequenceProcessor::on_jump_isReady() { return do_jump_isReady(); }
+bool TSequenceProcessor::on_jump_isReady()
+{
+	return do_jump_isReady();
+}
 
 /**
  * @note Address: 0x80007B54
@@ -1068,7 +1093,7 @@ void TSequenceProcessor::on_jump(const void* p1, const char* p2)
 	mCurrent              = p2;
 	mStack.mSize          = 0;
 	mProcess.mEndCallback = &process_onCharacterEnd_normal_;
-	do_reset_(p2);
+	do_resetStatus_(p2);
 	do_reset();
 	do_jump(p1, p2);
 }
@@ -1097,7 +1122,10 @@ unknown TSequenceProcessor::on_branch_query(u16)
  * @note Address: 0x80007BF0
  * @note Size: 0x2C
  */
-int TSequenceProcessor::on_branch_queryResult() { return do_branch_queryResult(); }
+int TSequenceProcessor::on_branch_queryResult()
+{
+	return do_branch_queryResult();
+}
 
 /**
  * @note Address: 0x80007C1C
@@ -1109,64 +1137,67 @@ void TSequenceProcessor::on_branch(const void* p1, const char* p2)
 	mCurrent              = p2;
 	mStack.mSize          = 0;
 	mProcess.mEndCallback = &process_onCharacterEnd_normal_;
-	do_reset_(p2);
+	do_resetStatus_(p2);
 	do_reset();
 	do_branch(p1, p2);
 }
 
 /**
- * @note Address: 0x80007CB8
- * @note Size: 0x4
- */
-void TSequenceProcessor::do_begin(const void*, const char*) { }
-
-/**
- * @note Address: 0x80007CBC
- * @note Size: 0x4
- */
-void TSequenceProcessor::do_end() { }
-
-/**
  * @note Address: 0x80007CC0
  * @note Size: 0x8
  */
-bool TSequenceProcessor::do_isReady() { return true; }
+bool TSequenceProcessor::do_isReady()
+{
+	return true;
+}
 
 /**
  * @note Address: 0x80007CC8
  * @note Size: 0x8
  */
-bool TSequenceProcessor::do_jump_isReady() { return true; }
+bool TSequenceProcessor::do_jump_isReady()
+{
+	return true;
+}
 
 /**
  * @note Address: 0x80007CD0
  * @note Size: 0x4
  */
-void TSequenceProcessor::do_jump(const void*, const char*) { }
+void TSequenceProcessor::do_jump(const void*, const char*)
+{
+}
 
 /**
  * @note Address: 0x80007CD4
  * @note Size: 0x4
  */
-void TSequenceProcessor::do_branch_query(u16) { }
+void TSequenceProcessor::do_branch_query(u32)
+{
+}
 
 /**
  * @note Address: 0x80007CD8
  * @note Size: 0x8
  */
-int TSequenceProcessor::do_branch_queryResult() { return -0x2; }
+int TSequenceProcessor::do_branch_queryResult()
+{
+	return -0x2;
+}
 
 /**
  * @note Address: 0x80007CE0
  * @note Size: 0x4
  */
-void TSequenceProcessor::do_branch(const void*, const char*) { }
+void TSequenceProcessor::do_branch(const void*, const char*)
+{
+}
 
 /**
  * @note Address: 0x80007CE4
  * @note Size: 0x1C
  */
-void TSequenceProcessor::do_reset_(const char* p1)
+void TSequenceProcessor::do_resetStatus_(const char* p1)
 {
 	mStatus = STATUS_Ready;
 	if (p1) {
@@ -1179,14 +1210,20 @@ void TSequenceProcessor::do_reset_(const char* p1)
  * @note Size: 0x10
  * do_setBegin_isReady___Q28JMessage18TSequenceProcessorCFv
  */
-bool TSequenceProcessor::do_setBegin_isReady_() const { return mStatus == STATUS_Ready; }
+bool TSequenceProcessor::do_setBegin_isReady_() const
+{
+	return mStatus == STATUS_Ready;
+}
 
 /**
  * @note Address: 0x80007D10
  * @note Size: 0x2C
  * do_begin___Q28JMessage18TSequenceProcessorFPCvPCc
  */
-void TSequenceProcessor::do_begin_(const void* p1, const char* p2) { do_begin(p1, p2); }
+void TSequenceProcessor::do_begin_(const void* p1, const char* p2)
+{
+	do_begin(p1, p2);
+}
 
 /**
  * @note Address: 0x80007D3C
@@ -1245,66 +1282,6 @@ bool TSequenceProcessor::do_tag_(u32 tag, const void* data, u32 size)
 		TProcessor::do_tag_(tag, data, size);
 		break;
 	}
-}
-
-/**
- * @note Address: 0x80007EB0
- * @note Size: 0x64
- * do_systemTagCode___Q28JMessage18TSequenceProcessorFUsPCvUl
- */
-void TSequenceProcessor::do_systemTagCode_(u16 p1, const void* p2, u32 p3)
-{
-	switch (p1) {
-	case 6:
-		mStatus                   = STATUS_Jump;
-		mProc.mJumpProc.mJumpFunc = &process_onJump_;
-		mProc.mJumpProc.mTarget   = *(u32*)p2;
-		break;
-	case 0:
-	case 1:
-	case 2:
-	case 3:
-		break;
-	case 4:
-	case 5:
-	default:
-		TProcessor::do_systemTagCode_(p1, p2, p3);
-		break;
-	}
-	/*
-	.loc_0x0:
-	  stwu      r1, -0x10(r1)
-	  mflr      r0
-	  stw       r0, 0x14(r1)
-	  rlwinm    r0,r4,0,16,31
-	  cmpwi     r0, 0x6
-	  beq-      .loc_0x30
-	  bge-      .loc_0x50
-	  cmpwi     r0, 0x4
-	  bge-      .loc_0x50
-	  cmpwi     r0, 0
-	  bge-      .loc_0x54
-	  b         .loc_0x50
-
-	.loc_0x30:
-	  li        r0, 0x3
-	  lis       r4, 0x8000
-	  stw       r0, 0x3C(r3)
-	  addi      r0, r4, 0x7F80
-	  lwz       r4, 0x0(r5)
-	  stw       r0, 0x40(r3)
-	  stw       r4, 0x44(r3)
-	  b         .loc_0x54
-
-	.loc_0x50:
-	  bl        -0xA8C
-
-	.loc_0x54:
-	  lwz       r0, 0x14(r1)
-	  mtlr      r0
-	  addi      r1, r1, 0x10
-	  blr
-	*/
 }
 
 /**
@@ -1407,7 +1384,9 @@ TRenderingProcessor::TRenderingProcessor(const TReference* ref)
  * @note Address: 0x800080FC
  * @note Size: 0x5C
  */
-TRenderingProcessor::~TRenderingProcessor() { }
+TRenderingProcessor::~TRenderingProcessor()
+{
+}
 
 /**
  * @note Address: 0x80008158
@@ -1539,36 +1518,24 @@ lbl_800082B8:
 }
 
 /**
- * @note Address: 0x800082CC
- * @note Size: 0x4
- */
-void TRenderingProcessor::do_begin(const void*, const char*) { }
-
-/**
- * @note Address: 0x800082D0
- * @note Size: 0x4
- */
-void TRenderingProcessor::do_end() { }
-
-/**
- * @note Address: 0x800082D4
- * @note Size: 0x4
- */
-void TRenderingProcessor::do_reset_(const char*) { }
-
-/**
  * @note Address: 0x800082D8
  * @note Size: 0x2C
  * do_begin___Q28JMessage19TRenderingProcessorFPCvPCc
  */
-void TRenderingProcessor::do_begin_(const void* p1, const char* p2) { do_begin(p1, p2); }
+void TRenderingProcessor::do_begin_(const void* p1, const char* p2)
+{
+	do_begin(p1, p2);
+}
 
 /**
  * @note Address: 0x80008304
  * @note Size: 0x2C
  * do_end___Q28JMessage19TRenderingProcessorFv
  */
-void TRenderingProcessor::do_end_() { do_end(); }
+void TRenderingProcessor::do_end_()
+{
+	do_end();
+}
 
 /**
  * @note Address: 0x80008330
@@ -1580,27 +1547,6 @@ bool TRenderingProcessor::do_tag_(u32 p1, const void* p2, u32 p3)
 	int v1 = p1 >> 0x10 & 0xFF;
 	if ((v1 >= 0xFD) || (v1 < 0xF7)) {
 		TProcessor::do_tag_(p1, p2, p3);
-	}
-}
-
-/**
- * @note Address: 0x80008364
- * @note Size: 0x40
- */
-void TRenderingProcessor::do_systemTagCode_(u16 p1, const void* p2, u32 p3)
-{
-	switch (p1) {
-	case 0:
-	case 1:
-	case 2:
-	case 3:
-	case 6:
-		break;
-	case 4:
-	case 5:
-	default:
-		TProcessor::do_systemTagCode_(p1, p2, p3);
-		break;
 	}
 }
 
