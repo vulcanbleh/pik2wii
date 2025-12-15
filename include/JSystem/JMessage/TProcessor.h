@@ -94,8 +94,8 @@ struct TProcessor {
 	virtual void do_end_()                                = 0; // _38
 	virtual bool do_tag_(u32, const void*, u32)           = 0; // _3C
 
-	void setBegin_messageCode(u16 groupID, u16 messageIndex);
-	void setBegin_messageID(u32, u32, bool*);
+	bool setBegin_messageCode(u16 groupID, u16 messageIndex);
+	bool setBegin_messageID(u32, u32, bool*);
 	void setBegin_messageCode(u32); // weak
 	const TResource* getResource_groupID(u16) const;
 	u32 toMessageCode_messageID(u32, u32, bool*) const;
