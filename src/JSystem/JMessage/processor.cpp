@@ -37,15 +37,18 @@ TProcessor::~TProcessor()
  * @note Size: 0xBC
  * setBegin_messageCode__Q28JMessage10TProcessorFUsUs
  */
-void TProcessor::setBegin_messageCode(u16 groupID, u16 messageIndex)
+bool TProcessor::setBegin_messageCode(u16 groupID, u16 messageIndex)
 {
 	void* entry = getMessageEntry_messageCode(groupID, messageIndex);
 
-	if (entry) {
-		const char* text = mResourceCache->getMessageText_messageEntry(entry);
-		reset();
-		do_begin_((const void*)entry, text);
+	if (!entry) {
+		return false;
 	}
+	
+	const char* text = mResourceCache->getMessageText_messageEntry(entry);
+	on_resetStatus_(text);
+	on_begin((const void*)entry, text);
+	return true;
 	/*
 	stwu     r1, -0x20(r1)
 	mflr     r0
@@ -109,12 +112,14 @@ lbl_80006E44:
  * @note Address: 0x80006E60
  * @note Size: 0x44
  */
-void TProcessor::setBegin_messageID(u32 lowerHalfMsg, u32 upperHalfMsg, bool* isMsgValid)
+bool TProcessor::setBegin_messageID(u32 lowerHalfMsg, u32 upperHalfMsg, bool* isMsgValid)
 {
 	u32 code = toMessageCode_messageID(lowerHalfMsg, upperHalfMsg, isMsgValid);
-	if (code != 0xFFFFFFFF) {
-		setBegin_messageCode(code);
+	if (code == 0xFFFFFFFF) {
+		return false;
 	}
+	
+	setBegin_messageCode(code);
 }
 
 /**
@@ -670,7 +675,7 @@ bool TProcessor::process_character_()
 		}
 		break;
 	case data::gcTagBegin:
-		on_tag_();
+		//on_tag_();
 		break;
 	default:
 		/*if (on_parseCharacter(character)) {
@@ -1096,7 +1101,7 @@ void TSequenceProcessor::on_jump(const void* p1, const char* p2)
 	mStack.mSize          = 0;
 	mProcess.mEndCallback = &process_onCharacterEnd_normal_;
 	do_resetStatus_(p2);
-	do_reset();
+	//do_reset();
 	do_jump(p1, p2);
 }
 
@@ -1140,7 +1145,7 @@ void TSequenceProcessor::on_branch(const void* p1, const char* p2)
 	mStack.mSize          = 0;
 	mProcess.mEndCallback = &process_onCharacterEnd_normal_;
 	do_resetStatus_(p2);
-	do_reset();
+	//do_reset();
 	do_branch(p1, p2);
 }
 
@@ -1342,7 +1347,7 @@ void* TSequenceProcessor::process_onJump_limited_(const TSequenceProcessor* proc
 	}
 
 	TControl* control = processor->mControl;
-	return (!control->setMessageCode_inSequence_(processor, groupID, v1)) ? nullptr : control->mEntry;
+	return (control->setMessageCode_inSequence_(processor, groupID, v1)) ? control->mEntry : nullptr;
 }
 
 /**
@@ -1358,7 +1363,7 @@ void* TSequenceProcessor::process_onJump_(const TSequenceProcessor* processor)
 	}
 
 	TControl* control = processor->mControl;
-	return (!control->setMessageCode_inSequence_(processor, processor->mProc.mJumpProc.mTarget >> 0x10, v1)) ? nullptr : control->mEntry;
+	return (control->setMessageCode_inSequence_(processor, processor->mProc.mJumpProc.mTarget >> 0x10, v1)) ? control->mEntry : nullptr;
 }
 
 /**
@@ -1375,7 +1380,7 @@ void* TSequenceProcessor::process_onBranch_limited_(const TSequenceProcessor* pr
 	}
 
 	TControl* control = processor->mControl;
-	return (!control->setMessageCode_inSequence_(processor, groupID, v1)) ? nullptr : control->mEntry;
+	return (control->setMessageCode_inSequence_(processor, groupID, v1)) ? control->mEntry : nullptr;
 }
 
 /**
@@ -1391,8 +1396,8 @@ void* TSequenceProcessor::process_onBranch_(const TSequenceProcessor* processor,
 	}
 
 	TControl* control = processor->mControl;
-	return (!control->setMessageCode_inSequence_(processor, ((u32*)processor->mProc.mJumpProc.mTarget)[p2] >> 0x10, v1)) ? nullptr
-	                                                                                                                     : control->mEntry;
+	return (control->setMessageCode_inSequence_(processor, ((u32*)processor->mProc.mJumpProc.mTarget)[p2] >> 0x10, v1)) ? control->mEntry
+	                                                                                                                     : nullptr;
 }
 
 /**

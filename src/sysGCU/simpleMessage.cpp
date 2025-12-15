@@ -31,7 +31,8 @@ void SimpleMessage::drawMessageID(Graphics& gfx, u32 lowerHalf, u32 upperHalf)
 
 	JMessage::TRenderingProcessor* jmProc = static_cast<JMessage::TRenderingProcessor*>(mProcessor);
 	//jmProc->reset_(nullptr);
-	jmProc->setBegin_messageID(lowerHalf, upperHalf, nullptr);
-	jmProc->process(nullptr);
+	if (jmProc->setBegin_messageID(lowerHalf, upperHalf, nullptr)){
+		jmProc->process(nullptr);
+	}
 }
 } // namespace P2JME

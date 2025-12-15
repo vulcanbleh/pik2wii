@@ -1666,7 +1666,7 @@ void TRenderingProcessor::preProcCenteringPre()
 	resetOnePageLine();
 	resetPageInfo();
 	_B4 = 0.0f;
-	reset();
+	//reset();
 }
 
 /**
@@ -1676,7 +1676,7 @@ void TRenderingProcessor::preProcCenteringPre()
 void TRenderingProcessor::preProcCenteringPost()
 {
 	// UNUSED FUNCTION
-	process(nullptr);
+	//process(nullptr);
 	setLineWidth();
 	newParagraph();
 	setOnePageLine();
@@ -1694,7 +1694,10 @@ void TRenderingProcessor::preProcCenteringPost()
 void TRenderingProcessor::preProcCenteringCode(uint p1)
 {
 	preProcCenteringPre();
-	setBegin_messageCode(p1 >> 16, p1);
+	
+	if (setBegin_messageCode(p1 >> 16, p1)){
+		process(nullptr);
+	}
 	preProcCenteringPost();
 }
 
@@ -1705,7 +1708,9 @@ void TRenderingProcessor::preProcCenteringCode(uint p1)
 void TRenderingProcessor::preProcCenteringID(uint p1, uint p2)
 {
 	preProcCenteringPre();
-	setBegin_messageID(p1, p2, nullptr);
+	if (setBegin_messageID(p1, p2, nullptr)){
+		process(nullptr);
+	}
 	preProcCenteringPost();
 }
 
