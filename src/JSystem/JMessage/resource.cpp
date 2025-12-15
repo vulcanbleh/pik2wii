@@ -135,15 +135,38 @@ void JMessage::TResourceContainer::TCResource::Do_destroy(JMessage::TResource* r
  */
 JMessage::TResourceContainer::TResourceContainer()
     : mEncoding(0)
-    , isLeadByte(nullptr)
+    , mParseCharacter(nullptr)
 {
 }
 
-JMessage::TResourceContainer::IsLeadByteFunc JMessage::TResourceContainer::sapfnIsLeadByte_[4] = {
-	nullptr,
-	JUTFont::isLeadByte_1Byte,
-	JUTFont::isLeadByte_2Byte,
-	JUTFont::isLeadByte_ShiftJIS,
+int JMessage::locale::parseCharacter_1Byte(const char** ppszText) {
+    u8** ppuText = (u8**)ppszText;
+    int parse_char = **ppuText & 0xFF;
+
+    (*ppuText)++;
+    return parse_char;
+}
+
+int JMessage::locale::parseCharacter_2Byte(const char** ppszText) {
+    u8** ppuText = (u8**)ppszText;
+
+    int parse_char = **ppuText & 0xFF;
+    (*ppuText)++;
+
+    parse_char <<= 8;
+
+    parse_char |= **ppuText & 0xFF;
+    (*ppuText)++;
+
+    return parse_char;
+}
+
+const JMessage::locale::parseCharacter_function JMessage::TResourceContainer::sapfnParseCharacter_[5] = {
+    nullptr,
+    JMessage::locale::parseCharacter_1Byte,
+    JMessage::locale::parseCharacter_2Byte,
+    JMessage::locale::parseCharacter_ShiftJIS,
+    JMessage::locale::parseCharacter_UTF8,
 };
 
 /**
@@ -220,6 +243,10 @@ bool JMessage::TParse::parseBlock_next(const void** dataPtr, u32* outSize, u32 f
 	case 'INF1':
 		mResource->setData_block_info(header);
 		break;
+	case 'FLI1':
+        break;
+    case 'FLW1':
+        break;
 	case 'DAT1':
 		mResource->setData_block_messageData((char*)&header[2]);
 

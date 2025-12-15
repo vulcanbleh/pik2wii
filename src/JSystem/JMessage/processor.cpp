@@ -43,7 +43,7 @@ void TProcessor::setBegin_messageCode(u16 groupID, u16 messageIndex)
 
 	if (entry) {
 		const char* text = mResourceCache->getMessageText_messageEntry(entry);
-		reset_(text);
+		reset();
 		do_begin_((const void*)entry, text);
 	}
 	/*
@@ -358,12 +358,13 @@ void TProcessor::do_select_separate()
  * @note Size: 0x64
  * reset___Q28JMessage10TProcessorFPCc
  */
-void TProcessor::reset_(const char* p1)
+void TProcessor::reset()
 {
-	mCurrent              = p1;
-	mStack.mSize          = 0;
-	mProcess.mEndCallback = process_onCharacterEnd_normal_;
-	do_resetStatus_(p1);
+	//mCurrent              = p1;
+	//mStack.mSize          = 0;
+	//mProcess.mEndCallback = process_onCharacterEnd_normal_;
+	//do_resetStatus_(p1);
+	on_resetStatus_(nullptr);
 	do_reset();
 }
 
@@ -377,24 +378,23 @@ void TProcessor::on_tag_()
 	// funky shit here, definitely doesnt match what TP has
 	u32 uSize;
 	char* psz = (char*)getCurrent();
-	psz++;
+	uSize = *(u8*)psz;
+    mCurrent = uSize + psz - 1;
 
-	uSize    = *(u8*)psz;
-	mCurrent = uSize + psz - 1;
-	psz++;
+    psz++;
 
-	u32 uTag = *(u8*)psz & 0xFF;
-	psz++;
+    u32 uTag = *(u8*)psz & 0xFF;
+    psz++;
 
-	uTag <<= 8;
-	uTag |= *(u8*)psz & 0xFF;
-	psz++;
+    uTag <<= 8;
+    uTag |= *(u8*)psz & 0xFF;
+    psz++;
 
-	uTag <<= 8;
-	uTag |= *(u8*)psz & 0xFF;
-	psz++;
+    uTag <<= 8;
+    uTag |= *(u8*)psz & 0xFF;
+    psz++;
 
-	on_tag(uTag, psz, uSize);
+    on_tag(uTag, psz, uSize - 5);
 }
 
 void TProcessor::do_resetStatus_(const char*)
@@ -660,7 +660,8 @@ const char* TProcessor::getMessageText_messageCode(u32 tag) const
  */
 bool TProcessor::process_character_()
 {
-	int character = mCurrent[0];
+	//int character = mCurrent[0];
+	int character = on_parseCharacter(&mCurrent);
 
 	switch (character) {
 	case 0:
@@ -672,13 +673,14 @@ bool TProcessor::process_character_()
 		on_tag_();
 		break;
 	default:
-		if (on_parseCharacter(character)) {
+		/*if (on_parseCharacter(character)) {
 			mCurrent++;
 			character <<= 8;
 			character |= *mCurrent;
 		}
 		mCurrent++;
-		do_character(character);
+		do_character(character);*/
+		on_character(character);
 	}
 
 	return true;
@@ -1222,7 +1224,7 @@ bool TSequenceProcessor::do_setBegin_isReady_() const
  */
 void TSequenceProcessor::do_begin_(const void* p1, const char* p2)
 {
-	do_begin(p1, p2);
+
 }
 
 /**
@@ -1233,7 +1235,6 @@ void TSequenceProcessor::do_begin_(const void* p1, const char* p2)
 void TSequenceProcessor::do_end_()
 {
 	mStatus = STATUS_End;
-	do_end();
 }
 
 /**
@@ -1244,7 +1245,30 @@ bool TSequenceProcessor::do_tag_(u32 tag, const void* data, u32 size)
 {
 	u32 group = data::getTagGroup(tag);
 	u16 code  = data::getTagCode(tag);
-	switch (group) {
+
+    switch (group) {
+    case 0xFF:
+        switch (code & 0xFFFF) {
+        case 0:
+        case 1:
+        case 2:
+        case 3:
+            break;
+        case 6: {
+            u32 u32Target = JGadget::binary::TParseValue<JGadget::binary::TParseValue_endian_big_<u32> >::parse(data);
+			mStatus                   = STATUS_Jump;
+			mProc.mJumpProc.mJumpFunc = &process_onJump_;
+			mProc.mJumpProc.mTarget   = u32Target;
+            break;
+        }
+        case 7:
+            break;
+        default: {
+            TProcessor::do_tag_(tag, data, size);
+            break;
+        }
+        }
+        break;
 	case 0xFC:
 		mStatus                   = STATUS_Jump;
 		mProc.mJumpProc.mJumpFunc = &process_onJump_limited_;
@@ -1524,7 +1548,7 @@ lbl_800082B8:
  */
 void TRenderingProcessor::do_begin_(const void* p1, const char* p2)
 {
-	do_begin(p1, p2);
+
 }
 
 /**
@@ -1534,7 +1558,7 @@ void TRenderingProcessor::do_begin_(const void* p1, const char* p2)
  */
 void TRenderingProcessor::do_end_()
 {
-	do_end();
+
 }
 
 /**
@@ -1542,12 +1566,39 @@ void TRenderingProcessor::do_end_()
  * @note Size: 0x34
  * do_tag___Q28JMessage19TRenderingProcessorFUlPCvUl
  */
-bool TRenderingProcessor::do_tag_(u32 p1, const void* p2, u32 p3)
+bool TRenderingProcessor::do_tag_(u32 uTag, void const* pData, u32 uSize)
 {
-	int v1 = p1 >> 0x10 & 0xFF;
-	if ((v1 >= 0xFD) || (v1 < 0xF7)) {
-		TProcessor::do_tag_(p1, p2, p3);
-	}
-}
+	u8 uGroupID = data::getTagGroup(uTag);
+    unsigned int uCode = data::getTagCode(uTag);
 
+    switch (uGroupID) {
+    case 0xFF:
+        switch (uCode & 0xFFFF) {
+        case 0:
+        case 1:
+        case 2:
+        case 3: {
+            break;
+        }
+        case 6:
+            break;
+        case 7:
+            break;
+        default:
+            TProcessor::do_tag_(uTag, pData, uSize);
+            break;
+        }
+        break;
+    case 0xFC:
+    case 0xFB:
+    case 0xFA:
+    case 0xF9:
+    case 0xF8:
+    case 0xF7:
+        break;
+    default:
+        TProcessor::do_tag_(uTag, pData, uSize);
+        break;
+    }
+}
 } // namespace JMessage

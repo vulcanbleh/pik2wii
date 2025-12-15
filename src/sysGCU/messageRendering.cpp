@@ -1666,7 +1666,7 @@ void TRenderingProcessor::preProcCenteringPre()
 	resetOnePageLine();
 	resetPageInfo();
 	_B4 = 0.0f;
-	reset_(nullptr);
+	reset();
 }
 
 /**

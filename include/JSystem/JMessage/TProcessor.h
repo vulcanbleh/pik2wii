@@ -106,15 +106,34 @@ struct TProcessor {
 	static bool process_onCharacterEnd_select_(TProcessor*);
 	static const char* process_onSelect_limited_(TProcessor*);
 	static const char* process_onSelect_(TProcessor*);
-	void reset_(const char*);
+	void reset();
 
-	int setBegin_messageEntryText(const TResource* resource, const void* entry, const char* param_2)
+	bool setBegin_messageEntryText(const TResource* resource, const void* entry, const char* param_2)
 	{
 		mResourceCache = resource;
-		reset_(param_2);
-		do_begin_(entry, param_2);
-		return TRUE;
+		//reset();
+		//do_begin_(entry, param_2);
+		on_resetStatus_(param_2);
+        on_begin(entry, param_2);
+		return true;
 	}
+	
+	void on_resetStatus_(const char* param_1) {
+        mCurrent = param_1;
+        mStack.clear();
+        mProcess.reset_normal();
+        do_resetStatus_(param_1);
+    }
+	
+	void on_begin(const void* entry, const char* param_2) {
+        do_begin_(entry, param_2);
+        do_begin(entry, param_2);
+    }
+
+    void on_end() {
+        do_end_();
+        do_end();
+    }
 
 	void* getMessageEntry_messageCode(u16 messageCode, u16 messageIndex) const
 	{
@@ -147,17 +166,17 @@ struct TProcessor {
 	void setResourceCache(TResource* cache) { mResourceCache = cache; }
 	void resetResourceCache() { setResourceCache(nullptr); }
 
-	int on_parseCharacter(int string) const { return mReference->on_parseCharacter(string); }
+	int on_parseCharacter(const char** string) const { return mReference->on_parseCharacter(string); }
 	void on_character(int character) { do_character(character); }
 
-	void on_end() { do_end_(); }
+	//void on_end() { do_end_(); }
 	
 	const char* on_word(u32 param_0) const { return mReference->on_word(param_0); }
 
 	void on_tag(u32 p1, const void* p2, u32 p3)
 	{
-		if (!do_tag(p1, p2, p3 - 5)) {
-			do_tag_(p1, p2, p3 - 5);
+		if (!do_tag(p1, p2, p3)) {
+			do_tag_(p1, p2, p3);
 		}
 	}
 
