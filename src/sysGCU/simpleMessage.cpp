@@ -30,7 +30,7 @@ void SimpleMessage::drawMessageID(Graphics& gfx, u32 lowerHalf, u32 upperHalf)
 	mProcessor->preProcID(lowerHalf, upperHalf);
 
 	JMessage::TRenderingProcessor* jmProc = static_cast<JMessage::TRenderingProcessor*>(mProcessor);
-	jmProc->reset_(nullptr);
+	//jmProc->reset_(nullptr);
 	jmProc->setBegin_messageID(lowerHalf, upperHalf, nullptr);
 	jmProc->process(nullptr);
 }
