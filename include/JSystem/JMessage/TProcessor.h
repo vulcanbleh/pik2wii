@@ -96,7 +96,12 @@ struct TProcessor {
 
 	bool setBegin_messageCode(u16 groupID, u16 messageIndex);
 	bool setBegin_messageID(u32, u32, bool*);
-	void setBegin_messageCode(u32); // weak
+	bool setBegin_messageCode(u32 code){ // weak
+	
+		return setBegin_messageCode(code >> 0x10, code & 0xFFFF);
+	
+	
+	}
 	const TResource* getResource_groupID(u16) const;
 	u32 toMessageCode_messageID(u32, u32, bool*) const;
 	const char* on_message_limited(u16) const;         // weak

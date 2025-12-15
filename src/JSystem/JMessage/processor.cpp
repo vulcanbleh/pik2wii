@@ -39,16 +39,16 @@ TProcessor::~TProcessor()
  */
 bool TProcessor::setBegin_messageCode(u16 groupID, u16 messageIndex)
 {
-	void* entry = getMessageEntry_messageCode(groupID, messageIndex);
+	const void* entry = getMessageEntry_messageCode(groupID, messageIndex);
 
 	if (!entry) {
 		return false;
 	}
 	
 	const char* text = mResourceCache->getMessageText_messageEntry(entry);
-	on_resetStatus_(text);
-	on_begin((const void*)entry, text);
-	return true;
+	//on_resetStatus_(text);
+	//on_begin((const void*)entry, text);
+	return setBegin_messageEntryText(mResourceCache, entry, text);
 	/*
 	stwu     r1, -0x20(r1)
 	mflr     r0
@@ -119,7 +119,7 @@ bool TProcessor::setBegin_messageID(u32 lowerHalfMsg, u32 upperHalfMsg, bool* is
 		return false;
 	}
 	
-	setBegin_messageCode(code);
+	return setBegin_messageCode(code);
 }
 
 /**
@@ -127,9 +127,9 @@ bool TProcessor::setBegin_messageID(u32 lowerHalfMsg, u32 upperHalfMsg, bool* is
  * @note Size: 0xC0
  * setBegin_messageCode__Q28JMessage10TProcessorFUl
  */
-void TProcessor::setBegin_messageCode(u32 code)
-{
-	setBegin_messageCode(code >> 0x10, code & 0xFFFF);
+//void TProcessor::setBegin_messageCode(u32 code)
+//{
+	//setBegin_messageCode(code >> 0x10, code & 0xFFFF);
 	/*
 	stwu     r1, -0x20(r1)
 	mflr     r0
@@ -188,7 +188,7 @@ lbl_80006F48:
 	addi     r1, r1, 0x20
 	blr
 	*/
-}
+//}
 
 /**
  * @note Address: N/A
