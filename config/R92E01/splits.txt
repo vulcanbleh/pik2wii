@@ -5377,6 +5377,7 @@ plugProjectMorimuraU/jigumoState.cpp:
 	.data       start:0x805C30F0 end:0x805C32F8
 	.bss        start:0x80639348 end:0x80639358
 	.sbss       start:0x8066CEF8 end:0x8066CF00
+	.sdata2     start:0x80673F18 end:0x80673F60
 
 plugProjectMorimuraU/jigumoAnimator.cpp:
 	.text       start:0x803E54E4 end:0x803E553C
@@ -5385,25 +5386,31 @@ plugProjectMorimuraU/jigumoAnimator.cpp:
 plugProjectMorimuraU/jigumoMgr.cpp:
 	.text       start:0x803E553C end:0x803E5A68
 	.data       start:0x805C3320 end:0x805C3470
+	.sdata2     start:0x80673F60 end:0x80673FA0
 
 plugProjectMorimuraU/jigumo.cpp:
 	.text       start:0x803E5A68 end:0x803E8CBC
 	.data       start:0x805C3470 end:0x805C37A0
 	.sbss       start:0x8066CF00 end:0x8066CF08
+	.sdata2     start:0x80673FA0 end:0x80674030
 
 plugProjectMorimuraU/enemyNestMgr.cpp:
 	.text       start:0x803E8CBC end:0x803E95B0
 	.ctors      start:0x80534F74 end:0x80534F78
+	.rodata     start:0x805535B0 end:0x80553640
 	.data       start:0x805C37A0 end:0x805C3880
 	.sbss       start:0x8066CF08 end:0x8066CF10
 
 plugProjectMorimuraU/enemyNest.cpp:
 	.text       start:0x803E95B0 end:0x803E97EC
 	.data       start:0x805C3880 end:0x805C3BB0
+	.sdata2     start:0x80674030 end:0x80674040
 
 plugProjectMorimuraU/tamagoMushiState.cpp:
 	.text       start:0x803E97EC end:0x803EA364
+	.rodata     start:0x80553640 end:0x80553678
 	.data       start:0x805C3BB0 end:0x805C3CB0
+	.sdata2     start:0x80674040 end:0x80674060
 
 plugProjectMorimuraU/tamagoMushiAnimator.cpp:
 	.text       start:0x803EA364 end:0x803EA3BC
@@ -5411,11 +5418,15 @@ plugProjectMorimuraU/tamagoMushiAnimator.cpp:
 
 plugProjectMorimuraU/tamagoMushiMgr.cpp:
 	.text       start:0x803EA3BC end:0x803EB450
+	.rodata     start:0x80553678 end:0x805536B8
 	.data       start:0x805C3CD8 end:0x805C3E48
+	.sdata2     start:0x80674060 end:0x806740C0
 
 plugProjectMorimuraU/tamagoMushi.cpp:
 	.text       start:0x803EB450 end:0x803ED4C8
+	.rodata     start:0x805536B8 end:0x805536E8
 	.data       start:0x805C3E48 end:0x805C4190
+	.sdata2     start:0x806740C0 end:0x80674130
 
 plugProjectMorimuraU/zukan2D.cpp:
 	.text       start:0x803ED4C8 end:0x803FA47C
@@ -6075,7 +6086,7 @@ sysGCU/gameflow.cpp:
 	.rodata     start:0x80559458 end:0x80559648
 	.data       start:0x805CCB48 end:0x805CCC70
 	.bss        start:0x806394D0 end:0x806394E0
-	.sdata      start:0x8066B6E8 end:0x8066B748
+	.sdata      start:0x8066B6E8 end:0x8066B6F0
 	.sbss       start:0x8066D1D0 end:0x8066D1D8
 
 sysGCU/menuSection.cpp:
@@ -6122,6 +6133,7 @@ sysGCU/reset.cpp:
 sysGCU/dvdStatus.cpp:
 	.text       start:0x804B07A8 end:0x804B12F4
 	.rodata     start:0x80559A48 end:0x80559AA0
+	.sdata      start:0x8066B6F0 end:0x8066B6F8
 	.sdata2     start:0x80675728 end:0x80675748
 
 sysGCU/sysTimers.cpp:
@@ -6204,12 +6216,14 @@ sysGCU/movieConfig.cpp:
 	.ctors      start:0x80535048 end:0x8053504C
 	.data       start:0x805CD248 end:0x805CD298
 	.bss        start:0x80639580 end:0x806395A0
+	.sdata      start:0x8066B6F8 end:0x8066B700
 	.sbss       start:0x8066D260 end:0x8066D270
 
 sysGCU/gameConfig.cpp:
 	.text       start:0x804B9D40 end:0x804BA4CC
 	.ctors      start:0x8053504C end:0x80535050
 	.data       start:0x805CD298 end:0x805CD4A0
+	.sdata      start:0x8066B700 end:0x8066B730
 
 sysGCU/fogMgr.cpp:
 	.text       start:0x804BA4CC end:0x804BA6C4
@@ -6294,6 +6308,7 @@ sysGCU/messageReference.cpp:
 	.text       start:0x804C4C74 end:0x804C4D34
 	.data       start:0x805CDC90 end:0x805CDCA0
 	.bss        start:0x80639628 end:0x80639728
+	.sdata      start:0x8066B730 end:0x8066B738
 
 sysGCU/simpleMessage.cpp:
 	.text       start:0x804C4D34 end:0x804C4E18
@@ -6309,6 +6324,7 @@ sysGCU/sysShapeModel.cpp:
 	.ctors      start:0x8053506C end:0x80535070
 	.data       start:0x805CDCA0 end:0x805CDCE0
 	.bss        start:0x80639738 end:0x80639748
+	.sdata      start:0x8066B738 end:0x8066B740
 	.sbss       start:0x8066D2C0 end:0x8066D2D0
 
 sysGCU/windowMessage.cpp:
@@ -6327,6 +6343,7 @@ sysGCU/pikmin2MemoryCardMgr.cpp:
 	.text       start:0x804C8350 end:0x804CC060
 	.rodata     start:0x8055AAB8 end:0x8055ABD0
 	.data       start:0x805CDEA8 end:0x805CDF80
+	.sdata      start:0x8066B740 end:0x8066B748
 
 sysGCU/commonSaveData.cpp:
 	.text       start:0x804CC060 end:0x804CC76C
@@ -6366,7 +6383,7 @@ sysGCU/demoSection.cpp:
 	.text       start:0x804D1E84 end:0x804D26C8
 	.rodata     start:0x8055B068 end:0x8055B140
 	.data       start:0x805CE2F0 end:0x805CE390
-	.sdata      start:0x8066B758 end:0x8066B768
+	.sdata      start:0x8066B758 end:0x8066B760
 	.sdata2     start:0x80675B08 end:0x80675B38
 
 sysGCU/THPAudioDecode.c:
@@ -6428,6 +6445,7 @@ sysGCU/screenObj.cpp:
 	.text       start:0x804D9078 end:0x804D99E0
 	.rodata     start:0x8055B760 end:0x8055B778
 	.data       start:0x805CE740 end:0x805CE7B8
+	.sdata      start:0x8066B760 end:0x8066B768
 	.sdata2     start:0x80675BD8 end:0x80675BE0
 
 sysGCU/JSTObjectParticleActor.cpp:
@@ -6525,7 +6543,7 @@ utilityU/PSMainSide_Se.cpp:
 	.text       start:0x804F2688 end:0x804F4AD0
 	.rodata     start:0x8055CAC0 end:0x8055CAE0
 	.data       start:0x805D0610 end:0x805D07B8
-	.sdata      start:0x8066B768 end:0x8066B798
+	.sdata      start:0x8066B768 end:0x8066B790
 	.sbss       start:0x8066D378 end:0x8066D390
 	.sdata2     start:0x80675CF8 end:0x80675D90
 
@@ -6533,6 +6551,7 @@ utilityU/PSMainSide_DirectorMgr.cpp:
 	.text       start:0x804F4AD0 end:0x804F67E8
 	.rodata     start:0x8055CAE0 end:0x8055CC40
 	.data       start:0x805D07B8 end:0x805D08E8
+	.sdata      start:0x8066B790 end:0x8066B798
 	.sbss       start:0x8066D390 end:0x8066D398
 	.sdata2     start:0x80675D90 end:0x80675DA0
 
