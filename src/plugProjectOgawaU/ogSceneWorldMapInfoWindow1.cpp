@@ -1,6 +1,11 @@
 #include "og/newScreen/WorldMapInfoWindow.h"
 #include "nans.h"
 
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "ogSceneWorldMapInfoWindow1.cpp";
+}
+
 namespace og {
 namespace newScreen {
 

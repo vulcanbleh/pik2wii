@@ -1,6 +1,11 @@
 #include "og/newScreen/FinalMsg.h"
 #include "Screen/Game2DMgr.h"
 
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "ogSceneFinalMsg.cpp";
+}
+
 namespace og {
 namespace newScreen {
 
