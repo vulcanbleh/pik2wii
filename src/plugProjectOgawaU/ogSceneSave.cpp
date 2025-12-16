@@ -3,6 +3,11 @@
 #include "System.h"
 #include "Game/MemoryCard/Mgr.h"
 
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "ogSceneSave.cpp";
+}
+
 namespace og {
 namespace newScreen {
 

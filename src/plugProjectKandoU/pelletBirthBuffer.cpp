@@ -1,5 +1,10 @@
 #include "Game/PelletBirthBuffer.h"
 
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "pelletBirthBuffer";
+}
+
 namespace Game {
 
 int PelletBirthBuffer::sNum;

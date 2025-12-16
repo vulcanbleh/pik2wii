@@ -3617,6 +3617,7 @@ plugProjectKandoU/gamePlayCommonData.cpp:
 
 plugProjectKandoU/pelletCarry.cpp:
 	.text       start:0x802B8FA0 end:0x802B913C
+	.sdata2     start:0x80670B70 end:0x80670B78
 
 plugProjectKandoU/gameChallenge2D.cpp:
 	.text       start:0x802B913C end:0x802B9390
@@ -4795,12 +4796,14 @@ plugProjectOgawaU/ogMenuMgr.cpp:
 
 plugProjectOgawaU/ogCallBackScreen.cpp:
 	.text       start:0x80384910 end:0x80384A90
-	.data       start:0x805B83E0 end:0x805B8400
+	.data       start:0x805B83E0 end:0x805B83FC
+	.sdata2     start:0x80673108 end:0x80673110
 
 plugProjectOgawaU/ogCounterRV.cpp:
 	.text       start:0x80384A90 end:0x80385D60
 	.ctors      start:0x80534EE8 end:0x80534EEC
 	.data       start:0x805B8400 end:0x805B8430
+	.sdata2     start:0x80673110 end:0x80673148
 
 plugProjectOgawaU/ogSE.cpp:
 	.text       start:0x80385D60 end:0x80386320
@@ -4841,7 +4844,7 @@ plugProjectOgawaU/DispMemberBase.cpp:
 
 plugProjectOgawaU/ogLib2D.cpp:
 	.text       start:0x803885A0 end:0x8038867C
-	.data       start:0x805B85B0 end:0x805B85C0
+	.data       start:0x805B85B0 end:0x805B85BC
 	.sbss       start:0x8066CDD0 end:0x8066CDD8
 
 plugProjectOgawaU/ogObjSMenuMap.cpp:
@@ -4899,6 +4902,7 @@ plugProjectOgawaU/ogUtil.cpp:
 plugProjectOgawaU/ogSceneCourseName.cpp:
 	.text       start:0x80392B38 end:0x80392D2C
 	.data       start:0x805B8C88 end:0x805B8D70
+	.sdata      start:0x8066B450 end:0x8066B458
 
 plugProjectOgawaU/ogObjKantei.cpp:
 	.text       start:0x80392D2C end:0x80394A00
@@ -4926,6 +4930,7 @@ plugProjectOgawaU/ogSceneFloor.cpp:
 	.text       start:0x80397468 end:0x80397AAC
 	.ctors      start:0x80534F18 end:0x80534F1C
 	.data       start:0x805B8FE8 end:0x805B9038
+	.sdata      start:0x8066B458 end:0x8066B460
 
 plugProjectOgawaU/ogObjCave.cpp:
 	.text       start:0x80397AAC end:0x8039874C
@@ -4964,16 +4969,19 @@ plugProjectOgawaU/ogObjContena.cpp:
 
 plugProjectOgawaU/ogSceneContena.cpp:
 	.text       start:0x803A0EC0 end:0x803A104C
+	.rodata     start:0x80551E28 end:0x80551E38
 	.data       start:0x805B97B0 end:0x805B9810
 
 plugProjectOgawaU/ogObjSMenuPauseDoukutu.cpp:
 	.text       start:0x803A104C end:0x803A2B30
 	.ctors      start:0x80534F2C end:0x80534F30
+	.rodata     start:0x80551E38 end:0x80551F30
 	.data       start:0x805B9810 end:0x805B98B8
 
 plugProjectOgawaU/ogSceneSMenuPauseDoukutu.cpp:
 	.text       start:0x803A2B30 end:0x803A2D48
 	.ctors      start:0x80534F30 end:0x80534F34
+	.rodata     start:0x80551F30 end:0x80551F68
 	.data       start:0x805B98B8 end:0x805B9998
 	.bss        start:0x80639288 end:0x80639298
 	.sbss       start:0x8066CE18 end:0x8066CE20
@@ -4981,86 +4989,110 @@ plugProjectOgawaU/ogSceneSMenuPauseDoukutu.cpp:
 plugProjectOgawaU/ogObjUfo.cpp:
 	.text       start:0x803A2D48 end:0x803A3EE8
 	.ctors      start:0x80534F34 end:0x80534F38
+	.rodata     start:0x80551F68 end:0x80551FC0
 	.data       start:0x805B9998 end:0x805B9A10
 
 plugProjectOgawaU/ogSceneUfo.cpp:
 	.text       start:0x803A3EE8 end:0x803A404C
+	.rodata     start:0x80551FC0 end:0x80551FD0
 	.data       start:0x805B9A10 end:0x805B9A70
 
 plugProjectOgawaU/ogObjSave.cpp:
 	.text       start:0x803A404C end:0x803A436C
+	.rodata     start:0x80551FD0 end:0x80552000
 	.data       start:0x805B9A70 end:0x805B9AE8
 
 plugProjectOgawaU/ogSceneSave.cpp:
 	.text       start:0x803A436C end:0x803A44D0
+	.rodata     start:0x80552000 end:0x80552020
 	.data       start:0x805B9AE8 end:0x805B9B38
+	.sdata      start:0x8066B460 end:0x8066B468
 
 plugProjectOgawaU/ogObjFinalMsg.cpp:
 	.text       start:0x803A44D0 end:0x803A5158
+	.rodata     start:0x80552020 end:0x80552060
 	.data       start:0x805B9B38 end:0x805B9BB0
 
 plugProjectOgawaU/ogSceneFinalMsg.cpp:
 	.text       start:0x803A5158 end:0x803A52B8
-	.data       start:0x805B9BB0 end:0x805B9D08
+	.rodata     start:0x80552060 end:0x80552090
+	.data       start:0x805B9BB0 end:0x805B9C18
 
 plugProjectOgawaU/ogObjVs.cpp:
 	.text       start:0x803A52B8 end:0x803A7324
 	.ctors      start:0x80534F38 end:0x80534F3C
+	.rodata     start:0x80552090 end:0x805520F8
+	.data       start:0x805B9C18 end:0x805B9CA8
+	.sdata2     start:0x806735B8 end:0x80673648
 
 plugProjectOgawaU/ogSceneVs.cpp:
 	.text       start:0x803A7324 end:0x803A7414
+	.rodata     start:0x805520F8 end:0x80552108
+	.data       start:0x805B9CA8 end:0x805B9D08
 
 plugProjectOgawaU/ogObjChallenge1P.cpp:
 	.text       start:0x803A7414 end:0x803A7F98
 	.ctors      start:0x80534F3C end:0x80534F40
+	.rodata     start:0x80552108 end:0x80552180
 	.data       start:0x805B9D08 end:0x805B9D88
 	.bss        start:0x80639298 end:0x806392A8
 	.sbss       start:0x8066CE20 end:0x8066CE28
+	.sdata2     start:0x80673648 end:0x80673688
 
 plugProjectOgawaU/ogSceneChallenge1P.cpp:
 	.text       start:0x803A7F98 end:0x803A8160
+	.rodata     start:0x80552180 end:0x805521A8
 	.data       start:0x805B9D88 end:0x805B9DF8
 
 plugProjectOgawaU/ogScaleMgr.cpp:
 	.text       start:0x803A8160 end:0x803A84D4
+	.sdata2     start:0x80673688 end:0x806736B0
 
 plugProjectOgawaU/ogObjSMenuPauseVs.cpp:
 	.text       start:0x803A84D4 end:0x803A93DC
+	.rodata     start:0x805521A8 end:0x805521F0
 	.data       start:0x805B9DF8 end:0x805B9EB0
 
 plugProjectOgawaU/ogSceneSMenuPauseVs.cpp:
 	.text       start:0x803A93DC end:0x803A9608
 	.ctors      start:0x80534F40 end:0x80534F44
+	.rodata     start:0x805521F0 end:0x80552220
 	.data       start:0x805B9EB0 end:0x805B9F18
 	.bss        start:0x806392A8 end:0x806392B8
 	.sbss       start:0x8066CE28 end:0x8066CE30
 
 plugProjectOgawaU/ogFuriko.cpp:
 	.text       start:0x803A9608 end:0x803A9DD8
+	.rodata     start:0x80552220 end:0x80552248
 	.data       start:0x805B9F18 end:0x805B9F38
 
 plugProjectOgawaU/ogCounterSlot.cpp:
 	.text       start:0x803A9DD8 end:0x803AA970
+	.rodata     start:0x80552248 end:0x80552278
 	.data       start:0x805B9F38 end:0x805B9F68
 
 plugProjectOgawaU/ogObjWorldMapInfoWindow0.cpp:
 	.text       start:0x803AA970 end:0x803AB04C
+	.rodata     start:0x80552278 end:0x805522C8
 	.data       start:0x805B9F68 end:0x805BA038
 
 plugProjectOgawaU/ogSceneWorldMapInfoWindow0.cpp:
 	.text       start:0x803AB04C end:0x803AB1FC
 	.ctors      start:0x80534F44 end:0x80534F48
+	.rodata     start:0x805522C8 end:0x80552308
 	.data       start:0x805BA038 end:0x805BA0A8
 	.bss        start:0x806392B8 end:0x806392C8
 	.sbss       start:0x8066CE30 end:0x8066CE38
 
 plugProjectOgawaU/ogObjWorldMapInfoWindow1.cpp:
 	.text       start:0x803AB1FC end:0x803AB8DC
+	.rodata     start:0x80552308 end:0x80552368
 	.data       start:0x805BA0A8 end:0x805BA178
 
 plugProjectOgawaU/ogSceneWorldMapInfoWindow1.cpp:
 	.text       start:0x803AB8DC end:0x803ABA8C
 	.ctors      start:0x80534F48 end:0x80534F4C
+	.rodata     start:0x80552368 end:0x805523A8
 	.data       start:0x805BA178 end:0x805BA1E8
 	.bss        start:0x806392C8 end:0x806392D8
 	.sbss       start:0x8066CE38 end:0x8066CE40
@@ -5068,6 +5100,7 @@ plugProjectOgawaU/ogSceneWorldMapInfoWindow1.cpp:
 plugProjectOgawaU/ogTotalPokoScreen.cpp:
 	.text       start:0x803ABA8C end:0x803ABF20
 	.data       start:0x805BA1E8 end:0x805BA290
+	.sdata2     start:0x80673748 end:0x80673760
 
 plugProjectOgawaU/ogObjChallengeBase.cpp:
 	.text       start:0x803ABF20 end:0x803AC384
@@ -5075,14 +5108,18 @@ plugProjectOgawaU/ogObjChallengeBase.cpp:
 	.data       start:0x805BA290 end:0x805BA310
 	.bss        start:0x806392D8 end:0x806392E8
 	.sbss       start:0x8066CE40 end:0x8066CE48
+	.sdata2     start:0x80673760 end:0x80673770
 
 plugProjectOgawaU/ogSceneChallengeBase.cpp:
 	.text       start:0x803AC384 end:0x803AC46C
 	.data       start:0x805BA310 end:0x805BA368
+	.sdata2     start:0x80673770 end:0x80673780
 
 plugProjectOgawaU/ogCallBackPicture.cpp:
 	.text       start:0x803AC46C end:0x803ACCD8
+	.rodata     start:0x805523A8 end:0x80552458
 	.data       start:0x805BA368 end:0x805BA388
+	.sdata2     start:0x80673780 end:0x80673798
 
 plugProjectOgawaU/ogDrawAfter.cpp:
 	.text       start:0x803ACCD8 end:0x803ACF38
@@ -5090,25 +5127,32 @@ plugProjectOgawaU/ogDrawAfter.cpp:
 
 plugProjectOgawaU/ogOtakaraSensor.cpp:
 	.text       start:0x803ACF38 end:0x803AE02C
+	.rodata     start:0x80552458 end:0x80552488
 	.data       start:0x805BA3A8 end:0x805BA3F0
+	.sdata2     start:0x80673798 end:0x80673828
 
 plugProjectOgawaU/ogTitleMsg.cpp:
 	.text       start:0x803AE02C end:0x803AF804
 	.data       start:0x805BA3F0 end:0x805BA550
 	.sbss       start:0x8066CE48 end:0x8066CE50
+	.sdata2     start:0x80673828 end:0x80673890
 
 plugProjectOgawaU/ogAngleMgr.cpp:
 	.text       start:0x803AF804 end:0x803AFA64
+	.sdata2     start:0x80673890 end:0x806738B0
 
 plugProjectOgawaU/ogSceneSMenuCont.cpp:
 	.text       start:0x803AFA64 end:0x803AFBC8
+	.rodata     start:0x80552488 end:0x805524B0
 	.data       start:0x805BA550 end:0x805BA620
 
 plugProjectOgawaU/ogObjSMenuCont.cpp:
 	.text       start:0x803AFBC8 end:0x803B06CC
 	.ctors      start:0x80534F50 end:0x80534F54
+	.rodata     start:0x805524B0 end:0x80552528
 	.data       start:0x805BA620 end:0x805BA6C8
 	.sbss       start:0x8066CE50 end:0x8066CE58
+	.sdata2     start:0x806738B0 end:0x806738C0
 
 plugProjectHikinoU/PSSeq.cpp:
 	.text       start:0x803B06CC end:0x803B3884

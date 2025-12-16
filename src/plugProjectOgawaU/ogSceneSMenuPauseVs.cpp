@@ -2,6 +2,11 @@
 #include "og/newScreen/SMenu.h"
 #include "nans.h"
 
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "ogSceneSMenuPauseVs.cpp";
+}
+
 namespace og {
 namespace newScreen {
 

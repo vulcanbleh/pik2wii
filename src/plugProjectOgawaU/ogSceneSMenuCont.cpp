@@ -1,5 +1,10 @@
 #include "og/newScreen/SMenu.h"
 
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "ogSceneSMenuCont.cpp";
+}
+
 namespace og {
 namespace newScreen {
 
