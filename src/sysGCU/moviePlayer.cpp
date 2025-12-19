@@ -518,7 +518,7 @@ bool MoviePlayer::update(Controller* input1, Controller* input2)
 
 	case DEMOSTATE_Fadeout:
 		if (mFadeTimer > 0.0f) {
-			mFadeTimer -= sys->mDeltaTime;
+			mFadeTimer -= sys->getDeltaTime();
 			if (mFadeTimer <= 0.0f) {
 				gameSystem->startFadeblack();
 			}
@@ -531,7 +531,7 @@ bool MoviePlayer::update(Controller* input1, Controller* input2)
 
 	case DEMOSTATE_Loading:
 		if (mFadeTimer > 0.0f) {
-			mFadeTimer -= sys->mDeltaTime;
+			mFadeTimer -= sys->getDeltaTime();
 		}
 		if (mThreadCommand.mMode == DvdThreadCommand::CM_Completed) {
 			sys->startChangeCurrentHeap(mMovieHeap);
@@ -577,7 +577,7 @@ bool MoviePlayer::update(Controller* input1, Controller* input2)
 		if (mObjectSystem) {
 			mObjectSystem->entry();
 		}
-		mFadeTimer -= sys->mDeltaTime;
+		mFadeTimer -= sys->getDeltaTime();
 		if (mFadeTimer < 1.1f && !mCanFinish) {
 			if (isFlag(MVP_IsFinished)) {
 				resetFrame();
