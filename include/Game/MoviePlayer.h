@@ -13,6 +13,7 @@
 #include "Vector3.h"
 #include "id32.h"
 #include "types.h"
+#include "Game/BaseGameSection.h"
 
 struct JPAResourceManager;
 struct Viewport;
@@ -254,10 +255,10 @@ struct MoviePlayer : public JKRDisposer {
 	void setMovieHeap(JKRHeap*);
 	void clearMovieHeap();
 	void doStartMovie();
-	void playSuspended();
+	bool playSuspended();
 	void hasSuspendedDemo();
 	void hasSuspendedContext();
-	void getSuspendedContext();
+	MovieContext* getSuspendedContext();
 	void do_stop();
 	void suspend(s32);
 	bool isLoadingBlack();
@@ -304,7 +305,7 @@ struct MoviePlayer : public JKRDisposer {
 	u8 _1A8[0x8];                                                  // _1A8, unknown
 	JKRHeap* mMovieHeap;                                           // _1B0
 	u32 mMovieHeapFreeSize;                                        // _1B4
-	int _1B8;												   // _1B8, unknown
+	BaseGameSection* mSection;									   // _1B8, unknown
 	int mMessageEndCount;                                          // _1BC
 	Vector3f mTransform;                                           // _1C0
 	f32 mTransformAngle;                                           // _1CC

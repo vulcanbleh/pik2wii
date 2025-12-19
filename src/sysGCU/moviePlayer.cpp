@@ -1,24 +1,25 @@
 #include "Game/MoviePlayer.h"
-#include "Game/CameraMgr.h"
+#include "Screen/Game2DMgr.h"
 #include "Game/GameSystem.h"
+#include "Game/CameraMgr.h"
 #include "Game/MapMgr.h"
+#include "PSM/Demo.h"
 #include "Game/P2JST/ObjectSystem.h"
+#include "P2JME/Movie.h"
+#include "JSystem/JStudio_JMessage.h"
+#include "JSystem/JStudio_JStage.h"
+#include "JSystem/JStudio_JParticle.h"
 #include "JSystem/JStudio/TFactory.h"
 #include "JSystem/JStudio/TParse.h"
-#include "JSystem/JStudio_JMessage.h"
-#include "JSystem/JStudio_JParticle.h"
-#include "JSystem/JStudio_JStage.h"
-#include "JSystem/JUtility/JUTAssertion.h"
 #include "LoadResource.h"
-#include "P2JME/Movie.h"
-#include "PSM/Demo.h"
+#include "JSystem/JUtility/JUTAssertion.h"
 #include "PSSystem/PSSystemIF.h"
 #include "ParticleMgr.h"
-#include "Screen/Game2DMgr.h"
-#include "nans.h"
 #include "utilityU.h"
+#include "nans.h"
+#include "Sys/DrawBuffers.h"
 
-static const u32 padding[]    = { 0, 0, 0 };
+//static const u32 padding[]    = { 0, 0, 0 };
 static const char className[] = "moviePlayer";
 
 namespace Game {
@@ -32,11 +33,12 @@ MoviePlayer* moviePlayer;
  */
 MoviePlayer::MoviePlayer()
     : mTextControl(nullptr)
+	, mSection(nullptr)
     , mCounter(0)
-    , mStbFile(nullptr)
+	, mStbFile(nullptr)
 {
 	mArchive      = nullptr;
-	mTransform    = 0.0f;
+	mTransform.set(0.0f, 0.0f, 0.0f);
 	mTargetNavi   = nullptr;
 	mActingCamera = nullptr;
 	mAltNavi      = nullptr;
@@ -99,7 +101,7 @@ PlayCamera* MoviePlayer::getActiveGameCamera()
  */
 void MoviePlayer::setMovieHeap(JKRHeap* heap)
 {
-	P2ASSERTLINE(501, !mMovieHeap);
+	P2ASSERTLINE(517, !mMovieHeap);
 	mMovieHeap         = heap;
 	mMovieHeapFreeSize = heap->getTotalFreeSize();
 }
@@ -110,7 +112,7 @@ void MoviePlayer::setMovieHeap(JKRHeap* heap)
  */
 void MoviePlayer::allocMovieHeap(u32 size)
 {
-	P2ASSERTLINE(511, !mMovieHeap);
+	P2ASSERTLINE(527, !mMovieHeap);
 
 	JKRHeap* backup = JKRGetCurrentHeap();
 	setMovieHeap(JKRSolidHeap::create(size, JKRGetCurrentHeap(), true));
@@ -150,7 +152,7 @@ int MoviePlayer::play(MovieConfig* config, MoviePlayArg& arg, bool flag)
 		// if a movie is already playing, put the new cutscene in the queue instead
 		MovieContext* context = getNewContext();
 		if (!context) {
-			JUT_PANICLINE(560, "******* ★キューにはいりきらんよ～！！\n"); // "******* ★It won't fit in the queue!!"
+			JUT_PANICLINE(579, "******* ★キューにはいりきらんよ～！！\n"); // "******* ★It won't fit in the queue!!"
 			return MOVIEPLAY_QUEUEFAIL;
 		} else {
 			setContext(context, config, arg);
@@ -166,12 +168,12 @@ int MoviePlayer::play(MovieConfig* config, MoviePlayArg& arg, bool flag)
 		config->dump();
 		mCurrentConfig = config;
 		mNaviID        = arg.mNaviID;
-		P2ASSERTLINE(594, config);
+		P2ASSERTLINE(614, config);
 
 		char path1[512];
 		char path2[512];
-		sprintf(path1, "/user/Mukki/movie/%s/demo.stb", config->mMovieNameBuffer2);
-		sprintf(path2, "/user/Mukki/movie/%s/demo.szs", config->mMovieNameBuffer2);
+		sprintf(path1, "user/Mukki/movie/%s/demo.stb", config->mMovieNameBuffer2);
+		sprintf(path2, "user/Mukki/movie/%s/demo.szs", config->mMovieNameBuffer2);
 		mIsPaused              = gameSystem->setPause(true, "moviePl:play", 3);
 		mOffset                = nullptr;
 		bool test              = false;
@@ -183,7 +185,7 @@ int MoviePlayer::play(MovieConfig* config, MoviePlayArg& arg, bool flag)
 				mCameraPosition = arg.mOrigin;
 				mCameraAngle    = arg.mAngle * RAD2DEG;
 				if (mCurrentConfig->mPositionFlag & 8) {
-					JUT_ASSERTLINE(609, mapMgr, "The Bikkuri\n");
+					JUT_ASSERTLINE(629, mapMgr, "The Bikkuri\n");
 					mCameraAngle = RAD2DEG * mapMgr->getBestAngle(mCameraPosition, 250.0f, 0.43633235f);
 				}
 			} else if (posFlag & 16) {
@@ -296,9 +298,29 @@ void MoviePlayer::clearContexts()
  * @note Address: N/A
  * @note Size: 0xF0
  */
-void MoviePlayer::playSuspended()
+bool MoviePlayer::playSuspended()
 {
-	// UNUSED FUNCTION
+	MovieContext* context = getSuspendedContext();
+	if (context) {
+		mTargetNavi   = context->mNavi;
+		mActingCamera = context->mCamera;
+		mTargetObject = context->mTargetObject;
+		int flag      = play(context->mConfig, context->mArg, true);
+		switch (flag) {
+		case MOVIEPLAY_SUCCESS:
+			return true;
+		case MOVIEPLAY_NOCONFIG:
+			return false;
+		case MOVIEPLAY_INQUEUE:
+			return true;
+		case MOVIEPLAY_QUEUEFAIL:
+			JUT_PANICLINE(787, "[QUE_FAILED] %s\n", context->mArg.mMovieName);
+			return false;
+		}
+	} else {
+		JUT_PANICLINE(792, " キューになにもないぞーー(T^T)\n"); // "There's nothing in the queue (T^T)\n"
+	}
+	return false;
 }
 
 /**
@@ -347,33 +369,15 @@ void MoviePlayer::hasSuspendedContext()
  * @note Address: N/A
  * @note Size: 0x6C
  */
-void MoviePlayer::getSuspendedContext()
+MovieContext* MoviePlayer::getSuspendedContext()
 {
-	// this is used in update I think? or it might be one of the above functions
-	// it needs to exist for rodata either way
 	MovieContext* context = mStoreContextActive.getChild();
 	if (context) {
 		context->del();
 		mStoreContextInactive.add(context);
 		mActiveContextNum--;
-		mTargetNavi   = context->mNavi;
-		mActingCamera = context->mCamera;
-		mTargetObject = context->mTargetObject;
-		u8 flag       = play(context->mConfig, context->mArg, true);
-		switch (flag) {
-		case MOVIEPLAY_SUCCESS:
-			// return true;
-		case MOVIEPLAY_NOCONFIG:
-			// return false;
-		case MOVIEPLAY_INQUEUE:
-			// return true;
-		case MOVIEPLAY_QUEUEFAIL:
-			JUT_PANICLINE(767, "[QUE_FAILED] %s\n", context->mArg.mMovieName);
-			// return false;
-		}
-	} else {
-		JUT_PANICLINE(772, " キューになにもないぞーー(T^T)\n"); // "There's nothing in the queue (T^T)\n"
 	}
+	return context;
 }
 
 /**
@@ -408,8 +412,8 @@ void MoviePlayer::loadResource()
 {
 	char path1[PATH_MAX];
 	char path2[PATH_MAX];
-	sprintf(path1, "/user/Mukki/movie/%s/demo.stb", mCurrentConfig->mMovieNameBuffer2);
-	sprintf(path2, "/user/Mukki/movie/%s/demo.szs", mCurrentConfig->mMovieNameBuffer2);
+	sprintf(path1, "user/Mukki/movie/%s/demo.stb", mCurrentConfig->mMovieNameBuffer2);
+	sprintf(path2, "user/Mukki/movie/%s/demo.szs", mCurrentConfig->mMovieNameBuffer2);
 	sys->startChangeCurrentHeap(mMovieHeap);
 
 	mDemoPSM                                 = new PSM::Demo;
@@ -462,11 +466,11 @@ void MoviePlayer::loadResource()
 	sys->heapStatusStart("stb", nullptr);
 	if (mArchive) {
 		mStbFile = mArchive->getResource("demo.stb");
-		JUT_ASSERTLINE(954, mStbFile, "まぢかｗ\n"); // "Seriously?"
+		JUT_ASSERTLINE(975, mStbFile, "まぢかｗ\n"); // "Seriously?"
 	} else {
-		JUT_PANICLINE(957, "demo.szs がないとだめだよｗ\n"); // "It's no good without it lol\n"
+		JUT_PANICLINE(978, "demo.szs がないとだめだよｗ\n"); // "It's no good without it lol\n"
 	}
-	JUT_ASSERTLINE(960, mStbFile, "resource open failed!\n");
+	JUT_ASSERTLINE(981, mStbFile, "resource open failed!\n");
 	sys->heapStatusEnd("stb");
 
 	sys->heapStatusStart("JStudio::TParse", nullptr);
@@ -492,7 +496,7 @@ bool MoviePlayer::parse(bool flag)
 
 	const void* file = mStbFile;
 	if (!parse.parse_next(&file, test)) {
-		JUT_PANICLINE(1004, "データを解釈できましぇん\n"); // "I can interpret the data\n"
+		JUT_PANICLINE(1025, "データを解釈できましぇん\n"); // "I can interpret the data\n"
 		return false;
 	} else {
 		mObjectSystem->reset();
@@ -514,7 +518,7 @@ bool MoviePlayer::update(Controller* input1, Controller* input2)
 
 	case DEMOSTATE_Fadeout:
 		if (mFadeTimer > 0.0f) {
-			mFadeTimer -= sys->getDeltaTime();
+			mFadeTimer -= sys->mDeltaTime;
 			if (mFadeTimer <= 0.0f) {
 				gameSystem->startFadeblack();
 			}
@@ -527,7 +531,7 @@ bool MoviePlayer::update(Controller* input1, Controller* input2)
 
 	case DEMOSTATE_Loading:
 		if (mFadeTimer > 0.0f) {
-			mFadeTimer -= sys->getDeltaTime();
+			mFadeTimer -= sys->mDeltaTime;
 		}
 		if (mThreadCommand.mMode == DvdThreadCommand::CM_Completed) {
 			sys->startChangeCurrentHeap(mMovieHeap);
@@ -536,7 +540,7 @@ bool MoviePlayer::update(Controller* input1, Controller* input2)
 		}
 		if (mThreadCommand.mMode == DvdThreadCommand::CM_Completed && mFadeTimer <= 0.0f) {
 			gameSystem->setPause(false, "moviePl:loaddone", 3);
-			gameSystem->paused();
+			//gameSystem->paused();
 			if (mDelegate2) {
 				mDelegate2->invoke(mCurrentConfig, 0, mNaviID);
 			}
@@ -573,7 +577,7 @@ bool MoviePlayer::update(Controller* input1, Controller* input2)
 		if (mObjectSystem) {
 			mObjectSystem->entry();
 		}
-		mFadeTimer -= sys->getDeltaTime();
+		mFadeTimer -= sys->mDeltaTime;
 		if (mFadeTimer < 1.1f && !mCanFinish) {
 			if (isFlag(MVP_IsFinished)) {
 				resetFrame();
@@ -596,39 +600,20 @@ bool MoviePlayer::update(Controller* input1, Controller* input2)
 			if (Screen::gGame2DMgr) {
 				Screen::gGame2DMgr->restartFinalFloorSound();
 			}
+			BaseGameSection* section = gameSystem->getSection();
+			if (section->mOpaqueDrawBuffer){
+				section->mOpaqueDrawBuffer->frameInitAll();
+			}
+			if (section->mTransparentDrawBuffer){
+				section->mTransparentDrawBuffer->frameInitAll();
+			}
 			if (mDelegate1) {
 				mDelegate1->invoke(config, 0, mNaviID);
 			}
 			gameSystem->startFadein(1.0f);
 			if (mStoreContextActive.getChild()) {
 				PSMCancelToPauseOffMainBgm();
-				// this whole part is an unused function from this file, but the returns need to be handled correctly so idk
-				MovieContext* context = mStoreContextActive.getChild();
-				if (context) {
-					context->del();
-					mStoreContextInactive.add(context);
-					mActiveContextNum--;
-				}
-				if (context) {
-					mTargetNavi   = context->mNavi;
-					mActingCamera = context->mCamera;
-					mTargetObject = context->mTargetObject;
-					int flag      = play(context->mConfig, context->mArg, true);
-					switch (flag) {
-					case MOVIEPLAY_SUCCESS:
-						return true;
-					case MOVIEPLAY_NOCONFIG:
-						return false;
-					case MOVIEPLAY_INQUEUE:
-						return true;
-					case MOVIEPLAY_QUEUEFAIL:
-						JUT_PANICLINE(767, "[QUE_FAILED] %s\n", context->mArg.mMovieName);
-						return false;
-					}
-				} else {
-					JUT_PANICLINE(772, " キューになにもないぞーー(T^T)\n"); // "There's nothing in the queue (T^T)\n"
-				}
-				return false;
+				return playSuspended();
 			} else if (mDemoState == DEMOSTATE_Loading || mDemoState == DEMOSTATE_Fadeout) {
 				PSMCancelToPauseOffMainBgm();
 			}
@@ -657,9 +642,7 @@ bool MoviePlayer::update(Controller* input1, Controller* input2)
 				if (norm > 10.0f) {
 					norm = 10.0f;
 				}
-				test *= norm;
-				test += offset;
-				mCameraPosition = test;
+				mCameraPosition = test + (offset * norm);
 				setTransform(mCameraPosition, mCameraAngle);
 			}
 		}
@@ -686,10 +669,10 @@ bool MoviePlayer::update(Controller* input1, Controller* input2)
 			    && mCurrentConfig->isSkippable()) {
 				skip();
 
-			} else if (((input1->getButtonDown() & Controller::PRESS_START)
-			            || (input2 && (input2->getButtonDown() & Controller::PRESS_START)))
-			           && !mCurrentConfig->isNeverSkippable()) {
-				skip();
+			//} else if (((input1->getButtonDown() & Controller::PRESS_START)
+			//            || (input2 && (input2->getButtonDown() & Controller::PRESS_START)))
+			//           && !mCurrentConfig->isNeverSkippable()) {
+			//	skip();
 			}
 		}
 	}
@@ -750,9 +733,19 @@ bool MoviePlayer::stop()
 			mDemoPSM->onDemoEnd();
 			mDemoPSM = nullptr;
 		}
+		BaseGameSection* section = mSection;
+		if (section){
+			if (section->mOpaqueDrawBuffer){
+				section->mOpaqueDrawBuffer->frameInitAll();
+			}
+			if (section->mTransparentDrawBuffer){
+				section->mTransparentDrawBuffer->frameInitAll();
+			}
+			mSection = nullptr;
+		}
 		mMovieHeap->freeAll();
 		int size = mMovieHeap->getTotalFreeSize();
-		JUT_ASSERTLINE(1339, size == (int)mMovieHeapFreeSize, "curr=%d init=%d free invalid\n", size, mMovieHeapFreeSize);
+		JUT_ASSERTLINE(1404, size == (int)mMovieHeapFreeSize, "curr=%d init=%d free invalid\n", size, mMovieHeapFreeSize);
 		mCurrentConfig = nullptr;
 	}
 
@@ -798,7 +791,7 @@ void MoviePlayer::setCamera(Camera* cam)
 		return;
 	}
 
-	P2ASSERTLINE(1453, objcam);
+	P2ASSERTLINE(1523, objcam);
 	if (getActiveGameCamera()) {
 		cam = mActingCamera;
 	}
@@ -810,11 +803,11 @@ void MoviePlayer::setCamera(Camera* cam)
 
 	mDemoPSM->init((Vec*)cam->getSoundPositionPtr(), (Vec*)cam->getSoundPositionPtr(), cam->getSoundMatrixPtr()->mMatrix.mtxView, arg);
 
-	cam->getViewMatrix(false);
+	//cam->getViewMatrix(false);
 	cam->getViewMatrix(false)->print("viewmat");
-	cam->getSoundPositionPtr();
-	cam->getSoundPositionPtr();
-	cam->getSoundPositionPtr();
+	//cam->getSoundPositionPtr();
+	//cam->getSoundPositionPtr();
+	//cam->getSoundPositionPtr();
 	mDemoPSM->onDemoTop();
 }
 
@@ -940,7 +933,7 @@ void MoviePlayer::skip()
 	gameSystem->startFadeout(1.0f);
 	mDemoPSM->onDemoFadeoutStart(30);
 	gameSystem->setPause(true, "moviePl:skip", 0);
-	mStudioControl->stopAllObjects();
+	//mStudioControl->stopAllObjects();
 
 	/*
 	stwu     r1, -0x40(r1)
@@ -1025,6 +1018,8 @@ lbl_8042E7FC:
 void MoviePlayer::draw2d()
 {
 	// here for rodata
+	OSReport("Movie ");
+	OSReport("%s");
 	OSReport("<suspend>");
 	OSReport("frame %4d", 0);
 	OSReport("use  %.1fK");
