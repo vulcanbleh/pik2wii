@@ -5,6 +5,11 @@
 #include "BaseParm.h"
 #include "string.h"
 
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "parms";
+}
+
 /**
  * @note Address: 0x80413658
  * @note Size: 0xAC
