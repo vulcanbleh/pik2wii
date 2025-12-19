@@ -2125,7 +2125,7 @@ config.libs = [
             Object(NonMatching, "plugProjectEbisawaU/ebiP2TitleCamera.cpp"),
             Object(NonMatching, "plugProjectEbisawaU/ebiP2TitleLight.cpp"),
             Object(NonMatching, "plugProjectEbisawaU/ebiScreenMemoryCard.cpp"),
-            Object(NonMatching, "plugProjectEbisawaU/efxTPkEffectMgr.cpp"),
+            Object(Matching, "plugProjectEbisawaU/efxTPkEffectMgr.cpp"),
             Object(NonMatching, "plugProjectEbisawaU/efxEnemyGeneral.cpp"),
             Object(NonMatching, "plugProjectEbisawaU/ebi3DGraph.cpp"),
             Object(NonMatching, "plugProjectEbisawaU/ebiGeometry.cpp"),
@@ -2135,7 +2135,7 @@ config.libs = [
             Object(NonMatching, "plugProjectEbisawaU/ebiOptionMgr.cpp"),
             Object(NonMatching, "plugProjectEbisawaU/ebi2DCallBack.cpp"),
             Object(NonMatching, "plugProjectEbisawaU/ebiCardMgr.cpp"),
-            Object(NonMatching, "plugProjectEbisawaU/ebiScreenFramework.cpp"),
+            Object(Matching, "plugProjectEbisawaU/ebiScreenFramework.cpp"),
             Object(NonMatching, "plugProjectEbisawaU/ebiScreenPushStart.cpp"),
             Object(
                 NonMatching,

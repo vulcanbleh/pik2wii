@@ -5654,13 +5654,13 @@ plugProjectEbisawaU/ebiP2TitleLight.cpp:
 plugProjectEbisawaU/ebiScreenMemoryCard.cpp:
 	.text       start:0x80442720 end:0x804498A0
 	.rodata     start:0x80556648 end:0x805569C8
-	.data       start:0x805C84F8 end:0x805C8600
+	.data       start:0x805C84F8 end:0x805C85C0
 	.sdata2     start:0x80674C50 end:0x80674C78
 
 plugProjectEbisawaU/efxTPkEffectMgr.cpp:
 	.text       start:0x804498A0 end:0x8044BDA8
 	.rodata     start:0x805569C8 end:0x80556A10
-	.data       start:0x805C8600 end:0x805C8648
+	.data       start:0x805C85C0 end:0x805C8648
 	.sbss       start:0x8066D070 end:0x8066D078
 
 plugProjectEbisawaU/efxEnemyGeneral.cpp:
