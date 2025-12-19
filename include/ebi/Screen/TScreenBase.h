@@ -91,7 +91,7 @@ struct TScreenBase : public TScreenBaseInterface {
 	virtual void killScreen();                         // _14
 	virtual void update();                             // _18
 	virtual void draw();                               // _1C
-	virtual bool isFinishScreen();                       // _20
+	virtual bool isFinishScreen();                     // _20
 	virtual void doSetArchive(JKRArchive*) { }         // _24 (weak)
 	virtual void doOpenScreen(ArgOpen*) { }            // _28 (weak)
 	virtual void doCloseScreen(ArgClose*) { }          // _2C (weak)
