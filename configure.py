@@ -1975,7 +1975,7 @@ config.libs = [
             Object(NonMatching, "plugProjectOgawaU/ogObjFloor.cpp"),
             Object(NonMatching, "plugProjectOgawaU/ogSceneFloor.cpp"),
             Object(NonMatching, "plugProjectOgawaU/ogObjCave.cpp"),
-            Object(nMatching, "plugProjectOgawaU/ogSceneCave.cpp"),
+            Object(Matching, "plugProjectOgawaU/ogSceneCave.cpp"),
             Object(NonMatching, "plugProjectOgawaU/ogObjAnaDemo.cpp"),
             Object(NonMatching, "plugProjectOgawaU/ogSceneAnaDemo.cpp"),
             Object(NonMatching, "plugProjectOgawaU/ogObjChallenge2P.cpp"),
