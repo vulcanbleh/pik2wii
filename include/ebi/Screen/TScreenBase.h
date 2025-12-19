@@ -73,7 +73,7 @@ struct TScreenBaseInterface {
 	virtual void killScreen()            = 0; // _14
 	virtual void update()                = 0; // _18
 	virtual void draw()                  = 0; // _1C
-	virtual u8 isFinishScreen()          = 0; // _20
+	virtual bool isFinishScreen()        = 0; // _20
 
 	// _00 = VTBL
 };
@@ -91,7 +91,7 @@ struct TScreenBase : public TScreenBaseInterface {
 	virtual void killScreen();                         // _14
 	virtual void update();                             // _18
 	virtual void draw();                               // _1C
-	virtual u8 isFinishScreen();                       // _20
+	virtual bool isFinishScreen();                     // _20
 	virtual void doSetArchive(JKRArchive*) { }         // _24 (weak)
 	virtual void doOpenScreen(ArgOpen*) { }            // _28 (weak)
 	virtual void doCloseScreen(ArgClose*) { }          // _2C (weak)
@@ -103,9 +103,9 @@ struct TScreenBase : public TScreenBaseInterface {
 	virtual void doDraw() { }                          // _44 (weak)
 	virtual char* getName() { return "NoNameScreen"; } // _48 (weak)
 
-	u8 isOpenScreen();
-	u8 isWaitScreen();
-	u8 isCloseScreen();
+	bool isOpenScreen();
+	bool isWaitScreen();
+	bool isCloseScreen();
 
 	// _00 = VTBL
 	JKRArchive* mArchive; // _04
