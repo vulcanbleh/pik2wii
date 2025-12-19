@@ -254,10 +254,10 @@ struct MoviePlayer : public JKRDisposer {
 	void setMovieHeap(JKRHeap*);
 	void clearMovieHeap();
 	void doStartMovie();
-	void playSuspended();
+	bool playSuspended();
 	void hasSuspendedDemo();
 	void hasSuspendedContext();
-	void getSuspendedContext();
+	MovieContext* getSuspendedContext();
 	void do_stop();
 	void suspend(s32);
 	bool isLoadingBlack();
@@ -304,20 +304,21 @@ struct MoviePlayer : public JKRDisposer {
 	u8 _1A8[0x8];                                                  // _1A8, unknown
 	JKRHeap* mMovieHeap;                                           // _1B0
 	u32 mMovieHeapFreeSize;                                        // _1B4
-	int mMessageEndCount;                                          // _1B8
-	Vector3f mTransform;                                           // _1BC
-	f32 mTransformAngle;                                           // _1C8
-	P2JST::ObjectSystem* mObjectSystem;                            // _1CC
-	JStudio::TControl* mStudioControl;                             // _1D0
-	JStudio::TFactory* mStudioFactory;                             // _1D4
-	JStudio_JStage::TCreateObject* mStudioStageCreateObject;       // _1D8
-	JStudio_JParticle::TCreateObject* mStudioParticleCreateObject; // _1DC
-	Pikmin_TCreateObject_JAudio* mPikminCreateObjectAudio;         // _1E0
-	P2JME::Movie::TControl* mTextControl;                          // _1E4
-	u32 mCounter;                                                  // _1E8
-	const void* mStbFile;                                          // _1EC
-	BitFlag<u32> mFlags;                                           // _1F0, see MoviePlayerFlags enum
-	JPAResourceManager* mEfxManager;                               // _1F4
+	int _1B8;												   // _1B8, unknown
+	int mMessageEndCount;                                          // _1BC
+	Vector3f mTransform;                                           // _1C0
+	f32 mTransformAngle;                                           // _1CC
+	P2JST::ObjectSystem* mObjectSystem;                            // _1D0
+	JStudio::TControl* mStudioControl;                             // _1D4
+	JStudio::TFactory* mStudioFactory;                             // _1D8
+	JStudio_JStage::TCreateObject* mStudioStageCreateObject;       // _1DC
+	JStudio_JParticle::TCreateObject* mStudioParticleCreateObject; // _1E0
+	Pikmin_TCreateObject_JAudio* mPikminCreateObjectAudio;         // _1E4
+	P2JME::Movie::TControl* mTextControl;                          // _1E8
+	u32 mCounter;                                                  // _1EC
+	const void* mStbFile;                                          // _1F0
+	BitFlag<u32> mFlags;                                           // _1F4, see MoviePlayerFlags enum
+	JPAResourceManager* mEfxManager;                               // _1F8
 
 	static JKRArchive* mArchive;
 };
