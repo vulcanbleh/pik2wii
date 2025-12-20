@@ -1267,6 +1267,7 @@ JSystem/J2D/J2DWindow.cpp:
 
 JSystem/J2D/J2DWindowEx.cpp:
 	.text       start:0x800A7998 end:0x800AA870
+	.rodata     start:0x8053EBF8 end:0x8053EC48
 	.data       start:0x805696A8 end:0x80569774
 	.sdata2     start:0x8066E0B0 end:0x8066E0CC
 
@@ -1287,6 +1288,7 @@ JSystem/J2D/J2DManage.cpp:
 
 JSystem/J2D/J2DMatBlock.cpp:
 	.text       start:0x800AC718 end:0x800B672C
+	.rodata     start:0x8053EC48 end:0x8053EC58
 	.data       start:0x805697C0 end:0x80569BB0
 
 JSystem/J2D/J2DMaterial.cpp:
@@ -1300,12 +1302,13 @@ JSystem/J2D/J2DMaterialFactory.cpp:
 
 JSystem/J2D/J2DPictureEx.cpp:
 	.text       start:0x800B9DEC end:0x800BE7F0
+	.rodata     start:0x8053EC58 end:0x8053ECC0
 	.data       start:0x80569C08 end:0x80569D54
 	.sdata2     start:0x8066E0F0 end:0x8066E110
 
 JSystem/J2D/J2DTevs.cpp:
 	.text       start:0x800BE7F0 end:0x800BEC18
-	.rodata     start:0x8053EBF8 end:0x8053ED40
+	.rodata     start:0x8053ECC0 end:0x8053ED40
 	.sdata2     start:0x8066E110 end:0x8066E150
 	.sbss2      start:0x806762C0 end:0x806762C8
 
@@ -1415,7 +1418,7 @@ JSystem/J3D/J3DShapeFactory.cpp:
 
 JSystem/J3D/J3DAnmLoader.cpp:
 	.text       start:0x800D7F8C end:0x800D999C
-	.data       start:0x8056A740 end:0x8056A8F8
+	.data       start:0x8056A740 end:0x8056A790
 	.sdata2     start:0x8066E2B8 end:0x8066E2C0
 
 JSystem/J3D/J3DModelSaver.cpp:
@@ -1423,13 +1426,14 @@ JSystem/J3D/J3DModelSaver.cpp:
 
 JSystem/J3D/J3DGD.cpp:
 	.text       start:0x800D99A4 end:0x800DC6DC
+	.data       start:0x8056A790 end:0x8056A838
 	.sdata      start:0x8066A9F0 end:0x8066AA38
 	.sdata2     start:0x8066E2C0 end:0x8066E300
 
 JSystem/J3D/J3DMatBlock.cpp:
 	.text       start:0x800DC6DC end:0x800E9A18
 	.ctors      start:0x80534D2C end:0x80534D30
-	.data       start:0x8056A8F8 end:0x8056B3B8
+	.data       start:0x8056A838 end:0x8056B3B8
 	.sdata      start:0x8066AA38 end:0x8066AA44
 	.sbss       start:0x8066BEC0 end:0x8066BEC8
 	.sdata2     start:0x8066E300 end:0x8066E308
@@ -1466,7 +1470,7 @@ JSystem/J3D/J3DSkinDeform.cpp:
 
 JSystem/J3D/J3DShapeDraw.cpp:
 	.text       start:0x800EE8B8 end:0x800EE920
-	.data       start:0x8056B678 end:0x8056B6A0
+	.data       start:0x8056B678 end:0x8056B684
 
 JSystem/J3D/J3DMtxBuffer.cpp:
 	.text       start:0x800EE920 end:0x800EF6FC
@@ -1717,7 +1721,7 @@ RevoSDK/dsp/DSPCode.c:
 
 RevoSDK/runtime/Gecko_ExceptionPPC.cp:
 	.text       start:0x801049DC end:0x80104A40
-	.bss        start:0x805D7D20 end:0x805DC1C0
+	.bss        start:0x805D7D20 end:0x805D7D30
 
 RevoSDK/runtime/GCN_mem_alloc.c:
 	.text       start:0x80104A40 end:0x80104AF8
@@ -1726,6 +1730,7 @@ RevoSDK/MSL_C/MSL_Common/alloc.c:
 	extab       start:0x80006528 end:0x80006540
 	extabindex  start:0x8000695C end:0x80006980
 	.text       start:0x80104AF8 end:0x8010500C
+	.bss        start:0x805D7D30 end:0x805D8068
 
 RevoSDK/MSL_C/MSL_Common/ansi_files.c:
 	extab       start:0x80006540 end:0x80006550
@@ -1950,7 +1955,7 @@ RevoSDK/ax/AXCL.c:
 
 RevoSDK/ax/AXOut.c:
 	.text       start:0x80113674 end:0x80113D24
-	.bss        start:0x805DC1C0 end:0x805F4A10
+	.bss        start:0x805DC1C0 end:0x805DC200
 	.sbss       start:0x8066C038 end:0x8066C078
 
 RevoSDK/ax/AXSPB.c:
@@ -1983,7 +1988,7 @@ RevoSDK/db/db.c:
 
 RevoSDK/dsp/dsp.c:
 	.text       start:0x80115DD8 end:0x80115FE0
-	.sdata      start:0x8066AAD8 end:0x8066ABD8
+	.sdata      start:0x8066AAD8 end:0x8066AAE0
 	.sbss       start:0x8066C100 end:0x8066C100
 
 RevoSDK/dsp/dsp_debug.c:
@@ -2269,7 +2274,7 @@ RevoSDK/wenc/wenc.c:
 
 RevoSDK/wpad/WPAD.c:
 	.text       start:0x801465E8 end:0x8014DE14
-	.bss        start:0x805F4A10 end:0x8062ED20
+	.bss        start:0x805F4A10 end:0x805F8D78
 	.sdata      start:0x8066ACC0 end:0x8066ACD0
 	.sbss       start:0x8066C660 end:0x8066C690
 
