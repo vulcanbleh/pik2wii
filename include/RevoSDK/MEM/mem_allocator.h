@@ -50,6 +50,9 @@ void MEMFreeToAllocator(MEMAllocator* allocator, void* block);
 void MEMInitAllocatorForExpHeap(MEMAllocator* allocator, MEMiHeapHead* heap, s32 align);
 void MEMInitAllocatorForFrmHeap(MEMAllocator* allocator, MEMiHeapHead* heap, s32 align);
 
+MEMiHeapHead* MEMCreateExpHeapEx(void* start, void* end);
+void MEMDestroyExpHeap(MEMiHeapHead*);
+
 ////////////////////////////////////////////////////////
 
 #ifdef __cplusplus
