@@ -5410,7 +5410,7 @@ plugProjectMorimuraU/enemyNestMgr.cpp:
 plugProjectMorimuraU/enemyNest.cpp:
 	.text       start:0x803E95B0 end:0x803E97EC
 	.data       start:0x805C3880 end:0x805C3BB0
-	.sdata2     start:0x80674030 end:0x80674040
+	.sdata2     start:0x80674030 end:0x8067403C
 
 plugProjectMorimuraU/tamagoMushiState.cpp:
 	.text       start:0x803E97EC end:0x803EA364
