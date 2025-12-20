@@ -1843,7 +1843,7 @@ config.libs = [
             Object(Matching, "plugProjectNishimuraU/BombSaraiAnimator.cpp"),
             Object(NonMatching, "plugProjectNishimuraU/BombSaraiMgr.cpp"),
             Object(NonMatching, "plugProjectNishimuraU/BombSarai.cpp"),
-            Object(NonMatching, "plugProjectNishimuraU/OtakaraBaseState.cpp"),
+            Object(Matching, "plugProjectNishimuraU/OtakaraBaseState.cpp"),
             Object(Matching, "plugProjectNishimuraU/OtakaraBaseAnimator.cpp"),
             Object(NonMatching, "plugProjectNishimuraU/OtakaraBaseMgr.cpp"),
             Object(NonMatching, "plugProjectNishimuraU/OtakaraBase.cpp"),

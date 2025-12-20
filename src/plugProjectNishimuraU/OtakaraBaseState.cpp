@@ -2,10 +2,14 @@
 #include "Game/EnemyFunc.h"
 #include "Game/Entities/OtakaraBase.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-OtakaraBaseState";
+}
+
 namespace Game {
 namespace OtakaraBase {
-
-const char basestatename[] = "246-OtakaraBaseState";
 
 /**
  * @note Address: 0x802B37A8
@@ -15,22 +19,22 @@ void FSM::init(EnemyBase* enemy)
 {
 	create(OTA_Count);
 
-	registerState(new StateDead);
-	registerState(new StateFlick);
-	registerState(new StateWait);
-	registerState(new StateMove);
-	registerState(new StateTurn);
-	registerState(new StateTake);
+	registerState(new StateDead("dead"));
+	registerState(new StateFlick("flick"));
+	registerState(new StateWait("wait"));
+	registerState(new StateMove("move"));
+	registerState(new StateTurn("turn"));
+	registerState(new StateTake("take"));
 
-	registerState(new StateItemWait);
-	registerState(new StateItemMove);
-	registerState(new StateItemTurn);
-	registerState(new StateItemFlick);
-	registerState(new StateItemDrop);
+	registerState(new StateItemWait("itemwait"));
+	registerState(new StateItemMove("itemmove"));
+	registerState(new StateItemTurn("itemturn"));
+	registerState(new StateItemFlick("itemflick"));
+	registerState(new StateItemDrop("itemdrop"));
 
-	registerState(new StateBombWait);
-	registerState(new StateBombMove);
-	registerState(new StateBombTurn);
+	registerState(new StateBombWait("bombturn")); // wrong name by devs?
+	registerState(new StateBombMove("bombflick")); // wrong name by devs?
+	registerState(new StateBombTurn("bombdrop")); // wrong name by devs?
 }
 
 /**
