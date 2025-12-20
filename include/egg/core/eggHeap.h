@@ -55,8 +55,10 @@ public:
 	virtual void free(void* pBlock)                                  = 0; // _18
 	virtual void destroy()                                           = 0; // _1C
 	virtual u32 resizeForMBlock(void* pBlock, u32 size)              = 0; // _20
-	virtual u32 adjust()                                             = 0; // _24
+	virtual u32 getTotalFreeSize()                                   = 0; // _24
 	virtual u32 getAllocatableSize(s32 align = 4)                    = 0; // _28
+	virtual u32 adjust()                                             = 0; // _2C
+	
 	
 
 	static Heap* findHeap(MEMiHeapHead* pHeapHandle);
@@ -114,15 +116,16 @@ protected:
 	static Heap* sCurrentHeap;
 
 	static void(*sCreateCallback)(void*);
+	static void(*sDestroyCallback)(void*);
 
 	// _00     = VTBL
 	// _00-_10 = Disposer
 	MEMiHeapHead* mHeapHandle; // _10
 	void* mHeapBuffer;         // _14
 	Heap* mParentHeap;         // _18
+	TBitFlag<u16> mFlags;      // _1C
 
 private:
-	TBitFlag<u16> mFlags;         // _1C
 	NW4R_UT_LIST_LINK_DECL();     // _20
 	nw4r::ut::List mDisposerList; // _28
 };

@@ -52,6 +52,12 @@ void MEMInitAllocatorForFrmHeap(MEMAllocator* allocator, MEMiHeapHead* heap, s32
 
 MEMiHeapHead* MEMCreateExpHeapEx(void* start, void* end);
 void MEMDestroyExpHeap(MEMiHeapHead*);
+void* MEMAllocFromExpHeapEx(MEMiHeapHead*, u32, s32);
+void MEMFreeToExpHeap(MEMiHeapHead*, void*);
+u32 MEMResizeForMBlockExpHeap(MEMiHeapHead*, void*, u32);
+u32 MEMGetTotalFreeSizeForExpHeap(MEMiHeapHead*);
+u32 MEMGetAllocatableSizeForExpHeapEx(MEMiHeapHead*, s32);
+u32 MEMAdjustExpHeap(MEMiHeapHead*);
 
 ////////////////////////////////////////////////////////
 
