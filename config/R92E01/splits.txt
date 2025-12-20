@@ -4403,15 +4403,22 @@ plugProjectNishimuraU/BombSarai.cpp:
 
 plugProjectNishimuraU/OtakaraBaseState.cpp:
 	.text       start:0x803326E0 end:0x80334BF0
+	.rodata     start:0x8054EEC8 end:0x8054EF48
+	.data       start:0x805AE938 end:0x805AEB54
+	.sdata2     start:0x806721F8 end:0x8067220C
 
 plugProjectNishimuraU/OtakaraBaseAnimator.cpp:
 	.text       start:0x80334BF0 end:0x80334C48
+	.data       start:0x805AEB58 end:0x805AEB80
 
 plugProjectNishimuraU/OtakaraBaseMgr.cpp:
 	.text       start:0x80334C48 end:0x80334FBC
+	.data       start:0x805AEB80 end:0x805AEC64
 
 plugProjectNishimuraU/OtakaraBase.cpp:
 	.text       start:0x80334FBC end:0x803368CC
+	.data       start:0x805AEC68 end:0x805AEFD0
+	.sdata2     start:0x80672210 end:0x80672258
 
 plugProjectNishimuraU/FireOtakaraMgr.cpp:
 	.text       start:0x803368CC end:0x80336D20
