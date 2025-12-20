@@ -6182,13 +6182,16 @@ sysGCU/moviePlayer.cpp:
 	.data       start:0x805CCEF8 end:0x805CCF58
 	.bss        start:0x80639520 end:0x80639530
 	.sbss       start:0x8066D220 end:0x8066D230
+	.sdata2     start:0x806757B0 end:0x806757F0
 
 sysGCU/JSTObjectActor.cpp:
 	.text       start:0x804B54B4 end:0x804B7564
 	.ctors      start:0x80535034 end:0x80535038
+	.rodata     start:0x8055A078 end:0x8055A0E8
 	.data       start:0x805CCF58 end:0x805CD028
 	.bss        start:0x80639530 end:0x80639540
 	.sbss       start:0x8066D230 end:0x8066D238
+	.sdata2     start:0x806757F0 end:0x80675810
 
 sysGCU/JSTObjectCamera.cpp:
 	.text       start:0x804B7564 end:0x804B7C28
@@ -6196,17 +6199,21 @@ sysGCU/JSTObjectCamera.cpp:
 	.data       start:0x805CD028 end:0x805CD0F8
 	.bss        start:0x80639540 end:0x80639550
 	.sbss       start:0x8066D238 end:0x8066D248
+	.sdata2     start:0x80675810 end:0x80675830
 
 sysGCU/JSTObjectGameActor.cpp:
 	.text       start:0x804B7C28 end:0x804B8828
 	.ctors      start:0x8053503C end:0x80535040
+	.rodata     start:0x8055A0E8 end:0x8055A1C0
 	.data       start:0x805CD0F8 end:0x805CD1C8
 	.bss        start:0x80639550 end:0x80639560
 	.sbss       start:0x8066D248 end:0x8066D250
+	.sdata2     start:0x80675830 end:0x80675840
 
 sysGCU/JSTObjectSystem.cpp:
 	.text       start:0x804B8828 end:0x804B9080
 	.ctors      start:0x80535040 end:0x80535044
+	.rodata     start:0x8055A1C0 end:0x8055A208
 	.data       start:0x805CD1C8 end:0x805CD248
 	.bss        start:0x80639560 end:0x80639570
 	.sbss       start:0x8066D250 end:0x8066D258
@@ -6214,59 +6221,73 @@ sysGCU/JSTObjectSystem.cpp:
 sysGCU/JSTFindCreature.cpp:
 	.text       start:0x804B9080 end:0x804B9504
 	.ctors      start:0x80535044 end:0x80535048
+	.rodata     start:0x8055A208 end:0x8055A290
 	.bss        start:0x80639570 end:0x80639580
 	.sbss       start:0x8066D258 end:0x8066D260
 
 sysGCU/movieConfig.cpp:
 	.text       start:0x804B9504 end:0x804B9D40
 	.ctors      start:0x80535048 end:0x8053504C
+	.rodata     start:0x8055A290 end:0x8055A2E0
 	.data       start:0x805CD248 end:0x805CD298
 	.bss        start:0x80639580 end:0x806395A0
 	.sdata      start:0x8066B6F8 end:0x8066B700
 	.sbss       start:0x8066D260 end:0x8066D270
+	.sdata2     start:0x80675840 end:0x80675848
 
 sysGCU/gameConfig.cpp:
 	.text       start:0x804B9D40 end:0x804BA4CC
 	.ctors      start:0x8053504C end:0x80535050
+	.rodata     start:0x8055A2E0 end:0x8055A320
 	.data       start:0x805CD298 end:0x805CD4A0
 	.sdata      start:0x8066B700 end:0x8066B730
 
 sysGCU/fogMgr.cpp:
 	.text       start:0x804BA4CC end:0x804BA6C4
 	.ctors      start:0x80535050 end:0x80535054
+	.rodata     start:0x8055A320 end:0x8055A338
 	.data       start:0x805CD4A0 end:0x805CD4B0
 	.bss        start:0x806395A0 end:0x806395B0
 	.sbss       start:0x8066D270 end:0x8066D278
+	.sdata2     start:0x80675848 end:0x80675858
 
 sysGCU/aramMgr.cpp:
 	.text       start:0x804BA6C4 end:0x804BACAC
+	.rodata     start:0x8055A338 end:0x8055A370
 	.data       start:0x805CD4B0 end:0x805CD4F0
 	.sbss       start:0x8066D278 end:0x8066D280
 
 sysGCU/resourceMgr.cpp:
 	.text       start:0x804BACAC end:0x804BBA5C
+	.rodata     start:0x8055A370 end:0x8055A3D0
 	.data       start:0x805CD4F0 end:0x805CD57C
 
 sysGCU/resourceMgr2D.cpp:
 	.text       start:0x804BBA5C end:0x804BBB04
+	.rodata     start:0x8055A3D0 end:0x8055A3F0
 	.data       start:0x805CD580 end:0x805CD590
 	.sbss       start:0x8066D280 end:0x8066D284
 
 sysGCU/sysMaterialAnim.cpp:
 	.text       start:0x804BBB04 end:0x804BC4F8
+	.rodata     start:0x8055A3F0 end:0x8055A418
 	.data       start:0x805CD590 end:0x805CD600
+	.sdata2     start:0x80675858 end:0x80675868
 
 sysGCU/P2DScreen.cpp:
 	.text       start:0x804BC4F8 end:0x804BC9B4
+	.rodata     start:0x8055A418 end:0x8055A430
 	.data       start:0x805CD600 end:0x805CD740
 	.sdata2     start:0x80675868 end:0x80675890
 
 sysGCU/movieMessage.cpp:
 	.text       start:0x804BC9B4 end:0x804BE84C
 	.ctors      start:0x80535054 end:0x80535058
+	.rodata     start:0x8055A430 end:0x8055A588
 	.data       start:0x805CD740 end:0x805CD920
 	.bss        start:0x806395B0 end:0x806395C0
 	.sbss       start:0x8066D288 end:0x8066D290
+	.sdata2     start:0x80675890 end:0x80675920
 
 sysGCU/moviePlayerPauseAndDraw.cpp:
 	.text       start:0x804BE84C end:0x804BEE64
@@ -6277,29 +6298,38 @@ sysGCU/moviePlayerPauseAndDraw.cpp:
 sysGCU/JSTObjectSpecialActor.cpp:
 	.text       start:0x804BEE64 end:0x804BF290
 	.ctors      start:0x8053505C end:0x80535060
+	.rodata     start:0x8055A588 end:0x8055A5E8
 	.data       start:0x805CD920 end:0x805CD9F0
 	.bss        start:0x806395D0 end:0x806395E0
 	.sbss       start:0x8066D298 end:0x8066D2A0
+	.sdata2     start:0x80675920 end:0x80675928
 
 sysGCU/messageSequence.cpp:
 	.text       start:0x804BF290 end:0x804BF89C
+	.rodata     start:0x8055A5E8 end:0x8055A608
 	.data       start:0x805CD9F0 end:0x805CDA68
+	.sdata2     start:0x80675928 end:0x80675950
 
 sysGCU/messageMgr.cpp:
 	.text       start:0x804BF89C end:0x804C0590
 	.ctors      start:0x80535060 end:0x80535064
+	.rodata     start:0x8055A608 end:0x8055A900
 	.data       start:0x805CDA68 end:0x805CDAF0
 	.bss        start:0x806395E0 end:0x806395EC
 	.sbss       start:0x8066D2A0 end:0x8066D2AC
 
 sysGCU/messageObj.cpp:
 	.text       start:0x804C0590 end:0x804C0D28
+	.rodata     start:0x8055A900 end:0x8055A948
 	.data       start:0x805CDAF0 end:0x805CDB38
+	.sdata2     start:0x80675950 end:0x80675960
 
 sysGCU/messageRendering.cpp:
 	.text       start:0x804C0D28 end:0x804C449C
+	.rodata     start:0x8055A948 end:0x8055A970
 	.data       start:0x805CDB38 end:0x805CDC90
 	.bss        start:0x806395F0 end:0x80639618
+	.sdata2     start:0x80675960 end:0x80675990
 
 sysGCU/message.cpp:
 	.text       start:0x804C449C end:0x804C46A8
@@ -6307,11 +6337,13 @@ sysGCU/message.cpp:
 sysGCU/modelEffect.cpp:
 	.text       start:0x804C46A8 end:0x804C4C74
 	.ctors      start:0x80535064 end:0x80535068
+	.rodata     start:0x8055A970 end:0x8055A998
 	.bss        start:0x80639618 end:0x80639628
 	.sbss       start:0x8066D2B0 end:0x8066D2B8
 
 sysGCU/messageReference.cpp:
 	.text       start:0x804C4C74 end:0x804C4D34
+	.rodata     start:0x8055A998 end:0x8055A9A8
 	.data       start:0x805CDC90 end:0x805CDCA0
 	.bss        start:0x80639628 end:0x80639728
 	.sdata      start:0x8066B730 end:0x8066B738
@@ -6322,23 +6354,28 @@ sysGCU/simpleMessage.cpp:
 sysGCU/sysShapeAnimation.cpp:
 	.text       start:0x804C4E18 end:0x804C532C
 	.ctors      start:0x80535068 end:0x8053506C
+	.rodata     start:0x8055A9A8 end:0x8055A9F8
 	.bss        start:0x80639728 end:0x80639734
 	.sbss       start:0x8066D2B8 end:0x8066D2C0
 
 sysGCU/sysShapeModel.cpp:
 	.text       start:0x804C532C end:0x804C6640
 	.ctors      start:0x8053506C end:0x80535070
+	.rodata     start:0x8055A9F8 end:0x8055AA20
 	.data       start:0x805CDCA0 end:0x805CDCE0
 	.bss        start:0x80639738 end:0x80639748
 	.sdata      start:0x8066B738 end:0x8066B740
 	.sbss       start:0x8066D2C0 end:0x8066D2D0
+	.sdata2     start:0x80675990 end:0x806759A0
 
 sysGCU/windowMessage.cpp:
 	.text       start:0x804C6640 end:0x804C7ADC
 	.ctors      start:0x80535070 end:0x80535074
+	.rodata     start:0x8055AA20 end:0x8055AA50
 	.data       start:0x805CDCE0 end:0x805CDE70
 	.bss        start:0x80639748 end:0x80639758
 	.sbss       start:0x8066D2D0 end:0x8066D2D8
+	.sdata2     start:0x806759A0 end:0x806759F8
 
 sysGCU/memoryCard.cpp:
 	.text       start:0x804C7ADC end:0x804C8350
@@ -6354,6 +6391,7 @@ sysGCU/pikmin2MemoryCardMgr.cpp:
 sysGCU/commonSaveData.cpp:
 	.text       start:0x804CC060 end:0x804CC76C
 	.rodata     start:0x8055ABD0 end:0x8055AC08
+	.sdata2     start:0x806759F8 end:0x80675A18
 
 sysGCU/bootSection.cpp:
 	.text       start:0x804CC76C end:0x804CF07C
