@@ -71,6 +71,7 @@ typedef u16 wchar_t;
 
 #define ROUND_UP(x, align)     (((x) + (align) - 1) & (-(align)))
 #define ROUND_UP_PTR(x, align) ((void*)((((u32)(x)) + (align) - 1) & (~((align) - 1))))
+#define ROUND_DOWN_PTR(x, align) ((void*)(((u32)(x)) & (~((align) - 1))))
 
 #define ASSERT_HANG(cond) \
 	if (!(cond)) {        \

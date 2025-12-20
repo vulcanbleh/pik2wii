@@ -6,13 +6,13 @@
 namespace EGG {
 
 struct ExpHeap : public Heap {
-	inline ExpHeap(MEMiHeapHead* pHeapHandle)
+	inline explicit ExpHeap(MEMiHeapHead* pHeapHandle)
 	    : Heap(pHeapHandle)
 	{
 	}
 
-	static ExpHeap* create(void*, u32, u16);
-	static ExpHeap* create(u32, Heap*, u16);
+	static ExpHeap* create(void* pHeapStart, u32 size, u16 opt = 0);
+	static ExpHeap* create(u32 size, Heap* parent, u16 opt = 0);
 
 	virtual ~ExpHeap();                                                // _08
 	virtual EHeapKind getHeapKind() const { return HEAP_KIND_EXPAND; } // _0C

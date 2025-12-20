@@ -2415,7 +2415,7 @@ config.libs = [
         "mw_version": "GC/3.0a3p1",  # unknown
         "progress_category": "egg",
         "objects": [
-            Object(NonMatching, "egg/core/eggExpHeap.cpp"),
+            Object(Matching, "egg/core/eggExpHeap.cpp"),
             Object(NonMatching, "egg/core/eggHeap.cpp"),
             Object(Matching, "egg/core/eggAllocator.cpp"),
             Object(Matching, "egg/core/eggThread.cpp"),
