@@ -125,6 +125,11 @@ void* OSGetArenaLo(void);
 void OSSetArenaHi(void* addr);
 void OSSetArenaLo(void* addr);
 
+void* OSGetMEM1ArenaLo(void);
+void* OSGetMEM1ArenaHi(void);
+void* OSGetMEM2ArenaLo(void);
+void* OSGetMEM2ArenaHi(void);
+
 // targsupp
 extern u32 TRKAccessFile(u32, u32, u32*, u8*);
 extern u32 TRKOpenFile(u32, u32, u32*, u8*);

@@ -55,8 +55,9 @@ public:
 	virtual void free(void* pBlock)                                  = 0; // _18
 	virtual void destroy()                                           = 0; // _1C
 	virtual u32 resizeForMBlock(void* pBlock, u32 size)              = 0; // _20
-	virtual u32 getAllocatableSize(s32 align = 4)                    = 0; // _24
-	virtual u32 adjust()                                             = 0; // _28
+	virtual u32 adjust()                                             = 0; // _24
+	virtual u32 getAllocatableSize(s32 align = 4)                    = 0; // _28
+	
 
 	static Heap* findHeap(MEMiHeapHead* pHeapHandle);
 	Heap* findParentHeap();
@@ -103,8 +104,6 @@ protected:
 	void registerHeapBuffer(void* pBuffer) { mHeapBuffer = pBuffer; }
 
 private:
-	static Heap* sCurrentHeap;
-
 	static nw4r::ut::List sHeapList;
 	static BOOL sIsHeapListInitialized;
 	static OSMutex sRootMutex;
@@ -112,6 +111,10 @@ private:
 	static Heap* sAllocatableHeap;
 
 protected:
+	static Heap* sCurrentHeap;
+
+	static void(*sCreateCallback)(void*);
+
 	// _00     = VTBL
 	// _00-_10 = Disposer
 	MEMiHeapHead* mHeapHandle; // _10
@@ -128,6 +131,8 @@ private:
 
 ////////////////////////////////////////////////////////
 ////////////////// OPERATOR OVERRIDES //////////////////
+
+inline void* operator new(size_t size, void* mem) { return mem; } // fabricated?
 
 // void* operator new(size_t size);
 // void* operator new(size_t size, EGG::Heap* pHeap, int align = 4);
