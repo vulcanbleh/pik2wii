@@ -139,7 +139,7 @@ bool JASWaveBankMgr::eraseWave(int bankIndex, int arcIndex)
 	if (arc == nullptr) {
 		return false;
 	}
-	return arc->erase() != false;
+	return arc->erase();
 }
 
 /**
