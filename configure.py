@@ -399,7 +399,7 @@ config.libs = [
             Object(Matching, "JSystem/JAudio/JAS/JASSimpleWaveBank.cpp"),
             Object(Matching, "JSystem/JAudio/JAS/JASWaveArcLoader.cpp"),
             Object(Matching, "JSystem/JAudio/JAS/JASWaveBank.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAS/JASWaveBankMgr.cpp"),
+            Object(Matching, "JSystem/JAudio/JAS/JASWaveBankMgr.cpp"),
             Object(Matching, "JSystem/JAudio/JAS/JASBank.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAS/JASTrackPort.cpp"),
             Object(Matching, "JSystem/JAudio/JAS/JASOuterParam.cpp"),
