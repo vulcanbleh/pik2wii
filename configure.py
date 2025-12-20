@@ -250,6 +250,7 @@ cflags_egg = [
     "-enc SJIS",
     "-ipa file",
     "-str reuse,readonly",
+    "-use_lmw_stmw on",
 ]
 
 # NW4R library flags

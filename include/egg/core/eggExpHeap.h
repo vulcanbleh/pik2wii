@@ -21,8 +21,9 @@ struct ExpHeap : public Heap {
 	virtual void free(void* pBlock);                                   // _18
 	virtual void destroy();                                            // _1C
 	virtual u32 resizeForMBlock(void* pBlock, u32 size);               // _20
-	virtual u32 getAllocatableSize(s32 align = 4);                     // _24
-	virtual u32 adjust();                                              // _28
+	virtual u32 getTotalFreeSize();                                    // _24
+	virtual u32 getAllocatableSize(s32 align = 4);                     // _28
+	virtual u32 adjust();                                              // _2C
 };
 
 } // namespace EGG

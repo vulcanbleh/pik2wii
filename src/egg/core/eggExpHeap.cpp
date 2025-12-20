@@ -1,5 +1,6 @@
 #include "types.h"
 #include <egg/core/eggExpHeap.h>
+#include <egg/core/eggAllocator.h>
 
 namespace EGG {
 
@@ -9,24 +10,24 @@ ExpHeap::~ExpHeap()
 	MEMDestroyExpHeap(mHeapHandle);
 }
 
-// issue with _savegpr_27_, unsure how to generate stmw r27, 0xc instead
 ExpHeap* ExpHeap::create(void* p, u32 size, u16 idk)
 {
 	ExpHeap* heap = nullptr;
 
 	u32 begin = ALIGN_NEXT((u32)p, 4);
 	u32 end   = ALIGN_PREV((u32)p + size, 4);
+    
 
-	if (end > begin || end - begin < sizeof(MEMiHeapHead)) {
+	if (begin > end || end - begin < sizeof(MEMiHeapHead)) {
 		return nullptr;
 	}
 
-	MEMiHeapHead* r27 = MEMCreateExpHeapEx((void*)(begin + sizeof(MEMiHeapHead) - 4), (void*)(end - sizeof(MEMiHeapHead) + 4));
+	MEMiHeapHead* r27 = MEMCreateExpHeapEx((void*)(begin + 0x38), (void*)(end - begin - 0x38));
 	if (r27) {
-		Heap* r31 = Heap::findContainHeap(p);
+		Heap* r31 = Heap::findContainHeap((void*)begin);
 
-		heap              = new (p) ExpHeap(r27);
-		heap->mHeapBuffer = (void*)begin;
+		heap              = new ((void*)begin) ExpHeap(r27);
+		heap->mHeapBuffer = p;
 		heap->mParentHeap = r31;
 
 		if (Heap::sCreateCallback) {
@@ -34,11 +35,12 @@ ExpHeap* ExpHeap::create(void* p, u32 size, u16 idk)
 		}
 	}
 
-	// FORCE_DONT_INLINE;
 	return heap;
 }
 
-// issue with _savegpr_27_, unsure how to generate stmw r27, 0xc instead
+#pragma dont_inline on
+
+// matching except inline
 ExpHeap* ExpHeap::create(u32 size, Heap* parent, u16 idk)
 {
 	ExpHeap* heap = nullptr;
@@ -61,5 +63,69 @@ ExpHeap* ExpHeap::create(u32 size, Heap* parent, u16 idk)
 
 	return heap;
 }
+
+#pragma dont_inline reset
+
+void ExpHeap::destroy()
+{
+    if (Heap::sDestroyCallback) {
+        Heap::sDestroyCallback(this);
+    }
+
+    Heap* parent = findParentHeap();
+    
+    this->~ExpHeap();
+
+    if (parent) {
+        parent->free(this);
+    }
+}
+
+void* ExpHeap::alloc(u32 size, s32 align)
+{
+    if (mFlags.on(1)) {
+        OSErrorLine(186, "DAME DAME\n");
+    }
+    return MEMAllocFromExpHeapEx(mHeapHandle, size, align);
+}
+
+void ExpHeap::free(void* pBlock)
+{
+    MEMFreeToExpHeap(mHeapHandle, pBlock);
+}
+
+u32 ExpHeap::resizeForMBlock(void* pBlock, u32 size)
+{
+    return MEMResizeForMBlockExpHeap(mHeapHandle, pBlock, size);
+}
+
+u32 ExpHeap::getTotalFreeSize()
+{
+    return MEMGetTotalFreeSizeForExpHeap(mHeapHandle);
+}
+
+u32 ExpHeap::getAllocatableSize(s32 align)
+{
+    return MEMGetAllocatableSizeForExpHeapEx(mHeapHandle, align);
+}
+
+// TODO: find what 0x38 is
+u32 ExpHeap::adjust()
+{
+    u32 size = MEMAdjustExpHeap(mHeapHandle) + 0x38;
+
+    if (size > 0x38 && mParentHeap) {
+        mParentHeap->resizeForMBlock(mHeapBuffer, size);
+        return size;
+    }
+    return 0;
+
+}
+
+void ExpHeap::initAllocator(Allocator* alloc, s32 align)
+{
+    MEMInitAllocatorForExpHeap(alloc, mHeapHandle, align);
+}
+
 
 } // namespace EGG
