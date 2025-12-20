@@ -6591,7 +6591,7 @@ egg/gfx/eggCamera.cpp:
 	.text       start:0x804F8384 end:0x804F87D8
 	.rodata     start:0x8055D1C0 end:0x8055D1E8
 	.data       start:0x805D0B70 end:0x805D0BB0
-	.sdata      start:0x8066B7C0 end:0x8066B7D8
+	.sdata      start:0x8066B7C0 end:0x8066B7D0
 
 egg/gfx/eggDrawHelper.cpp:
 	extab       start:0x80006700 end:0x80006798
@@ -6618,7 +6618,7 @@ egg/gfx/eggProjection.cpp:
 	.text       start:0x804F9630 end:0x804FA3D8
 	.rodata     start:0x8055D1E8 end:0x8055D228
 	.data       start:0x805D0BB0 end:0x805D0C30
-	.sdata      start:0x8066B7D8 end:0x8066B7F0
+	.sdata      start:0x8066B7D0 end:0x8066B7F0
 	.sbss       start:0x8066D3B8 end:0x8066D3C0
 	.sdata2     start:0x80675E18 end:0x80675E58
 
@@ -6680,7 +6680,7 @@ egg/core/eggHeap.cpp:
 
 egg/core/eggAllocator.cpp:
 	.text       start:0x804FBFA8 end:0x804FC068
-	.data       start:0x805D0C90 end:0x805D0CA8
+	.data       start:0x805D0C90 end:0x805D0CA4
 
 egg/core/eggThread.cpp:
 	.text       start:0x804FC068 end:0x804FC0CC

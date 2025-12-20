@@ -2,16 +2,13 @@
 #define _EGG_CORE_ALLOCATOR_H
 
 #include <egg/egg_types.h>
+#include <RevoSDK/mem.h>
 
 namespace EGG {
 
 class Heap;
 
-struct unk_Allocator_base {
-	u8 _00[0x10];
-};
-
-struct Allocator : public unk_Allocator_base {
+struct Allocator : public MEMAllocator {
 	Allocator(Heap*, s32);
 
 	virtual ~Allocator();
@@ -19,7 +16,7 @@ struct Allocator : public unk_Allocator_base {
 	virtual void* alloc(u32);
 	virtual void free(void*);
 
-	// _00-_10 = unk_Allocator_base
+	// _00-_10 = MEMAllocator
 	// _10     = VTBL
 	Heap* mHeap; // _14
 	u32 mAlign;  // _18
