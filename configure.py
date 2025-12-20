@@ -2383,7 +2383,7 @@ config.libs = [
                 "egg/gfx/eggProjection.cpp",
                 extra_cflags=["-RTTI on"],
             ),
-            Object(NonMatching, "egg/gfx/eggViewport.cpp"),
+            Object(Matching, "egg/gfx/eggViewport.cpp"),
         ],
     },
     {
@@ -2405,7 +2405,7 @@ config.libs = [
             Object(NonMatching, "egg/math/eggMath.cpp"),
             Object(NonMatching, "egg/math/eggMatrix.cpp"),
             Object(NonMatching, "egg/math/eggVector.cpp"),
-            Object(NonMatching, "egg/math/eggBoundBox.cpp"),
+            Object(Matching, "egg/math/eggBoundBox.cpp"),
         ],
     },
     {
@@ -2416,7 +2416,7 @@ config.libs = [
         "objects": [
             Object(NonMatching, "egg/core/eggExpHeap.cpp"),
             Object(NonMatching, "egg/core/eggHeap.cpp"),
-            Object(NonMatching, "egg/core/eggAllocator.cpp"),
+            Object(Matching, "egg/core/eggAllocator.cpp"),
             Object(Matching, "egg/core/eggThread.cpp"),
             Object(NonMatching, "egg/core/eggSystem.cpp"),
             Object(NonMatching, "egg/core/eggController.cpp"),
