@@ -64,6 +64,8 @@ struct SceneInfo {
 		mCam1Position[0] = pos1;
 		mCam1Position[1] = pos2;
 	}
+	
+	inline BOOL getBitShift1() { return (u8)getFlag(SFBS_1) == TRUE; }
 
 	// _00 = VTBL
 	u16 mStageFlags;            // _04

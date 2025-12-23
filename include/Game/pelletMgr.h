@@ -81,6 +81,9 @@ struct PelletMgr : public NodeObjectMgr<GenericObjectMgr> {
 		}
 
 		operator s16() { return mValue; }
+		
+		inline u8 getPelletKind() { return mValue >> 8; }
+		inline u8 getPelletIndex() { return mValue & 255; }
 
 		bool isNull();
 		void read(Stream&);
@@ -123,7 +126,9 @@ struct PelletMgr : public NodeObjectMgr<GenericObjectMgr> {
 	void decode(s32, u8&, int&);
 	int encode(u8, int);
 	BasePelletMgr* getMgrByID(u8);
+	BasePelletMgr* getMgrByIndex(int);
 	void calcNearestTreasure(Vector3f&, f32);
+	void setUseFlagAll(bool);
 
 	static bool mDebug;
 	static bool disableDynamics;
@@ -351,6 +356,7 @@ struct Pellet : public DynCreature, public SysShape::MotionListener, public Carr
 	void init_pmotions();
 	void update_pmotions();
 	void start_pmotions();
+	void start_carrymotion();
 	void stop_carrymotion();
 	void finish_carrymotion();
 	int getSpeicalSlot();
@@ -408,7 +414,7 @@ struct Pellet : public DynCreature, public SysShape::MotionListener, public Carr
 		}
 	}
 
-	inline bool isTreasurePosition() // this probably needs a better name; used in Pellet::onSetPosition
+	inline bool doSpawnBuried()
 	{
 		bool check = false;
 		if ((mCaptureMatrix == nullptr) && (PelletMgr::mDebug == false) && (mConfig->mParams.mDepth.mData > 0.0f) && (mIsCaptured == 0)) {

@@ -7,24 +7,34 @@
 #include "PSGame/SoundTable.h"
 
 namespace PSM {
+// using an inline makes it stop inlining in initEnvironmentSe, so here's a macro for now
+#define APPEND_SE_LINK(builder, id)                                                  \
+	{                                                                                \
+		PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(id); \
+		PSSystem::IdList* list = &builder.mList;                                     \
+		if (!list->getFirst()) {                                                     \
+			builder.mList.mNextLink = link;                                          \
+		}                                                                            \
+		list->append(link);                                                          \
+	}
 
 /**
  * @size{0x14}
  */
 struct PersEnvInfo {
-	f32 _00; // _00
-	f32 _04; // _04
-	f32 _08; // _08
-	f32 _0C; // _0C
-	f32 _10; // _10
+	f32 _00;          // _00
+	f32 mMutedVolume; // _04
+	f32 _08;          // _08
+	f32 _0C;          // _0C
+	f32 _10;          // _10
 
 	inline void operator=(PersEnvInfo& other)
 	{
-		_00 = other._00;
-		_04 = other._04;
-		_08 = other._08;
-		_0C = other._0C;
-		_10 = other._10;
+		_00          = other._00;
+		mMutedVolume = other.mMutedVolume;
+		_08          = other._08;
+		_0C          = other._0C;
+		_10          = other._10;
 	}
 };
 
@@ -32,7 +42,7 @@ struct EnvSe_Perspective_AvoidY : public PSGame::EnvSe_Perspective {
 	EnvSe_Perspective_AvoidY(u32 soundID, f32 volume, Vec pos)
 	    : PSGame::EnvSe_Perspective(soundID, volume, pos)
 	{
-		_48 = 400.0f;
+		mYOffset = 400.0f;
 	}
 
 	virtual JAISound* play();                    // _0C
@@ -40,14 +50,14 @@ struct EnvSe_Perspective_AvoidY : public PSGame::EnvSe_Perspective {
 
 	// _10     = VTBL
 	// _00-_48 = PSGame::EnvSe_Perspective
-	f32 _48;           // _48
+	f32 mYOffset;      // _48
 	PersEnvInfo mInfo; // _4C
 };
 
 struct Env_Pollutin : public PSGame::EnvSe_AutoPan {
 	Env_Pollutin(u32 soundID)
 	    : EnvSe_AutoPan(soundID, 0.0f, 1.0f, 1.0f, 0.0018554f, 0.0008554f)
-	    , _50(1.0f)
+	    , mVolumeModifier(1.0f)
 	{
 	}
 
@@ -56,7 +66,7 @@ struct Env_Pollutin : public PSGame::EnvSe_AutoPan {
 
 	// _10     = VTBL
 	// _00-_50 = PSGame::EnvSe_AutoPan
-	f32 _50; // _50
+	f32 mVolumeModifier; // _50
 };
 
 /**
@@ -68,36 +78,38 @@ struct PersEnvManager {
 	bool playOk(EnvSe_Perspective_AvoidY*);
 	void exec();
 
-	PSSystem::EnvSeMgr* mEnvSeMgr;          // _00
-	u8 mSeCount;                            // _04
-	EnvSe_Perspective_AvoidY** mPersEnvSes; // _08, array of mSeCount sound effects
-	f32* _0C;                               // _0C, unknown ptr
-	f32 _10;                                // _10
+	PSSystem::EnvSeMgr* mEnvSeMgr;             // _00
+	u8 mSeCount;                               // _04
+	EnvSe_Perspective_AvoidY** mPersEnvSounds; // _08, array of mSeCount sound effects
+	f32* mSeDistances;                         // _0C
+	f32 _10;                                   // _10
 };
 
 struct EnvSeObjBuilder : public PSGame::Builder_EvnSe_Perspective {
-	EnvSeObjBuilder(JGeometry::TBox3<f32>);
+	EnvSeObjBuilder(JGeometry::TBox3<f32> bounds)
+	    : PSGame::Builder_EvnSe_Perspective(bounds)
+	{
+	}
 
 	virtual ~EnvSeObjBuilder() { }                              // _08
 	virtual void onBuild(PSSystem::EnvSeBase*);                 // _0C
 	virtual PSGame::EnvSe_Perspective* newSeObj(u32, f32, Vec); // _10
 
-	void setInfo(PersEnvInfo);
+	void setInfo(PersEnvInfo info) { mPersEnvInfo = info; }
 
-	inline void createNewId(u32 id)
+	inline void appendNewSELink(u32 id)
 	{
 		PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(id);
 		PSSystem::IdList* list = &mList;
-		if (!mCurrentId) {
-			mCurrentId = link;
+		if (!list->getFirst()) {
+			mList.mNextLink = link;
 		}
 		list->append(link);
 	}
 
 	// _00     = VTBL
-	// _00-_4C = PSGame::Builder_EvnSe_Perspective
-	PSSystem::IdLink* mCurrentId; // _4C
-	PersEnvInfo mPersEnvInfo;     // _50
+	// _00-_50 = PSGame::Builder_EvnSe_Perspective
+	PersEnvInfo mPersEnvInfo; // _50
 };
 
 struct SeSound : public JAISe {
@@ -137,8 +149,24 @@ struct SeSound : public JAISe {
 	static const f32 smACosPrm[];
 };
 
-void SetNoYOfset(PSSystem::EnvSeMgr* mgr);
-void SetBossBgmMuteVol(PSSystem::EnvSeMgr* mgr, u32 id, f32 vol);
+inline void SetNoYOfset(PSSystem::EnvSeMgr* mgr)
+{
+	for (JSULink<PSSystem::EnvSeBase>* link = mgr->mEnvList.getFirst(); link; link = link->getNext()) {
+		if (((EnvSe_Perspective_AvoidY*)link->getObjectPtr())->getCastType() == 'pers') {
+			((EnvSe_Perspective_AvoidY*)link->getObjectPtr())->mYOffset = 0.0f;
+		}
+	}
+}
+inline void SetBossBgmMuteVol(PSSystem::EnvSeMgr* mgr, u32 id, f32 vol)
+{
+	EnvSe_Perspective_AvoidY* se;
+	for (JSULink<PSSystem::EnvSeBase>* link = mgr->mEnvList.getFirst(); link; link = link->getNext()) {
+		se = (EnvSe_Perspective_AvoidY*)link->getObjectPtr();
+		if (se->getCastType() == 'poll' && id == se->mSoundID) {
+			se->mInfo.mMutedVolume = vol;
+		}
+	}
+}
 } // namespace PSM
 
 #endif

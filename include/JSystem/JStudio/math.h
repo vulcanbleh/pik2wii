@@ -21,7 +21,7 @@ void transform_SRxyzT(MtxP, const Mtx, const Vec&, const Vec&, const Vec&);
 
 inline void getRotation_y(Mtx mtx, f32 yRot)
 {
-	PSMTXRotRad(mtx, 'y', yRot * 0.017453292f);
+	PSMTXRotRad(mtx, 'y', MTXDegToRad(yRot));
 }
 
 inline void getTransformation_RyT(Mtx outMtx, const Vec& translation, f32 yRot)

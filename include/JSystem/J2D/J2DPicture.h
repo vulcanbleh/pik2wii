@@ -49,23 +49,23 @@ struct J2DPicture : public J2DPane {
 	virtual bool append(const ResTIMG* resource, JUTPalette* palette, f32 blendRatio)
 	{
 		return insert(resource, palette, mTextureCount, blendRatio);
-	}                                                                                                                 // _A0 (weak)
+	} // _A0 (weak)
 	virtual bool append(const char* fileName, f32 blendRatio) { return insert(fileName, mTextureCount, blendRatio); } // _A4 (weak)
 	virtual bool append(const char* fileName, JUTPalette* palette, f32 blendRatio)
 	{
 		return insert(fileName, palette, mTextureCount, blendRatio);
-	}                                                                                                               // _A8 (weak)
+	} // _A8 (weak)
 	virtual bool append(JUTTexture* texture, f32 blendRatio) { return insert(texture, mTextureCount, blendRatio); } // _AC (weak)
 	virtual bool prepend(const ResTIMG* resource, f32 blendRatio) { return insert(resource, 0, blendRatio); }       // _B0 (weak)
 	virtual bool prepend(const ResTIMG* resource, JUTPalette* palette, f32 blendRatio)
 	{
 		return insert(resource, palette, 0, blendRatio);
-	}                                                                                                      // _B4 (weak)
+	} // _B4 (weak)
 	virtual bool prepend(const char* fileName, f32 blendRatio) { return insert(fileName, 0, blendRatio); } // _B8 (weak)
 	virtual bool prepend(const char* fileName, JUTPalette* palette, f32 blendRatio)
 	{
 		return insert(fileName, palette, 0, blendRatio);
-	}                                                                                                                         // _BC (weak)
+	} // _BC (weak)
 	virtual bool prepend(JUTTexture* texture, f32 blendRatio) { return insert(texture, 0, blendRatio); }                      // _C0 (weak)
 	virtual bool insert(const ResTIMG* resource, u8 id, f32 blendRatio) { return insert(resource, nullptr, id, blendRatio); } // _C4 (weak)
 	virtual bool insert(const ResTIMG*, JUTPalette*, u8, f32);                                                                // _C8
@@ -108,7 +108,7 @@ struct J2DPicture : public J2DPane {
 	{
 		setBlendColorRatio(p1, p2, p3, p4, p5, p6, p7, p8);
 		setBlendAlphaRatio(p1, p2, p3, p4, p5, p6, p7, p8);
-	}                                                                                          // _104 (weak)
+	} // _104 (weak)
 	virtual void setBlendColorRatio(f32, f32, f32, f32, f32, f32, f32, f32);                   // _108
 	virtual void setBlendAlphaRatio(f32, f32, f32, f32, f32, f32, f32, f32);                   // _10C
 	virtual ResTIMG* changeTexture(const ResTIMG* img, u8 id);                                 // _110
@@ -155,7 +155,44 @@ struct J2DPicture : public J2DPane {
 	void setTexCoord(const JUTTexture* texture, J2DBinding binding, J2DMirror mirror, bool doRotate90);
 	void setTexCoord(JGeometry::TVec2s* texCoord, const JUTTexture* texture, J2DBinding binding, J2DMirror mirror, bool doRotate90);
 	GXTlut getTlutID(const ResTIMG* img, u8 id);
-	void operator=(const J2DPicture&);
+
+	void operator=(const J2DPicture& other)
+	{
+		J2DPane::operator=(other);
+
+		mTextures[0] = other.mTextures[0];
+		mTextures[1] = other.mTextures[1];
+		mTextures[2] = other.mTextures[2];
+		mTextures[3] = other.mTextures[3];
+
+		mTextureCount     = other.mTextureCount;
+		mUsedTextureFlags = other.mUsedTextureFlags;
+
+		mTexCoords[0] = other.mTexCoords[0];
+		mTexCoords[1] = other.mTexCoords[1];
+		mTexCoords[2] = other.mTexCoords[2];
+		mTexCoords[3] = other.mTexCoords[3];
+
+		mBlendColorRatio[0] = other.mBlendColorRatio[0];
+		mBlendColorRatio[1] = other.mBlendColorRatio[1];
+		mBlendColorRatio[2] = other.mBlendColorRatio[2];
+		mBlendColorRatio[3] = other.mBlendColorRatio[3];
+
+		mBlendAlphaRatio[0] = other.mBlendAlphaRatio[0];
+		mBlendAlphaRatio[1] = other.mBlendAlphaRatio[1];
+		mBlendAlphaRatio[2] = other.mBlendAlphaRatio[2];
+		mBlendAlphaRatio[3] = other.mBlendAlphaRatio[3];
+
+		mPalette         = other.mPalette;
+		mWhite           = other.mWhite;
+		mBlack           = other.mBlack;
+		mCornerColors[0] = other.mCornerColors[0];
+		mCornerColors[1] = other.mCornerColors[1];
+		mCornerColors[2] = other.mCornerColors[2];
+		mCornerColors[3] = other.mCornerColors[3];
+		mBlendColor      = other.mBlendColor;
+		mBlendAlpha      = other.mBlendAlpha;
+	}
 
 	inline void setCornerColor(TCornerColor colors)
 	{
@@ -257,12 +294,12 @@ struct J2DPictureEx : public J2DPicture {
 	virtual bool prepend(const ResTIMG* resource, JUTPalette* palette, f32 blendRatio)
 	{
 		return insert(resource, palette, 0, blendRatio);
-	}                                                                                                      // _B4 (weak)
+	} // _B4 (weak)
 	virtual bool prepend(const char* fileName, f32 blendRatio) { return insert(fileName, 0, blendRatio); } // _B8 (weak)
 	virtual bool prepend(const char* fileName, JUTPalette* palette, f32 blendRatio)
 	{
 		return insert(fileName, palette, 0, blendRatio);
-	}                                                                                                                         // _BC (weak)
+	} // _BC (weak)
 	virtual bool prepend(JUTTexture* texture, f32 blendRatio) { return insert(texture, 0, blendRatio); }                      // _C0 (weak)
 	virtual bool insert(const ResTIMG* resource, u8 id, f32 blendRatio) { return insert(resource, nullptr, id, blendRatio); } // _C4 (weak)
 	virtual bool insert(const ResTIMG* resource, JUTPalette* palette, u8 id, f32 blendRatio);                                 // _C8

@@ -51,8 +51,10 @@ struct TScreenProgre {
 	J2DPane* mPane_ir00;                      // _44
 	J2DPane* mPane_il01;                      // _48
 	J2DPane* mPane_ir01;                      // _4C
-	E2DCallBack_BlinkFontColor mBlinkFont[2]; // _50
-	TYesNoCursor mCursor[2];                  // _E8
+	E2DCallBack_BlinkFontColor mBlinkFontYes; // _50
+	E2DCallBack_BlinkFontColor mBlinkFontNo;  // _9C
+	TYesNoCursor mCursor1;                    // _E8
+	TYesNoCursor mCursor2;                    // _120
 };
 } // namespace ebi
 

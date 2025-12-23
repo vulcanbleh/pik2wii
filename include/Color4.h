@@ -3,6 +3,7 @@
 
 #include "RevoSDK/gx.h"
 #include "types.h"
+#include "JSystem/JUtility/TColor.h"
 
 // TODO: See if this inherits GXColor
 struct Color4 {
@@ -47,6 +48,13 @@ struct Color4 {
 		set(r, g, b, a);
 	}
 
+	inline JUtility::TColor toTColor()
+	{
+		JUtility::TColor color;
+		color.set(r, g, b, a);
+		return color;
+	}
+
 	void read(struct Stream&);
 	void write(struct Stream&);
 
@@ -54,25 +62,6 @@ struct Color4 {
 	u8 g;
 	u8 b;
 	u8 a;
-};
-
-// used in sysGCU's fogMgr.cpp
-union u_color {
-	Color4 colorView;
-	GXColor GXColorView;
-
-	u_color(Color4 cv)
-	    : colorView(cv)
-	{
-	}
-	u_color(GXColor uv)
-	    : GXColorView(uv)
-	{
-	}
-	u_color(u8 r, u8 g, u8 b, u8 a)
-	    : colorView(Color4(r, g, b, a))
-	{
-	}
 };
 
 inline void GXSetChanMatColor4(Color4* color)
