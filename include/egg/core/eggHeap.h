@@ -142,7 +142,7 @@ inline void* operator new(size_t size, void* mem) { return mem; } // fabricated?
 
 // void* operator new[](size_t size);
 // void* operator new[](size_t size, int align);
-// void* operator new[](size_t size, EGG::Heap* pHeap, int align = 4);
+void* operator new[](size_t size, EGG::Heap* pHeap, int align = 4);
 
 // void operator delete(void* pBlock) noexcept;
 // void operator delete[](void* pBlock) noexcept;
