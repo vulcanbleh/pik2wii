@@ -156,8 +156,8 @@ struct J2DPicture : public J2DPane {
 	void setTexCoord(JGeometry::TVec2s* texCoord, const JUTTexture* texture, J2DBinding binding, J2DMirror mirror, bool doRotate90);
 	GXTlut getTlutID(const ResTIMG* img, u8 id);
 
-	void operator=(const J2DPicture& other)
-	{
+	void operator=(const J2DPicture& other);
+	/*{
 		J2DPane::operator=(other);
 
 		mTextures[0] = other.mTextures[0];
@@ -192,7 +192,7 @@ struct J2DPicture : public J2DPane {
 		mCornerColors[3] = other.mCornerColors[3];
 		mBlendColor      = other.mBlendColor;
 		mBlendAlpha      = other.mBlendAlpha;
-	}
+	}*/
 
 	inline void setCornerColor(TCornerColor colors)
 	{

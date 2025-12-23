@@ -21,7 +21,7 @@ static void _Print(char* name, ...)
 }
 
 ParticleMgr* particleMgr;
-volatile bool ParticleMgr::disableCulling;
+bool ParticleMgr::disableCulling;
 f32 ParticleMgr::mClipRadiusS = 10.0f;
 f32 ParticleMgr::mClipRadiusM = 30.0f;
 f32 ParticleMgr::mClipRadiusL = 100.0f;

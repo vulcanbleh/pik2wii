@@ -959,9 +959,9 @@ void System::endRender()
 {
 	PSSystem::SysIF* sysif;
 	if (sysif = PSSystem::spSysIF) {
-		sys->mTimers->_start("sound", true);
+		sys->mTimers->start("sound", true);
 		sysif->mainLoop();
-		sys->mTimers->_stop("sound");
+		sys->mTimers->stop("sound");
 	}
 	mDvdStatus->draw();
 	mResetMgr->draw();

@@ -64,6 +64,24 @@ struct Color4 {
 	u8 a;
 };
 
+union u_color {
+	Color4 colorView;
+	GXColor GXColorView;
+
+	u_color(Color4 cv)
+	    : colorView(cv)
+	{
+	}
+	u_color(GXColor uv)
+	    : GXColorView(uv)
+	{
+	}
+	u_color(u8 r, u8 g, u8 b, u8 a)
+	    : colorView(Color4(r, g, b, a))
+	{
+	}
+};
+
 inline void GXSetChanMatColor4(Color4* color)
 {
 	GXColor gxCol = color->toGXColor();

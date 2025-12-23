@@ -196,7 +196,7 @@ WaveScene::WaveArea::WaveArea()
  * @note Address: 0x8033DAA0
  * @note Size: 0x114
  */
-u8 WaveScene::WaveArea::loadWave(u16 bankIdx, u16 arcIdx, TaskChecker* checker)
+bool WaveScene::WaveArea::loadWave(u16 bankIdx, u16 arcIdx, TaskChecker* checker)
 {
 	deleteWave();
 	if (checker) {

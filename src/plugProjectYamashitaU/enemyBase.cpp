@@ -2840,7 +2840,7 @@ bool EnemyBase::flyCollisionCallBack(Creature*, f32, CollPart*)
  */
 bool EnemyBase::hipdropCallBack(Creature* sourceCreature, f32 damage, CollPart* p3)
 {
-	/*f32 purpleDamage = getParms().mPurplePikiStunDamage;
+	f32 purpleDamage = getParms().mPurplePikiStunDamage;
 
 	if (isEvent(0, EB_Invulnerable) == false) {
 		mInstantDamage += purpleDamage;
@@ -2856,8 +2856,7 @@ bool EnemyBase::hipdropCallBack(Creature* sourceCreature, f32 damage, CollPart* 
 
 	if (mFloorTriangle) {
 		createBounceEffect(mPosition, getDownSmokeScale());
-	}*/
-	addDamage(getParms().mPurplePikiStunDamage, 1.0f);
+	}
 	return false;
 }
 

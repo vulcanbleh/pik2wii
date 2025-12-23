@@ -211,43 +211,43 @@ struct TAsinAcosTable {
 /**
  * @fabricatedName
  */
-template <int LENGTH, typename T>
+template <int length, typename T>
 struct TSinCosTable {
 
 	TSinCosTable() { init(); }
 
 	void init()
 	{
-		for (int i = 0; i < LENGTH; i++) {
-			mTable[i].first  = ::sin(((f64)i * TAngleConstant_<T>::RADIAN_DEG360()) / LENGTH);
-			mTable[i].second = ::cos(((f64)i * TAngleConstant_<T>::RADIAN_DEG360()) / LENGTH);
+		for (int i = 0; i < 2048; i++) {
+			mTable[i].first  = ::sin(((f64)i * TAngleConstant_<f32>::RADIAN_DEG360()) / 2048.0);
+			mTable[i].second = ::cos(((f64)i * TAngleConstant_<f32>::RADIAN_DEG360()) / 2048.0);
 		}
 	}
 
-	inline T radsToLUT() const
+	inline f32 radsToLUT() const
 	{
 		// inline f32 radsToLUTConstant() const {
-		return ((T)LENGTH) / TAngleConstant_<T>::RADIAN_DEG360();
+		return ((f32)length) / TAU;
 	}
 
 	// inline int radsToLUT(f32 theta) {
 	//     return theta < 0.0f ? theta *
 	// }
 
-	inline T sin(T x) const
+	inline T sin(f32 x) const
 	{
-		return (x < 0.0f) ? -mTable[(u32)(x * -radsToLUT()) % LENGTH].first : mTable[(u32)(x * radsToLUT()) % LENGTH].first;
+		return (x < 0.0f) ? -mTable[(int)(x * -radsToLUT()) & 0x7FF].first : mTable[(int)(x * radsToLUT()) & 0x7FF].first;
 		// return (x < 0.0f) ? -mTable[(int)-(x * (((T)length)/TAU)) & 0x7FF].first : mTable[(int)(x * ((T)length)/TAU) & 0x7FF].first;
 		// return (x < 0.0f) ? -mTable[(int)-(x * kRadsToLUT) & 0x7FF].first : mTable[(int)(x * kRadsToLUT) & 0x7FF].first;
 	}
-	inline T cos(T x) const
+	inline T cos(f32 x) const
 	{
 		// x = (x < 0.0f) ? -(int)(x * 325.9493f) % 2048 : (int)(x * 325.9493f) % 2048;
 		// x = (x < 0.0f) ? -(x * kRadsToLUT) : (x * kRadsToLUT);
 		// x = (x < 0.0f) ? -(x * radsToLUT()) : (x * radsToLUT());
 		// return mTable[(int)x & 0x7FF].second;
 		// x = (x < 0.0f) ? -x : x;
-		return mTable[(u32)(((x < 0.0f) ? -x : x) * radsToLUT()) % LENGTH].second;
+		return mTable[(int)(((x < 0.0f) ? -x : x) * radsToLUT()) & 0x7FF].second;
 		// return (x < 0.0f) ? mTable[(int)-(x * 325.9493f) % 2048].second : mTable[(int)(x * 325.9493f) % 2048].second;
 	}
 
@@ -267,13 +267,13 @@ struct TSinCosTable {
 		return table[(u16)(22.755556106567383f * degree) & 0x1fffU].second;
 	}
 
-	T sinShort(s16 v) const { return mTable[static_cast<u16>(v * LENGTH / (USHORT_MAX))].first; };
-	T cosShort(s16 v) const { return mTable[static_cast<u16>(v * LENGTH / (USHORT_MAX))].second; };
+	f32 sinShort(s16 v) const { return mTable[static_cast<u16>(v) >> 5].first; }
+	f32 cosShort(s16 v) const { return mTable[static_cast<u16>(v) >> 5].second; }
 
 	/**
 	 * elements are pairs of {sine, cosine}
 	 */
-	std::pair<T, T> mTable[LENGTH];
+	std::pair<T, T> mTable[length];
 };
 
 // 16 /*ushort bits*/ - log2(length)

@@ -77,7 +77,6 @@ struct T2DOnyonKira : public TChasePosDir {
 	    : TChasePosDir(PID_WMap_OnyonKira, pos, pos2)
 	{
 		mResMgrId = 1;
-		mGroup    = 3;
 	}
 	// vtable 1
 	virtual bool create(Arg*); // _08

@@ -444,10 +444,10 @@ bool ObjContena::moveContena()
 	JUT_ASSERTLINE(607, data->mOnyonID != -1, "Contena Type error!\n");
 
 	if (mTimer1 > 0.0f) {
-		mTimer1 -= sys->mDeltaTime;
+		mTimer1 -= sys->getDeltaTime();
 	}
 	if (mTimer2 > 0.0f) {
-		mTimer2 -= sys->mDeltaTime;
+		mTimer2 -= sys->getDeltaTime();
 	}
 
 	if (!data->mState) {
@@ -482,7 +482,7 @@ bool ObjContena::moveContena()
 				mTimer0 = mMoveTime;
 				break;
 			case 1:
-				mTimer0 -= sys->mDeltaTime;
+				mTimer0 -= sys->getDeltaTime();
 				if (mTimer0 < 0.0f)
 					mScreenState = 2;
 				break;
@@ -501,7 +501,7 @@ bool ObjContena::moveContena()
 				mTimer0 = mMoveTime;
 				break;
 			case 3:
-				mTimer0 -= sys->mDeltaTime;
+				mTimer0 -= sys->getDeltaTime();
 				if (mTimer0 < 0.0f)
 					mScreenState = 4;
 				break;
@@ -685,7 +685,7 @@ bool ObjContena::doUpdateFadein()
 {
 	bool check = false;
 	commonUpdate();
-	mFadeLevel += sys->mDeltaTime;
+	mFadeLevel += sys->getDeltaTime();
 	mScreenAngle   = mFadeLevel / msVal._20;
 	mMenuMoveAngle = (1.0f - og::Screen::calcSmooth0to1(mFadeLevel, msVal._20)) * 800.0f;
 
@@ -702,7 +702,7 @@ bool ObjContena::doUpdateFadein()
 bool ObjContena::doUpdateFadeout()
 {
 	bool check = false;
-	mFadeLevel += sys->mDeltaTime;
+	mFadeLevel += sys->getDeltaTime();
 	mScreenAngle   = 1.0f - mFadeLevel / msVal._20;
 	mMenuMoveAngle = -800.0f * og::Screen::calcSmooth0to1(mFadeLevel, msVal._20);
 	if (mFadeLevel >= msVal._20) {

@@ -51,7 +51,7 @@ MemoryCardMgrCommand* MemoryCardMgr::getCurrentCommand()
 {
 	MemoryCardMgrCommand* cmd = &mCommands[mCurrentCommandIdx];
 	bool check                = cmd->mFlag || (!cmd->mFlag && (int)mIsCard == 0);
-	JUT_ASSERTLINE(198, check, "command queue is broken.flag:%d num:%d", cmd->mFlag, mIsCard == 0);
+	JUT_ASSERTLINE(203, check, "command queue is broken.flag:%d num:%d", cmd->mFlag, mIsCard == 0);
 	return cmd;
 }
 
@@ -72,7 +72,7 @@ void MemoryCardMgr::setCommand(int flags)
 bool MemoryCardMgr::setCommand(MemoryCardMgrCommandBase* command)
 {
 	bool check = true;
-	P2ASSERTLINE(225, (command->getClassSize() <= 0x20));
+	P2ASSERTLINE(230, (command->getClassSize() <= 0x20));
 	OSLockMutex(&mOsMutex);
 	u32 i = 0;
 	while (true) {
@@ -84,18 +84,18 @@ bool MemoryCardMgr::setCommand(MemoryCardMgrCommandBase* command)
 
 		if (i == 5) {
 			check = false;
-			JUT_PANICLINE(240, "command Queue is full.");
+			JUT_PANICLINE(245, "command Queue is full.");
 		}
 	}
 
 	if (check) {
 		u32 j = mCurrentCommandIdx;
 		while (true) {
-			MemoryCardMgrCommand* cmd = getCommandQueue();
-			if (cmd[j].mFlag == 0) {
+			int* dataPtr = &(mCommands[j].mFlag);
+			if (*dataPtr == 0) {
 				memcpy(&getCommandQueue()[j], (void*)command, sizeof(MemoryCardMgrCommand));
 				mIsCard++;
-				P2ASSERTLINE(254, (u32)mIsCard <= 5);
+				P2ASSERTLINE(259, (u32)mIsCard <= 5);
 				break;
 			}
 			j++;
@@ -210,7 +210,7 @@ lbl_80440804:
  */
 void MemoryCardMgr::releaseCurrentCommand()
 {
-	P2ASSERTLINE(285, (int)mIsCard >= 0);
+	P2ASSERTLINE(290, (int)mIsCard >= 0);
 	if (++mCurrentCommandIdx == 5) {
 		mCurrentCommandIdx = 0;
 	}
@@ -248,7 +248,7 @@ bool MemoryCardMgr::cardFormat(ECardSlot slot)
  */
 void MemoryCardMgr::init()
 {
-	CARDInit();
+	//CARDInit();
 	resetCommandFlagQueue();
 	setInsideStatusFlag(INSIDESTATUS_Unk);
 	OSInitMutex(&mOsMutex);
@@ -263,7 +263,7 @@ void MemoryCardMgr::init()
 void MemoryCardMgr::update()
 {
 	if (checkStatus() != 11 && !sys->isResetActive()) {
-		if (CARDProbe(0) && checkStatus() == 0) {
+		/*if (CARDProbe(0) && checkStatus() == 0) {
 
 			if (isSaveInvalid()) {
 				MemoryCardMgrCommand cmd(3);
@@ -275,7 +275,7 @@ void MemoryCardMgr::update()
 				MemoryCardMgrCommand cmd(4);
 				setCommand(&cmd);
 			}
-		}
+		}*/
 	}
 }
 
@@ -330,11 +330,11 @@ u32 MemoryCardMgr::checkStatus()
 			result = 5;
 			break;
 		case INSIDESTATUS_Unk11:
-			JUT_PANICLINE(447, "impossible case\n");
+			JUT_PANICLINE(456, "impossible case\n");
 			result = 11;
 			break;
 		default:
-			P2ASSERTLINE(452, false);
+			P2ASSERTLINE(461, false);
 		}
 		OSUnlockMutex(&mOsMutex);
 	}
@@ -356,7 +356,7 @@ void MemoryCardMgr::cardProc(void* data)
 		}
 
 		switch (currCmd->mFlag) {
-		case 1:
+		/*case 1:
 			format(CARDSLOT_Unk0);
 			break;
 		case 2:
@@ -367,7 +367,7 @@ void MemoryCardMgr::cardProc(void* data)
 			break;
 		case 4:
 			detach(CARDSLOT_Unk0);
-			break;
+			break;*/
 		default:
 			doCardProc(data, currCmd);
 		}
@@ -880,7 +880,7 @@ s32 MemoryCardMgr::checkSpace(ECardSlot cardSlot, int requiredSpace)
  */
 void MemoryCardMgr::doMakeHeader(u8* header)
 {
-	OSCalendarTime calendar;
+	/*OSCalendarTime calendar;
 	snprintf((char*)header + 0x1c00, 0x20, "ピクミン２　セーブデータ ");
 	OSTime osTime = OSGetTime();
 	OSTicksToCalendarTime(osTime, &calendar);
@@ -897,7 +897,7 @@ void MemoryCardMgr::doMakeHeader(u8* header)
 	header[0x1a02] = -1;
 	header[0x1a03] = 0;
 	header[0x1a04] = -1;
-	header[0x1a05] = -0x10;
+	header[0x1a05] = -0x10;*/
 	return;
 }
 
@@ -907,7 +907,7 @@ void MemoryCardMgr::doMakeHeader(u8* header)
  */
 bool MemoryCardMgr::doCheckCardStat(CARDStat* cardStat)
 {
-	if (cardStat->iconAddr != 0 || cardStat->commentAddr != 0x1c00 || CARDGetBannerFormat(cardStat) != BannerColorCI8
+	/*if (cardStat->iconAddr != 0 || cardStat->commentAddr != 0x1c00 || CARDGetBannerFormat(cardStat) != BannerColorCI8
 	    || CARDGetIconAnim(cardStat) != 0 || CARDGetIconFormat(cardStat, 0) != 1 || CARDGetIconFormat(cardStat, 1) != 1
 	    || CARDGetIconFormat(cardStat, 2) != 1 || CARDGetIconFormat(cardStat, 3) != 0 || CARDGetIconFormat(cardStat, 4) != 0
 	    || CARDGetIconFormat(cardStat, 5) != 0 || CARDGetIconFormat(cardStat, 6) != 0 || CARDGetIconFormat(cardStat, 7) != 0
@@ -917,7 +917,7 @@ bool MemoryCardMgr::doCheckCardStat(CARDStat* cardStat)
 		return false;
 	}
 
-	return true;
+	return true;*/
 }
 
 /**
@@ -926,7 +926,7 @@ bool MemoryCardMgr::doCheckCardStat(CARDStat* cardStat)
  */
 void MemoryCardMgr::doSetCardStat(CARDStat* cardStat)
 {
-	CARDSetIconAddress(cardStat, 0);
+	/*CARDSetIconAddress(cardStat, 0);
 	CARDSetCommentAddress(cardStat, 0x1c00);
 	CARDSetBannerFormat(cardStat, BannerColorCI8);
 	CARDSetIconAnim(cardStat, 0);
@@ -947,7 +947,7 @@ void MemoryCardMgr::doSetCardStat(CARDStat* cardStat)
 	CARDSetIconSpeed(cardStat, 4, 0);
 	CARDSetIconSpeed(cardStat, 5, 0);
 	CARDSetIconSpeed(cardStat, 6, 0);
-	CARDSetIconSpeed(cardStat, 7, 0);
+	CARDSetIconSpeed(cardStat, 7, 0);*/
 }
 
 /**

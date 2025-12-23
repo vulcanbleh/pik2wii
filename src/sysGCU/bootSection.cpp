@@ -725,6 +725,10 @@ bool BootSection::doUpdate()
 	case SID_LoadMemoryCard:
 		updateLoadMemoryCard();
 		break;
+	case SID_InitNintendoLogo:
+		// setMode(SID_NINTENDO_LOGO);
+		// mPikiMgr->appear();
+		break;
 	case SID_NintendoLogo:
 		updateNintendoLogo();
 		break;

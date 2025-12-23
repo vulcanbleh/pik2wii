@@ -516,11 +516,18 @@ void Graphics::drawSphere(Vector3f& position, f32 radius)
 		GXLoadPosMtxImm(concatMtx.mMatrix.mtxView, 0);
 
 		for (int j = 0; j < 16; j++) {
-			f32 theta = 0.3926991f * (f32)(j);
-			f32 phi   = 0.3926991f * (f32)((j + 1) % 32);
-			Vector3f start(radius * sinf(theta), radius * cosf(theta), 0.0f);
-			Vector3f end(radius * sinf(phi), radius * cosf(phi), 0.0f);
-			drawLine(start, end);
+			f32 theta    = 0.3926991f * (f32)(j);
+			f32 phi      = 0.3926991f * (f32)((j + 1) % 32);
+			f32 cosTheta = radius * cosf(theta); // f26
+			f32 sinTheta = radius * sinf(theta); // f24
+			f32 cosPhi   = radius * cosf(phi);   // f23
+			f32 sinPhi   = radius * sinf(phi);   // f22
+			f32 zero     = 0.0f;                 // f28
+			GXBegin(GX_LINES, GX_VTXFMT0, 2);
+			GXPosition3f32(sinTheta, cosTheta, zero);
+			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
+			GXPosition3f32(sinPhi, cosPhi, zero);
+			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
 		}
 	}
 
@@ -535,11 +542,18 @@ void Graphics::drawSphere(Vector3f& position, f32 radius)
 		GXLoadPosMtxImm(concatMtx.mMatrix.mtxView, 0);
 
 		for (int j = 0; j < 16; j++) {
-			f32 theta = 0.3926991f * (f32)(j);
-			f32 phi   = 0.3926991f * (f32)((j + 1) % 32);
-			Vector3f start(radius * sinf(theta), 0.0f, radius * cosf(theta));
-			Vector3f end(radius * sinf(phi), 0.0f, radius * cosf(phi));
-			drawLine(start, end);
+			f32 theta    = 0.3926991f * (f32)(j);
+			f32 phi      = 0.3926991f * (f32)((j + 1) % 32);
+			f32 cosTheta = radius * cosf(theta); // f26
+			f32 sinTheta = radius * sinf(theta); // f23
+			f32 cosPhi   = radius * cosf(phi);   // f24
+			f32 sinPhi   = radius * sinf(phi);   // f22
+			f32 zero     = 0.0f;                 // f30
+			GXBegin(GX_LINES, GX_VTXFMT0, 2);
+			GXPosition3f32(sinTheta, zero, cosTheta);
+			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
+			GXPosition3f32(sinPhi, zero, cosPhi);
+			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
 		}
 	}
 }
@@ -563,11 +577,18 @@ void Graphics::drawSphere(f32 radius, Matrixf* gfxMtx)
 		GXLoadPosMtxImm(concatMtx.mMatrix.mtxView, 0);
 
 		for (int j = 0; j < 16; j++) {
-			f32 theta = 0.3926991f * (f32)(j);
-			f32 phi   = 0.3926991f * (f32)((j + 1) % 32);
-			Vector3f start(radius * sinf(theta), radius * cosf(theta), 0.0f);
-			Vector3f end(radius * sinf(phi), radius * cosf(phi), 0.0f);
-			drawLine(start, end);
+			f32 theta    = 0.3926991f * (f32)(j);
+			f32 phi      = 0.3926991f * (f32)((j + 1) % 32);
+			f32 cosTheta = radius * cosf(theta); // f26
+			f32 sinTheta = radius * sinf(theta); // f24
+			f32 cosPhi   = radius * cosf(phi);   // f23
+			f32 sinPhi   = radius * sinf(phi);   // f22
+			f32 zero     = 0.0f;                 // f28
+			GXBegin(GX_LINES, GX_VTXFMT0, 2);
+			GXPosition3f32(sinTheta, cosTheta, zero);
+			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
+			GXPosition3f32(sinPhi, cosPhi, zero);
+			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
 		}
 	}
 
@@ -583,11 +604,18 @@ void Graphics::drawSphere(f32 radius, Matrixf* gfxMtx)
 		GXLoadPosMtxImm(concatMtx.mMatrix.mtxView, 0);
 
 		for (int j = 0; j < 16; j++) {
-			f32 theta = 0.3926991f * (f32)(j);
-			f32 phi   = 0.3926991f * (f32)((j + 1) % 32);
-			Vector3f start(radius * sinf(theta), 0.0f, radius * cosf(theta));
-			Vector3f end(radius * sinf(phi), 0.0f, radius * cosf(phi));
-			drawLine(start, end);
+			f32 theta    = 0.3926991f * (f32)(j);
+			f32 phi      = 0.3926991f * (f32)((j + 1) % 32);
+			f32 cosTheta = radius * cosf(theta); // f26
+			f32 sinTheta = radius * sinf(theta); // f23
+			f32 cosPhi   = radius * cosf(phi);   // f24
+			f32 sinPhi   = radius * sinf(phi);   // f22
+			f32 zero     = 0.0f;                 // f30
+			GXBegin(GX_LINES, GX_VTXFMT0, 2);
+			GXPosition3f32(sinTheta, zero, cosTheta);
+			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
+			GXPosition3f32(sinPhi, zero, cosPhi);
+			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
 		}
 	}
 }

@@ -151,8 +151,8 @@ u32 JASSeqCtrl::get32(u32 offset) const
  */
 u16 JASSeqCtrl::read16()
 {
-	u16 result = readByte() << 8;
-	result |= readByte();
+	u16 result = *(mCurrentFilePtr++) << 8;
+	result |= *(mCurrentFilePtr++);
 	return result;
 }
 

@@ -52,7 +52,8 @@ struct NotOff : public Game::WPCondition {
 			{
 				Game::BaseItem* item = *iterHole;
 				Vector3f holePos     = item->getPosition();
-				if (holePos.distance2D(wpPos) < 70.0f) {
+				Vector2f sep         = Vector2f(holePos.x - wpPos.x, holePos.z - wpPos.z);
+				if (sep.length() < 70.0f) {
 					return false;
 				}
 			}
@@ -64,7 +65,8 @@ struct NotOff : public Game::WPCondition {
 			{
 				Game::BaseItem* item = *iterGeyser;
 				Vector3f geyserPos   = item->getPosition();
-				if (geyserPos.distance2D(wpPos) < 70.0f) {
+				Vector2f sep         = Vector2f(geyserPos.x - wpPos.x, geyserPos.z - wpPos.z);
+				if (sep.length() < 70.0f) {
 					return false;
 				}
 			}

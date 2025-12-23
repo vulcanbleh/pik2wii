@@ -115,16 +115,16 @@ void Mgr::release(Obj* obj)
 	if (obj->isFlag(STONE_Registered)) {
 		obj->resetFlag(STONE_Registered);
 
-		Obj* currObj = obj;
+		CNode* currObj = &obj->mNodeArray[0];
 		for (int i = 0; i < ENEMY_STONE_MODEL_NUM; i++) {
-			DrawInfo* child = (DrawInfo*)currObj->mNodeArray[0].mChild;
+			DrawInfo* child = (DrawInfo*)currObj->mChild;
 			while (child) {
 				DrawInfo* nextChild = (DrawInfo*)child->mNext;
 				child->reset();
 				mDrawInfo.add(child);
 				child = nextChild;
 			}
-			currObj = (Obj*)&currObj->mInfo; // this makes no sense
+			currObj++; // really weird way to do this but fine
 		}
 		obj->del();
 	}

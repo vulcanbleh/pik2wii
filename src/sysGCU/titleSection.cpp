@@ -130,9 +130,8 @@ void Section::init()
 	mMenu->addKeyEvent(Menu::KeyEvent::INVOKE_ACTION_ON_BUTTON_PRESS, Controller::PRESS_A,
 	                   new Delegate1<Section, Menu&>(this, &menuSelect));
 
-	int i     = 0;
 	int sects = 0;
-	for (i = 0; i < GameFlow::SN_SECTION_COUNT; i++) {
+	for (int i = 0; i < GameFlow::SN_SECTION_COUNT; i++) {
 		SectionInfo* data = GameFlow::getSectionInfo(i);
 
 		if (data) {

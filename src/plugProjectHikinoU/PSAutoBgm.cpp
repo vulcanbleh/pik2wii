@@ -1570,9 +1570,10 @@ void OnCycle::setTip(JASTrack* track)
 	}
 
 	mModule->_2C2   = x;
-	PSBankData* bnk = mModule->mBankData;
-	track->writePortAppDirect(6, (bnk->mData[x * 3]));
-	track->writePortAppDirect(7, (bnk->mData[x * 3 + 1]));
+	PSBankData& bnk = mModule->mBankData[x];
+	u32 addr        = (u32)(bnk.mData[2] | (bnk.mData[1] << 16 | bnk.mData[0] << 8));
+	track->writePortAppDirect(4, addr >> 16);
+	track->writePortAppDirect(7, addr);
 	/*
 	stwu     r1, -0x30(r1)
 	mflr     r0

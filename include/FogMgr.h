@@ -23,7 +23,7 @@ struct FogMgr : public CNode {
 	GXFogType mType;         // _18
 	f32 mNearZ;              // _1C
 	f32 mFarZ;               // _20
-	JUtility::TColor mColor; // _24
+	u_color mColor; // _24
 };
 
 #endif

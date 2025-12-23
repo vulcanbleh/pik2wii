@@ -378,7 +378,7 @@ u32 PlayCamera::updateCameraMode()
 		if (mChangePlayerState == CAMCHANGE_None) {
 			if (pad->getButton() & Controller::PRESS_R) {
 				if (mHoldRTimer < 1.0f) {
-					mHoldRTimer += sys->mDeltaTime;
+					mHoldRTimer += sys->getDeltaTime();
 					if (mHoldRTimer >= 1.0f) {
 						flags |= (CAMFLAGS_StartZoomCam | CAMFLAGS_InZoomCam);
 					}
@@ -559,7 +559,7 @@ void PlayCamera::setSmoothThetaSpeed()
 {
 	Controller* pad = mTargetObj->mController1;
 	if (pad) {
-		f32 maxSpeed = mCameraParms->mMaxRotSpeed.mValue * sys->mDeltaTime;
+		f32 maxSpeed = mCameraParms->mMaxRotSpeed.mValue * sys->getDeltaTime();
 		mSmoothMoveSpeed += pad->mMStick.mXPos * mCameraParms->mRotAccel.mValue;
 		mSmoothMoveSpeed = boundAboveBelow(mSmoothMoveSpeed, maxSpeed);
 	}
@@ -572,7 +572,7 @@ void PlayCamera::setSmoothThetaSpeed()
 void PlayCamera::changeTargetTheta()
 {
 	if (mFollowTime > 0.0f) {
-		mFollowTime -= sys->mDeltaTime;
+		mFollowTime -= sys->getDeltaTime();
 		setTargetThetaToWhistle();
 	} else {
 		f32 angle = mCameraAngleTarget - mSmoothMoveSpeed;
@@ -754,10 +754,10 @@ lbl_8024096C:
 void PlayCamera::updateVibration(int id)
 {
 	f32* vibrateTimer  = &mVibrateTimer[id];
-	f32 newSpeed       = mVibrateSpeed[id] * sys->mDeltaTime;
+	f32 newSpeed       = mVibrateSpeed[id] * sys->getDeltaTime();
 	f32 packetStrength = 1.0f;
 	mVibrateAngle[id] += newSpeed;
-	mVibrateTimer[id] += sys->mDeltaTime;
+	mVibrateTimer[id] += sys->getDeltaTime();
 	if (mVibrateAngle[id] > TAU) {
 		mVibrateAngle[id] -= TAU;
 	}
