@@ -2743,17 +2743,16 @@ void THiScore::changeColorBlock(J2DColorBlock* colorB, J2DColorBlock* colorA)
  */
 void THiScore::updateLayout()
 {
-	f32 height = getHeight();
+	f32 height = mIndexPaneList[0]->mPane->mOffset.y - mIndexPaneList[1]->mPane->mOffset.y;
 
 	mPaneHeightDiff = height * 2.0f;
 
 	if (mIsAllTreasures) {
 		for (int i = 0; i < mNumActiveRows; i++) {
-			mIndexPaneList[i]->setOffset((height * mClearListHeightRate) * f32(i - mCurrActiveRowSel));
-			mIndexPaneList[i]->mYOffset = mIndexPaneList[i]->getPaneOffsetY();
+			updateIDPaneYOffset(i, (height * mClearListHeightRate) * f32(i - mCurrActiveRowSel));
 		}
 
-		height         = getHeight();
+		height         = mIndexPaneList[0]->mPane->mOffset.y - mIndexPaneList[1]->mPane->mOffset.y;
 		mMinSelYOffset = mIndexPaneList[mCurrMinActiveRow]->getPaneOffsetY();
 		mMaxSelYOffset = mIndexPaneList[mCurrMaxActiveRow]->getPaneOffsetY();
 	}
