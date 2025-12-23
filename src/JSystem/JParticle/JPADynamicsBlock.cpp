@@ -96,10 +96,13 @@ void JPAVolumeSphere(JPAEmitterWorkData* workData)
 			workData->mVolumeX++;
 			if (workData->mVolumeX * 2 < workData->mDivNumber) {
 				int angleMax = workData->mVolumeAngleMax;
-				if (workData->mVolumeAngleMax != 1) {
+				switch (workData->mVolumeAngleMax) {
+				default:
 					angleMax += 4;
-				} else {
+					break;
+				case 1:
 					angleMax += 3;
+					break;
 				}
 				workData->mVolumeAngleMax = angleMax;
 			} else {

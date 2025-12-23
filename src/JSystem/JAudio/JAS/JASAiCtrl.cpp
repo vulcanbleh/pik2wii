@@ -166,10 +166,10 @@ void readDspBuffer(s16* param_0, u32 param_1)
 	if (r29 == sDspDacWriteBuffer && sDspDacBufferCount >= 3) {
 		s16 r25 = sDspDacBuffer[sDspDacReadBuffer][param_1 / 2 - 1];
 		s16 r24 = sDspDacBuffer[sDspDacReadBuffer][param_1 - 1];
-		for (int i = 0; i < param_1; i++) {
+		for (u32 i = 0; i < param_1; i++) {
 			sDspDacBuffer[sDspDacReadBuffer][i] = r25;
 		}
-		for (int i = param_1; i < param_1 * 2; i++) {
+		for (u32 i = param_1; i < param_1 * 2; i++) {
 			sDspDacBuffer[sDspDacReadBuffer][i] = r24;
 		}
 	} else {

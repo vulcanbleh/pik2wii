@@ -8,19 +8,28 @@ namespace Screen {
  * @note Address: 0x8040B3F4
  * @note Size: 0x4C
  */
-u64 getSerialTagName(u64 tag, int offs) { return tag + (offs / 10 * 0x100) + offs % 10; }
+u64 getSerialTagName(u64 tag, int offs)
+{
+	return tag + (offs / 10 * 0x100) + offs % 10;
+}
 
 /**
  * @note Address: 0x8040B440
  * @note Size: 0x50
  */
-void setTex(J2DScreen* screen, u64 tag, const ResTIMG* tex) { static_cast<J2DPicture*>(screen->search(tag))->changeTexture(tex, '\0'); }
+void setTex(J2DScreen* screen, u64 tag, const ResTIMG* tex)
+{
+	static_cast<J2DPicture*>(screen->search(tag))->changeTexture(tex, '\0');
+}
 
 /**
  * @note Address: 0x8040B490
  * @note Size: 0x50
  */
-void setTex(J2DScreen* screen, u64 tag, const char* str) { static_cast<J2DPicture*>(screen->search(tag))->changeTexture(str, '\0'); }
+void setTex(J2DScreen* screen, u64 tag, const char* str)
+{
+	static_cast<J2DPicture*>(screen->search(tag))->changeTexture(str, '\0');
+}
 
 /**
  * @note Address: 0x8040B4E0
@@ -135,7 +144,10 @@ void khUtilFadePane::update()
 		break;
 	}
 
-	FOREACH_NODE(khPaneNode, mPaneNode.mNext, node) { node->mPane->setAlpha(mCurrentAlpha); }
+	FOREACH_NODE(khPaneNode, mPaneNode.mNext, node)
+	{
+		node->mPane->setAlpha(mCurrentAlpha);
+	}
 }
 
 /**
@@ -180,21 +192,24 @@ void khUtilFadePane::fadeout()
 void khUtilFadePane::set_init_alpha(u8 a)
 {
 	mCurrentAlpha = a;
-	FOREACH_NODE(khPaneNode, mPaneNode.mNext, node) { node->mPane->setAlpha(mCurrentAlpha); }
+	FOREACH_NODE(khPaneNode, mPaneNode.mNext, node)
+	{
+		node->mPane->setAlpha(mCurrentAlpha);
+	}
 }
 
 /**
  * @note Address: 0x8040BE70
  * @note Size: 0x158
  */
-khUtilColorAnm::khUtilColorAnm(P2DScreen::Mgr* screen, u64 tag, int panes, int frames)
+khUtilColorAnm::khUtilColorAnm(P2DScreen::Mgr* screen, u64 tag, int colors, int frames)
 {
-	mPaneNum = panes;
-	mLength  = frames;
-	mFrame   = 0;
+	mColorCount = colors;
+	mLength     = frames;
+	mFrame      = 0;
 	mColor.set(0, 0, 0, 0);
-	mColorList = new JUtility::TColor[mPaneNum];
-	for (int i = 0; i < mPaneNum; i++) {
+	mColorList = new JUtility::TColor[mColorCount];
+	for (int i = 0; i < mColorCount; i++) {
 		mColorList[i].set(0, 0, 0, 0);
 	}
 	mDisabledColor.setRGBA(mColor);
@@ -219,7 +234,7 @@ void khUtilColorAnm::update()
 		f32 inverseT;
 
 		// Calculate the animation position between start and end
-		f32 t = (mFrame * (mPaneNum - 1)) / (f32)mLength;
+		f32 t = (mFrame * (mColorCount - 1)) / (f32)mLength;
 
 		// Get the two colors to interpolate between
 		JUtility::TColor src  = getColor((int)t);

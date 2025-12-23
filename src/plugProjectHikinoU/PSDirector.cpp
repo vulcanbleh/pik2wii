@@ -32,7 +32,10 @@ DirectorBase::DirectorBase(int numTracks, const char* name)
  * @note Address: 0x803430C8
  * @note Size: 0x10
  */
-bool DirectorBase::isUnderDirection() { return mState == 0; }
+bool DirectorBase::isUnderDirection()
+{
+	return mState == 0;
+}
 
 /**
  * @note Address: 0x803430D8
@@ -184,7 +187,9 @@ void DirectorBase::directOffInner()
  * @note Address: 0x8034351C
  * @note Size: 0x4
  */
-void DirectorBase::doUpdateRequest() { }
+void DirectorBase::doUpdateRequest()
+{
+}
 
 /**
  * @note Address: 0x80343520
@@ -260,11 +265,11 @@ void SwitcherDirector::doUpdateRequest()
  * @note Address: 0x80343848
  * @note Size: 0x88
  */
-DirectorMgrBase::DirectorMgrBase(u8 count)
+DirectorMgrBase::DirectorMgrBase(u8 directorCount)
     : JADHioNode("ディレクターマネージャ") // "Director Manager"
 {
 	mDirectors     = nullptr;
-	mDirectorCount = count;
+	mDirectorCount = directorCount;
 	P2ASSERTLINE(394, mDirectorCount != 0);
 }
 

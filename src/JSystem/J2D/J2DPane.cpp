@@ -325,7 +325,7 @@ bool J2DPane::removeChild(J2DPane* child)
 void J2DPane::draw(f32 x, f32 y, const J2DGrafContext* grafContext, bool isOrthoGraf, bool check)
 {
 	bool unkBool = check && mIsVisible;
-	if (grafContext->getGrafType() != 1) {
+	if (grafContext->getGrafType() != J2DGraf_Ortho) {
 		isOrthoGraf = false;
 	}
 
@@ -994,17 +994,17 @@ s16 J2DPane::J2DCast_F32_to_S16(f32 value, u8 cutoff)
  * @note Address: 0x800393C0
  * @note Size: 0x14C
  */
-void* J2DPane::getPointer(JSURandomInputStream* stream, u32 p1, JKRArchive* archive)
+void* J2DPane::getPointer(JSURandomInputStream* stream, u32 resType, JKRArchive* archive)
 {
 	JUTResReference resRef;
 
 	void* pointer;
 	if (archive == nullptr) {
 		if (J2DScreen::getDataManage() == nullptr) {
-			pointer = resRef.getResource(stream, p1, nullptr);
+			pointer = resRef.getResource(stream, resType, nullptr);
 		} else {
 			s32 prevPos = stream->getPosition();
-			pointer     = resRef.getResource(stream, p1, nullptr);
+			pointer     = resRef.getResource(stream, resType, nullptr);
 			if (pointer == nullptr) {
 				stream->seek(prevPos, SEEK_SET);
 				pointer = J2DScreen::getDataManage()->get(stream);
@@ -1012,10 +1012,10 @@ void* J2DPane::getPointer(JSURandomInputStream* stream, u32 p1, JKRArchive* arch
 		}
 	} else {
 		s32 prevPos = stream->getPosition();
-		pointer     = resRef.getResource(stream, p1, archive);
+		pointer     = resRef.getResource(stream, resType, archive);
 		if (pointer == nullptr) {
 			stream->seek(prevPos, SEEK_SET);
-			pointer = resRef.getResource(stream, p1, nullptr);
+			pointer = resRef.getResource(stream, resType, nullptr);
 		}
 
 		if (pointer == nullptr) {

@@ -8,7 +8,6 @@
 #include "Parameters.h"
 #include "nans.h"
 #include "string.h"
-#include "types.h"
 
 u32 GeneratorCurrentVersion = 'v0.3';
 
@@ -18,7 +17,7 @@ static const int unusedArray[] = { 0, 0, 0 };
  * @note Address: N/A
  * @note Size: 0xE4
  */
-void _Print(char* name, ...)
+static void _Print(char* name, ...)
 {
 	OSReport("generator");
 }
@@ -170,7 +169,7 @@ Generator::Generator()
 {
 	mObject      = nullptr;
 	mId          = '____';
-	mReservedNum = 0;
+	mReservedNum = Reserved_Null;
 	mNameId.setID('    ');
 	mVersion.setID(GeneratorCurrentVersion);
 	strcpy(mGenObjName, "unset");
@@ -246,8 +245,8 @@ bool Generator::loadCreature(Stream& input)
 	if (mCreature) {
 		mCreature->mGenerator = this;
 		u8 flag               = 0;
-		if (mReservedNum & 0x8) {
-			flag |= 0x1;
+		if (isReservedFlag(Reserved_doTrackPosition)) {
+			flag |= CREATURE_SAVE_FLAG_POSITION;
 		}
 		mCreature->load(input, flag);
 	} else {
@@ -284,7 +283,7 @@ void Generator::saveCreature(Stream& output)
 {
 	if (mCreature) {
 		u8 conversion = 0;
-		if (mReservedNum & 8) {
+		if (isReservedFlag(Reserved_doTrackPosition)) {
 			conversion |= CREATURE_SAVE_FLAG_POSITION;
 		}
 
@@ -323,7 +322,7 @@ void Generator::generate()
 
 	mCreature = nullptr;
 	if (mObject) {
-		if (ramMode != RM_Disc && (mReservedNum & 4) != 0
+		if (ramMode != RM_Disc && isReservedFlag(Reserved_doTrackDeath)
 		    && (int)gameSystem->mTimeMgr->mDayCount >= (int)(mDayNum + mDaysTillResurrection)) {
 			mDayNum     = gameSystem->mTimeMgr->mDayCount;
 			mDeathCount = 0;
@@ -447,6 +446,9 @@ void Generator::read(Stream& input)
  */
 void Generator::write(Stream& output)
 {
+	// Note that the entire functionality of outputting Generators as text is unused code
+	// Only binary is ever used by the actual game
+	
 	output.textWriteTab(output.mTabCount);
 	ID32 id(GeneratorCurrentVersion);
 	id.write(output);
@@ -461,20 +463,21 @@ void Generator::write(Stream& output)
 	output.textWriteText("\t# 復活日数\r\n"); // 'resurrection days'
 
 	if (ramMode == RM_Disc) {
-		// generator files as stored on disc
+		// write the generator's name when working with plain text
 		output.textWriteTab(output.mTabCount);
 		for (int i = 0; i < 32; i++) {
 			output.writeByte(mGenObjName[i]);
 		}
 		output.textWriteText("\t# <%s>\r\n", mGenObjName);
 	} else {
-		// gencache?
+		// binary skips writing the name, but does write additional values to keep track of its alive status
 		output.writeByte('\0');
 		output.writeShort(mDeathCount);
 		output.writeShort(mDayNum);
 		output.writeShort(mDayLimit);
 	}
-
+	
+	// Store position as shorts in binary mode, as floats in text mode
 	if (ramMode != RM_Disc) {
 		output.writeShort((s16)mPosition.x + mOffset.x);
 		output.writeShort((s16)mPosition.y + mOffset.y);
@@ -492,6 +495,7 @@ void Generator::write(Stream& output)
 		output.writeFloat(mOffset.z);
 		output.textWriteText("\t# offset\r\n");
 	}
+	
 	if (mObject) {
 		mObject->write(output);
 	} else {

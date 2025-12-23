@@ -789,8 +789,7 @@ void Pikmin::TUnit::update()
 	case STATE_Unk2:
 	case STATE_Unk4:
 	case STATE_Unk5:
-		mFrameControlA.mRate
-		    = (mRandAnimSpeeds.y * (mParms[0] * mManager->mParams.mAnimSpeedWalk())) * ((sys->getDeltaTime() * 60.0f) * 0.5f);
+		mFrameControlA.mRate = (mRandAnimSpeeds.y * (mParms[0] * mManager->mParams.mAnimSpeedWalk())) * ((sys->getDeltaTime() * 60.0f) * 0.5f);
 		mFrameControlA.update();
 		mManager->mAnimator->setAnmWait(mModel, mFrameControlA.mFrame);
 

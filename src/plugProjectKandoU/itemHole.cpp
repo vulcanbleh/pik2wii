@@ -148,9 +148,9 @@ void Item::movieUserCommand(u32 command, MoviePlayer* player)
 	switch (command) {
 	case CC_MovieCommand1:
 		PelletIterator iterator;
-		iterator.first();
-		while (!iterator.isDone()) {
-			Pellet* pellet = (Pellet*)(*iterator);
+		CI_LOOP(iterator)
+		{
+			Pellet* pellet = *iterator;
 			if (pellet->isPickable() && pellet->isAlive()) {
 				Vector3f pelletPos = pellet->getPosition();
 				Vector3f holePos   = getPosition();
@@ -161,7 +161,6 @@ void Item::movieUserCommand(u32 command, MoviePlayer* player)
 					pellet->setPosition(pelletPos, false);
 				}
 			}
-			iterator.next();
 		}
 		if (!player->isFlag(MVP_IsFinished)) {
 			mFsm->transit(this, Hole_Appear, nullptr);
@@ -170,7 +169,7 @@ void Item::movieUserCommand(u32 command, MoviePlayer* player)
 			if (mBuryDepth != 0.0f) {
 				PSSystem::spSysIF->playSystemSe(PSSE_SY_WORK_FINISH, 0);
 			}
-			efx::Arg arg(Vector3f::zero);
+			efx::Arg arg;
 			arg.mPosition = mPosition;
 			mEfxWarpZone->create(&arg);
 			mFsm->transit(this, Hole_Normal, nullptr);
@@ -296,7 +295,7 @@ void Item::initDependency()
 	}
 
 	if (getStateID() == Hole_Normal) {
-		efx::Arg arg(Vector3f::zero);
+		efx::Arg arg;
 		arg.mPosition = mPosition;
 		mEfxWarpZone->create(&arg);
 	}
@@ -354,7 +353,7 @@ void Item::doAI()
 	if (mBarrel) {
 		if (!mBarrel->isAlive()) {
 			mBarrel = nullptr;
-			efx::Arg arg(Vector3f::zero);
+			efx::Arg arg;
 			arg.mPosition = mPosition;
 			mEfxWarpZone->create(&arg);
 		}

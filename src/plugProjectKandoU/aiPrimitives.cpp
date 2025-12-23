@@ -113,8 +113,8 @@ void ActApproachPos::init(ActionArg* settings)
 int ActApproachPos::exec()
 {
 	Vector3f dir = mGoalPosition - mParent->getPosition();
+	f32 dist     = dir.length2D();
 	f32 y        = dir.y;
-	f32 dist     = dir.length();
 	dir.normalise();
 
 	f32 angleDist = angDist(JMAAtan2Radian(dir.x, dir.z), mParent->getFaceDir());
