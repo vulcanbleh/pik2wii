@@ -565,7 +565,7 @@ JSystem/JAudio/JAS/JASDriverIF.cpp:
 	.text       start:0x80055374 end:0x80055870
 	.ctors      start:0x80534CC8 end:0x80534CCC
 	.rodata     start:0x80538DD0 end:0x80538FE0
-	.bss        start:0x805D2B78 end:0x805D2D10
+	.bss        start:0x805D2B78 end:0x805D2CF8
 	.sdata      start:0x8066A888 end:0x8066A890
 	.sdata2     start:0x8066DAE0 end:0x8066DAF0
 
@@ -595,6 +595,7 @@ JSystem/JAudio/JAS/JASCallback.cpp:
 JSystem/JAudio/JAS/JASCmdStack.cpp:
 	.text       start:0x80057424 end:0x80057690
 	.ctors      start:0x80534CCC end:0x80534CD0
+	.bss        start:0x805D2CF8 end:0x805D2D10
 
 JSystem/JAudio/JAS/JASDvdThread.cpp:
 	.text       start:0x80057690 end:0x80057780
