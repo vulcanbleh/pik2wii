@@ -2377,7 +2377,7 @@ config.libs = [
                 extra_cflags=["-RTTI on"],
             ),
             Object(NonMatching, "egg/gfx/eggDrawHelper.cpp"),
-            Object(NonMatching, "egg/gfx/eggTexture.cpp"),
+            Object(Matching, "egg/gfx/eggTexture.cpp"),
             Object(Matching, "egg/gfx/eggPalette.cpp"),
             Object(
                 NonMatching,
