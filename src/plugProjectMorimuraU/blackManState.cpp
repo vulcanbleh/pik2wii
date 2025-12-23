@@ -632,7 +632,7 @@ void StateTired::init(EnemyBase* enemy, StateArg* stateArg)
 {
 	enemy->startMotion(WRAITHANIM_Wait2, nullptr);
 	enemy->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
-	_10 = 0;
+	mTiredCounter = 0;
 }
 
 /**
@@ -652,9 +652,9 @@ void StateTired::exec(EnemyBase* enemy)
 		return;
 	}
 
-	_10++;
+	mTiredCounter++;
 	Obj* wraith = OBJ(enemy);
-	if (_10 > wraith->getParms()->mProperParms.mStandStillTimerLength.mValue) {
+	if (mTiredCounter > wraith->getParms()->mProperParms.mStandStillTimerLength.mValue) {
 		enemy->finishMotion();
 	}
 }

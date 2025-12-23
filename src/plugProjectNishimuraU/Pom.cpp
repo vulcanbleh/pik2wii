@@ -99,15 +99,15 @@ void Obj::changeMaterial()
 	J3DModel* j3dModel      = mModel->getJ3DModel();
 	J3DModelData* modelData = j3dModel->getModelData();
 
-	u16 nameIdx           = j3dModel->getModelData()->getMaterialTable().getMaterialName()->getIndex("hanabira1_v");
-	J3DMaterial* material = modelData->getMaterialTable().getMaterialNodePointer(nameIdx);
+	u16 nameIdx           = modelData->getMaterialName()->getIndex("hanabira1_v");
+	J3DMaterial* material = modelData->getMaterialNodePointer(nameIdx);
 	material->getTevBlock()->setTevColor(0, mRgbColor);
 	j3dModel->calcMaterial();
 
-	for (u16 i = 0; i < modelData->getMaterialTable().getMaterialNum(); i++) {
+	for (u16 i = 0; i < modelData->getMaterialNum(); i++) {
 		J3DMatPacket* packet = j3dModel->getMatPacket(i);
 		j3dSys.setMatPacket(j3dModel->getMatPacket(i));
-		modelData->mMaterialTable.mMaterials[i]->diff(packet->getShapePacket()->mDiffFlag);
+		modelData->getMaterialNodePointer(i)->diff(packet->getShapePacket()->mDiffFlag);
 	}
 }
 

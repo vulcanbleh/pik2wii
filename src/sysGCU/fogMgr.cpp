@@ -19,7 +19,7 @@ FogMgr::FogMgr()
     , mType(GX_FOG_LINEAR)
     , mNearZ(640.0f)
     , mFarZ(3024.0f)
-    , mColor(0xAD, 0xB1, 0xFC, 0xFF)
+    , mColor(173, 177, 252, 255)
 {
 }
 
@@ -29,7 +29,7 @@ FogMgr::FogMgr()
  */
 void FogMgr::off(Graphics&)
 {
-	GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, mColor.GXColorView);
+	GXSetFog(GX_FOG_NONE, 0.0f, 0.0f, 0.0f, 0.0f, mColor);
 }
 
 /**
@@ -41,7 +41,7 @@ void FogMgr::set(Graphics& graphics)
 	GXFogAdjTable table;
 	Camera* activeCam = graphics.mCurrentViewport->mCamera;
 
-	GXSetFog(mType, mNearZ, mFarZ, activeCam->getNear(), activeCam->getFar(), mColor.GXColorView);
+	GXSetFog(mType, mNearZ, mFarZ, activeCam->getNear(), activeCam->getFar(), mColor);
 
 	u16 width = System::getRenderModeObj()->fbWidth;
 	GXInitFogAdjTable(&table, width, activeCam->mProjectionMtx);
@@ -56,7 +56,10 @@ void FogMgr::set(Graphics& graphics)
  */
 void FogMgr::setColor(Color4& color)
 {
-	mColor.colorView = color;
+	mColor.r = color.r;
+	mColor.g = color.g;
+	mColor.b = color.b;
+	mColor.a = color.a;
 }
 
 /**
@@ -65,5 +68,8 @@ void FogMgr::setColor(Color4& color)
  */
 void FogMgr::getColor(Color4& color)
 {
-	color = mColor.colorView;
+	color.r = mColor.r;
+	color.g = mColor.g;
+	color.b = mColor.b;
+	color.a = mColor.a;
 }

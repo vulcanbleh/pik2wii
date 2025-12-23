@@ -66,6 +66,14 @@ VerticalSplitter::VerticalSplitter(Graphics*)
  */
 void VerticalSplitter::split2(f32)
 {
+	Viewport* vp1 = mGraphics->getViewport(PLAYER1_VIEWPORT);
+	Viewport* vp2 = mGraphics->getViewport(PLAYER2_VIEWPORT);
+
+	vp1->mSplitRatio.x = -1.0f;
+	int y              = sys->getRenderModeObj()->efbHeight;
+	int x              = sys->getRenderModeObj()->fbWidth;
+	mBounds.p1         = 0.0f;
+	mBounds.p2         = Vector2f(x, y);
 	// UNUSED FUNCTION
 }
 
@@ -197,58 +205,12 @@ void Viewport::updateCameraAspect()
  */
 void Viewport::refresh()
 {
+	f32 size_x = mSplitRatio.x * mBounds.getWidth();
+	f32 size_y = mSplitRatio.y * mBounds.getHeight();
+	Vector2f size(size_x, size_y);
 	mBounds2.p1 = mBounds.p1 + mOffset;
-	mBounds2.p2 = mBounds2.p1 + Vector2f(mSplitRatio.x * mBounds.getWidth(), mSplitRatio.y * mBounds.getHeight());
+	mBounds2.p2 = mBounds2.p1 + size;
 	updateCameraAspect();
-	/*
-	lfs      f4, 0x1c(r3)
-	lfs      f0, 0x48(r3)
-	lfs      f7, 0x20(r3)
-	lfs      f1, 0x4c(r3)
-	fadds    f0, f4, f0
-	lfs      f3, 0x24(r3)
-	lfs      f2, 0x28(r3)
-	fadds    f6, f7, f1
-	lfs      f5, 0x50(r3)
-	fsubs    f4, f3, f4
-	lfs      f3, 0x54(r3)
-	fsubs    f1, f2, f7
-	stfs     f0, 0x2c(r3)
-	fmuls    f2, f5, f4
-	fmuls    f3, f3, f1
-	stfs     f6, 0x30(r3)
-	lfs      f0, 0x2c(r3)
-	lfs      f1, 0x30(r3)
-	fadds    f0, f0, f2
-	fadds    f1, f1, f3
-	stfs     f0, 0x34(r3)
-	stfs     f1, 0x38(r3)
-	lwz      r4, 0x44(r3)
-	cmplwi   r4, 0
-	beqlr
-	lfs      f3, 0x38(r3)
-	lfs      f0, 0x30(r3)
-	lfs      f2, 0x34(r3)
-	lfs      f1, 0x2c(r3)
-	fsubs    f3, f3, f0
-	lfs      f0, lbl_805204B8@sda21(r2)
-	fsubs    f1, f2, f1
-	fcmpu    cr0, f0, f3
-	beq      lbl_8042536C
-	fcmpu    cr0, f0, f1
-	bne      lbl_80425374
-
-lbl_8042536C:
-	lfs      f0, lbl_805204C8@sda21(r2)
-	b        lbl_80425378
-
-lbl_80425374:
-	fdivs    f0, f1, f3
-
-lbl_80425378:
-	stfs     f0, 0x2c(r4)
-	blr
-	*/
 }
 
 /**
@@ -259,63 +221,6 @@ void Viewport::setRect(Rectf& rect)
 {
 	mBounds = rect;
 	refresh();
-	/*
-	lfs      f0, 0(r4)
-	stfs     f0, 0x1c(r3)
-	lfs      f0, 4(r4)
-	stfs     f0, 0x20(r3)
-	lfs      f0, 8(r4)
-	stfs     f0, 0x24(r3)
-	lfs      f0, 0xc(r4)
-	stfs     f0, 0x28(r3)
-	lfs      f4, 0x1c(r3)
-	lfs      f0, 0x48(r3)
-	lfs      f7, 0x20(r3)
-	lfs      f1, 0x4c(r3)
-	fadds    f0, f4, f0
-	lfs      f3, 0x24(r3)
-	lfs      f2, 0x28(r3)
-	fadds    f6, f7, f1
-	lfs      f5, 0x50(r3)
-	fsubs    f4, f3, f4
-	lfs      f3, 0x54(r3)
-	fsubs    f1, f2, f7
-	stfs     f0, 0x2c(r3)
-	fmuls    f4, f5, f4
-	fmuls    f2, f3, f1
-	stfs     f6, 0x30(r3)
-	lfs      f0, 0x2c(r3)
-	lfs      f1, 0x30(r3)
-	fadds    f0, f0, f4
-	fadds    f1, f1, f2
-	stfs     f0, 0x34(r3)
-	stfs     f1, 0x38(r3)
-	lwz      r4, 0x44(r3)
-	cmplwi   r4, 0
-	beqlr
-	lfs      f3, 0x38(r3)
-	lfs      f0, 0x30(r3)
-	lfs      f2, 0x34(r3)
-	lfs      f1, 0x2c(r3)
-	fsubs    f3, f3, f0
-	lfs      f0, lbl_805204B8@sda21(r2)
-	fsubs    f1, f2, f1
-	fcmpu    cr0, f0, f3
-	beq      lbl_80425430
-	fcmpu    cr0, f0, f1
-	bne      lbl_80425438
-
-lbl_80425430:
-	lfs      f0, lbl_805204C8@sda21(r2)
-	b        lbl_8042543C
-
-lbl_80425438:
-	fdivs    f0, f1, f3
-
-lbl_8042543C:
-	stfs     f0, 0x2c(r4)
-	blr
-	*/
 }
 
 /**
@@ -347,7 +252,7 @@ void Viewport::setOrthoGraph2d(J2DOrthoGraph&)
 SysShape::Model* Viewport::setJ3DViewMtx(bool flag)
 {
 	Matrixf* mtx = getMatrix(flag);
-	PSMTXCopy(mtx->mMatrix.mtxView, j3dSys.mViewMtx);
+	j3dSys.setViewMtx(mtx->mMatrix.mtxView);
 }
 
 /**
@@ -398,7 +303,10 @@ void Graphics::addViewport(Viewport* vp)
  * @note Address: 0x804255F0
  * @note Size: 0x10
  */
-Viewport* Graphics::getViewport(int id) { return mViewports[id]; }
+Viewport* Graphics::getViewport(int id)
+{
+	return mViewports[id];
+}
 
 /**
  * @note Address: 0x80425600
@@ -446,7 +354,10 @@ void Graphics::updateJ3D()
  * @note Address: 0x804256E0
  * @note Size: 0x30
  */
-static void graphicsTokenCallback(u16 id) { Graphics::lastTokenName = sys->mGfx->getTokenName(id); }
+static void graphicsTokenCallback(u16 id)
+{
+	Graphics::lastTokenName = sys->mGfx->getTokenName(id);
+}
 
 /**
  * @note Address: 0x80425710
@@ -470,7 +381,10 @@ void Graphics::setToken(char* tok)
  * @note Address: 0x80425788
  * @note Size: 0x10
  */
-char* Graphics::getTokenName(u16 id) { return mTokens[id]; }
+char* Graphics::getTokenName(u16 id)
+{
+	return mTokens[id];
+}
 
 /**
  * @note Address: N/A
@@ -602,18 +516,11 @@ void Graphics::drawSphere(Vector3f& position, f32 radius)
 		GXLoadPosMtxImm(concatMtx.mMatrix.mtxView, 0);
 
 		for (int j = 0; j < 16; j++) {
-			f32 theta    = 0.3926991f * (f32)(j);
-			f32 phi      = 0.3926991f * (f32)((j + 1) % 32);
-			f32 cosTheta = radius * cosf(theta); // f26
-			f32 sinTheta = radius * sinf(theta); // f24
-			f32 cosPhi   = radius * cosf(phi);   // f23
-			f32 sinPhi   = radius * sinf(phi);   // f22
-			f32 zero     = 0.0f;                 // f28
-			GXBegin(GX_LINES, GX_VTXFMT0, 2);
-			GXPosition3f32(sinTheta, cosTheta, zero);
-			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
-			GXPosition3f32(sinPhi, cosPhi, zero);
-			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
+			f32 theta = 0.3926991f * (f32)(j);
+			f32 phi   = 0.3926991f * (f32)((j + 1) % 32);
+			Vector3f start(radius * sinf(theta), radius * cosf(theta), 0.0f);
+			Vector3f end(radius * sinf(phi), radius * cosf(phi), 0.0f);
+			drawLine(start, end);
 		}
 	}
 
@@ -628,412 +535,13 @@ void Graphics::drawSphere(Vector3f& position, f32 radius)
 		GXLoadPosMtxImm(concatMtx.mMatrix.mtxView, 0);
 
 		for (int j = 0; j < 16; j++) {
-			f32 theta    = 0.3926991f * (f32)(j);
-			f32 phi      = 0.3926991f * (f32)((j + 1) % 32);
-			f32 cosTheta = radius * cosf(theta); // f26
-			f32 sinTheta = radius * sinf(theta); // f23
-			f32 cosPhi   = radius * cosf(phi);   // f24
-			f32 sinPhi   = radius * sinf(phi);   // f22
-			f32 zero     = 0.0f;                 // f30
-			GXBegin(GX_LINES, GX_VTXFMT0, 2);
-			GXPosition3f32(sinTheta, zero, cosTheta);
-			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
-			GXPosition3f32(sinPhi, zero, cosPhi);
-			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
+			f32 theta = 0.3926991f * (f32)(j);
+			f32 phi   = 0.3926991f * (f32)((j + 1) % 32);
+			Vector3f start(radius * sinf(theta), 0.0f, radius * cosf(theta));
+			Vector3f end(radius * sinf(phi), 0.0f, radius * cosf(phi));
+			drawLine(start, end);
 		}
 	}
-	/*
-	stwu     r1, -0x1d0(r1)
-	mflr     r0
-	stw      r0, 0x1d4(r1)
-	stfd     f31, 0x1c0(r1)
-	psq_st   f31, 456(r1), 0, qr0
-	stfd     f30, 0x1b0(r1)
-	psq_st   f30, 440(r1), 0, qr0
-	stfd     f29, 0x1a0(r1)
-	psq_st   f29, 424(r1), 0, qr0
-	stfd     f28, 0x190(r1)
-	psq_st   f28, 408(r1), 0, qr0
-	stfd     f27, 0x180(r1)
-	psq_st   f27, 392(r1), 0, qr0
-	stfd     f26, 0x170(r1)
-	psq_st   f26, 376(r1), 0, qr0
-	stfd     f25, 0x160(r1)
-	psq_st   f25, 360(r1), 0, qr0
-	stfd     f24, 0x150(r1)
-	psq_st   f24, 344(r1), 0, qr0
-	stfd     f23, 0x140(r1)
-	psq_st   f23, 328(r1), 0, qr0
-	stfd     f22, 0x130(r1)
-	psq_st   f22, 312(r1), 0, qr0
-	stmw     r25, 0x114(r1)
-	fmr      f25, f1
-	lis      r5, sincosTable___5JMath@ha
-	lfs      f30, lbl_805204D8@sda21(r2)
-	mr       r26, r3
-	lfd      f29, lbl_805204D0@sda21(r2)
-	mr       r27, r4
-	lfs      f28, lbl_805204B8@sda21(r2)
-	addi     r30, r5, sincosTable___5JMath@l
-	lfs      f27, lbl_805204DC@sda21(r2)
-	li       r29, 0
-	lfs      f31, lbl_805204C8@sda21(r2)
-	lis      r31, 0x4330
-	lis      r25, 0xcc01
-
-lbl_80425B40:
-	xoris    r0, r29, 0x8000
-	stw      r31, 0xc8(r1)
-	mr       r6, r27
-	addi     r3, r1, 0x68
-	stw      r0, 0xcc(r1)
-	addi     r4, r1, 0x2c
-	addi     r5, r1, 0x20
-	lfd      f0, 0xc8(r1)
-	stfs     f31, 0x2c(r1)
-	fsubs    f0, f0, f29
-	stfs     f31, 0x30(r1)
-	fmuls    f0, f30, f0
-	stfs     f31, 0x34(r1)
-	stfs     f28, 0x20(r1)
-	stfs     f0, 0x24(r1)
-	stfs     f28, 0x28(r1)
-	bl       "makeSRT__7MatrixfFR10Vector3<f>R10Vector3<f>R10Vector3<f>"
-	addi     r3, r26, 0x8c
-	addi     r4, r1, 0x68
-	addi     r5, r1, 0x98
-	bl       PSMTXConcat
-	addi     r3, r1, 0x98
-	li       r4, 0
-	bl       GXLoadPosMtxImm
-	li       r28, 0
-
-lbl_80425BA4:
-	addi     r3, r28, 1
-	xoris    r4, r28, 0x8000
-	slwi     r0, r3, 0x1b
-	stw      r4, 0xcc(r1)
-	srwi     r3, r3, 0x1f
-	subf     r0, r3, r0
-	stw      r31, 0xc8(r1)
-	rotlwi   r0, r0, 5
-	add      r0, r0, r3
-	lfd      f0, 0xc8(r1)
-	xoris    r0, r0, 0x8000
-	stw      r31, 0xd0(r1)
-	fsubs    f0, f0, f29
-	stw      r0, 0xd4(r1)
-	fmuls    f2, f30, f0
-	lfd      f0, 0xd0(r1)
-	fsubs    f0, f0, f29
-	fmr      f1, f2
-	fcmpo    cr0, f2, f28
-	fmuls    f3, f30, f0
-	bge      lbl_80425BFC
-	fneg     f1, f2
-
-lbl_80425BFC:
-	fmuls    f0, f1, f27
-	fcmpo    cr0, f2, f28
-	fctiwz   f0, f0
-	stfd     f0, 0xd8(r1)
-	lwz      r0, 0xdc(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	add      r3, r30, r0
-	lfs      f0, 4(r3)
-	fmuls    f26, f25, f0
-	bge      lbl_80425C50
-	lfs      f0, lbl_805204E0@sda21(r2)
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fmuls    f0, f2, f0
-	fctiwz   f0, f0
-	stfd     f0, 0xe0(r1)
-	lwz      r0, 0xe4(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f0, r3, r0
-	fneg     f0, f0
-	b        lbl_80425C70
-
-lbl_80425C50:
-	fmuls    f0, f2, f27
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fctiwz   f0, f0
-	stfd     f0, 0xe8(r1)
-	lwz      r0, 0xec(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f0, r3, r0
-
-lbl_80425C70:
-	fmr      f1, f3
-	fcmpo    cr0, f3, f28
-	fmuls    f24, f25, f0
-	bge      lbl_80425C84
-	fneg     f1, f3
-
-lbl_80425C84:
-	fmuls    f0, f1, f27
-	fcmpo    cr0, f3, f28
-	fctiwz   f0, f0
-	stfd     f0, 0xf0(r1)
-	lwz      r0, 0xf4(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	add      r3, r30, r0
-	lfs      f0, 4(r3)
-	fmuls    f23, f25, f0
-	bge      lbl_80425CD8
-	lfs      f0, lbl_805204E0@sda21(r2)
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fmuls    f0, f3, f0
-	fctiwz   f0, f0
-	stfd     f0, 0xf8(r1)
-	lwz      r0, 0xfc(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f0, r3, r0
-	fneg     f22, f0
-	b        lbl_80425CF8
-
-lbl_80425CD8:
-	fmuls    f0, f3, f27
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fctiwz   f0, f0
-	stfd     f0, 0x100(r1)
-	lwz      r0, 0x104(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f22, r3, r0
-
-lbl_80425CF8:
-	li       r3, 0xa8
-	li       r4, 0
-	li       r5, 2
-	bl       GXBegin
-	stfs     f24, -0x8000(r25)
-	addi     r28, r28, 1
-	fmuls    f0, f25, f22
-	cmpwi    r28, 0x10
-	stfs     f26, -0x8000(r25)
-	stfs     f28, -0x8000(r25)
-	lbz      r5, 0x87(r26)
-	lbz      r4, 0x86(r26)
-	lbz      r3, 0x85(r26)
-	lbz      r0, 0x84(r26)
-	stb      r0, -0x8000(r25)
-	stb      r3, -0x8000(r25)
-	stb      r4, -0x8000(r25)
-	stb      r5, -0x8000(r25)
-	stfs     f0, -0x8000(r25)
-	stfs     f23, -0x8000(r25)
-	stfs     f28, -0x8000(r25)
-	lbz      r5, 0x87(r26)
-	lbz      r4, 0x86(r26)
-	lbz      r3, 0x85(r26)
-	lbz      r0, 0x84(r26)
-	stb      r0, -0x8000(r25)
-	stb      r3, -0x8000(r25)
-	stb      r4, -0x8000(r25)
-	stb      r5, -0x8000(r25)
-	blt      lbl_80425BA4
-	addi     r29, r29, 1
-	cmpwi    r29, 0x10
-	blt      lbl_80425B40
-	lis      r3, sincosTable___5JMath@ha
-	lfs      f28, lbl_805204D8@sda21(r2)
-	lfd      f29, lbl_805204D0@sda21(r2)
-	addi     r31, r3, sincosTable___5JMath@l
-	lfs      f30, lbl_805204B8@sda21(r2)
-	li       r28, 0
-	lfs      f31, lbl_805204DC@sda21(r2)
-	lis      r30, 0x4330
-	lfs      f27, lbl_805204C8@sda21(r2)
-	lis      r25, 0xcc01
-
-lbl_80425DA4:
-	xoris    r0, r28, 0x8000
-	stw      r30, 0x100(r1)
-	mr       r6, r27
-	addi     r3, r1, 0x38
-	stw      r0, 0x104(r1)
-	addi     r4, r1, 0x14
-	addi     r5, r1, 8
-	lfd      f0, 0x100(r1)
-	stfs     f27, 0x14(r1)
-	fsubs    f0, f0, f29
-	stfs     f27, 0x18(r1)
-	fmuls    f0, f28, f0
-	stfs     f27, 0x1c(r1)
-	stfs     f30, 0xc(r1)
-	stfs     f0, 8(r1)
-	stfs     f30, 0x10(r1)
-	bl       "makeSRT__7MatrixfFR10Vector3<f>R10Vector3<f>R10Vector3<f>"
-	addi     r3, r26, 0x8c
-	addi     r4, r1, 0x38
-	addi     r5, r1, 0x98
-	bl       PSMTXConcat
-	addi     r3, r1, 0x98
-	li       r4, 0
-	bl       GXLoadPosMtxImm
-	li       r29, 0
-
-lbl_80425E08:
-	addi     r3, r29, 1
-	xoris    r4, r29, 0x8000
-	slwi     r0, r3, 0x1b
-	stw      r4, 0x104(r1)
-	srwi     r3, r3, 0x1f
-	subf     r0, r3, r0
-	stw      r30, 0x100(r1)
-	rotlwi   r0, r0, 5
-	add      r0, r0, r3
-	lfd      f0, 0x100(r1)
-	xoris    r0, r0, 0x8000
-	stw      r30, 0xf8(r1)
-	fsubs    f0, f0, f29
-	stw      r0, 0xfc(r1)
-	fmuls    f2, f28, f0
-	lfd      f0, 0xf8(r1)
-	fsubs    f0, f0, f29
-	fmr      f1, f2
-	fcmpo    cr0, f2, f30
-	fmuls    f3, f28, f0
-	bge      lbl_80425E60
-	fneg     f1, f2
-
-lbl_80425E60:
-	fmuls    f0, f1, f31
-	fcmpo    cr0, f2, f30
-	fctiwz   f0, f0
-	stfd     f0, 0xf0(r1)
-	lwz      r0, 0xf4(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	add      r3, r31, r0
-	lfs      f0, 4(r3)
-	fmuls    f26, f25, f0
-	bge      lbl_80425EB4
-	lfs      f0, lbl_805204E0@sda21(r2)
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fmuls    f0, f2, f0
-	fctiwz   f0, f0
-	stfd     f0, 0xe8(r1)
-	lwz      r0, 0xec(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f0, r3, r0
-	fneg     f0, f0
-	b        lbl_80425ED4
-
-lbl_80425EB4:
-	fmuls    f0, f2, f31
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fctiwz   f0, f0
-	stfd     f0, 0xe0(r1)
-	lwz      r0, 0xe4(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f0, r3, r0
-
-lbl_80425ED4:
-	fmr      f1, f3
-	fcmpo    cr0, f3, f30
-	fmuls    f23, f25, f0
-	bge      lbl_80425EE8
-	fneg     f1, f3
-
-lbl_80425EE8:
-	fmuls    f0, f1, f31
-	fcmpo    cr0, f3, f30
-	fctiwz   f0, f0
-	stfd     f0, 0xd8(r1)
-	lwz      r0, 0xdc(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	add      r3, r31, r0
-	lfs      f0, 4(r3)
-	fmuls    f24, f25, f0
-	bge      lbl_80425F3C
-	lfs      f0, lbl_805204E0@sda21(r2)
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fmuls    f0, f3, f0
-	fctiwz   f0, f0
-	stfd     f0, 0xd0(r1)
-	lwz      r0, 0xd4(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f0, r3, r0
-	fneg     f22, f0
-	b        lbl_80425F5C
-
-lbl_80425F3C:
-	fmuls    f0, f3, f31
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fctiwz   f0, f0
-	stfd     f0, 0xc8(r1)
-	lwz      r0, 0xcc(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f22, r3, r0
-
-lbl_80425F5C:
-	li       r3, 0xa8
-	li       r4, 0
-	li       r5, 2
-	bl       GXBegin
-	stfs     f23, -0x8000(r25)
-	addi     r29, r29, 1
-	fmuls    f0, f25, f22
-	cmpwi    r29, 0x10
-	stfs     f30, -0x8000(r25)
-	stfs     f26, -0x8000(r25)
-	lbz      r5, 0x87(r26)
-	lbz      r4, 0x86(r26)
-	lbz      r3, 0x85(r26)
-	lbz      r0, 0x84(r26)
-	stb      r0, -0x8000(r25)
-	stb      r3, -0x8000(r25)
-	stb      r4, -0x8000(r25)
-	stb      r5, -0x8000(r25)
-	stfs     f0, -0x8000(r25)
-	stfs     f30, -0x8000(r25)
-	stfs     f24, -0x8000(r25)
-	lbz      r5, 0x87(r26)
-	lbz      r4, 0x86(r26)
-	lbz      r3, 0x85(r26)
-	lbz      r0, 0x84(r26)
-	stb      r0, -0x8000(r25)
-	stb      r3, -0x8000(r25)
-	stb      r4, -0x8000(r25)
-	stb      r5, -0x8000(r25)
-	blt      lbl_80425E08
-	addi     r28, r28, 1
-	cmpwi    r28, 0x10
-	blt      lbl_80425DA4
-	psq_l    f31, 456(r1), 0, qr0
-	lfd      f31, 0x1c0(r1)
-	psq_l    f30, 440(r1), 0, qr0
-	lfd      f30, 0x1b0(r1)
-	psq_l    f29, 424(r1), 0, qr0
-	lfd      f29, 0x1a0(r1)
-	psq_l    f28, 408(r1), 0, qr0
-	lfd      f28, 0x190(r1)
-	psq_l    f27, 392(r1), 0, qr0
-	lfd      f27, 0x180(r1)
-	psq_l    f26, 376(r1), 0, qr0
-	lfd      f26, 0x170(r1)
-	psq_l    f25, 360(r1), 0, qr0
-	lfd      f25, 0x160(r1)
-	psq_l    f24, 344(r1), 0, qr0
-	lfd      f24, 0x150(r1)
-	psq_l    f23, 328(r1), 0, qr0
-	lfd      f23, 0x140(r1)
-	psq_l    f22, 312(r1), 0, qr0
-	lfd      f22, 0x130(r1)
-	lmw      r25, 0x114(r1)
-	lwz      r0, 0x1d4(r1)
-	mtlr     r0
-	addi     r1, r1, 0x1d0
-	blr
-	*/
 }
 
 /**
@@ -1055,18 +563,11 @@ void Graphics::drawSphere(f32 radius, Matrixf* gfxMtx)
 		GXLoadPosMtxImm(concatMtx.mMatrix.mtxView, 0);
 
 		for (int j = 0; j < 16; j++) {
-			f32 theta    = 0.3926991f * (f32)(j);
-			f32 phi      = 0.3926991f * (f32)((j + 1) % 32);
-			f32 cosTheta = radius * cosf(theta); // f26
-			f32 sinTheta = radius * sinf(theta); // f24
-			f32 cosPhi   = radius * cosf(phi);   // f23
-			f32 sinPhi   = radius * sinf(phi);   // f22
-			f32 zero     = 0.0f;                 // f28
-			GXBegin(GX_LINES, GX_VTXFMT0, 2);
-			GXPosition3f32(sinTheta, cosTheta, zero);
-			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
-			GXPosition3f32(sinPhi, cosPhi, zero);
-			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
+			f32 theta = 0.3926991f * (f32)(j);
+			f32 phi   = 0.3926991f * (f32)((j + 1) % 32);
+			Vector3f start(radius * sinf(theta), radius * cosf(theta), 0.0f);
+			Vector3f end(radius * sinf(phi), radius * cosf(phi), 0.0f);
+			drawLine(start, end);
 		}
 	}
 
@@ -1082,432 +583,22 @@ void Graphics::drawSphere(f32 radius, Matrixf* gfxMtx)
 		GXLoadPosMtxImm(concatMtx.mMatrix.mtxView, 0);
 
 		for (int j = 0; j < 16; j++) {
-			f32 theta    = 0.3926991f * (f32)(j);
-			f32 phi      = 0.3926991f * (f32)((j + 1) % 32);
-			f32 cosTheta = radius * cosf(theta); // f26
-			f32 sinTheta = radius * sinf(theta); // f23
-			f32 cosPhi   = radius * cosf(phi);   // f24
-			f32 sinPhi   = radius * sinf(phi);   // f22
-			f32 zero     = 0.0f;                 // f30
-			GXBegin(GX_LINES, GX_VTXFMT0, 2);
-			GXPosition3f32(sinTheta, zero, cosTheta);
-			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
-			GXPosition3f32(sinPhi, zero, cosPhi);
-			GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
+			f32 theta = 0.3926991f * (f32)(j);
+			f32 phi   = 0.3926991f * (f32)((j + 1) % 32);
+			Vector3f start(radius * sinf(theta), 0.0f, radius * cosf(theta));
+			Vector3f end(radius * sinf(phi), 0.0f, radius * cosf(phi));
+			drawLine(start, end);
 		}
 	}
-	/*
-	stwu     r1, -0x1d0(r1)
-	mflr     r0
-	stw      r0, 0x1d4(r1)
-	stfd     f31, 0x1c0(r1)
-	psq_st   f31, 456(r1), 0, qr0
-	stfd     f30, 0x1b0(r1)
-	psq_st   f30, 440(r1), 0, qr0
-	stfd     f29, 0x1a0(r1)
-	psq_st   f29, 424(r1), 0, qr0
-	stfd     f28, 0x190(r1)
-	psq_st   f28, 408(r1), 0, qr0
-	stfd     f27, 0x180(r1)
-	psq_st   f27, 392(r1), 0, qr0
-	stfd     f26, 0x170(r1)
-	psq_st   f26, 376(r1), 0, qr0
-	stfd     f25, 0x160(r1)
-	psq_st   f25, 360(r1), 0, qr0
-	stfd     f24, 0x150(r1)
-	psq_st   f24, 344(r1), 0, qr0
-	stfd     f23, 0x140(r1)
-	psq_st   f23, 328(r1), 0, qr0
-	stfd     f22, 0x130(r1)
-	psq_st   f22, 312(r1), 0, qr0
-	stmw     r24, 0x110(r1)
-	fmr      f25, f1
-	lis      r5, sincosTable___5JMath@ha
-	lis      r6, "zero__10Vector3<f>"@ha
-	lfs      f30, lbl_805204D8@sda21(r2)
-	lfd      f29, lbl_805204D0@sda21(r2)
-	mr       r25, r3
-	lfs      f28, lbl_805204B8@sda21(r2)
-	mr       r26, r4
-	lfs      f27, lbl_805204DC@sda21(r2)
-	addi     r29, r5, sincosTable___5JMath@l
-	lfs      f31, lbl_805204C8@sda21(r2)
-	addi     r31, r6, "zero__10Vector3<f>"@l
-	li       r28, 0
-	lis      r30, 0x4330
-	lis      r24, 0xcc01
-
-lbl_804260E0:
-	xoris    r0, r28, 0x8000
-	stw      r30, 0xc8(r1)
-	mr       r6, r31
-	addi     r3, r1, 0x68
-	stw      r0, 0xcc(r1)
-	addi     r4, r1, 0x2c
-	addi     r5, r1, 0x20
-	lfd      f0, 0xc8(r1)
-	stfs     f31, 0x2c(r1)
-	fsubs    f0, f0, f29
-	stfs     f31, 0x30(r1)
-	fmuls    f0, f30, f0
-	stfs     f31, 0x34(r1)
-	stfs     f28, 0x20(r1)
-	stfs     f0, 0x24(r1)
-	stfs     f28, 0x28(r1)
-	bl       "makeSRT__7MatrixfFR10Vector3<f>R10Vector3<f>R10Vector3<f>"
-	addi     r4, r1, 0x68
-	mr       r3, r26
-	mr       r5, r4
-	bl       PSMTXConcat
-	addi     r3, r25, 0x8c
-	addi     r4, r1, 0x68
-	addi     r5, r1, 0x98
-	bl       PSMTXConcat
-	addi     r3, r1, 0x98
-	li       r4, 0
-	bl       GXLoadPosMtxImm
-	li       r27, 0
-
-lbl_80426154:
-	addi     r3, r27, 1
-	xoris    r4, r27, 0x8000
-	slwi     r0, r3, 0x1b
-	stw      r4, 0xcc(r1)
-	srwi     r3, r3, 0x1f
-	subf     r0, r3, r0
-	stw      r30, 0xc8(r1)
-	rotlwi   r0, r0, 5
-	add      r0, r0, r3
-	lfd      f0, 0xc8(r1)
-	xoris    r0, r0, 0x8000
-	stw      r30, 0xd0(r1)
-	fsubs    f0, f0, f29
-	stw      r0, 0xd4(r1)
-	fmuls    f2, f30, f0
-	lfd      f0, 0xd0(r1)
-	fsubs    f0, f0, f29
-	fmr      f1, f2
-	fcmpo    cr0, f2, f28
-	fmuls    f3, f30, f0
-	bge      lbl_804261AC
-	fneg     f1, f2
-
-lbl_804261AC:
-	fmuls    f0, f1, f27
-	fcmpo    cr0, f2, f28
-	fctiwz   f0, f0
-	stfd     f0, 0xd8(r1)
-	lwz      r0, 0xdc(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	add      r3, r29, r0
-	lfs      f0, 4(r3)
-	fmuls    f26, f25, f0
-	bge      lbl_80426200
-	lfs      f0, lbl_805204E0@sda21(r2)
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fmuls    f0, f2, f0
-	fctiwz   f0, f0
-	stfd     f0, 0xe0(r1)
-	lwz      r0, 0xe4(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f0, r3, r0
-	fneg     f0, f0
-	b        lbl_80426220
-
-lbl_80426200:
-	fmuls    f0, f2, f27
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fctiwz   f0, f0
-	stfd     f0, 0xe8(r1)
-	lwz      r0, 0xec(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f0, r3, r0
-
-lbl_80426220:
-	fmr      f1, f3
-	fcmpo    cr0, f3, f28
-	fmuls    f24, f25, f0
-	bge      lbl_80426234
-	fneg     f1, f3
-
-lbl_80426234:
-	fmuls    f0, f1, f27
-	fcmpo    cr0, f3, f28
-	fctiwz   f0, f0
-	stfd     f0, 0xf0(r1)
-	lwz      r0, 0xf4(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	add      r3, r29, r0
-	lfs      f0, 4(r3)
-	fmuls    f23, f25, f0
-	bge      lbl_80426288
-	lfs      f0, lbl_805204E0@sda21(r2)
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fmuls    f0, f3, f0
-	fctiwz   f0, f0
-	stfd     f0, 0xf8(r1)
-	lwz      r0, 0xfc(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f0, r3, r0
-	fneg     f22, f0
-	b        lbl_804262A8
-
-lbl_80426288:
-	fmuls    f0, f3, f27
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fctiwz   f0, f0
-	stfd     f0, 0x100(r1)
-	lwz      r0, 0x104(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f22, r3, r0
-
-lbl_804262A8:
-	li       r3, 0xa8
-	li       r4, 0
-	li       r5, 2
-	bl       GXBegin
-	stfs     f24, -0x8000(r24)
-	addi     r27, r27, 1
-	fmuls    f0, f25, f22
-	cmpwi    r27, 0x10
-	stfs     f26, -0x8000(r24)
-	stfs     f28, -0x8000(r24)
-	lbz      r5, 0x87(r25)
-	lbz      r4, 0x86(r25)
-	lbz      r3, 0x85(r25)
-	lbz      r0, 0x84(r25)
-	stb      r0, -0x8000(r24)
-	stb      r3, -0x8000(r24)
-	stb      r4, -0x8000(r24)
-	stb      r5, -0x8000(r24)
-	stfs     f0, -0x8000(r24)
-	stfs     f23, -0x8000(r24)
-	stfs     f28, -0x8000(r24)
-	lbz      r5, 0x87(r25)
-	lbz      r4, 0x86(r25)
-	lbz      r3, 0x85(r25)
-	lbz      r0, 0x84(r25)
-	stb      r0, -0x8000(r24)
-	stb      r3, -0x8000(r24)
-	stb      r4, -0x8000(r24)
-	stb      r5, -0x8000(r24)
-	blt      lbl_80426154
-	addi     r28, r28, 1
-	cmpwi    r28, 0x10
-	blt      lbl_804260E0
-	lis      r3, sincosTable___5JMath@ha
-	lis      r4, "zero__10Vector3<f>"@ha
-	lfs      f28, lbl_805204D8@sda21(r2)
-	addi     r31, r3, sincosTable___5JMath@l
-	lfd      f29, lbl_805204D0@sda21(r2)
-	addi     r29, r4, "zero__10Vector3<f>"@l
-	lfs      f30, lbl_805204B8@sda21(r2)
-	li       r27, 0
-	lfs      f31, lbl_805204DC@sda21(r2)
-	lis      r30, 0x4330
-	lfs      f27, lbl_805204C8@sda21(r2)
-	lis      r24, 0xcc01
-
-lbl_8042635C:
-	xoris    r0, r27, 0x8000
-	stw      r30, 0x100(r1)
-	mr       r6, r29
-	addi     r3, r1, 0x38
-	stw      r0, 0x104(r1)
-	addi     r4, r1, 0x14
-	addi     r5, r1, 8
-	lfd      f0, 0x100(r1)
-	stfs     f27, 0x14(r1)
-	fsubs    f0, f0, f29
-	stfs     f27, 0x18(r1)
-	fmuls    f0, f28, f0
-	stfs     f27, 0x1c(r1)
-	stfs     f30, 0xc(r1)
-	stfs     f0, 8(r1)
-	stfs     f30, 0x10(r1)
-	bl       "makeSRT__7MatrixfFR10Vector3<f>R10Vector3<f>R10Vector3<f>"
-	addi     r4, r1, 0x38
-	mr       r3, r26
-	mr       r5, r4
-	bl       PSMTXConcat
-	addi     r3, r25, 0x8c
-	addi     r4, r1, 0x38
-	addi     r5, r1, 0x98
-	bl       PSMTXConcat
-	addi     r3, r1, 0x98
-	li       r4, 0
-	bl       GXLoadPosMtxImm
-	li       r28, 0
-
-lbl_804263D0:
-	addi     r3, r28, 1
-	xoris    r4, r28, 0x8000
-	slwi     r0, r3, 0x1b
-	stw      r4, 0x104(r1)
-	srwi     r3, r3, 0x1f
-	subf     r0, r3, r0
-	stw      r30, 0x100(r1)
-	rotlwi   r0, r0, 5
-	add      r0, r0, r3
-	lfd      f0, 0x100(r1)
-	xoris    r0, r0, 0x8000
-	stw      r30, 0xf8(r1)
-	fsubs    f0, f0, f29
-	stw      r0, 0xfc(r1)
-	fmuls    f2, f28, f0
-	lfd      f0, 0xf8(r1)
-	fsubs    f0, f0, f29
-	fmr      f1, f2
-	fcmpo    cr0, f2, f30
-	fmuls    f3, f28, f0
-	bge      lbl_80426428
-	fneg     f1, f2
-
-lbl_80426428:
-	fmuls    f0, f1, f31
-	fcmpo    cr0, f2, f30
-	fctiwz   f0, f0
-	stfd     f0, 0xf0(r1)
-	lwz      r0, 0xf4(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	add      r3, r31, r0
-	lfs      f0, 4(r3)
-	fmuls    f26, f25, f0
-	bge      lbl_8042647C
-	lfs      f0, lbl_805204E0@sda21(r2)
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fmuls    f0, f2, f0
-	fctiwz   f0, f0
-	stfd     f0, 0xe8(r1)
-	lwz      r0, 0xec(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f0, r3, r0
-	fneg     f0, f0
-	b        lbl_8042649C
-
-lbl_8042647C:
-	fmuls    f0, f2, f31
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fctiwz   f0, f0
-	stfd     f0, 0xe0(r1)
-	lwz      r0, 0xe4(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f0, r3, r0
-
-lbl_8042649C:
-	fmr      f1, f3
-	fcmpo    cr0, f3, f30
-	fmuls    f23, f25, f0
-	bge      lbl_804264B0
-	fneg     f1, f3
-
-lbl_804264B0:
-	fmuls    f0, f1, f31
-	fcmpo    cr0, f3, f30
-	fctiwz   f0, f0
-	stfd     f0, 0xd8(r1)
-	lwz      r0, 0xdc(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	add      r3, r31, r0
-	lfs      f0, 4(r3)
-	fmuls    f24, f25, f0
-	bge      lbl_80426504
-	lfs      f0, lbl_805204E0@sda21(r2)
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fmuls    f0, f3, f0
-	fctiwz   f0, f0
-	stfd     f0, 0xd0(r1)
-	lwz      r0, 0xd4(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f0, r3, r0
-	fneg     f22, f0
-	b        lbl_80426524
-
-lbl_80426504:
-	fmuls    f0, f3, f31
-	lis      r3, sincosTable___5JMath@ha
-	addi     r3, r3, sincosTable___5JMath@l
-	fctiwz   f0, f0
-	stfd     f0, 0xc8(r1)
-	lwz      r0, 0xcc(r1)
-	rlwinm   r0, r0, 3, 0x12, 0x1c
-	lfsx     f22, r3, r0
-
-lbl_80426524:
-	li       r3, 0xa8
-	li       r4, 0
-	li       r5, 2
-	bl       GXBegin
-	stfs     f23, -0x8000(r24)
-	addi     r28, r28, 1
-	fmuls    f0, f25, f22
-	cmpwi    r28, 0x10
-	stfs     f30, -0x8000(r24)
-	stfs     f26, -0x8000(r24)
-	lbz      r5, 0x87(r25)
-	lbz      r4, 0x86(r25)
-	lbz      r3, 0x85(r25)
-	lbz      r0, 0x84(r25)
-	stb      r0, -0x8000(r24)
-	stb      r3, -0x8000(r24)
-	stb      r4, -0x8000(r24)
-	stb      r5, -0x8000(r24)
-	stfs     f0, -0x8000(r24)
-	stfs     f30, -0x8000(r24)
-	stfs     f24, -0x8000(r24)
-	lbz      r5, 0x87(r25)
-	lbz      r4, 0x86(r25)
-	lbz      r3, 0x85(r25)
-	lbz      r0, 0x84(r25)
-	stb      r0, -0x8000(r24)
-	stb      r3, -0x8000(r24)
-	stb      r4, -0x8000(r24)
-	stb      r5, -0x8000(r24)
-	blt      lbl_804263D0
-	addi     r27, r27, 1
-	cmpwi    r27, 0x10
-	blt      lbl_8042635C
-	psq_l    f31, 456(r1), 0, qr0
-	lfd      f31, 0x1c0(r1)
-	psq_l    f30, 440(r1), 0, qr0
-	lfd      f30, 0x1b0(r1)
-	psq_l    f29, 424(r1), 0, qr0
-	lfd      f29, 0x1a0(r1)
-	psq_l    f28, 408(r1), 0, qr0
-	lfd      f28, 0x190(r1)
-	psq_l    f27, 392(r1), 0, qr0
-	lfd      f27, 0x180(r1)
-	psq_l    f26, 376(r1), 0, qr0
-	lfd      f26, 0x170(r1)
-	psq_l    f25, 360(r1), 0, qr0
-	lfd      f25, 0x160(r1)
-	psq_l    f24, 344(r1), 0, qr0
-	lfd      f24, 0x150(r1)
-	psq_l    f23, 328(r1), 0, qr0
-	lfd      f23, 0x140(r1)
-	psq_l    f22, 312(r1), 0, qr0
-	lfd      f22, 0x130(r1)
-	lmw      r24, 0x110(r1)
-	lwz      r0, 0x1d4(r1)
-	mtlr     r0
-	addi     r1, r1, 0x1d0
-	blr
-	*/
 }
 
 /**
  * @note Address: N/A
  * @note Size: 0x5B4
  */
-void Graphics::drawCylinder(Vector3f&, Vector3f&, f32)
+void Graphics::drawCylinder(Vector3f& p1, Vector3f&, f32)
 {
+	p1.x = PI;
 	// UNUSED FUNCTION
 }
 
@@ -1609,7 +700,10 @@ void Graphics::drawRect(Rectf&, JUTTexture*)
  * @note Address: 0x804268C4
  * @note Size: 0x24
  */
-void Graphics::clearZBuffer(Rectf& bounds) { fillZBuffer(bounds, -0.999f); }
+void Graphics::clearZBuffer(Rectf& bounds)
+{
+	fillZBuffer(bounds, -0.999f);
+}
 
 /**
  * @note Address: 0x804268E8
@@ -1929,9 +1023,11 @@ void Graphics::drawTile(Sys::Sphere&, Sys::Sphere&, JUTTexture*)
  */
 void Graphics::drawCone(Vector3f& start, Vector3f& end, f32 inAngle, int limit)
 {
-	f32 angle    = TORADIANS(inAngle); // f7
-	Vector3f sep = end - start;        // f2, f0, f1
-	f32 dist     = sep.length();       // f31
+	Vector3f sep;
+	sep = end - start; // f2, f0, f1
+
+	f32 angle = TORADIANS(inAngle); // f7
+	f32 dist  = sep.length();       // f31
 
 	f32 sinTheta = sinf(angle);
 	f32 cosTheta = cosf(angle);
@@ -1942,16 +1038,18 @@ void Graphics::drawCone(Vector3f& start, Vector3f& end, f32 inAngle, int limit)
 
 	Vector3f xVec; // f3, f4, f5
 	Vector3f yVec; // f6, f7, f8
+	Vector3f xAxis(1.0f, 0.0f, 0.0f);
 	Vector3f yAxis(0.0f, 1.0f, 0.0f);
-	if (FABS(sep.dot(yAxis)) < 1.0E-7f) {
+	if (absF(sep.dot(yAxis)) < 1.0E-7f) {
 		xVec = cross(yAxis, sep);
 		xVec.normalise();
 
 		yVec = cross(xVec, sep);
 		yVec.normalise();
 	} else {
-		yVec = cross(yAxis, sep);
+		yVec = cross(xAxis, sep);
 		yVec.normalise();
+
 		xVec = cross(yVec, sep);
 		xVec.normalise();
 	}
@@ -1969,32 +1067,18 @@ void Graphics::drawCone(Vector3f& start, Vector3f& end, f32 inAngle, int limit)
 
 	for (int i = 0; i < limit; i++) {
 		f32 newAngle1 = (TAU * ((f32)i - 0.5f)) / (f32)limit;
-
-		f32 cosPhi = val * cosf(newAngle1); // f24
-		f32 sinPhi = val * sinf(newAngle1); // f23
+		f32 cos1      = val * cosf(newAngle1);
+		f32 sin1      = val * sinf(newAngle1);
+		Vector3f ln1(cos1, sin1, dist);
 
 		f32 newAngle2 = (TAU * ((f32)(i + 1) - 0.5f)) / (f32)limit;
+		f32 cos2      = val * cosf(newAngle2);
+		f32 sin2      = val * sinf(newAngle2);
+		Vector3f ln2(cos2, sin2, dist);
 
-		f32 cosOmega = val * cosf(newAngle2); // f22
-		f32 sinOmega = val * sinf(newAngle2); // f21
-
-		GXBegin(GX_LINES, GX_VTXFMT0, 2);
-		GXPosition3f32(Vector3f::zero.x, Vector3f::zero.y, Vector3f::zero.z);
-		GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
-		GXPosition3f32(cosPhi, sinPhi, dist);
-		GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
-
-		GXBegin(GX_LINES, GX_VTXFMT0, 2);
-		GXPosition3f32(Vector3f::zero.x, Vector3f::zero.y, Vector3f::zero.z);
-		GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
-		GXPosition3f32(cosOmega, sinOmega, dist);
-		GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
-
-		GXBegin(GX_LINES, GX_VTXFMT0, 2);
-		GXPosition3f32(cosPhi, sinPhi, dist);
-		GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
-		GXPosition3f32(cosOmega, sinOmega, dist);
-		GXColor4u8(mDrawColor.r, mDrawColor.g, mDrawColor.b, mDrawColor.a);
+		drawLine(Vector3f::zero, ln1);
+		drawLine(Vector3f::zero, ln2);
+		drawLine(ln1, ln2);
 	}
 	/*
 	stwu     r1, -0x190(r1)
@@ -2549,8 +1633,7 @@ void Graphics::setupJ2DOrthoGraphDefault()
 	f32 y2   = sys->getRenderModeObj()->efbHeight + gScissorOffset;
 	f32 x2   = sys->getRenderModeObj()->fbWidth;
 	f32 offs = 0.0f;
-	JGeometry::TBox2f bounds(0.0f, 0.0f, x2 + offs, y2 + offs);
-	mOrthoGraph.scissor(bounds);
+	mOrthoGraph.scissor(JGeometry::TBox2f(0.0f, 0.0f, offs + x2, offs + y2));
 
 	y = sys->getRenderModeObj()->efbHeight;
 	x = sys->getRenderModeObj()->fbWidth;
@@ -2747,13 +1830,19 @@ void Graphics::setupJ2DPerspGraphDefault()
  * @note Address: 0x804276F0
  * @note Size: 0x20
  */
-void Graphics::clearVtxDesc() { GXClearVtxDesc(); }
+void Graphics::clearVtxDesc()
+{
+	GXClearVtxDesc();
+}
 
 /**
  * @note Address: 0x80427710
  * @note Size: 0x28
  */
-void Graphics::setVtxDesc(_GXAttr attr, _GXAttrType type) { GXSetVtxDesc(attr, type); }
+void Graphics::setVtxDesc(_GXAttr attr, _GXAttrType type)
+{
+	GXSetVtxDesc(attr, type);
+}
 
 /**
  * @note Address: 0x80427738
@@ -2777,7 +1866,10 @@ void Graphics::drawRectangle(Rectf&, bool)
  * @note Address: 0x8042776C
  * @note Size: 0x3C
  */
-void Graphics::disableLight() { GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT0, GX_DF_CLAMP, GX_AF_NONE); }
+void Graphics::disableLight()
+{
+	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_VTX, GX_SRC_VTX, GX_LIGHT0, GX_DF_CLAMP, GX_AF_NONE);
+}
 
 /**
  * @note Address: N/A
@@ -2853,12 +1945,7 @@ void Graphics::perspPrintf(PerspPrintfInfo& info, Vector3f& position, char* form
 
 	GXLoadPosMtxImm(concatMtx.mMatrix.mtxView, 0);
 
-	JUtility::TColor color1;
-	JUtility::TColor color2;
-	color1.set(info.mColorA.r, info.mColorA.g, info.mColorA.b, info.mColorA.a);
-	color2.set(info.mColorB.r, info.mColorB.g, info.mColorB.b, info.mColorB.a);
-
-	J2DPrint printer(info.mFont, color1, color2);
+	J2DPrint printer(info.mFont, info.mColorA.toTColor(), info.mColorB.toTColor());
 	printer.initiate();
 
 	switch (info.mPrintType) {
@@ -2879,276 +1966,6 @@ void Graphics::perspPrintf(PerspPrintfInfo& info, Vector3f& position, char* form
 		printer.print(x, (f32)info.mPerspectiveOffsetY, buf);
 	} break;
 	}
-
-	/*
-	stwu     r1, -0x270(r1)
-	mflr     r0
-	stw      r0, 0x274(r1)
-	stw      r31, 0x26c(r1)
-	mr       r31, r4
-	stw      r30, 0x268(r1)
-	stw      r29, 0x264(r1)
-	mr       r29, r5
-	stw      r28, 0x260(r1)
-	mr       r28, r3
-	bne      cr1, lbl_80427B28
-	stfd     f1, 0x28(r1)
-	stfd     f2, 0x30(r1)
-	stfd     f3, 0x38(r1)
-	stfd     f4, 0x40(r1)
-	stfd     f5, 0x48(r1)
-	stfd     f6, 0x50(r1)
-	stfd     f7, 0x58(r1)
-	stfd     f8, 0x60(r1)
-
-lbl_80427B28:
-	addi     r11, r1, 0x278
-	addi     r0, r1, 8
-	lis      r12, 0x400
-	stw      r3, 8(r1)
-	addi     r30, r1, 0x80
-	addi     r3, r1, 0x148
-	stw      r4, 0xc(r1)
-	mr       r4, r6
-	stw      r5, 0x10(r1)
-	mr       r5, r30
-	stw      r6, 0x14(r1)
-	stw      r7, 0x18(r1)
-	stw      r8, 0x1c(r1)
-	stw      r9, 0x20(r1)
-	stw      r10, 0x24(r1)
-	stw      r12, 0x80(r1)
-	stw      r11, 0x84(r1)
-	stw      r0, 0x88(r1)
-	bl       vsprintf
-	lwz      r4, 0x25c(r28)
-	lwz      r3, 0x44(r4)
-	cmplwi   r3, 0
-	beq      lbl_80427B9C
-	lwz      r12, 0(r3)
-	li       r4, 0
-	lwz      r12, 0x48(r12)
-	mtctr    r12
-	bctrl
-	b        lbl_80427BA0
-
-lbl_80427B9C:
-	lwz      r3, 0x40(r4)
-
-lbl_80427BA0:
-	lfs      f2, 0x10(r31)
-	lfs      f0, 0(r3)
-	fneg     f1, f2
-	fmuls    f0, f0, f2
-	stfs     f0, 0xbc(r1)
-	lfs      f0, 4(r3)
-	fmuls    f0, f0, f2
-	stfs     f0, 0xcc(r1)
-	lfs      f0, 8(r3)
-	fmuls    f0, f0, f2
-	stfs     f0, 0xdc(r1)
-	lfs      f0, 0x10(r3)
-	fmuls    f0, f0, f1
-	stfs     f0, 0xc0(r1)
-	lfs      f0, 0x14(r3)
-	fmuls    f0, f0, f1
-	stfs     f0, 0xd0(r1)
-	lfs      f0, 0x18(r3)
-	fmuls    f0, f0, f1
-	stfs     f0, 0xe0(r1)
-	lfs      f0, 0x20(r3)
-	fmuls    f0, f0, f2
-	stfs     f0, 0xc4(r1)
-	lfs      f0, 0x24(r3)
-	fmuls    f0, f0, f2
-	stfs     f0, 0xd4(r1)
-	lfs      f0, 0x28(r3)
-	fmuls    f0, f0, f2
-	stfs     f0, 0xe4(r1)
-	lfs      f0, 0(r29)
-	stfs     f0, 0xc8(r1)
-	lfs      f0, 4(r29)
-	stfs     f0, 0xd8(r1)
-	lfs      f0, 8(r29)
-	stfs     f0, 0xe8(r1)
-	lwz      r4, 0x25c(r28)
-	lwz      r3, 0x44(r4)
-	cmplwi   r3, 0
-	beq      lbl_80427C54
-	lwz      r12, 0(r3)
-	li       r4, 0
-	lwz      r12, 0x48(r12)
-	mtctr    r12
-	bctrl
-	b        lbl_80427C58
-
-lbl_80427C54:
-	lwz      r3, 0x40(r4)
-
-lbl_80427C58:
-	addi     r4, r1, 0xbc
-	addi     r5, r1, 0x8c
-	bl       PSMTXConcat
-	addi     r3, r1, 0x8c
-	li       r4, 0
-	bl       GXLoadPosMtxImm
-	li       r7, -1
-	lbz      r9, 0x1b(r31)
-	stw      r7, 0x68(r1)
-	addi     r3, r1, 0xec
-	lbz      r8, 0x1a(r31)
-	addi     r5, r1, 0x7c
-	lbz      r4, 0x19(r31)
-	addi     r6, r1, 0x74
-	lbz      r0, 0x18(r31)
-	stb      r4, 0x69(r1)
-	stb      r0, 0x68(r1)
-	stb      r8, 0x6a(r1)
-	stb      r9, 0x6b(r1)
-	lwz      r4, 0x68(r1)
-	stw      r7, 0x6c(r1)
-	stw      r4, 0x74(r1)
-	lbz      r9, 0x17(r31)
-	lbz      r8, 0x16(r31)
-	lbz      r7, 0x15(r31)
-	lbz      r0, 0x14(r31)
-	stb      r7, 0x6d(r1)
-	stb      r0, 0x6c(r1)
-	stb      r8, 0x6e(r1)
-	stb      r9, 0x6f(r1)
-	lwz      r0, 0x6c(r1)
-	stw      r4, 0x70(r1)
-	stw      r0, 0x7c(r1)
-	stw      r0, 0x78(r1)
-	lwz      r4, 0(r31)
-	bl       __ct__8J2DPrintFP7JUTFontQ28JUtility6TColorQ28JUtility6TColor
-	addi     r3, r1, 0xec
-	bl       initiate__8J2DPrintFv
-	lwz      r0, 0xc(r31)
-	cmpwi    r0, 2
-	beq      lbl_80427D58
-	bge      lbl_80427DE8
-	cmpwi    r0, 1
-	bge      lbl_80427D0C
-	b        lbl_80427DE8
-
-lbl_80427D0C:
-	lwz      r4, 4(r31)
-	lis      r5, 0x4330
-	lwz      r0, 8(r31)
-	addi     r3, r1, 0xec
-	xoris    r4, r4, 0x8000
-	stw      r5, 0x248(r1)
-	xoris    r0, r0, 0x8000
-	lfd      f2, lbl_805204D0@sda21(r2)
-	stw      r4, 0x24c(r1)
-	addi     r4, r1, 0x148
-	lfd      f0, 0x248(r1)
-	stw      r0, 0x254(r1)
-	fsubs    f1, f0, f2
-	stw      r5, 0x250(r1)
-	lfd      f0, 0x250(r1)
-	fsubs    f2, f0, f2
-	crset    6
-	bl       print__8J2DPrintFffPCce
-	b        lbl_80427E74
-
-lbl_80427D58:
-	addi     r3, r1, 0xec
-	addi     r4, r1, 0x148
-	crclr    6
-	bl       getWidth__8J2DPrintFPCce
-	lfs      f0, lbl_805204B8@sda21(r2)
-	addi     r3, r1, 0xec
-	fcmpo    cr0, f1, f0
-	cror     2, 1, 2
-	bne      lbl_80427D88
-	lfs      f0, lbl_805204BC@sda21(r2)
-	fadds    f0, f0, f1
-	b        lbl_80427D90
-
-lbl_80427D88:
-	lfs      f0, lbl_805204BC@sda21(r2)
-	fsubs    f0, f1, f0
-
-lbl_80427D90:
-	fctiwz   f0, f0
-	lis      r5, 0x4330
-	lwz      r0, 8(r31)
-	addi     r4, r1, 0x148
-	lwz      r6, 4(r31)
-	stfd     f0, 0x250(r1)
-	xoris    r0, r0, 0x8000
-	lfd      f2, lbl_805204D0@sda21(r2)
-	lwz      r7, 0x254(r1)
-	stw      r5, 0x248(r1)
-	subf     r6, r7, r6
-	xoris    r6, r6, 0x8000
-	stw      r0, 0x25c(r1)
-	stw      r6, 0x24c(r1)
-	stw      r5, 0x258(r1)
-	lfd      f1, 0x248(r1)
-	lfd      f0, 0x258(r1)
-	fsubs    f1, f1, f2
-	fsubs    f2, f0, f2
-	crset    6
-	bl       print__8J2DPrintFffPCce
-	b        lbl_80427E74
-
-lbl_80427DE8:
-	addi     r3, r1, 0xec
-	addi     r4, r1, 0x148
-	crclr    6
-	bl       getWidth__8J2DPrintFPCce
-	lfs      f2, lbl_805204BC@sda21(r2)
-	addi     r3, r1, 0xec
-	lfs      f0, lbl_805204B8@sda21(r2)
-	fmuls    f1, f2, f1
-	fcmpo    cr0, f1, f0
-	cror     2, 1, 2
-	bne      lbl_80427E1C
-	fadds    f0, f2, f1
-	b        lbl_80427E20
-
-lbl_80427E1C:
-	fsubs    f0, f1, f2
-
-lbl_80427E20:
-	fctiwz   f0, f0
-	lis      r5, 0x4330
-	lwz      r0, 8(r31)
-	addi     r4, r1, 0x148
-	lwz      r6, 4(r31)
-	stfd     f0, 0x258(r1)
-	xoris    r0, r0, 0x8000
-	lfd      f2, lbl_805204D0@sda21(r2)
-	lwz      r7, 0x25c(r1)
-	stw      r5, 0x250(r1)
-	subf     r6, r7, r6
-	xoris    r6, r6, 0x8000
-	stw      r0, 0x24c(r1)
-	stw      r6, 0x254(r1)
-	stw      r5, 0x248(r1)
-	lfd      f1, 0x250(r1)
-	lfd      f0, 0x248(r1)
-	fsubs    f1, f1, f2
-	fsubs    f2, f0, f2
-	crset    6
-	bl       print__8J2DPrintFffPCce
-
-lbl_80427E74:
-	addi     r3, r1, 0xec
-	li       r4, -1
-	bl       __dt__8J2DPrintFv
-	lwz      r0, 0x274(r1)
-	lwz      r31, 0x26c(r1)
-	lwz      r30, 0x268(r1)
-	lwz      r29, 0x264(r1)
-	lwz      r28, 0x260(r1)
-	mtlr     r0
-	addi     r1, r1, 0x270
-	blr
-	*/
 }
 
 /**
@@ -3172,10 +1989,15 @@ void Graphics::initGX()
  * @note Address: 0x80427F00
  * @note Size: 0x4
  */
-void Graphics::dirtyInitGX() { }
+void Graphics::dirtyInitGX()
+{
+}
 
 /**
  * @note Address: 0x80427F04
  * @note Size: 0x60
  */
-void Graphics::clearInitGX() { initGX(); }
+void Graphics::clearInitGX()
+{
+	initGX();
+}

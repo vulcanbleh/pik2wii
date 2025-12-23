@@ -612,10 +612,10 @@ void System::loadSoundResource()
 	newheap->becomeCurrentHeap();
 
 	// something in these inlines is doing bad regalloc things. or not enough bad regalloc things. not sure.
-	PSSystem::Scene* scene = PSMGetSceneMgrCheck()->mScenes;
+	PSSystem::Scene* scene = PSMGetPikSceneMgrCheck()->mScenes;
 	P2ASSERTLINE(1245, scene);
-
 	scene->scene1stLoadSync();
+
 	newheap->adjustSize();
 	old->becomeCurrentHeap();
 	/*
@@ -959,9 +959,9 @@ void System::endRender()
 {
 	PSSystem::SysIF* sysif;
 	if (sysif = PSSystem::spSysIF) {
-		sys->mTimers->start("sound", true);
+		sys->mTimers->_start("sound", true);
 		sysif->mainLoop();
-		sys->mTimers->stop("sound");
+		sys->mTimers->_stop("sound");
 	}
 	mDvdStatus->draw();
 	mResetMgr->draw();

@@ -315,9 +315,7 @@ int SceneBase::getFinishState() { return (mStateID == SB_Unknown4) ? doGetFinish
  */
 Controller* SceneBase::getGamePad() const
 {
-	Mgr* mgr = mScreenMgr;
-	mgr->checkController();
-	return mgr->mController;
+	return mScreenMgr->getGamePad();
 }
 
 /**

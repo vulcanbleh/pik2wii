@@ -1,7 +1,7 @@
 #include "Game/CameraMgr.h"
-#include "Game/MapMgr.h"
 #include "Game/Navi.h"
 #include "Game/Stickers.h"
+#include "Game/MapMgr.h"
 #include "PSSystem/PSSystemIF.h"
 #include "nans.h"
 
@@ -336,7 +336,7 @@ void PlayCamera::startDemoCamera(int type)
 	switch (type) {
 	case CAMDEMO_Test:
 		mGoalTargetDistance = mCameraParms->mZoomDist;
-		mGoalVerticalAngle  = mCameraParms->mZoomAngle.mValue * (0.017453292f);
+		mGoalVerticalAngle  = MTXDegToRad(mCameraParms->mZoomAngle());
 		mGoalFOV            = mCameraParms->mZoomFOV;
 		mNearZPlane         = 1.0f;
 		mFarZPlane          = 12800.0f;
@@ -346,7 +346,7 @@ void PlayCamera::startDemoCamera(int type)
 		break;
 	default:
 		mGoalTargetDistance = mCameraParms->mNearLowDist;
-		mGoalVerticalAngle  = mCameraParms->mNearLowAngle.mValue * (0.017453292f);
+		mGoalVerticalAngle  = MTXDegToRad(mCameraParms->mNearLowAngle());
 		mGoalFOV            = mCameraParms->mNearLowFOV;
 		mNearZPlane         = mCameraParms->mNearLowNear;
 		mFarZPlane          = mCameraParms->mNearLowFar;
@@ -378,7 +378,7 @@ u32 PlayCamera::updateCameraMode()
 		if (mChangePlayerState == CAMCHANGE_None) {
 			if (pad->getButton() & Controller::PRESS_R) {
 				if (mHoldRTimer < 1.0f) {
-					mHoldRTimer += sys->getDeltaTime();
+					mHoldRTimer += sys->mDeltaTime;
 					if (mHoldRTimer >= 1.0f) {
 						flags |= (CAMFLAGS_StartZoomCam | CAMFLAGS_InZoomCam);
 					}
@@ -420,7 +420,7 @@ u32 PlayCamera::updateCameraMode()
 void PlayCamera::startZoomCamera()
 {
 	mGoalTargetDistance = mCameraParms->mZoomDist;
-	mGoalVerticalAngle  = mCameraParms->mZoomAngle.mValue * (0.017453292f);
+	mGoalVerticalAngle  = MTXDegToRad(mCameraParms->mZoomAngle());
 	mGoalFOV            = mCameraParms->mZoomFOV;
 	mNearZPlane         = 1.0f;
 	mFarZPlane          = 12800.0f;
@@ -462,7 +462,7 @@ void PlayCamera::setTargetParms()
 		switch (mCameraZoomLevel) {
 		case CAMZOOM_Near: // low zoom low angle
 			mGoalTargetDistance = mCameraParms->mNearLowDist;
-			mGoalVerticalAngle  = mCameraParms->mNearLowAngle.mValue * (0.017453292f);
+			mGoalVerticalAngle  = MTXDegToRad(mCameraParms->mNearLowAngle());
 			mGoalFOV            = mCameraParms->mNearLowFOV;
 			mNearZPlane         = mCameraParms->mNearLowNear;
 			mFarZPlane          = mCameraParms->mNearLowFar;
@@ -472,7 +472,7 @@ void PlayCamera::setTargetParms()
 			break;
 		case CAMZOOM_Mid: // medium zoom low angle
 			mGoalTargetDistance = mCameraParms->mMidLowDist;
-			mGoalVerticalAngle  = mCameraParms->mMidLowAngle.mValue * (0.017453292f);
+			mGoalVerticalAngle  = MTXDegToRad(mCameraParms->mMidLowAngle());
 			mGoalFOV            = mCameraParms->mMidLowFOV;
 			mNearZPlane         = mCameraParms->mMidLowNear;
 			mFarZPlane          = mCameraParms->mMidLowFar;
@@ -482,7 +482,7 @@ void PlayCamera::setTargetParms()
 			break;
 		case CAMZOOM_Far: // far zoom low angle
 			mGoalTargetDistance = mCameraParms->mFarLowDist;
-			mGoalVerticalAngle  = mCameraParms->mFarLowAngle.mValue * (0.017453292f);
+			mGoalVerticalAngle  = MTXDegToRad(mCameraParms->mFarLowAngle());
 			mGoalFOV            = mCameraParms->mFarLowFOV;
 			mNearZPlane         = mCameraParms->mFarLowNear;
 			mFarZPlane          = mCameraParms->mFarLowFar;
@@ -497,7 +497,7 @@ void PlayCamera::setTargetParms()
 		switch (mCameraZoomLevel) {
 		case CAMZOOM_Near: // low zoom high angle
 			mGoalTargetDistance = mCameraParms->mNearHighDist;
-			mGoalVerticalAngle  = mCameraParms->mNearHighAngle.mValue * (0.017453292f);
+			mGoalVerticalAngle  = MTXDegToRad(mCameraParms->mNearHighAngle());
 			mGoalFOV            = mCameraParms->mNearHighFOV;
 			mNearZPlane         = mCameraParms->mNearHighNear;
 			mFarZPlane          = mCameraParms->mNearHighFar;
@@ -507,7 +507,7 @@ void PlayCamera::setTargetParms()
 			break;
 		case CAMZOOM_Mid: // medium zoom high angle
 			mGoalTargetDistance = mCameraParms->mMidHighDist;
-			mGoalVerticalAngle  = mCameraParms->mMidHighAngle.mValue * (0.017453292f);
+			mGoalVerticalAngle  = MTXDegToRad(mCameraParms->mMidHighAngle());
 			mGoalFOV            = mCameraParms->mMidHighFOV;
 			mNearZPlane         = mCameraParms->mMidHighNear;
 			mFarZPlane          = mCameraParms->mMidHighFar;
@@ -517,7 +517,7 @@ void PlayCamera::setTargetParms()
 			break;
 		case CAMZOOM_Far: // far zoom high angle
 			mGoalTargetDistance = mCameraParms->mFarHighDist;
-			mGoalVerticalAngle  = mCameraParms->mFarHighAngle.mValue * (0.017453292f);
+			mGoalVerticalAngle  = MTXDegToRad(mCameraParms->mFarHighAngle());
 			mGoalFOV            = mCameraParms->mFarHighFOV;
 			mNearZPlane         = mCameraParms->mFarHighNear;
 			mFarZPlane          = mCameraParms->mFarHighFar;
@@ -559,7 +559,7 @@ void PlayCamera::setSmoothThetaSpeed()
 {
 	Controller* pad = mTargetObj->mController1;
 	if (pad) {
-		f32 maxSpeed = mCameraParms->mMaxRotSpeed.mValue * sys->getDeltaTime();
+		f32 maxSpeed = mCameraParms->mMaxRotSpeed.mValue * sys->mDeltaTime;
 		mSmoothMoveSpeed += pad->mMStick.mXPos * mCameraParms->mRotAccel.mValue;
 		mSmoothMoveSpeed = boundAboveBelow(mSmoothMoveSpeed, maxSpeed);
 	}
@@ -572,7 +572,7 @@ void PlayCamera::setSmoothThetaSpeed()
 void PlayCamera::changeTargetTheta()
 {
 	if (mFollowTime > 0.0f) {
-		mFollowTime -= sys->getDeltaTime();
+		mFollowTime -= sys->mDeltaTime;
 		setTargetThetaToWhistle();
 	} else {
 		f32 angle = mCameraAngleTarget - mSmoothMoveSpeed;
@@ -754,10 +754,10 @@ lbl_8024096C:
 void PlayCamera::updateVibration(int id)
 {
 	f32* vibrateTimer  = &mVibrateTimer[id];
-	f32 newSpeed       = mVibrateSpeed[id] * sys->getDeltaTime();
+	f32 newSpeed       = mVibrateSpeed[id] * sys->mDeltaTime;
 	f32 packetStrength = 1.0f;
 	mVibrateAngle[id] += newSpeed;
-	mVibrateTimer[id] += sys->getDeltaTime();
+	mVibrateTimer[id] += sys->mDeltaTime;
 	if (mVibrateAngle[id] > TAU) {
 		mVibrateAngle[id] -= TAU;
 	}
@@ -998,7 +998,7 @@ lbl_80240DCC:
 f32 PlayCamera::getCollisionCameraTargetPhi(f32 angle, f32 dist)
 {
 	dist /= 15.0f; // f19
-	angle *= (0.017453292f);
+	angle = MTXDegToRad(angle);
 
 	f32 cosTheta = cosf(mCameraAngleTarget); // f22
 	f32 sinTheta = sinf(mCameraAngleTarget); // f26

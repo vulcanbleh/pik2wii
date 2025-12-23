@@ -14,10 +14,8 @@
 
 namespace PSM {
 
-f32 sBoss_ViewDist    = 1300.0f;
-f32 sBoss_ViewDistVol = 0.3f;
-f32 sBoss_DistMax     = 4000.0f;
 EnemyBigBoss* EnemyBigBoss::sBigBoss;
+u8 Piki::sDopedPikminNum = 0;
 
 /**
  * @note Address: N/A
@@ -736,12 +734,12 @@ void CreatureAnime::playActorAnimSound(JAInter::Actor* actor, f32 pitchmod, u8 a
 			if (i != max - 1) {
 				continue;
 			}
-			int a1 = 0;
-			int a2 = 0;
+			int maxTime = 0;
+			int useId   = 0;
 			for (u8 j = 0; j < max; j++) {
-				if (!handle[j] && (se[j]->_2C < a1)) {
-					a1 = se[j]->_2C;
-					a2 = j;
+				if (!handle[j] && (se[j]->mActiveTimer < maxTime)) {
+					maxTime = se[j]->mActiveTimer;
+					useId   = j;
 				}
 			}
 

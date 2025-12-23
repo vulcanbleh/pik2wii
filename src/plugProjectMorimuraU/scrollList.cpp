@@ -226,7 +226,10 @@ int TIndexPane::getIndex()
  * @note Address: 0x803A2614
  * @note Size: 0x8
  */
-int TIndexPane::getListIndex() { return mIndex; }
+int TIndexPane::getListIndex()
+{
+	return mIndex;
+}
 
 /**
  * @note Address: 0x803A261C
@@ -438,7 +441,7 @@ void TScrollList::updateIndex(bool doScrollDown)
 				check2 = true;
 			}
 
-			mIndexPaneList[mCurrMinActiveRow]->setPaneOffset(0.0f);
+			mIndexPaneList[mCurrMinActiveRow]->setOffset(0.0f);
 
 			int updateIdx = mIndexPaneList[mCurrMaxActiveRow]->mIndex;
 			getUpdateIndex(updateIdx, doScrollDown);
@@ -465,7 +468,7 @@ void TScrollList::updateIndex(bool doScrollDown)
 				check2 = true;
 			}
 
-			mIndexPaneList[mCurrMaxActiveRow]->setPaneOffset(0.0f);
+			mIndexPaneList[mCurrMaxActiveRow]->setOffset(0.0f);
 
 			int updateIdx = mIndexPaneList[mCurrMinActiveRow]->mIndex;
 			getUpdateIndex(updateIdx, doScrollDown);
@@ -885,7 +888,7 @@ bool TScrollList::updateList()
 
 	f32 val2 = mIndexGroup->mScrollOffset;
 	for (int i = 0; i < mNumActiveRows; i++) {
-		mIndexPaneList[i]->setPaneOffset(val2);
+		mIndexPaneList[i]->setOffset(val2);
 		changeTextTevBlock(i);
 	}
 
@@ -904,7 +907,7 @@ bool TScrollList::updateList()
 
 	mIndexGroup->mScrollOffset = val2;
 	for (int i = 0; i < mNumActiveRows; i++) {
-		mIndexPaneList[i]->setPaneOffset(val2);
+		mIndexPaneList[i]->setOffset(val2);
 	}
 
 	mIndexGroup->mIsActiveSpeedUp = 0;

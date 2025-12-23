@@ -65,10 +65,10 @@ f32 pikmin2_acosf(f32 x)
  */
 const f32 pikmin2_asinf(f32 x)
 {
-	// if (x < -1.0f || x > 1.0f) {
-	// 	JUT_PANICLINE(65, "acosf %f\n", x);
-	// }
-	// return JMath::asinAcosTable_.asin_(x);
+	if (x < -1.0f || x > 1.0f) {
+		JUT_PANICLINE(65, "asin %f\n", x);
+	}
+	return JMath::asinAcosTable_.asin_(x);
 }
 
 /**
@@ -426,7 +426,7 @@ Quat::Quat(RPY& rpy)
 {
 	Quat quat(0.0f, Vector3f(0.0f, 0.0f, 0.0f));
 	Quat quat2(0.0f, Vector3f(0.0f, 0.0f, 0.0f));
-	// *this = quat * quat2;
+	//*this = quat * quat2;
 }
 
 /**
@@ -451,8 +451,8 @@ void Quat::set(Vector3f& vec)
 	f32 sinHalfZ = pikmin2_sinf(0.5f * vec.z);
 	quatZ.set(cosHalfZ, 0.0f, 0.0f, sinHalfZ);
 
-	// *this = quatZ * quatY;
-	// *this = *this * quatX;
+	//*this = quatZ * quatY;
+	//*this = *this * quatX;
 }
 
 /**
@@ -606,7 +606,7 @@ void Quat::slerp(Quat& q1, f32 t, Quat& qout)
 	// [ISSUE HERE] ----------------------------------------------------------------=-=-=-=-=-=-=-=-=-=-HEREHERHEHERHERHE
 	// I negated to fix the resgwaps below, which indicates some weirdness
 	// Regswaps happen inside this function but once fixed I think it'll solve the ones below
-	f32 newOmega = -pikmin2_acosf(cos_omega);
+	f32 newOmega = pikmin2_acosf(cos_omega);
 
 	// calculate sin(omega)
 	f32 sinOmega = pikmin2_sinf(newOmega);
