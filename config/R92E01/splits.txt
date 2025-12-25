@@ -6051,6 +6051,7 @@ sysCommonU/sysTemplates.cpp:
 sysCommonU/mapCode.cpp:
 	.text       start:0x804A30B4 end:0x804A347C
 	.data       start:0x805CCA18 end:0x805CCA70
+	.sdata      start:0x8066B6D8 end:0x8066B6E0
 
 sysCommonU/geomIntersection.cpp:
 	.text       start:0x804A347C end:0x804A39BC

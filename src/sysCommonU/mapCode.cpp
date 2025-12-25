@@ -50,10 +50,8 @@ inline void MapCode::Code::read(Stream& input) { mContents = input.readByte(); }
  */
 void MapCode::Code::setCode(int attribute, int slipCode, bool isBald)
 {
-	bool baldCode = (isBald > 0);
-	baldCode &= SLIPCODE_MASK;
 	int temp  = (attribute & ATTR_MASK) | (slipCode << 4);
-	mContents = temp | (baldCode << 6);
+	mContents = temp | (isBald << 6);
 }
 
 /**
