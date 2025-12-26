@@ -4506,9 +4506,11 @@ plugProjectNishimuraU/LeafChappy.cpp:
 plugProjectNishimuraU/BigFootState.cpp:
 	.text       start:0x80343C54 end:0x803447A8
 	.ctors      start:0x80534EB8 end:0x80534EBC
+	.rodata     start:0x8054F588 end:0x8054F5B8
 	.data       start:0x805B16A0 end:0x805B17A0
 	.bss        start:0x80639178 end:0x80639188
 	.sbss       start:0x8066CD48 end:0x8066CD50
+	.sdata2     start:0x806724D8 end:0x806724F0
 
 plugProjectNishimuraU/BigFootAnimator.cpp:
 	.text       start:0x803447A8 end:0x80344800
@@ -4516,18 +4518,24 @@ plugProjectNishimuraU/BigFootAnimator.cpp:
 
 plugProjectNishimuraU/BigFootMgr.cpp:
 	.text       start:0x80344800 end:0x80344F8C
+	.rodata     start:0x8054F5B8 end:0x8054F618
 	.data       start:0x805B17C8 end:0x805B19C0
 	.sdata      start:0x8066B420 end:0x8066B428
+	.sdata2     start:0x806724F0 end:0x80672528
 
 plugProjectNishimuraU/BigFootShadow.cpp:
 	.text       start:0x80344F8C end:0x80345654
+	.rodata     start:0x8054F618 end:0x8054F6A8
+	.sdata2     start:0x80672528 end:0x80672560
 
 plugProjectNishimuraU/BigFoot.cpp:
 	.text       start:0x80345654 end:0x80348860
 	.ctors      start:0x80534EBC end:0x80534EC0
+	.rodata     start:0x8054F6A8 end:0x8054F790
 	.data       start:0x805B19C0 end:0x805B1F48
 	.bss        start:0x80639188 end:0x80639198
 	.sbss       start:0x8066CD50 end:0x8066CD58
+	.sdata2     start:0x80672560 end:0x806725F0
 
 plugProjectNishimuraU/SnakeWholeState.cpp:
 	.text       start:0x80348860 end:0x8034AE9C

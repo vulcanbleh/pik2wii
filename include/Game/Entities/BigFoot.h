@@ -309,36 +309,8 @@ struct State : public EnemyFSMState {
 };
 
 struct StateDead : public State {
-	inline StateDead()
-	    : State(BIGFOOT_Dead, "dead")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateFlick : public State {
-	inline StateFlick()
-	    : State(BIGFOOT_Flick, "flick")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateLand : public State {
-	inline StateLand()
-	    : State(BIGFOOT_Land, "land")
+	inline StateDead(const char* name)
+	    : State(BIGFOOT_Dead, name)
 	{
 	}
 
@@ -351,8 +323,22 @@ struct StateLand : public State {
 };
 
 struct StateStay : public State {
-	inline StateStay()
-	    : State(BIGFOOT_Stay, "stay")
+	inline StateStay(const char* name)
+	    : State(BIGFOOT_Stay, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateLand : public State {
+	inline StateLand(const char* name)
+	    : State(BIGFOOT_Land, name)
 	{
 	}
 
@@ -365,8 +351,22 @@ struct StateStay : public State {
 };
 
 struct StateWait : public State {
-	inline StateWait()
-	    : State(BIGFOOT_Wait, "wait")
+	inline StateWait(const char* name)
+	    : State(BIGFOOT_Wait, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateFlick : public State {
+	inline StateFlick(const char* name)
+	    : State(BIGFOOT_Flick, name)
 	{
 	}
 
@@ -379,8 +379,8 @@ struct StateWait : public State {
 };
 
 struct StateWalk : public State {
-	inline StateWalk()
-	    : State(BIGFOOT_Walk, "walk")
+	inline StateWalk(const char* name)
+	    : State(BIGFOOT_Walk, name)
 	{
 	}
 

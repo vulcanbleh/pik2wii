@@ -1,9 +1,13 @@
 #include "Game/Entities/BigFoot.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-BigFootShadow";
+}
+
 namespace Game {
 namespace BigFoot {
-
-static const char bigFootShadowName[] = "246-BigFootShadow";
 
 /**
  * @note Address: 0x802C7810
@@ -76,10 +80,9 @@ void BigFootShadowMgr::setJointPosPtr(int p1, int p2, Vector3f* posPtr) { mJoint
  */
 void BigFootShadowMgr::update()
 {
-	Vector3f pos = mObj->getTraceCentrePosition();
 	JointShadowParm shadowParm;
-	shadowParm.mPosition = pos;
-	shadowParm.mRotation = Vector3f(0.5f, 3.0f, 0.5f);
+	shadowParm.mPosition = mObj->getTraceCentrePosition();
+	shadowParm.mRotation.set(0.5f, 3.0f, 0.5f);
 	shadowParm.mRotation.normalise();
 
 	Vector3f translation = mMatrix->getColumn(3);
