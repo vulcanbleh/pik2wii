@@ -5,6 +5,12 @@
 #include "Game/rumble.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-BigFootState";
+}
+
 namespace Game {
 namespace BigFoot {
 
@@ -15,12 +21,12 @@ namespace BigFoot {
 void FSM::init(EnemyBase* enemy)
 {
 	create(BIGFOOT_Count);
-	registerState(new StateDead);
-	registerState(new StateStay);
-	registerState(new StateLand);
-	registerState(new StateWait);
-	registerState(new StateFlick);
-	registerState(new StateWalk);
+	registerState(new StateDead("dead"));
+	registerState(new StateStay("stay"));
+	registerState(new StateLand("land"));
+	registerState(new StateWait("wait"));
+	registerState(new StateFlick("flick"));
+	registerState(new StateWalk("walk"));
 }
 
 /**
@@ -35,7 +41,7 @@ void StateDead::init(EnemyBase* enemy, StateArg* stateArg)
 	bigfoot->deathProcedure();
 	bigfoot->disableEvent(0, EB_Cullable);
 
-	bigfoot->mTargetVelocity = 0.0f;
+	bigfoot->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	bigfoot->setEmotionCaution();
 	bigfoot->startMotion(BIGFOOTANIM_Dead, nullptr);
 
@@ -168,7 +174,7 @@ void StateLand::exec(EnemyBase* enemy)
 			rumbleMgr->startRumble(RUMBLETYPE_Fixed15, position, RUMBLEID_Both);
 
 		} else if ((u32)bigfoot->mCurAnim->mType == KEYEVENT_END) {
-			if (bigfoot->mHealth <= 0.0f) {
+			if (bigfoot->isDead()) {
 				transit(bigfoot, BIGFOOT_Dead, nullptr);
 			} else if (EnemyFunc::isStartFlick(bigfoot, false)) {
 				transit(bigfoot, BIGFOOT_Flick, nullptr);
@@ -218,7 +224,7 @@ void StateWait::exec(EnemyBase* enemy)
 	Obj* bigfoot = OBJ(enemy);
 	bigfoot->mStateTimer += sys->getDeltaTime();
 
-	if (bigfoot->mHealth <= 0.0f) {
+	if (bigfoot->isDead()) {
 		bigfoot->mNextState = BIGFOOT_Dead;
 		bigfoot->finishMotion();
 	} else if (EnemyFunc::isStartFlick(bigfoot, false)) {
@@ -273,7 +279,7 @@ void StateFlick::exec(EnemyBase* enemy)
 			                            parms->mGeneral.mShakeDamage.mValue, -1000.0, nullptr);
 			bigfoot->mFlickTimer = 0.0f;
 		} else if ((u32)bigfoot->mCurAnim->mType == KEYEVENT_END) {
-			if (bigfoot->mHealth <= 0.0f) {
+			if (bigfoot->isDead()) {
 				transit(bigfoot, BIGFOOT_Dead, nullptr);
 			} else {
 				transit(bigfoot, BIGFOOT_Walk, nullptr);
@@ -323,7 +329,7 @@ void StateWalk::exec(EnemyBase* enemy)
 	Obj* bigfoot = OBJ(enemy);
 	bigfoot->getTargetPosition();
 	bigfoot->mStateTimer += sys->getDeltaTime();
-	if (bigfoot->mHealth <= 0.0f) {
+	if (bigfoot->isDead()) {
 		transit(bigfoot, BIGFOOT_Dead, nullptr);
 	} else {
 		if (EnemyFunc::isStartFlick(bigfoot, false)) {

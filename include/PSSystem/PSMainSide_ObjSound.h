@@ -15,10 +15,10 @@ inline void assertIsBoss(PSM::EnemyBase* soundObj)
 		isBoss = true;
 	}
 
-	P2ASSERTLINE(1108, isBoss);
+	P2ASSERTLINE(1120, isBoss);
 }
 
-inline void checkMidBoss(PSM::EnemyBase* soundObj) { P2ASSERTLINE(1114, soundObj->getCastType() == CCT_EnemyMidBoss); }
+inline void checkMidBoss(PSM::EnemyBase* soundObj) { P2ASSERTLINE(1126, soundObj->getCastType() == CCT_EnemyMidBoss); }
 
 inline void disableAppearFlag(PSM::EnemyBase* soundObj)
 {

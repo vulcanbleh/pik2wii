@@ -3,13 +3,17 @@
 #include "JSystem/JUtility/JUTNameTab.h"
 #include "Sys/MatBaseAnimation.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-BigFootMgr";
+}
+
 namespace Game {
 namespace BigFoot {
 
-static const char bigfootMgrName[] = "246-BigFootMgr";
-
 namespace {
-static const char* cMatAnimBrkTexName = "/enemy/data/BigFoot/ooashi_model.brk";
+static const char* cMatAnimBrkTexName = "enemy/data/BigFoot/ooashi_model.brk";
 } // namespace
 
 /**
