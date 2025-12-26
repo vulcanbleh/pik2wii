@@ -2377,7 +2377,7 @@ config.libs = [
                 extra_cflags=["-RTTI on"],
             ),
             Object(NonMatching, "egg/gfx/eggDrawHelper.cpp"),
-            Object(Matching, "egg/gfx/eggTexture.cpp"),
+            Object(NonMatching, "egg/gfx/eggTexture.cpp"),
             Object(Matching, "egg/gfx/eggPalette.cpp"),
             Object(
                 NonMatching,
@@ -2415,7 +2415,7 @@ config.libs = [
         "mw_version": "GC/3.0a3p1",  # unknown
         "progress_category": "egg",
         "objects": [
-            Object(Matching, "egg/core/eggExpHeap.cpp"),
+            Object(NonMatching, "egg/core/eggExpHeap.cpp"),
             Object(NonMatching, "egg/core/eggHeap.cpp"),
             Object(Matching, "egg/core/eggAllocator.cpp"),
             Object(Matching, "egg/core/eggThread.cpp"),
