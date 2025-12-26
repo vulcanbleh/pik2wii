@@ -22,7 +22,7 @@
 JAISound::JAISound()
     : JSULink<JAISound>(this)
     , mState(SOUNDSTATE_Inactive)
-    , mFinishWaitTimer(10)
+    , _16(10)
     , mCreatureObj(nullptr)
 {
 	// UNUSED FUNCTION
@@ -93,37 +93,25 @@ void JAISound::initMultiMoveParameter(JAInter::MoveParaSet*, u8, u32, f32, f32, 
  * @note Address: 0x800B3B24
  * @note Size: 0x24
  */
-u8 JAISe::getSeCategoryNumber()
-{
-	return JAInter::SeMgr::changeIDToCategory(mSoundID);
-}
+u8 JAISe::getSeCategoryNumber() { return JAInter::SeMgr::changeIDToCategory(mSoundID); }
 
 /**
  * @note Address: 0x800B3B48
  * @note Size: 0xC
  */
-u32 JAISound::getSwBit()
-{
-	return mSoundInfo->mFlag;
-}
+u32 JAISound::getSwBit() { return mSoundInfo->mFlag; }
 
 /**
  * @note Address: 0x800B3B54
  * @note Size: 0x10
  */
-u32 JAISound::checkSwBit(u32 flag)
-{
-	return flag & getSwBit();
-}
+u32 JAISound::checkSwBit(u32 flag) { return flag & getSwBit(); }
 
 /**
  * @note Address: 0x800B3B64
  * @note Size: 0xC
  */
-u8 JAISound::getInfoPriority()
-{
-	return mSoundInfo->mPriority;
-}
+u8 JAISound::getInfoPriority() { return mSoundInfo->mPriority; }
 
 /**
  * @note Address: 0x800B3B70
@@ -161,10 +149,7 @@ void JAISound::start(u32 fadeTime)
  * @note Address: 0x800B3BE8
  * @note Size: 0x30
  */
-void JAISound::stop(u32 fadeTime)
-{
-	JAIBasic::msBasic->stopSoundHandle(this, fadeTime);
-}
+void JAISound::stop(u32 fadeTime) { JAIBasic::msBasic->stopSoundHandle(this, fadeTime); }
 
 /**
  * @note Address: 0x800B3C18
@@ -209,8 +194,8 @@ void JAISound::checkReady()
 f32 JAISound::setDistanceVolumeCommon(f32 p1, u8 p2)
 {
 	f32 dist;
-	if (mCameraIndex != 4) {
-		dist = mSoundObj[mCameraIndex].mDistance;
+	if (_18 != 4) {
+		dist = mSoundObj[_18].mDistance;
 	} else { // _18 == 4
 		dist = mSoundObj[0].mDistance;
 		for (u8 i = 1; i < JAIGlobalParameter::audioCameraMax; i++) {
@@ -279,8 +264,8 @@ f32 JAISound::setDistancePanCommon()
 	}
 
 	// audioCameraMax != 1
-	if (mCameraIndex != 4) {
-		return mCameraIndex & 1;
+	if (_18 != 4) {
+		return _18 & 1;
 	}
 	return 0.5f;
 	/*
@@ -635,7 +620,7 @@ lbl_800B42A0:
 f32 JAISound::setDistanceDolbyCommon()
 {
 	JAISound_0x34* obj = mSoundObj;
-	if (!mPosition || obj->mPosition.z < JAIGlobalParameter::seDolbyFrontDistanceMax) {
+	if (_3C == 0 || obj->mPosition.z < JAIGlobalParameter::seDolbyFrontDistanceMax) {
 		return 0.0f;
 	}
 	if (obj->mPosition.z < 0.0f) {
@@ -1307,7 +1292,7 @@ void JAISe::setSeDistanceParameters()
 	setSeDistanceFxmix(moveTime);
 	setSeDistanceFir(moveTime);
 	if (checkSwBit(0x400) == 0) {
-		setFxmix(JAIBasic::msBasic->getMapInfoFxParameter(mMapInfoIndex), 0, SOUNDPARAM_Unk3);
+		setFxmix(JAIBasic::msBasic->getMapInfoFxParameter(_30), 0, SOUNDPARAM_Unk3);
 	}
 	setSeDistanceDolby(moveTime);
 }
@@ -1362,7 +1347,7 @@ void JAISe::setSeDistancePitch(u8 moveTime)
 		}
 	}
 	if (checkSwBit(0x40 | 0x80) != 0) {
-		pitch += mRandPitchModifier / 192.0f;
+		pitch += _17 / 192.0f;
 	}
 	mSeParam.mPitches[SOUNDPARAM_Distance].set(pitch, moveTime);
 	/*
@@ -1494,9 +1479,7 @@ void JAISe::setSeDistanceFxmix(u8 moveTime)
  * @note Address: 0x800B4F24
  * @note Size: 0x4
  */
-void JAISe::setSeDistanceFir(u8)
-{
-}
+void JAISe::setSeDistanceFir(u8) { }
 
 /**
  * @note Address: 0x800B4F28
@@ -1571,10 +1554,7 @@ void JAIStream::setStreamInterDolby(u8, f32, u32)
  * @note Address: 0x800B4FCC
  * @note Size: 0xC
  */
-void JAIStream::setStreamPrepareFlag(u8 flag)
-{
-	JAInter::StreamMgr::streamUpdate->mPrepareFlag = flag;
-}
+void JAIStream::setStreamPrepareFlag(u8 flag) { JAInter::StreamMgr::streamUpdate->mPrepareFlag = flag; }
 
 /**
  * @note Address: 0x800B4FD8
@@ -1903,10 +1883,7 @@ lbl_800B5328:
  * @note Size: 0xC
  * setSeqPrepareFlag__11JAISequenceFUc
  */
-void JAISequence::setSeqPrepareFlag(u8 seqPrepareFlag)
-{
-	mSeqParameter.mUpdateData->mPrepareFlag = seqPrepareFlag;
-}
+void JAISequence::setSeqPrepareFlag(u8 seqPrepareFlag) { mSeqParameter.mUpdateData->mPrepareFlag = seqPrepareFlag; }
 
 /**
  * @note Address: 0x800B547C
@@ -2144,10 +2121,7 @@ u32 JAISequence::getFadeCounter()
  * @note Size: 0xC
  * getFadeCounter__5JAISeFv
  */
-u32 JAISe::getFadeCounter()
-{
-	return mSeParam.mVolumes[SOUNDPARAM_Direct].mMoveCounter - 1;
-}
+u32 JAISe::getFadeCounter() { return mSeParam.mVolumes[SOUNDPARAM_Direct].mMoveCounter - 1; }
 
 /**
  * @note Address: 0x800B55F0
@@ -2166,34 +2140,34 @@ u32 JAIStream::getFadeCounter()
  * @note Address: 0x800B5614
  * @note Size: 0xE8
  */
-void JAISound::initParameter(void* handlePtr, JAInter::Actor* actor, u32 soundID, u32 fadeTime, u8 camId, JAInter::SoundInfo* info)
+void JAISound::initParameter(void* handlePtr, JAInter::Actor* actor, u32 soundID, u32 fadeTime, u8 p5, JAInter::SoundInfo* info)
 {
 	mSoundID = soundID;
 	if (actor) {
 		mCreatureObj = actor->mObj;
 		if (actor->mObj) {
-			mPosition     = actor->mVec2;
-			mMapInfoIndex = actor->mInfoIndex;
+			_3C = actor->mVec2;
+			_30 = actor->mUnk;
 		} else {
-			mPosition     = nullptr;
-			mMapInfoIndex = actor->mInfoIndex;
+			_3C = nullptr;
+			_30 = actor->mUnk;
 		}
 		mIsPlayingWithActor = actor->mFlag.boolView[0];
 	} else {
 		mCreatureObj        = nullptr;
-		mPosition           = nullptr;
+		_3C                 = nullptr;
 		mIsPlayingWithActor = false;
-		mMapInfoIndex       = 0;
+		_30                 = 0;
 	}
 	mMainSoundPPointer         = (void**)handlePtr;
 	mFadeCounter               = fadeTime;
-	mCameraIndex               = camId;
+	_18                        = p5;
 	mSoundInfo                 = info;
-	mFinishWaitTimer           = 10;
+	_16                        = 10;
 	mDistanceParameterMoveTime = JAIGlobalParameter::getParamDistanceParameterMoveTime();
 	mAdjustPriority            = 0;
-	mActiveTimer               = 0;
-	if (mPosition) {
+	_2C                        = 0;
+	if (_3C) {
 		mSoundObj->mDistance = JAIGlobalParameter::getParamDistanceMax() * 10.0f;
 	} else {
 		mSoundObj->mDistance = 0.0f;
@@ -2232,9 +2206,7 @@ JAISound* JAInter::LinkSound::getSound()
  * @note Address: 0x800B57E8
  * @note Size: 0x4
  */
-void JAISound::onGet()
-{
-}
+void JAISound::onGet() { }
 
 /**
  * @note Address: 0x800B57EC
@@ -2255,9 +2227,7 @@ void JAInter::LinkSound::releaseSound(JAISound* sound)
  * @note Address: 0x800B5854
  * @note Size: 0x4
  */
-void JAISound::onRelease()
-{
-}
+void JAISound::onRelease() { }
 
 /**
  * @note Address: N/A
