@@ -725,13 +725,14 @@ JSystem/JAudio/JAI/JAISequenceHeap.cpp:
 
 JSystem/JAudio/JAI/JAISequenceMgr.cpp:
 	.text       start:0x80061C58 end:0x8006433C
-	.sbss       start:0x8066BB90 end:0x8066BBB0
+	.sbss       start:0x8066BB90 end:0x8066BBA8
 	.sdata2     start:0x8066DBD8 end:0x8066DBF8
 
 JSystem/JAudio/JAI/JAISound.cpp:
 	.text       start:0x8006433C end:0x8006805C
 	.data       start:0x80566FF8 end:0x80567368
 	.sdata      start:0x8066A988 end:0x8066A990
+	.sbss       start:0x8066BBA8 end:0x8066BBB0
 	.sdata2     start:0x8066DBF8 end:0x8066DC40
 
 JSystem/JAudio/JAI/JAISoundTable.cpp:
