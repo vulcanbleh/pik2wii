@@ -18,17 +18,17 @@ struct TSequenceProcessor : public JMessage::TSequenceProcessor {
 	};
 
 	virtual ~TSequenceProcessor() { }                     // _08 (weak)
-	virtual void do_character(int);                       // _10
-	virtual bool do_tag(u32, const void*, u32);           // _14
-	virtual bool do_systemTagCode(u16, const void*, u32); // _18
-	virtual void do_begin(const void*, const char*);      // _40
-	virtual void do_end();                                // _44
-	virtual bool do_isReady();                            // _48
-	virtual bool do_jump_isReady();                       // _4C
-	virtual void do_jump(const void*, const char*);       // _50
-	virtual void do_branch_query(u16);                    // _54
-	virtual int do_branch_queryResult();                  // _58
-	virtual void do_branch(const void*, const char*);     // _5C
+	virtual void do_begin(const void*, const char*);      // _0C
+	virtual void do_end();                                // _10
+	virtual void do_character(int);                       // _14
+	virtual bool do_tag(u32, const void*, u32);           // _1C
+	virtual bool do_isReady();                            // _40
+	virtual bool do_jump_isReady();                       // _44
+	virtual void do_jump(const void*, const char*);       // _48
+	virtual int do_branch_queryResult();                  // _50
+	virtual void do_branch(const void*, const char*);     // _54
+	virtual void do_branch_query(u16);                    // _58
+	virtual bool do_systemTagCode(u16, const void*, u32); // _5C
 	virtual void doResetAbtnWaitSE();                     // _60
 	virtual void doCharacterSEStart() { }                 // _64 (weak)
 	virtual void doCharacterSE(int) { }                   // _68 (weak)

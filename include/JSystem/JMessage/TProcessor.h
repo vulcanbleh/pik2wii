@@ -81,22 +81,27 @@ struct TProcessor {
 
 	virtual ~TProcessor();                                     // _08
 	virtual void do_reset();                                   // _0C
-	virtual void do_character(int);                            // _10
-	virtual bool do_tag(u32, const void*, u32);                // _14
-	virtual bool do_systemTagCode(u16, const void*, u32);      // _18
-	virtual void do_select_begin(u32);                         // _1C
-	virtual void do_select_end();                              // _20
-	virtual void do_select_separate();                         // _24
-	virtual void do_reset_(const char*) = 0;                   // _28
-	virtual bool do_setBegin_isReady_() const;                 // _2C
-	virtual void do_begin_(const void*, const char*)      = 0; // _30
-	virtual void do_end_()                                = 0; // _34
-	virtual bool do_tag_(u32, const void*, u32)           = 0; // _38
-	virtual void do_systemTagCode_(u16, const void*, u32) = 0; // _3C
+	virtual void do_begin(const void*, const char*);		   // _10
+    virtual void do_end();									   // _14
+	virtual void do_character(int);                            // _18
+	virtual bool do_tag(u32, const void*, u32);                // _1C
+	virtual void do_select_begin(u32);                         // _20
+	virtual void do_select_end();                              // _24
+	virtual void do_select_separate();                         // _28
+	virtual void do_resetStatus_(const char*);		           // _2C
+	virtual bool do_setBegin_isReady_() const;                 // _30
+	virtual void do_begin_(const void*, const char*)      = 0; // _34
+	virtual void do_end_()                                = 0; // _38
+	virtual bool do_tag_(u32, const void*, u32)           = 0; // _3C
 
-	void setBegin_messageCode(u16 groupID, u16 messageIndex);
-	void setBegin_messageID(u32, u32, bool*);
-	void setBegin_messageCode(u32); // weak
+	bool setBegin_messageCode(u16 groupID, u16 messageIndex);
+	bool setBegin_messageID(u32, u32, bool*);
+	bool setBegin_messageCode(u32 code){ // weak
+	
+		return setBegin_messageCode(code >> 0x10, code & 0xFFFF);
+	
+	
+	}
 	const TResource* getResource_groupID(u16) const;
 	u32 toMessageCode_messageID(u32, u32, bool*) const;
 	const char* on_message_limited(u16) const;         // weak
@@ -106,15 +111,34 @@ struct TProcessor {
 	static bool process_onCharacterEnd_select_(TProcessor*);
 	static const char* process_onSelect_limited_(TProcessor*);
 	static const char* process_onSelect_(TProcessor*);
-	void reset_(const char*);
+	void reset();
 
-	int setBegin_messageEntryText(const TResource* resource, const void* entry, const char* param_2)
+	bool setBegin_messageEntryText(const TResource* resource, const void* entry, const char* param_2)
 	{
 		mResourceCache = resource;
-		reset_(param_2);
-		do_begin_(entry, param_2);
-		return TRUE;
+		//reset();
+		//do_begin_(entry, param_2);
+		on_resetStatus_(param_2);
+        on_begin(entry, param_2);
+		return true;
 	}
+	
+	void on_resetStatus_(const char* param_1) {
+        mCurrent = param_1;
+        mStack.clear();
+        mProcess.reset_normal();
+        do_resetStatus_(param_1);
+    }
+	
+	void on_begin(const void* entry, const char* param_2) {
+        do_begin_(entry, param_2);
+        do_begin(entry, param_2);
+    }
+
+    void on_end() {
+        do_end_();
+        do_end();
+    }
 
 	void* getMessageEntry_messageCode(u16 messageCode, u16 messageIndex) const
 	{
@@ -147,10 +171,12 @@ struct TProcessor {
 	void setResourceCache(TResource* cache) { mResourceCache = cache; }
 	void resetResourceCache() { setResourceCache(nullptr); }
 
-	int on_parseCharacter(int string) const { return mReference->on_parseCharacter(string); }
+	int on_parseCharacter(const char** string) const { return mReference->on_parseCharacter(string); }
 	void on_character(int character) { do_character(character); }
 
-	void on_end() { do_end_(); }
+	//void on_end() { do_end_(); }
+	
+	const char* on_word(u32 param_0) const { return mReference->on_word(param_0); }
 
 	void on_tag(u32 p1, const void* p2, u32 p3)
 	{
@@ -209,20 +235,17 @@ struct TSequenceProcessor : public TProcessor {
 	TSequenceProcessor(const TReference*, TControl*);
 
 	virtual ~TSequenceProcessor();                         // _08
-	virtual void do_reset_(const char*);                   // _28
-	virtual bool do_setBegin_isReady_() const;             // _2C
-	virtual void do_begin_(const void*, const char*);      // _30
-	virtual void do_end_();                                // _34
-	virtual bool do_tag_(u32, const void*, u32);           // _38
-	virtual void do_systemTagCode_(u16, const void*, u32); // _3C
-	virtual void do_begin(const void*, const char*);       // _40
-	virtual void do_end();                                 // _44
-	virtual bool do_isReady();                             // _48
-	virtual bool do_jump_isReady();                        // _4C
-	virtual void do_jump(const void*, const char*);        // _50
-	virtual void do_branch_query(u16);                     // _54
-	virtual int do_branch_queryResult();                   // _58
-	virtual void do_branch(const void*, const char*);      // _5C
+	virtual void do_resetStatus_(const char*);             // _2C
+	virtual bool do_setBegin_isReady_() const;             // _30
+	virtual void do_begin_(const void*, const char*);      // _34
+	virtual void do_end_();                                // _38
+	virtual bool do_tag_(u32, const void*, u32);           // _3C
+	virtual bool do_isReady();                             // _40
+	virtual bool do_jump_isReady();                        // _44
+	virtual void do_jump(const void*, const char*);        // _48
+	virtual void do_branch_query(u32);                     // _4C
+	virtual int do_branch_queryResult();                   // _50
+	virtual void do_branch(const void*, const char*);      // _54
 
 	const char* process(const char*);
 	bool on_isReady();
@@ -258,13 +281,9 @@ struct TRenderingProcessor : public TProcessor {
 	TRenderingProcessor(const TReference*);
 
 	virtual ~TRenderingProcessor();                        // _08
-	virtual void do_reset_(const char*);                   // _28
-	virtual void do_begin_(const void*, const char*);      // _30
-	virtual void do_end_();                                // _34
-	virtual bool do_tag_(u32, const void*, u32);           // _38
-	virtual void do_systemTagCode_(u16, const void*, u32); // _3C
-	virtual void do_begin(const void*, const char*);       // _40
-	virtual void do_end();                                 // _44
+	virtual void do_begin_(const void*, const char*);      // _34
+	virtual void do_end_();                                // _38
+	virtual bool do_tag_(u32, const void*, u32);           // _3C
 
 	int process(const char*);
 

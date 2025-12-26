@@ -1,13 +1,11 @@
 #ifndef _JSYSTEM_JMESSAGE_TRESOURCE_H
 #define _JSYSTEM_JMESSAGE_TRESOURCE_H
 
+#include "JSystem/JGadget/search.h"
 #include "JSystem/JGadget/linklist.h"
 #include "JSystem/JMessage/data.h"
+#include "JSystem/JMessage/locale.h"
 #include "types.h"
-
-namespace JGadget {
-struct TLinkListNode;
-}
 
 namespace JMessage {
 struct TResource : public JGadget::TLinkListNode {
@@ -85,11 +83,12 @@ struct TResource_color {
 
 struct TResourceContainer {
 	struct TCResource : public JGadget::TLinkList_factory<TResource, 0> {
+		TCResource();
+		TResource* Get_groupID(u16);
+
 		virtual ~TCResource();               // _08
 		virtual TResource* Do_create();      // _0C
 		virtual void Do_destroy(TResource*); // _10
-
-		TResource* Get_groupID(u16);
 
 		// _00-_08 	= TLinkList_factory
 		// _0C 		= VTABLE
@@ -99,7 +98,7 @@ struct TResourceContainer {
 
 	TResourceContainer();
 
-	int parseCharacter(int string) const { return isLeadByte(string); }
+	int parseCharacter(const char** string) const { return mParseCharacter(string); }
 	TResource* getResource_groupID(u16 groupID) { return mContainer.Get_groupID(groupID); }
 	TResource* getResource_groupID(u16 groupID) const { return getResource_groupID(groupID); }
 
@@ -121,26 +120,26 @@ struct TResourceContainer {
 		destroyResource_color();
 	}
 
+	void setEncoding_(u8 encoding)
+	{
+		mEncoding  = encoding;
+		mParseCharacter = JGadget::toValueFromIndex<JMessage::locale::parseCharacter_function>(encoding, sapfnParseCharacter_, 5, nullptr);
+	}
+
 	void setEncoding(u8 encoding)
 	{
 		if (encoding == 0) {
 			mEncoding  = encoding;
-			isLeadByte = nullptr;
+			mParseCharacter = nullptr;
 		} else {
-			mEncoding               = encoding;
-			IsLeadByteFunc defFunc  = nullptr;
-			IsLeadByteFunc* funcPtr = &TResourceContainer::sapfnIsLeadByte_[encoding];
-			if (encoding >= 4) {
-				funcPtr = &defFunc;
-			}
-			isLeadByte = *funcPtr;
+			setEncoding_(encoding);
 		}
 	}
 
-	static IsLeadByteFunc sapfnIsLeadByte_[4];
+	static const JMessage::locale::parseCharacter_function sapfnParseCharacter_[5];
 
 	u8 mEncoding;              // _00
-	IsLeadByteFunc isLeadByte; // _04 - function pointer for isLeadByte, based on encoding
+	JMessage::locale::parseCharacter_function mParseCharacter; // _04
 	TCResource mContainer;     // _08
 	TResource_color mColor;    // _18
 };

@@ -10,7 +10,7 @@ struct TReference {
 	virtual ~TReference();            // _08
 	virtual char* do_word(u32) const; // _0C
 
-	int on_parseCharacter(int string) const { return mResource->parseCharacter(string); }
+	int on_parseCharacter(const char** string) const { return mResource->parseCharacter(string); }
 	const char* on_word(u32 param_0) const { return do_word(param_0); }
 
 	TResource* getResource_groupID(u16 groupID) const

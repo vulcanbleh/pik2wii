@@ -2668,8 +2668,8 @@ plugProjectYamashitaU/timeMgr.cpp:
 
 plugProjectYamashitaU/pelplantGenerator.cpp:
 	.text       start:0x801BADBC end:0x801BB070
-	.rodata     start:0x80547188 end:0x805471C0
-	.data       start:0x8058D8F8 end:0x8058D920
+	.rodata     start:0x80547188 end:0x805471BC
+	.data       start:0x8058D8F8 end:0x8058D91C
 
 plugProjectYamashitaU/enemyInteractActions.cpp:
 	.text       start:0x801BB070 end:0x801BB144
@@ -2678,7 +2678,7 @@ plugProjectYamashitaU/enemyInteractActions.cpp:
 plugProjectYamashitaU/enemyAnimatorBase.cpp:
 	.text       start:0x801BB144 end:0x801BB388
 	.data       start:0x8058D920 end:0x8058D948
-	.sdata2     start:0x8066F210 end:0x8066F230
+	.sdata2     start:0x8066F210 end:0x8066F22C
 
 plugProjectYamashitaU/enemyStoneMgr.cpp:
 	.text       start:0x801BB388 end:0x801BB880
