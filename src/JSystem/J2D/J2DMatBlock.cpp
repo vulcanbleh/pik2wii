@@ -21,7 +21,7 @@
 void J2DColorBlock::initialize()
 {
 	for (int i = 0; i < 2; i++) {
-		mColors[i] = j2dDefaultColInfo;
+		mColors[i] = JUtility::TColor(j2dDefaultColInfo);
 	}
 	mChannelCount = 2;
 	for (int i = 0; i < 4; i++) {
@@ -190,13 +190,6 @@ JUTPalette* J2DTevBlock::getPalette(u32 index)
  * __ct__12J2DTevBlock1Fv
  */
 J2DTevBlock1::J2DTevBlock1()
-    : J2DTevBlock()
-    , mOrders()
-    , mColors()
-    , mStages()
-    , mKColors()
-    , mSwapModeTables()
-    , mIndStages()
 {
 	mTextures[0]  = nullptr;
 	mUndeleteFlag = 0;
@@ -230,9 +223,8 @@ void J2DTevBlock1::initialize()
 	mFontNo        = -1;
 	mOrders[0].setTevOrderInfo(j2dDefaultTevOrderInfoNull);
 
-	J2DGXColorS10 color(j2dDefaultTevColor);
 	for (int i = 0; i < 4; i++) {
-		mColors[i] = color;
+		mColors[i] = j2dDefaultTevColor;
 	}
 
 	mStages[0].setStageNo(0);
@@ -1202,20 +1194,16 @@ bool J2DTevBlock2::setTexture(u32 id, const ResTIMG* timg)
 
 	u8 tlutid = 0;
 	if (timg && timg->mPaletteFormat) {
-		JUTTexture* tex = mTextures[id == 0];
-		if (tex) {
-			const ResTIMG* timg = tex->getTexInfo();
+		u8 idx = id == 0 ? 1 : 0;
+		if (mTextures[idx]) {
+			const ResTIMG* timg = mTextures[idx]->getTexInfo();
 			if (timg != nullptr && timg->mPaletteFormat) {
-				int tlutname = tex->getTlutName();
-				u8 var_r0    = 0;
+				int tlutname = mTextures[idx]->getTlutName();
+				u8 tlut_no = tlutname - (tlutname >= GX_BIGTLUT0 ? GX_BIGTLUT0 : GX_TLUT0);
 
-				if (tlutname >= 16) {
-					var_r0 = 16;
-				}
-
-				if (!(u8)(tlutname - var_r0)) {
-					tlutid = 1;
-				}
+				if (tlut_no == 0) {
+                    tlutid = 1;
+                }
 			}
 		}
 	}
@@ -1681,7 +1669,7 @@ void J2DTevBlock4::initialize()
 		mKAlphaSels[i] = -1;
 	}
 	for (int i = 0; i < 4; i++) {
-		mSwapModeTables[i] = j2dDefaultTevSwapModeTable;
+		mSwapModeTables[i].setTevSwapModeTableInfo(j2dDefaultTevSwapModeTable);
 	}
 	for (int i = 0; i < 4; i++) {
 		mIndStages[i].setIndTevStageInfo(j2dDefaultIndTevStageInfo);
@@ -1995,10 +1983,9 @@ bool J2DTevBlock4::insertTexture(u32 id, const ResTIMG* timg, JUTPalette* palett
 				continue;
 			}
 			u8 tlutName  = mTextures[i]->getTlutName();
-			int local_3c = tlutName >= 0x10 ? 0x10 : 0;
-			u8 bVar1     = tlutName - local_3c;
-			if (bVar1 < 4) {
-				local_44 |= 1 << bVar1;
+			u8 tlut_no = tlutName - (tlutName >= GX_BIGTLUT0 ? GX_BIGTLUT0 : GX_TLUT0);
+			if (tlut_no < 4) {
+				local_44 |= 1 << tlut_no;
 			}
 		}
 		for (u8 i = 0; i < 4; i++) {
@@ -2031,9 +2018,9 @@ bool J2DTevBlock4::insertTexture(u32 id, const ResTIMG* timg, JUTPalette* palett
 		} else {
 			texture->storeTIMG(timg, palette);
 		}
-		u8 local_38[4];
+		bool local_38[4];
 		for (u8 i = 0; i < 4; i++) {
-			local_38[i] = -(mUndeleteFlag & 1 << i) >> 0x1f;
+			local_38[i] = (mUndeleteFlag & 1 << i) != 0;
 		}
 		for (; idx > id; idx--) {
 			mTextures[idx]   = mTextures[idx - 1];
@@ -2407,10 +2394,11 @@ bool J2DTevBlock4::setTexture(u32 id, const ResTIMG* timg)
 	if (id >= 4) {
 		return false;
 	}
-
+	
+	u8 used_tlut;
 	u8 tlutid = 0;
 	if (timg && timg->mPaletteFormat) {
-		u8 local_44 = 0;
+		used_tlut = 0;
 		for (int i = 0; i < 4; i++) {
 			if (i == id) {
 				continue;
@@ -2426,17 +2414,13 @@ bool J2DTevBlock4::setTexture(u32 id, const ResTIMG* timg)
 				continue;
 			}
 			int tlutName = mTextures[i]->getTlutName();
-			int local_3c = 0;
-			if (tlutName >= 16) {
-				local_3c = 16;
-			}
-			u8 bVar1 = tlutName - local_3c;
-			if (bVar1 < 8) {
-				local_44 |= 1 << bVar1;
-			}
+			u8 tlut_no = tlutName - (tlutName >= GX_BIGTLUT0 ? GX_BIGTLUT0 : GX_TLUT0);
+			if (tlut_no < 4) {
+                used_tlut |= 1 << tlut_no;
+            }
 		}
 		for (u8 i = 0; i < 4; i++) {
-			if ((local_44 & 1 << i) == 0) {
+			if ((used_tlut & 1 << i) == 0) {
 				tlutid = i;
 				break;
 			}
@@ -2974,6 +2958,7 @@ void J2DTevBlock8::initialize()
 		mPalettes[i] = nullptr;
 	}
 	mFont = nullptr;
+	mFontUndeleteFlag = 0;
 	/*
 	stwu     r1, -0x50(r1)
 	addi     r8, r2, j2dDefaultTevColor@sda21
@@ -3335,11 +3320,10 @@ bool J2DTevBlock8::insertTexture(u32 id, const ResTIMG* timg, JUTPalette* palett
 			if (!texInfo->mPaletteFormat) {
 				continue;
 			}
-			u8 tlutName  = mTextures[i]->getTlutName();
-			int local_3c = tlutName >= 0x10 ? 0x10 : 0;
-			u8 bVar1     = tlutName - local_3c;
-			if (bVar1 < 8) {
-				local_44 |= 1 << bVar1;
+			int tlutName  = mTextures[i]->getTlutName();
+			u8 tlut_no = tlutName - (tlutName >= GX_BIGTLUT0 ? GX_BIGTLUT0 : GX_TLUT0);
+			if (tlut_no < 8) {
+				local_44 |= 1 << tlut_no;
 			}
 		}
 		for (u8 i = 0; i < 8; i++) {
@@ -3756,9 +3740,10 @@ bool J2DTevBlock8::setTexture(u32 id, const ResTIMG* timg)
 		return false;
 	}
 
+	u8 used_tlut;
 	u8 tlutid = 0;
 	if (timg && timg->mPaletteFormat) {
-		u8 local_44 = 0;
+		used_tlut = 0;
 		for (int i = 0; i < 8; i++) {
 			if (i == id) {
 				continue;
@@ -3774,17 +3759,13 @@ bool J2DTevBlock8::setTexture(u32 id, const ResTIMG* timg)
 				continue;
 			}
 			int tlutName = mTextures[i]->getTlutName();
-			int local_3c = 0;
-			if (tlutName >= 16) {
-				local_3c = 16;
-			}
-			u8 bVar1 = tlutName - local_3c;
-			if (bVar1 < 8) {
-				local_44 |= 1 << bVar1;
+			u8 tlut_no = tlutName - (tlutName >= GX_BIGTLUT0 ? GX_BIGTLUT0 : GX_TLUT0);
+			if (tlut_no < 8) {
+				used_tlut |= 1 << tlut_no;
 			}
 		}
 		for (u8 i = 0; i < 4; i++) {
-			if ((local_44 & 1 << i) == 0) {
+			if ((used_tlut & 1 << i) == 0) {
 				tlutid = i;
 				break;
 			}
@@ -4728,12 +4709,11 @@ bool J2DTevBlock16::insertTexture(u32 id, const ResTIMG* timg, JUTPalette* palet
 			if (!texInfo->mPaletteFormat) {
 				continue;
 			}
-			u8 tlutName  = mTextures[i]->getTlutName();
-			int local_3c = tlutName >= 0x10 ? 0x10 : 0;
-			u8 bVar1     = tlutName - local_3c;
-			if (bVar1 < 8) {
-				local_44 |= 1 << bVar1;
-			}
+			int tlutName = mTextures[i]->getTlutName();
+            u8 tlut_no = tlutName - (tlutName >= GX_BIGTLUT0 ? GX_BIGTLUT0 : GX_TLUT0);
+            if (tlut_no < 8) {
+                local_44 |= 1 << tlut_no;
+            }
 		}
 		for (u8 i = 0; i < 8; i++) {
 			if ((local_44 & 1 << i) == 0) {
@@ -4765,9 +4745,9 @@ bool J2DTevBlock16::insertTexture(u32 id, const ResTIMG* timg, JUTPalette* palet
 		} else {
 			texture->storeTIMG(timg, palette);
 		}
-		u8 local_38[4];
+		bool local_38[4];
 		for (u8 i = 0; i < 8; i++) {
-			local_38[i] = -(mUndeleteFlag & 1 << i) >> 0x1f;
+			local_38[i] = (mUndeleteFlag & 1 << i) != 0;
 		}
 		for (; idx > id; idx--) {
 			mTextures[idx]   = mTextures[idx - 1];
@@ -4776,7 +4756,7 @@ bool J2DTevBlock16::insertTexture(u32 id, const ResTIMG* timg, JUTPalette* palet
 			local_38[idx]    = local_38[idx - 1];
 		}
 		mTextures[id] = texture;
-		mUndeleteFlag &= 0x80;
+		mUndeleteFlag = 0;
 		for (u8 i = 0; i < 8; i++) {
 			if (local_38[i]) {
 				mUndeleteFlag |= 1 << i;
@@ -5149,9 +5129,10 @@ bool J2DTevBlock16::setTexture(u32 id, const ResTIMG* timg)
 		return false;
 	}
 
+	u8 used_tlut;
 	u8 tlutid = 0;
 	if (timg && timg->mPaletteFormat) {
-		u8 local_44 = 0;
+		u8 used_tlut = 0;
 		for (int i = 0; i < 8; i++) {
 			if (i == id) {
 				continue;
@@ -5167,17 +5148,14 @@ bool J2DTevBlock16::setTexture(u32 id, const ResTIMG* timg)
 				continue;
 			}
 			int tlutName = mTextures[i]->getTlutName();
-			int local_3c = 0;
-			if (tlutName >= 16) {
-				local_3c = 16;
-			}
-			u8 bVar1 = tlutName - local_3c;
-			if (bVar1 < 8) {
-				local_44 |= 1 << bVar1;
+			u8 tlut_no = tlutName - (tlutName >= GX_BIGTLUT0 ? GX_BIGTLUT0 : GX_TLUT0);
+			
+			if (tlut_no < 8) {
+				used_tlut |= 1 << tlut_no;
 			}
 		}
 		for (u8 i = 0; i < 4; i++) {
-			if ((local_44 & 1 << i) == 0) {
+			if ((used_tlut & 1 << i) == 0) {
 				tlutid = i;
 				break;
 			}

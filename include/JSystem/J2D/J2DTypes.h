@@ -309,6 +309,12 @@ extern const J2DTevSwapModeInfo j2dDefaultTevSwapMode;
 extern const J2DTevSwapModeTableInfo j2dDefaultTevSwapModeTable;
 extern const u8 j2dDefaultTevSwapTable;
 
+extern const J2DTevStageInfo j2dDefaultTevStageInfo;
+extern const GXColor j2dDefaultColInfo;
+extern const GXColorS10 j2dDefaultTevColor;
+extern const GXColor j2dDefaultTevKColor;
+
+extern const u8 j2dDefaultDither;
 struct J2DTevSwapModeTable {
 	J2DTevSwapModeTable() { _00 = j2dDefaultTevSwapTable; }
 
@@ -336,26 +342,19 @@ struct J2DTevStage {
 	{
 		setTevStageInfo(info);
 		setTevSwapModeInfo(j2dDefaultTevSwapMode);
-		// TODO: this is here to force this to not inline - it's probably (actually) an inline depth issue.
-		// clang-format off
-		(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; 
-		(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; 
-		(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; 
-		(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; 
-		(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; 
-		(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; 
-		(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; 
-		(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; 
-		(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; 
-		(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; 
-		(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; 
-		(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0;
-		// clang-format on
 	}
 
-	J2DTevStage();
-
-	void setTevStageInfo(J2DTevStageInfo const&);
+	J2DTevStage() {
+        setTevStageInfo(j2dDefaultTevStageInfo);
+        setTevSwapModeInfo(j2dDefaultTevSwapMode);
+    }
+	
+	void setTevStageInfo(J2DTevStageInfo const& info) {
+        setColorABCD(info.mColorA, info.mColorB, info.mColorC, info.mColorD);
+        setTevColorOp(info.mCOp, info.mCBias, info.mCScale, info.mCClamp, info.mCReg);
+        setAlphaABCD(info.mAlphaA, info.mAlphaB, info.mAlphaC, info.mAlphaD);
+        setTevAlphaOp(info.mAOp, info.mABias, info.mAScale, info.mAClamp, info.mAReg);
+    }
 
 	void setStageNo(u32 param_0)
 	{
@@ -579,12 +578,7 @@ struct J2DTextureSRTInfo {
 	f32 mTranslationY; // _10
 };
 
-extern const J2DTevStageInfo j2dDefaultTevStageInfo;
-extern const GXColor j2dDefaultColInfo;
-extern const GXColorS10 j2dDefaultTevColor;
-extern const GXColor j2dDefaultTevKColor;
 
-extern const u8 j2dDefaultDither;
 
 enum J2DTextBoxHBinding {
 	J2DHBIND_Center = 0,
