@@ -57,9 +57,7 @@ PSGame::SeMgr* PSSystem::SingletonBase<PSGame::SeMgr>::sInstance;
 PSSystem::SeqDataList* PSSystem::SingletonBase<PSSystem::SeqDataList>::sInstance;
 PSSystem::StreamDataList* PSSystem::SingletonBase<PSSystem::StreamDataList>::sInstance;
 
-namespace Game {
 
-static const int _UNUSED[3] = { 0, 0, 0 };
 /**
  * Unused. Just here to make the rodata line up.
  * @note Address: N/A
@@ -69,7 +67,7 @@ static void _Print(char* format, ...)
 {
 	OSReport(format, "enemyBase");
 }
-
+namespace Game {
 namespace EnemyBaseFSM {
 /**
  * Performs animation for the given enemy.
@@ -351,13 +349,13 @@ void AppearState::init(EnemyBase* enemy, StateArg* arg)
 	efx::TEnemyApsmoke effect; // this is "Appear Smoke"
 
 	f32 mod                      = enemy->mScaleModifier;
-	EnemyTypeID::EEnemyTypeID id = enemy->getEnemyTypeID();
+    EnemyTypeID::EEnemyTypeID id = enemy->getEnemyTypeID();
 
-	efx::ArgEnemyType fxArg(enemy->getPosition(), id, mod);
-	effect.create(&fxArg);
+    efx::ArgEnemyType fxArg(enemy->getPosition(), id, mod);
+    effect.create(&fxArg);
 
-	enemy->mScale         = 0.0f;
-	enemy->mStunAnimTimer = 0.0f;
+    enemy->mScale.set(0.0f, 0.0f, 0.0f);
+    enemy->mStunAnimTimer = 0.0f;
 }
 
 /**
@@ -471,8 +469,12 @@ void LivingState::updateCullingOff(EnemyBase* enemy)
 void LivingState::updateAlways(EnemyBase* enemy)
 {
 	if (enemy->isEvent(0, EB_BitterQueued)) {
-		enemy->startStoneState();
-	}
+        if (enemy->isDead()){
+            enemy->disableEvent(0, EB_BitterQueued);
+            return;
+        }
+        enemy->startStoneState();
+    }
 }
 
 /**
@@ -705,7 +707,7 @@ void StoneState::init(EnemyBase* enemy, StateArg* arg)
 	enemy->hide();
 	enemy->mBitterTimer = 0.0f;
 	enemy->stopMotion();
-	enemy->mCurrentVelocity = 0.0f;
+	enemy->mCurrentVelocity.set(0.0f, 0.0f, 0.0f);
 
 	if (enemy->mFloorTriangle) {
 		enemy->enableEvent(0, EB_Constrained);
@@ -2727,11 +2729,10 @@ void EnemyBase::getLifeGaugeParam(LifeGaugeParam& param)
  */
 void EnemyBase::doGetLifeGaugeParam(LifeGaugeParam& param)
 {
-	f32 y           = mPosition.y + getParms().mLifeMeterHeight();
-	param.mPosition.set(mPosition.x, y, mPosition.z);
-	
-	param.mCurrHealthRatio = mHealth / mMaxHealth;
-	param.mRadius          = 10.0f;
+	param.mPosition.set(mPosition.x,  mPosition.y + getParms().mLifeMeterHeight(), mPosition.z);
+    
+    param.mCurrHealthRatio = mHealth / mMaxHealth;
+    param.mRadius          = 10.0f;
 }
 
 /**
@@ -3169,7 +3170,7 @@ PSM::EnemyBase* EnemyBase::createPSEnemyBase()
 		break;
 	case BDT_Triple:
 	case BDT_MiniBoss:
-		JUT_PANICLINE(4392, "abolished type\n");
+		JUT_PANICLINE(4402, "abolished type\n");
 		break;
 	case BDT_Boss:
 		base = new PSM::EnemyMidBoss(this);

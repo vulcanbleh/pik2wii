@@ -11,8 +11,6 @@
 
 u32 GeneratorCurrentVersion = 'v0.3';
 
-static const int unusedArray[] = { 0, 0, 0 };
-
 /**
  * @note Address: N/A
  * @note Size: 0xE4
@@ -238,9 +236,6 @@ bool Generator::loadCreature(Stream& input)
 {
 	if (mObject) {
 		mCreature = mObject->generate(this);
-		if (mCreature) {
-			mCreature->getTypeName();
-		}
 	}
 	if (mCreature) {
 		mCreature->mGenerator = this;
@@ -287,9 +282,6 @@ void Generator::saveCreature(Stream& output)
 			conversion |= CREATURE_SAVE_FLAG_POSITION;
 		}
 
-		mCreature->getTypeName();
-		mCreature->getCreatureName();
-		mCreature->getCreatureID();
 		mCreature->save(output, conversion);
 		return;
 	}
