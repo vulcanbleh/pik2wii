@@ -70,6 +70,14 @@ JASTrack::JASTrack()
  */
 JASTrack::~JASTrack()
 {
+	JSULink<JASChannel>* link = getFirst();
+	while (link) {
+		JSULink<JASChannel>* next = link->getObject()->getNext();
+		link->getObject()->release(0);
+		link->getObject()->free();
+		remove(link->getObject()->getObject());
+		link = next;
+	}
 	// UNUSED FUNCTION
 }
 
@@ -635,9 +643,28 @@ void JASTrack::oscSetupSimpleEnv(u8 setupType, u32 offset)
  * @note Address: N/A
  * @note Size: 0x64
  */
-void JASTrack::updateOscParam(int, f32)
+void JASTrack::updateOscParam(int id, f32 value)
 {
-	// UNUSED FUNCTION
+	switch (id) {
+	case TIMED_Osc0_Width:
+		mOscData[0].mWidth = value;
+		break;
+	case TIMED_Osc0_Rate:
+		mOscData[0].mRate = value;
+		break;
+	case TIMED_Osc0_Vertex:
+		mOscData[0].mVertex = value;
+		break;
+	case TIMED_Osc1_Width:
+		mOscData[1].mWidth = value;
+		break;
+	case TIMED_Osc1_Rate:
+		mOscData[1].mRate = value;
+		break;
+	case TIMED_Osc1_Vertex:
+		mOscData[1].mVertex = value;
+		break;
+	}
 }
 
 /**
@@ -676,27 +703,7 @@ void JASTrack::updateTimedParam()
 				mUpdateFlags |= (1 << i);
 				continue;
 			}
-			f32 value = mTimedParam.mMoveParams[i].mCurrentValue;
-			switch (i) {
-			case TIMED_Osc0_Width:
-				mOscData[0].mWidth = value;
-				break;
-			case TIMED_Osc0_Rate:
-				mOscData[0].mRate = value;
-				break;
-			case TIMED_Osc0_Vertex:
-				mOscData[0].mVertex = value;
-				break;
-			case TIMED_Osc1_Width:
-				mOscData[1].mWidth = value;
-				break;
-			case TIMED_Osc1_Rate:
-				mOscData[1].mRate = value;
-				break;
-			case TIMED_Osc1_Vertex:
-				mOscData[1].mVertex = value;
-				break;
-			}
+			updateOscParam(i, mTimedParam.mMoveParams[i].mCurrentValue);
 		}
 	}
 	mUpdateFlags |= OUTERPARAM_Pitch;
@@ -1278,24 +1285,8 @@ bool JASTrack::stopSeq()
 		break;
 	case 2:
 		_35B = 0;
-		// none of this makes sense. there's some weird list thing going on here
-		if (_366 && this) {
-			JSULink<JASChannel>* link = getFirst();
-			while (link) {
-				JSULink<JASChannel>* next = link->getObject()->getNext();
-				link->getObject()->release(0);
-				link->getObject()->free();
-				remove(link->getObject()->getObject());
-				link = next;
-			}
-			this->~JASTrack();
-			mHead = nullptr;
-			if (sFreeListEnd) {
-				sFreeListEnd->mHead = reinterpret_cast<JSUPtrLink*>(this);
-			} else {
-				sFreeList = this;
-			}
-			sFreeListEnd = this;
+		if (_366) {
+			delete this;
 		}
 		break;
 	default:
@@ -1444,23 +1435,8 @@ void JASTrack::close()
 		link = next;
 	}
 
-	if (_366 && this) {
-		JSULink<JASChannel>* link = getFirst();
-		while (link) {
-			JSULink<JASChannel>* next = link->getObject()->getNext();
-			link->getObject()->release(0);
-			link->getObject()->free();
-			remove(link->getObject()->getObject());
-			link = next;
-		}
-		this->~JASTrack();
-		mHead = nullptr;
-		if (sFreeListEnd) {
-			sFreeListEnd->mHead = reinterpret_cast<JSUPtrLink*>(this);
-		} else {
-			sFreeList = this;
-		}
-		sFreeListEnd = this;
+	if (_366) {
+		delete this;
 	}
 	/*
 	stwu     r1, -0x20(r1)
@@ -1682,172 +1658,56 @@ bool JASTrack::start(void* file, u32 offset)
  * @note Address: 0x800A155C
  * @note Size: 0x1DC
  */
-JASTrack* JASTrack::openChild(u8 p1, u8 p2)
+JASTrack* JASTrack::openChild(u8 index, u8 p2)
 {
-	if (mChildList[p1]) {
-		mChildList[p1]->close();
-		mChildList[p1] = nullptr;
+	if (mChildList[index]) {
+		mChildList[index]->close();
+		mChildList[index] = nullptr;
 	}
 
-	// what is UP with these sFreeList things????
-	JASTrack* newTrack = sFreeList;
-	if (newTrack == nullptr) {
-		newTrack = nullptr;
-	} else {
+	JASTrack* newTrack = new JASTrack();
+	if (!newTrack) {
+		return nullptr;
 	}
 
 	newTrack->init();
 	newTrack->_366         = 1;
 	newTrack->mParentTrack = this;
 	newTrack->_357         = p2;
-	newTrack->_348         = (((_348 << 4) | (p1 & 0xFF)) & ~0xF0000000) | ((_348 & 0xF0000000) + 0x10000000);
-	mChildList[p1]         = newTrack;
+	newTrack->_348         = (((_348 << 4) | (index & 0xFF)) & ~0xF0000000) | ((_348 & 0xF0000000) + 0x10000000);
+	mChildList[index]      = newTrack;
 	newTrack->inherit();
 	return newTrack;
-	/*
-	stwu     r1, -0x20(r1)
-	mflr     r0
-	stw      r0, 0x24(r1)
-	rlwinm   r0, r4, 2, 0x16, 0x1d
-	stmw     r27, 0xc(r1)
-	mr       r27, r3
-	add      r30, r27, r0
-	mr       r28, r4
-	mr       r29, r5
-	lwz      r3, 0x2fc(r30)
-	cmplwi   r3, 0
-	beq      lbl_800A1598
-	bl       close__8JASTrackFv
-	li       r0, 0
-	stw      r0, 0x2fc(r30)
-
-lbl_800A1598:
-	lwz      r31, sFreeList__8JASTrack@sda21(r13)
-	cmplwi   r31, 0
-	bne      lbl_800A15AC
-	li       r31, 0
-	b        lbl_800A15C4
-
-lbl_800A15AC:
-	lwz      r0, 0(r31)
-	cmplwi   r0, 0
-	stw      r0, sFreeList__8JASTrack@sda21(r13)
-	bne      lbl_800A15C4
-	li       r0, 0
-	stw      r0, sFreeListEnd__8JASTrack@sda21(r13)
-
-lbl_800A15C4:
-	cmplwi   r31, 0
-	beq      lbl_800A15D8
-	mr       r3, r31
-	bl       __ct__8JASTrackFv
-	mr       r31, r3
-
-lbl_800A15D8:
-	cmplwi   r31, 0
-	bne      lbl_800A15E8
-	li       r3, 0
-	b        lbl_800A1724
-
-lbl_800A15E8:
-	mr       r3, r31
-	bl       init__8JASTrackFv
-	li       r3, 1
-	clrlwi   r0, r28, 0x18
-	stb      r3, 0x366(r31)
-	stw      r27, 0x2f8(r31)
-	stb      r29, 0x357(r31)
-	lwz      r4, 0x348(r27)
-	slwi     r3, r4, 4
-	rlwinm   r4, r4, 0, 0, 3
-	or       r0, r3, r0
-	addis    r3, r4, 0x1000
-	clrlwi   r0, r0, 4
-	or       r0, r3, r0
-	stw      r0, 0x348(r31)
-	stw      r31, 0x2fc(r30)
-	lwz      r3, 0x2f8(r31)
-	cmplwi   r3, 0
-	beq      lbl_800A1720
-	lhz      r3, 0x352(r3)
-	li       r0, 0
-	sth      r3, 0x352(r31)
-	stb      r0, 0x365(r31)
-	lwz      r3, 0x2f8(r31)
-	lfs      f0, 0x344(r3)
-	stfs     f0, 0x344(r31)
-	lwz      r3, 0x2f8(r31)
-	lhz      r0, 0x354(r3)
-	sth      r0, 0x354(r31)
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x364(r3)
-	stb      r0, 0x364(r31)
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x362(r3)
-	stb      r0, 0x362(r31)
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x358(r3)
-	stb      r0, 0x358(r31)
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x359(r3)
-	stb      r0, 0x359(r31)
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x363(r3)
-	stb      r0, 0x363(r31)
-	lbz      r0, 0x357(r31)
-	rlwinm.  r0, r0, 0, 0x1e, 0x1e
-	bne      lbl_800A1720
-	lwz      r4, 0x2f8(r31)
-	addi     r3, r31, 0x268
-	addi     r4, r4, 0x268
-	bl       inherit__16JASRegisterParamFRC16JASRegisterParam
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x35c(r3)
-	stb      r0, 0x35c(r31)
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x35f(r3)
-	stb      r0, 0x35f(r31)
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x13e(r3)
-	stb      r0, 0x13e(r31)
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x35d(r3)
-	stb      r0, 0x35d(r31)
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x360(r3)
-	stb      r0, 0x360(r31)
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x13f(r3)
-	stb      r0, 0x13f(r31)
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x35e(r3)
-	stb      r0, 0x35e(r31)
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x361(r3)
-	stb      r0, 0x361(r31)
-	lwz      r3, 0x2f8(r31)
-	lbz      r0, 0x140(r3)
-	stb      r0, 0x140(r31)
-
-lbl_800A1720:
-	mr       r3, r31
-
-lbl_800A1724:
-	lmw      r27, 0xc(r1)
-	lwz      r0, 0x24(r1)
-	mtlr     r0
-	addi     r1, r1, 0x20
-	blr
-	*/
 }
 
 /**
  * @note Address: N/A
  * @note Size: 0xB8
  */
-void JASTrack::loadTbl(u32, u32, u32)
+u32 JASTrack::loadTbl(u32 ofs, u32 idx, u32 param_4)
 {
-	// UNUSED FUNCTION
+	u32 result;
+	switch (param_4) {
+	case 4:
+		result = mSeqCtrl.mRawFilePtr[ofs + idx];
+		break;
+	case 5:
+		idx    = idx * 2;
+		result = mSeqCtrl.get16(ofs + idx);
+		break;
+	case 6:
+		idx    = idx * 2 + idx; // Roundabout way to multiply by 3.
+		result = mSeqCtrl.get24(ofs + idx);
+		break;
+	case 7:
+		idx    = idx * 4;
+		result = mSeqCtrl.get32(ofs + idx);
+		break;
+	case 8:
+		result = mSeqCtrl.get32(ofs + idx);
+		break;
+	}
+	return result;
 }
 
 /**
@@ -2262,13 +2122,13 @@ void JASTrack::writeRegParam(u8 p1)
 		val26 = 11;
 		break;
 	case 10: {
-		u8 currByte = *mSeqCtrl.mCurrentFilePtr++;
+		u8 currByte = mSeqCtrl.readByte();
 		val26       = 10;
 		val27       = currByte & 0xC;
 		val25       = (currByte >> 4) + 4;
 	} break;
 	case 9: {
-		u8 currByte = *mSeqCtrl.mCurrentFilePtr++;
+		u8 currByte = mSeqCtrl.readByte();
 		val27       = currByte & 0xC;
 		val26       = currByte & 0xF0;
 		if (val27 == 8) {
@@ -2281,25 +2141,25 @@ void JASTrack::writeRegParam(u8 p1)
 		break;
 	}
 
-	u8 nextByte = *mSeqCtrl.mCurrentFilePtr++;
+	u8 nextByte = mSeqCtrl.readByte();
 
 	if (val26 == 10) {
-		u8 nextNextByte = *mSeqCtrl.mCurrentFilePtr++;
+		u8 nextNextByte = mSeqCtrl.readByte();
 		val24           = readReg32(nextNextByte);
 	}
 
 	switch (val27) {
 	case 0:
-		val23 = readReg16(*mSeqCtrl.mCurrentFilePtr++);
+		val23 = readReg16(mSeqCtrl.readByte());
 		break;
 	case 4:
-		val23 = *mSeqCtrl.mCurrentFilePtr++;
+		val23 = mSeqCtrl.readByte();
 		break;
 	case 12:
 		val23 = mSeqCtrl.read16();
 		break;
 	case 8:
-		u32 byte = *mSeqCtrl.mCurrentFilePtr++;
+		u32 byte = mSeqCtrl.readByte();
 		if (byte & 0x80) {
 			val23 = byte << 8;
 		} else {
@@ -2370,27 +2230,7 @@ void JASTrack::writeRegParam(u8 p1)
 		val23 = val28 % (u16)val23;
 	} break;
 	case 0xA:
-		// this is probably an inline/some stripped function above
-		u32 interVal;
-		u32 new23 = val23;
-		switch (val25) {
-		case 4:
-			interVal = mSeqCtrl.mRawFilePtr[val24 + new23];
-			break;
-		case 5:
-			interVal = mSeqCtrl.get16(val24 + (new23 << 1));
-			break;
-		case 6:
-			interVal = mSeqCtrl.get24(val24 + val23 + (new23 << 1));
-			break;
-		case 7:
-			interVal = mSeqCtrl.get32(val24 + (new23 << 2));
-			break;
-		case 8:
-			interVal = mSeqCtrl.get32(val24 + new23);
-			break;
-		}
-		val23 = (u16)interVal;
+		val23 = (u16)loadTbl(val24, val23, val25);
 		break;
 	}
 

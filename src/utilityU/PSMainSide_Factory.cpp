@@ -16,16 +16,6 @@
 #include "PSAutoBgm/MeloArr.h"
 #include "nans.h"
 
-#define CREATE_NEW_ID(id, builder)                                                   \
-	{                                                                                \
-		PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(id); \
-		PSSystem::IdList* list = &builder.mList;                                     \
-		if (!builder.mCurrentId) {                                                   \
-			builder.mCurrentId = link;                                               \
-		}                                                                            \
-		list->append(link);                                                          \
-	}
-
 static const u32 padding[] = { 0, 0, 0 };
 
 namespace PSM {
@@ -52,22 +42,22 @@ JAISound* Env_Pollutin::play()
 {
 	EnvSeBase::play();
 	mVolume = 1.0f;
-	if (_50 != 1.0f) {
-		P2ASSERTLINE(79, _50 < 1.0f);
+	if (mVolumeModifier != 1.0f) {
+		P2ASSERTLINE(79, mVolumeModifier < 1.0f);
 
 		MiddleBossSeq* seq = PSMGetMiddleBossSeq();
 		if (seq && *seq->getHandleP()) {
 			JAISound** se = seq->getHandleP();
 			f32 newVolume = (*se)->getVolume(SOUNDPARAM_Unk0);
 			if (newVolume > 0.0f) {
-				mVolume = JALCalc::linearTransform(newVolume, 0.0f, 1.0f, 1.0f, _50, true);
+				mVolume = JALCalc::linearTransform(newVolume, 0.0f, 1.0f, 1.0f, mVolumeModifier, true);
 			}
 		} else {
 			PSM::Scene_Ground* scene = static_cast<PSM::Scene_Ground*>(PSMGetChildScene());
 			PSSystem::checkGameScene(scene);
 			PSSystem::SeqBase* seq = scene->getSeqMgr()->getSeq(1);
 			if (seq && *seq->getHandleP() && !strcmp(seq->mBmsFileName, "kuro_post.bms")) {
-				mVolume = _50;
+				mVolume = mVolumeModifier;
 			}
 		}
 	}
@@ -86,10 +76,9 @@ JAISound* EnvSe_Perspective_AvoidY::play()
 	if (!navi) {
 		hasNavi = false;
 	}
-	Scene_Game* scene            = PSMGetGameScene();
-	PSM::PersEnvManager* persMgr = scene->mPersEnvMgr;
+	PSM::PersEnvManager* persMgr = PSMGetGameScene()->mPersEnvMgr;
 	if (hasNavi && persMgr && persMgr->playOk(this)) {
-		mPosition.y = _48 + navi->getPosition().y;
+		mPosition.y = mYOffset + navi->getPosition().y;
 
 		Vector3f pos = navi->getPosition();
 		Vec naviPos  = *(Vec*)&pos;
@@ -99,7 +88,7 @@ JAISound* EnvSe_Perspective_AvoidY::play()
 		                                  PSSystem::SingletonBase<ObjCalcBase>::getInstance()->getPlayerNo(mPosition));
 		f32 calc;
 		if (dist < mInfo._08) {
-			calc = JALCalc::linearTransform(dist, mInfo._04, mInfo._08, 0.0f, mInfo._10, true);
+			calc = JALCalc::linearTransform(dist, mInfo.mMutedVolume, mInfo._08, 0.0f, mInfo._10, true);
 		} else if (dist < mInfo._0C) {
 			calc = mInfo._10;
 		} else {
@@ -304,7 +293,9 @@ void EnvSeObjBuilder::onBuild(PSSystem::EnvSeBase* se)
  * @note Address: 0x8045A1C4
  * @note Size: 0x3C
  */
-SceneMgr::SceneMgr() { }
+SceneMgr::SceneMgr()
+{
+}
 
 /**
  * @note Address: 0x8045A200
@@ -312,7 +303,7 @@ SceneMgr::SceneMgr() { }
  */
 PSSystem::BgmSeq* SceneMgr::newMainBgm(const char* bmsFilePath, JAInter::SoundInfo& info)
 {
-	DirectorMgr_Scene* director = new DirectorMgr_Scene(nullptr, 8);
+	DirectorMgr_Scene* director = new DirectorMgr_Scene(nullptr, DirectorMgr_Scene::Director_COUNT);
 	PSSystem::DirectedBgm* seq  = new PSSystem::JumpBgmSeq(bmsFilePath, info, director);
 
 	P2ASSERTLINE(349, seq);
@@ -326,7 +317,10 @@ PSSystem::BgmSeq* SceneMgr::newMainBgm(const char* bmsFilePath, JAInter::SoundIn
  * @note Address: 0x8045A2D8
  * @note Size: 0x14
  */
-bool SceneMgr::curSceneIsBigBossFloor() { return EnemyBigBoss::sBigBoss != nullptr; }
+bool SceneMgr::curSceneIsBigBossFloor()
+{
+	return EnemyBigBoss::sBigBoss != nullptr;
+}
 
 /**
  * @note Address: 0x8045A2EC
@@ -426,60 +420,24 @@ void SceneMgr::initEnvironmentSe(PSM::Scene_Game* scene)
 
 	switch (type) {
 	case PSGame::SceneInfo::CHALLENGE_MODE:
-		mgr                     = new PSSystem::EnvSeMgr;
+		mgr = new PSSystem::EnvSeMgr;
+
 		PersEnvManager* persMgr = new PersEnvManager(mgr);
 		scene->mPersEnvMgr      = persMgr;
-		PSSystem::IdLink* link  = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT01_MIX1);
-		PSSystem::IdList* list  = &builder.mList;
-		if (!list->getFirst()) {
-			builder.mCurrentId = link;
-		}
-		list->append(link);
-		link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT02_MIX1);
-		if (!list->getFirst()) {
-			builder.mCurrentId = link;
-		}
-		list->append(link);
-		link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT03_MIX1);
-		if (!list->getFirst()) {
-			builder.mCurrentId = link;
-		}
-		list->append(link);
-		link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT04_MIX1);
-		if (!list->getFirst()) {
-			builder.mCurrentId = link;
-		}
-		list->append(link);
-		link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT05_MIX1);
-		if (!list->getFirst()) {
-			builder.mCurrentId = link;
-		}
-		list->append(link);
-		link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT01_MIX2);
-		if (!list->getFirst()) {
-			builder.mCurrentId = link;
-		}
-		list->append(link);
-		link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT02_MIX2);
-		if (!list->getFirst()) {
-			builder.mCurrentId = link;
-		}
-		list->append(link);
-		link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT03_MIX2);
-		if (!list->getFirst()) {
-			builder.mCurrentId = link;
-		}
-		list->append(link);
-		link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT04_MIX2);
-		if (!list->getFirst()) {
-			builder.mCurrentId = link;
-		}
-		list->append(link);
-		link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT05_MIX2);
-		if (!list->getFirst()) {
-			builder.mCurrentId = link;
-		}
-		list->append(link);
+
+		// use all 10 INSECT sounds in challenge mode (the amount that actually play depends on the map size)
+		APPEND_SE_LINK(builder, PSSE_MP_INSECT01_MIX1);
+		APPEND_SE_LINK(builder, PSSE_MP_INSECT02_MIX1);
+		APPEND_SE_LINK(builder, PSSE_MP_INSECT03_MIX1);
+		APPEND_SE_LINK(builder, PSSE_MP_INSECT04_MIX1);
+		APPEND_SE_LINK(builder, PSSE_MP_INSECT05_MIX1);
+
+		APPEND_SE_LINK(builder, PSSE_MP_INSECT01_MIX2);
+		APPEND_SE_LINK(builder, PSSE_MP_INSECT02_MIX2);
+		APPEND_SE_LINK(builder, PSSE_MP_INSECT03_MIX2);
+		APPEND_SE_LINK(builder, PSSE_MP_INSECT04_MIX2);
+		APPEND_SE_LINK(builder, PSSE_MP_INSECT05_MIX2);
+
 		PSM::PersEnvInfo envInfo = (PSM::PersEnvInfo) { 1500.0f, 479.0f, 707.0f, 808.0f, 1.0f };
 		persMgr->_10             = 479.0f;
 		builder.setInfo(envInfo);
@@ -487,292 +445,108 @@ void SceneMgr::initEnvironmentSe(PSM::Scene_Game* scene)
 		PSM::SetNoYOfset(mgr);
 		mgr->mEnvList.append(new Env_Pollutin(PSSE_EV_POLUTION_MIX01));
 		mgr->mEnvList.append(new Env_Pollutin(PSSE_EV_POLUTION_MIX02));
-
 		break;
+
 	case PSGame::SceneInfo::TWO_PLAYER_BATTLE:
 		break;
 	}
 
-	if (!mgr && info->getFlag(PSGame::SceneInfo::SFBS_1) == 1) {
+	if (!mgr && info->getBitShift1() == FALSE) {
 		if (info->isCaveFloor()) {
-			mgr                     = new PSSystem::EnvSeMgr;
+			mgr = new PSSystem::EnvSeMgr;
+
 			PersEnvManager* persMgr = new PersEnvManager(mgr); // r30
 			scene->mPersEnvMgr      = persMgr;
+
+			// In story mode caves, use different ambient noises based on the sublevel (from 1 - 15)
 			switch (static_cast<PSGame::CaveFloorInfo*>(info)->mFloorNum) {
 			case 0: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT02_MIX1);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT03_MIX1);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT02_MIX1);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT03_MIX1);
 			} break;
 
 			case 1: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT02_MIX2);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT03_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT02_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT03_MIX2);
 			} break;
 
 			case 2: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT02_MIX1);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT03_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT04_MIX1);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT02_MIX1);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT03_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT04_MIX1);
 			} break;
 
 			case 3: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT03_MIX1);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT04_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT01_MIX1);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT03_MIX1);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT04_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT01_MIX1);
 			} break;
 
 			case 4: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT04_MIX1);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT01_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT05_MIX1);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT04_MIX1);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT01_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT05_MIX1);
 			} break;
 
 			case 5: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT01_MIX1);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT05_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP01_MIX1);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT01_MIX1);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT05_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP01_MIX1);
 			} break;
 
 			case 6: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECT05_MIX1);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP01_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP06_MIX1);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECT05_MIX1);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP01_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP06_MIX1);
 			} break;
 
 			case 7: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP01_MIX1);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP06_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP02_MIX1);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP01_MIX1);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP06_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP02_MIX1);
 			} break;
 
 			case 8: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP06_MIX1);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP02_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP05_MIX1);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP06_MIX1);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP02_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP05_MIX1);
 			} break;
 
 			case 9: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP02_MIX1);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP05_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP04_MIX1);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP02_MIX1);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP05_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP04_MIX1);
 			} break;
 
 			case 10: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP05_MIX2);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP04_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP03_MIX1);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP05_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP04_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP03_MIX1);
 			} break;
 
 			case 11: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP05_MIX2);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP04_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP03_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP05_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP04_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP03_MIX2);
 			} break;
 
 			case 12: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP05_MIX2);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP04_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP03_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP05_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP04_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP03_MIX2);
 			} break;
 
 			case 13: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP05_MIX2);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP04_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP03_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP05_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP04_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP03_MIX2);
 			} break;
 
 			case 14:
 			default: {
-				PSSystem::IdLink* link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP05_MIX2);
-				PSSystem::IdList* list = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP04_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_INSECTDEEP03_MIX2);
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP05_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP04_MIX2);
+				APPEND_SE_LINK(builder, PSSE_MP_INSECTDEEP03_MIX2);
 			} break;
 			}
 
@@ -788,116 +562,67 @@ void SceneMgr::initEnvironmentSe(PSM::Scene_Game* scene)
 			switch (type) {
 			case PSGame::SceneInfo::COURSE_TUTORIAL:
 			case PSGame::SceneInfo::COURSE_TUTORIALDAY1: {
-				PSSystem::EnvSeMgr* tutorialMgr = new PSSystem::EnvSeMgr;
-				mgr                             = tutorialMgr;
-				PSGame::EnvSe_AutoPan* pan0     = new PSGame::EnvSe_AutoPan(PSSE_MP_WIND_BACK, 0.0f, 0.5f, 1.0f, 0.0018554f, 0.0008554f);
+				mgr = new PSSystem::EnvSeMgr;
+
+				PSGame::EnvSe_AutoPan* pan0 = new PSGame::EnvSe_AutoPan(PSSE_MP_WIND_BACK, 0.0f, 0.5f, 1.0f, 0.0018554f, 0.0008554f);
 				P2ASSERTLINE(778, pan0);
 				pan0->setDirection(true, false);
-				tutorialMgr->mEnvList.append(pan0);
+				mgr->mEnvList.append(pan0);
 
 				PSGame::EnvSe_AutoPan* pan1 = new PSGame::EnvSe_AutoPan(PSSE_MP_WIND_BACK, 1.0f, 0.5f, 1.0f, 0.0018554f, 0.0008554f);
 				P2ASSERTLINE(785, pan1);
 				pan1->setDirection(false, true);
-				tutorialMgr->mEnvList.append(pan1);
+				mgr->mEnvList.append(pan1);
 			} break;
 
 			case PSGame::SceneInfo::COURSE_FOREST: {
-				PSSystem::EnvSeMgr* forestMgr = new PSSystem::EnvSeMgr;
-				mgr                           = forestMgr;
-				PersEnvManager* persMgr       = new PersEnvManager(forestMgr);
-				scene->mPersEnvMgr            = persMgr;
-				PSSystem::IdLink* link        = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_BIRD_SP_SUZUME); // 'sparrow'
-				PSSystem::IdList* list        = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_BIRD_SP_UGUISU); // 'japanese warbler'
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_BIRD_SP_HIBARI); // 'lark'
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				mgr = new PSSystem::EnvSeMgr;
+
+				PersEnvManager* persMgr = new PersEnvManager(mgr);
+				scene->mPersEnvMgr      = persMgr;
+
+				APPEND_SE_LINK(builder, PSSE_MP_BIRD_SP_SUZUME); // 'sparrow'
+				APPEND_SE_LINK(builder, PSSE_MP_BIRD_SP_UGUISU); // 'japanese warbler'
+				APPEND_SE_LINK(builder, PSSE_MP_BIRD_SP_HIBARI); // 'lark'
+
 				PSM::PersEnvInfo envInfo = (PSM::PersEnvInfo) { 1500.0f, 379.0f, 579.0f, 1031.0f, 0.9f };
 				persMgr->_10             = 379.0f;
 				builder.setInfo(envInfo);
-				builder.build(1.0f, forestMgr);
+				builder.build(1.0f, mgr);
 			} break;
 			case PSGame::SceneInfo::COURSE_YAKUSHIMA: {
-				PSSystem::EnvSeMgr* yakuMgr = new PSSystem::EnvSeMgr;
-				mgr                         = yakuMgr;
-				PersEnvManager* persMgr     = new PersEnvManager(yakuMgr);
-				scene->mPersEnvMgr          = persMgr;
-				PSSystem::IdLink* link      = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_SEMI_KUMA01); // 'bear cicada'
-				PSSystem::IdList* list      = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_SEMI_MINMIN01); // 'minmin cicada'
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_SEMI_NIINII01); // 'niinii cicada'
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_SEMI_KUMA02); // 'bear cicada'
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_SEMI_MINMIN02); // 'minmin cicada'
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_SEMI_NIINII02); // 'niinii cicada'
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				mgr = new PSSystem::EnvSeMgr;
+
+				PersEnvManager* persMgr = new PersEnvManager(mgr);
+				scene->mPersEnvMgr      = persMgr;
+
+				APPEND_SE_LINK(builder, PSSE_MP_SEMI_KUMA01);   // 'bear cicada'
+				APPEND_SE_LINK(builder, PSSE_MP_SEMI_MINMIN01); // 'minmin cicada'
+				APPEND_SE_LINK(builder, PSSE_MP_SEMI_NIINII01); // 'niinii cicada'
+				APPEND_SE_LINK(builder, PSSE_MP_SEMI_KUMA02);   // 'bear cicada'
+				APPEND_SE_LINK(builder, PSSE_MP_SEMI_MINMIN02); // 'minmin cicada'
+				APPEND_SE_LINK(builder, PSSE_MP_SEMI_NIINII02); // 'niinii cicada'
+
 				PSM::PersEnvInfo envInfo = (PSM::PersEnvInfo) { 1500.0f, 479.0f, 707.0f, 808.0f, 1.0f };
 				persMgr->_10             = 479.0f;
 				builder.setInfo(envInfo);
-				builder.build(1.0f, yakuMgr);
+				builder.build(1.0f, mgr);
 			} break;
 			case PSGame::SceneInfo::COURSE_LAST: {
-				PSSystem::EnvSeMgr* lastMgr = new PSSystem::EnvSeMgr;
-				mgr                         = lastMgr;
-				PersEnvManager* persMgr     = new PersEnvManager(lastMgr);
-				scene->mPersEnvMgr          = persMgr;
-				PSSystem::IdLink* link      = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_BIRD_FA_KAMO); // 'duck'
-				PSSystem::IdList* list      = &builder.mList;
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_BIRD_FA_MOZU); // 'shrike'
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_BIRD_FA_KAMO); // 'duck'
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
-				link = new (JKRGetCurrentHeap(), -4) PSSystem::IdLink(PSSE_MP_BIRD_FA_TSUGUMI); // 'thrush'
-				if (!list->getFirst()) {
-					builder.mCurrentId = link;
-				}
-				list->append(link);
+				mgr = new PSSystem::EnvSeMgr;
+
+				PersEnvManager* persMgr = new PersEnvManager(mgr);
+				scene->mPersEnvMgr      = persMgr;
+
+				APPEND_SE_LINK(builder, PSSE_MP_BIRD_FA_KAMO);    // 'duck'
+				APPEND_SE_LINK(builder, PSSE_MP_BIRD_FA_MOZU);    // 'shrike'
+				APPEND_SE_LINK(builder, PSSE_MP_BIRD_FA_KAMO);    // 'duck'
+				APPEND_SE_LINK(builder, PSSE_MP_BIRD_FA_TSUGUMI); // 'thrush'
+
 				PSM::PersEnvInfo envInfo = (PSM::PersEnvInfo) { 1500.0f, 379.0f, 479.0f, 1131.0f, 1.0f };
 				persMgr->_10             = 379.0f;
 				builder.setInfo(envInfo);
-				builder.build(1.0f, lastMgr);
+				builder.build(1.0f, mgr);
 			} break;
 			}
 		}
@@ -2849,48 +2574,51 @@ lbl_8045BF30:
 	*/
 }
 
-/**
- * @note Address: 0x8045BF5C
- * @note Size: 0x8C
- */
-void SetBossBgmMuteVol(PSSystem::EnvSeMgr* mgr, u32 id, f32 vol)
-{
-	EnvSe_Perspective_AvoidY* se;
-	for (JSULink<PSSystem::EnvSeBase>* link = mgr->mEnvList.getFirst(); link; link = link->getNext()) {
-		se = (EnvSe_Perspective_AvoidY*)link->getObjectPtr();
-		if (se->getCastType() == 'poll' && id == se->mSoundID) {
-			se->mInfo._04 = vol;
-		}
-	}
-}
+// /**
+//  * @note Address: 0x8045BF5C
+//  * @note Size: 0x8C
+//  */
+// void SetBossBgmMuteVol(PSSystem::EnvSeMgr* mgr, u32 id, f32 vol)
+// {
+// 	EnvSe_Perspective_AvoidY* se;
+// 	for (JSULink<PSSystem::EnvSeBase>* link = mgr->mEnvList.getFirst(); link; link = link->getNext()) {
+// 		se = (EnvSe_Perspective_AvoidY*)link->getObjectPtr();
+// 		if (se->getCastType() == 'poll' && id == se->mSoundID) {
+// 			se->mInfo.mMutedVolume = vol;
+// 		}
+// 	}
+// }
 
-/**
- * @note Address: 0x8045BFE8
- * @note Size: 0x74
- */
-void SetNoYOfset(PSSystem::EnvSeMgr* mgr)
-{
-	for (JSULink<PSSystem::EnvSeBase>* link = mgr->mEnvList.getFirst(); link; link = link->getNext()) {
-		if (((EnvSe_Perspective_AvoidY*)link->mValue)->getCastType() == 'pers') {
-			((EnvSe_Perspective_AvoidY*)link->mValue)->_48 = 0.0f;
-		}
-	}
-}
+// /**
+//  * @note Address: 0x8045BFE8
+//  * @note Size: 0x74
+//  */
+// void SetNoYOfset(PSSystem::EnvSeMgr* mgr)
+// {
+// 	for (JSULink<PSSystem::EnvSeBase>* link = mgr->mEnvList.getFirst(); link; link = link->getNext()) {
+// 		if (((EnvSe_Perspective_AvoidY*)link->mValue)->getCastType() == 'pers') {
+// 			((EnvSe_Perspective_AvoidY*)link->mValue)->mYOffset = 0.0f;
+// 		}
+// 	}
+// }
 
-/**
- * @note Address: 0x8045C05C
- * @note Size: 0x2C
- */
-void EnvSeObjBuilder::setInfo(PersEnvInfo info) { mPersEnvInfo = info; }
+// /**
+//  * @note Address: 0x8045C05C
+//  * @note Size: 0x2C
+//  */
+// void EnvSeObjBuilder::setInfo(PersEnvInfo info)
+// {
+// 	mPersEnvInfo = info;
+// }
 
-/**
- * @note Address: 0x8045C088
- * @note Size: 0x70
- */
-EnvSeObjBuilder::EnvSeObjBuilder(JGeometry::TBox3f bounds)
-    : PSGame::Builder_EvnSe_Perspective(bounds)
-{
-}
+// /**
+//  * @note Address: 0x8045C088
+//  * @note Size: 0x70
+//  */
+// EnvSeObjBuilder::EnvSeObjBuilder(JGeometry::TBox3f bounds)
+//     : PSGame::Builder_EvnSe_Perspective(bounds)
+// {
+// }
 
 /**
  * @note Address: 0x8045C12C
@@ -2899,7 +2627,7 @@ EnvSeObjBuilder::EnvSeObjBuilder(JGeometry::TBox3f bounds)
 PSSystem::BgmSeq* SceneMgr::newAutoBgm(const char* conductorFileName, const char* bmsFileName, JAInter::SoundInfo& soundInfo,
                                        JADUtility::AccessMode mode, PSGame::SceneInfo& sceneinfo, PSSystem::DirectorMgrBase* directorMgr)
 {
-	DirectorMgr_Scene* scene = new DirectorMgr_Scene_AutoBgm(directorMgr, 8);
+	DirectorMgr_Scene* scene = new DirectorMgr_Scene_AutoBgm(directorMgr, DirectorMgr_Scene::Director_COUNT);
 	PSAutoBgm::AutoBgm* bgm  = new PSAutoBgm::AutoBgm(conductorFileName, bmsFileName, soundInfo, mode, scene);
 	P2ASSERTLINE(1015, bgm);
 	bgm->init();
@@ -2907,7 +2635,7 @@ PSSystem::BgmSeq* SceneMgr::newAutoBgm(const char* conductorFileName, const char
 	scene->initAndAdaptToBgm(*bgm);
 
 	PSAutoBgm::MeloArr_RandomAvoid* melo = new PSAutoBgm::MeloArr_RandomAvoid("乱数位置Avoid"); // 'random position Avoid'
-	melo->_18                            = true;
+	melo->mDoDirectSubTracks             = true;
 	bgm->mMeloArr.mList.append(melo);
 	return bgm;
 }
@@ -2919,9 +2647,9 @@ PSSystem::BgmSeq* SceneMgr::newAutoBgm(const char* conductorFileName, const char
 MiddleBossSeq::MiddleBossSeq(const char* bmsFileName, const JAInter::SoundInfo& info, PSSystem::DirectorMgrBase* directorMgr)
     : PSSystem::JumpBgmSeq(bmsFileName, info, directorMgr)
     , mCurrBossObj(nullptr)
-    , _138(0)
-    , _13C(3)
-    , _13E(-1)
+    , mAvoidJumpMaxTime(0)
+    , mCurrentAttackMixId(EnemyMidBoss::BossBgm_Attack)
+    , mAvoidJumpTimer(-1)
     , _140(0)
 {
 }
@@ -2933,16 +2661,16 @@ MiddleBossSeq::MiddleBossSeq(const char* bmsFileName, const JAInter::SoundInfo& 
 void MiddleBossSeq::onJump(u16 track)
 {
 	switch (track) {
-	case 4:
+	case EnemyMidBoss::BossBgm_Flick:
 		break;
-	case 9:
-		_13E = 0;
+	case EnemyMidBoss::BossBgm_Appear:
+		mAvoidJumpTimer = 0;
 		break;
-	case 3:
-	case 5:
-	case 6:
-	case 7:
-	case 8:
+	case EnemyMidBoss::BossBgm_Attack:
+	case EnemyMidBoss::BossBgm_Attack2:
+	case EnemyMidBoss::BossBgm_Attack3:
+	case EnemyMidBoss::BossBgm_Attack4:
+	case EnemyMidBoss::BossBgm_AttackLong:
 		P2ASSERTLINE(1078, mCurrBossObj);
 		mCurrBossObj->mHasReset = true;
 		break;
@@ -2956,8 +2684,8 @@ void MiddleBossSeq::onJump(u16 track)
 void MiddleBossSeq::exec()
 {
 	SeqBase::exec();
-	if (_13E != 0xFFFF) {
-		_13E++;
+	if (mAvoidJumpTimer != 0xFFFF) {
+		mAvoidJumpTimer++;
 	}
 }
 
@@ -2965,12 +2693,12 @@ void MiddleBossSeq::exec()
  * @note Address: 0x8045C3C4
  * @note Size: 0x5C
  */
-void MiddleBossSeq::requestJumpBgmQuickly(u16 flag)
+void MiddleBossSeq::requestJumpBgmQuickly(u16 track)
 {
-	u16 flag2 = jumpCheck(flag);
-	if (flag2 != 0xFFFF) {
-		JumpBgmSeq::requestJumpBgmQuickly(flag2);
-		JumpBgmSeq::setAvoidJumpTimer_Checked(_138);
+	u16 newTrack = jumpCheck(track);
+	if (newTrack != 0xFFFF) {
+		JumpBgmSeq::requestJumpBgmQuickly(newTrack);
+		JumpBgmSeq::setAvoidJumpTimer_Checked(mAvoidJumpMaxTime);
 	}
 }
 
@@ -2978,12 +2706,12 @@ void MiddleBossSeq::requestJumpBgmQuickly(u16 flag)
  * @note Address: 0x8045C420
  * @note Size: 0x5C
  */
-void MiddleBossSeq::requestJumpBgmOnBeat(u16 flag)
+void MiddleBossSeq::requestJumpBgmOnBeat(u16 track)
 {
-	u16 flag2 = jumpCheck(flag);
-	if (flag2 != 0xFFFF) {
-		JumpBgmSeq::requestJumpBgmOnBeat(flag2);
-		JumpBgmSeq::setAvoidJumpTimer_Checked(_138);
+	u16 newTrack = jumpCheck(track);
+	if (newTrack != 0xFFFF) {
+		JumpBgmSeq::requestJumpBgmOnBeat(newTrack);
+		JumpBgmSeq::setAvoidJumpTimer_Checked(mAvoidJumpMaxTime);
 	}
 }
 
@@ -2993,10 +2721,10 @@ void MiddleBossSeq::requestJumpBgmOnBeat(u16 flag)
  */
 void MiddleBossSeq::requestJumpBgmEveryBeat(u16 track)
 {
-	u16 checkedTrack = jumpCheck(track);
-	if (checkedTrack != 0xFFFF) {
-		JumpBgmSeq::requestJumpBgmEveryBeat(checkedTrack);
-		JumpBgmSeq::setAvoidJumpTimer_Checked(_138);
+	u16 newTrack = jumpCheck(track);
+	if (newTrack != 0xFFFF) {
+		JumpBgmSeq::requestJumpBgmEveryBeat(newTrack);
+		JumpBgmSeq::setAvoidJumpTimer_Checked(mAvoidJumpMaxTime);
 	}
 }
 
@@ -3006,246 +2734,68 @@ void MiddleBossSeq::requestJumpBgmEveryBeat(u16 track)
  */
 u16 MiddleBossSeq::jumpCheck(u16 track)
 {
-	bool check  = true;
-	bool check2 = true;
-	_138        = 0;
-	if (track > 1 && track < 5) { // probably an inline?
-		check2 = false;
-	}
-	if (!check2 && track != 7) {
-		check = false;
-	}
-	P2ASSERTLINE(1136, !check);
-	switch (mJumpPort._70) {
-	case 1:
-		if (track == 1) {
+	mAvoidJumpMaxTime = 0;
+
+	// i think this makes sure we never jump into Attack2/3/4 without starting with Attack
+	P2ASSERTLINE(1136, !EnemyMidBoss::isSecondaryAttackTrack(track));
+
+	switch (mJumpPort.mCurrentTrackId) {
+	case EnemyMidBoss::BossBgm_MainLoop:
+		if (track == EnemyMidBoss::BossBgm_MainLoop) {
 			return 0xFFFF;
 		}
 		break;
-	case 2:
-	case 3:
-	case 4: // please someone get this switch case to spawn correctly
-	        // case 5:
-	        // case 6:
-	        // case 7:
-		break;
-	case 8:
-	case 9:
-		if (track != 1 && track != 10) {
+
+	case EnemyMidBoss::BossBgm_AttackLong:
+		if (track != EnemyMidBoss::BossBgm_MainLoop && track != EnemyMidBoss::BossBgm_Defeated) {
 			return 0xFFFF;
 		}
 		break;
-		// case 9:
-		// 	break;
+
+	case EnemyMidBoss::BossBgm_InactiveLoop:
+	case EnemyMidBoss::BossBgm_AttackPrep:
+	case EnemyMidBoss::BossBgm_Attack:
+	case EnemyMidBoss::BossBgm_Flick:
+	case EnemyMidBoss::BossBgm_Appear:
+		break;
 	}
 
 	switch (track) {
-	case 3:
-		_13C++;
-		if (_13C == 4) {
-			_13C = 5;
-		} else if (_13C == 8) {
-			_13C = 3;
+	case EnemyMidBoss::BossBgm_Attack:
+		// attack mixes play in a fixed order (BossBgm_Attack, BossBgm_Attack2, BossBgm_Attack3, BossBgm_Attack4)
+		mCurrentAttackMixId++;
+		if (mCurrentAttackMixId == EnemyMidBoss::BossBgm_Flick) {
+			mCurrentAttackMixId = EnemyMidBoss::BossBgm_Attack2;
+		} else if (mCurrentAttackMixId == EnemyMidBoss::BossBgm_AttackLong) {
+			mCurrentAttackMixId = EnemyMidBoss::BossBgm_Attack;
 		}
-		track = _13C;
-		_138  = 50;
+		track             = mCurrentAttackMixId;
+		mAvoidJumpMaxTime = 50;
 		break;
-	case 4:
+
+	case EnemyMidBoss::BossBgm_Flick:
 		P2ASSERTLINE(1205, mCurrBossObj);
-		if (_13E < 400 || !mCurrBossObj->mHasReset) {
+		if (mAvoidJumpTimer < 400 || !mCurrBossObj->mHasReset) {
 			return 0xFFFF;
 		}
-		_138 = 90;
+		mAvoidJumpMaxTime = 90;
 		break;
-	case 9:
-		_138 = 180;
+
+	case EnemyMidBoss::BossBgm_Appear:
+		mAvoidJumpMaxTime = 180;
 		break;
-	case 10:
-		_138                      = 180;
+
+	case EnemyMidBoss::BossBgm_Defeated:
+		mAvoidJumpMaxTime         = 180;
 		mJumpPort.mAvoidJumpTimer = 0;
 		break;
-	case 11:
+
+	case EnemyMidBoss::BossBgm_WaterwraithEscape:
 		mJumpPort.mAvoidJumpTimer = 0;
 		break;
 	}
 
 	return track;
-
-	/*
-	stwu     r1, -0x10(r1)
-	mflr     r0
-	li       r5, 1
-	stw      r0, 0x14(r1)
-	mr       r6, r5
-	stw      r31, 0xc(r1)
-	mr       r31, r4
-	addi     r0, r31, -5
-	li       r4, 0
-	stw      r30, 8(r1)
-	mr       r30, r3
-	clrlwi   r3, r0, 0x10
-	subfic   r0, r3, 1
-	stw      r4, 0x138(r30)
-	orc      r3, r5, r3
-	srwi     r0, r0, 1
-	subf     r0, r0, r3
-	rlwinm.  r0, r0, 1, 0x1f, 0x1f
-	bne      lbl_8045C528
-	mr       r6, r4
-
-lbl_8045C528:
-	clrlwi.  r0, r6, 0x18
-	bne      lbl_8045C540
-	clrlwi   r0, r31, 0x10
-	cmplwi   r0, 7
-	beq      lbl_8045C540
-	li       r5, 0
-
-lbl_8045C540:
-	clrlwi.  r0, r5, 0x18
-	beq      lbl_8045C564
-	lis      r3, lbl_8049CE74@ha
-	lis      r5, lbl_8049CE8C@ha
-	addi     r3, r3, lbl_8049CE74@l
-	li       r4, 0x470
-	addi     r5, r5, lbl_8049CE8C@l
-	crclr    6
-	bl       panic_f__12JUTExceptionFPCciPCce
-
-lbl_8045C564:
-	lhz      r0, 0x130(r30)
-	cmpwi    r0, 5
-	bge      lbl_8045C580
-	cmpwi    r0, 1
-	beq      lbl_8045C598
-	bge      lbl_8045C5D0
-	b        lbl_8045C5D0
-
-lbl_8045C580:
-	cmpwi    r0, 9
-	beq      lbl_8045C5D0
-	bge      lbl_8045C5D0
-	cmpwi    r0, 8
-	bge      lbl_8045C5B0
-	b        lbl_8045C5D0
-
-lbl_8045C598:
-	clrlwi   r0, r31, 0x10
-	cmplwi   r0, 1
-	bne      lbl_8045C5D0
-	lis      r3, 0x0000FFFF@ha
-	addi     r3, r3, 0x0000FFFF@l
-	b        lbl_8045C6D4
-
-lbl_8045C5B0:
-	clrlwi   r0, r31, 0x10
-	cmplwi   r0, 1
-	beq      lbl_8045C5D0
-	cmplwi   r0, 0xa
-	beq      lbl_8045C5D0
-	lis      r3, 0x0000FFFF@ha
-	addi     r3, r3, 0x0000FFFF@l
-	b        lbl_8045C6D4
-
-lbl_8045C5D0:
-	clrlwi   r0, r31, 0x10
-	cmpwi    r0, 9
-	beq      lbl_8045C6A8
-	bge      lbl_8045C5F8
-	cmpwi    r0, 4
-	beq      lbl_8045C64C
-	bge      lbl_8045C6D0
-	cmpwi    r0, 3
-	bge      lbl_8045C608
-	b        lbl_8045C6D0
-
-lbl_8045C5F8:
-	cmpwi    r0, 0xb
-	beq      lbl_8045C6C8
-	bge      lbl_8045C6D0
-	b        lbl_8045C6B4
-
-lbl_8045C608:
-	lhz      r3, 0x13c(r30)
-	addi     r0, r3, 1
-	sth      r0, 0x13c(r30)
-	lhz      r0, 0x13c(r30)
-	cmplwi   r0, 4
-	bne      lbl_8045C62C
-	li       r0, 5
-	sth      r0, 0x13c(r30)
-	b        lbl_8045C63C
-
-lbl_8045C62C:
-	cmplwi   r0, 8
-	bne      lbl_8045C63C
-	li       r0, 3
-	sth      r0, 0x13c(r30)
-
-lbl_8045C63C:
-	lhz      r31, 0x13c(r30)
-	li       r0, 0x32
-	stw      r0, 0x138(r30)
-	b        lbl_8045C6D0
-
-lbl_8045C64C:
-	lwz      r0, 0x134(r30)
-	cmplwi   r0, 0
-	bne      lbl_8045C674
-	lis      r3, lbl_8049CE74@ha
-	lis      r5, lbl_8049CE8C@ha
-	addi     r3, r3, lbl_8049CE74@l
-	li       r4, 0x4b5
-	addi     r5, r5, lbl_8049CE8C@l
-	crclr    6
-	bl       panic_f__12JUTExceptionFPCciPCce
-
-lbl_8045C674:
-	lhz      r0, 0x13e(r30)
-	cmplwi   r0, 0x190
-	blt      lbl_8045C690
-	lwz      r3, 0x134(r30)
-	lbz      r0, 0xff(r3)
-	cmplwi   r0, 0
-	bne      lbl_8045C69C
-
-lbl_8045C690:
-	lis      r3, 0x0000FFFF@ha
-	addi     r3, r3, 0x0000FFFF@l
-	b        lbl_8045C6D4
-
-lbl_8045C69C:
-	li       r0, 0x5a
-	stw      r0, 0x138(r30)
-	b        lbl_8045C6D0
-
-lbl_8045C6A8:
-	li       r0, 0xb4
-	stw      r0, 0x138(r30)
-	b        lbl_8045C6D0
-
-lbl_8045C6B4:
-	li       r3, 0xb4
-	li       r0, 0
-	stw      r3, 0x138(r30)
-	stw      r0, 0x12c(r30)
-	b        lbl_8045C6D0
-
-lbl_8045C6C8:
-	li       r0, 0
-	stw      r0, 0x12c(r30)
-
-lbl_8045C6D0:
-	mr       r3, r31
-
-lbl_8045C6D4:
-	lwz      r0, 0x14(r1)
-	lwz      r31, 0xc(r1)
-	lwz      r30, 8(r1)
-	mtlr     r0
-	addi     r1, r1, 0x10
-	blr
-	*/
 }
 
 /**
@@ -3261,7 +2811,9 @@ BigBossSeq::BigBossSeq(const char* bmsFileName, const JAInter::SoundInfo& info, 
  * @note Address: 0x8045C758
  * @note Size: 0x80
  */
-MiddleBossSeq::~MiddleBossSeq() { }
+MiddleBossSeq::~MiddleBossSeq()
+{
+}
 
 /**
  * @note Address: 0x8045C7D8
@@ -3269,62 +2821,62 @@ MiddleBossSeq::~MiddleBossSeq() { }
  */
 u16 BigBossSeq::jumpCheck(u16 track)
 {
-	_138 = 0;
-	switch (mJumpPort._70) {
-	case 1:
-		if (track == 1) {
+	mAvoidJumpMaxTime = 0;
+	switch (mJumpPort.mCurrentTrackId) {
+	case EnemyBigBoss::BigBossBgm_4Weapons:
+		if (track == EnemyBigBoss::BigBossBgm_4Weapons) {
 			return 0xFFFF;
 		}
 		break;
-	case 8:
-		if (track == 8) {
+	case EnemyBigBoss::BigBossBgm_3Weapons:
+		if (track == EnemyBigBoss::BigBossBgm_3Weapons) {
 			return 0xFFFF;
 		}
 		break;
-	case 9:
-		if (track == 9) {
+	case EnemyBigBoss::BigBossBgm_2Weapons:
+		if (track == EnemyBigBoss::BigBossBgm_2Weapons) {
 			return 0xFFFF;
 		}
 		break;
-	case 10:
-		if (track == 10) {
+	case EnemyBigBoss::BigBossBgm_1Weapon:
+		if (track == EnemyBigBoss::BigBossBgm_1Weapon) {
 			return 0xFFFF;
 		}
 		break;
-	case 11:
-		if (track == 11) {
+	case EnemyBigBoss::BigBossBgm_NoWeapons:
+		if (track == EnemyBigBoss::BigBossBgm_NoWeapons) {
 			return 0xFFFF;
 		}
 		break;
-	case 3:
-	case 5:
-	case 6:
-	case 7:
-		if (track != 1 && (u16)(track - 8) > 3 && track != 13) {
+	case EnemyBigBoss::BigBossBgm_FlareCannon:
+	case EnemyBigBoss::BigBossBgm_ComedyBomb:
+	case EnemyBigBoss::BigBossBgm_MonsterPump:
+	case EnemyBigBoss::BigBossBgm_ShockTherapist:
+		if (track != EnemyBigBoss::BigBossBgm_4Weapons && (u16)(track - 8) > 3 && track != EnemyBigBoss::BigBossBgm_Defeated) {
 			return 0xFFFF;
 		}
 		break;
-	case 0:
-	case 2:
-	case 4:
-	case 12:
+	case EnemyBigBoss::BigBossBgm_Null:
+	case EnemyBigBoss::BigBossBgm_AttackPrep:
+	case EnemyBigBoss::BigBossBgm_NoWeaponsFlick:
+	case EnemyBigBoss::BigBossBgm_Intro:
 		break;
 	}
 
 	switch (track) {
-	case 4:
+	case EnemyBigBoss::BigBossBgm_NoWeaponsFlick:
 		P2ASSERTLINE(1332, mCurrBossObj);
-		if (_13E < 800 || !mCurrBossObj->mHasReset) {
+		if (mAvoidJumpTimer < 800 || !mCurrBossObj->mHasReset) {
 			return 0xFFFF;
 		}
-		_138 = 90;
+		mAvoidJumpMaxTime = 90;
 		break;
-	case 12:
-		_138                      = 180;
+	case EnemyBigBoss::BigBossBgm_Intro:
+		mAvoidJumpMaxTime         = 180;
 		mJumpPort.mAvoidJumpTimer = 0;
 		break;
-	case 13:
-		_138                      = 180;
+	case EnemyBigBoss::BigBossBgm_Defeated:
+		mAvoidJumpMaxTime         = 180;
 		mJumpPort.mAvoidJumpTimer = 0;
 	}
 	return track;
@@ -3337,13 +2889,13 @@ u16 BigBossSeq::jumpCheck(u16 track)
 void BigBossSeq::onJump(u16 track)
 {
 	switch (track) {
-	case 12:
-		_13E = 0;
+	case EnemyBigBoss::BigBossBgm_Intro:
+		mAvoidJumpTimer = 0;
 		break;
-	case 3:
-	case 5:
-	case 6:
-	case 7:
+	case EnemyBigBoss::BigBossBgm_FlareCannon:
+	case EnemyBigBoss::BigBossBgm_ComedyBomb:
+	case EnemyBigBoss::BigBossBgm_MonsterPump:
+	case EnemyBigBoss::BigBossBgm_ShockTherapist:
 		P2ASSERTLINE(1378, mCurrBossObj);
 		mCurrBossObj->mHasReset = true;
 		break;
@@ -3356,11 +2908,11 @@ void BigBossSeq::onJump(u16 track)
  */
 PersEnvManager::PersEnvManager(PSSystem::EnvSeMgr* mgr)
 {
-	mEnvSeMgr   = mgr;
-	mSeCount    = 3;
-	mPersEnvSes = new EnvSe_Perspective_AvoidY*[3];
-	_0C         = new f32[3];
-	_10         = 0.0f;
+	mEnvSeMgr      = mgr;
+	mSeCount       = 3;
+	mPersEnvSounds = new EnvSe_Perspective_AvoidY*[3];
+	mSeDistances   = new f32[3];
+	_10            = 0.0f;
 }
 
 /**
@@ -3370,7 +2922,7 @@ PersEnvManager::PersEnvManager(PSSystem::EnvSeMgr* mgr)
 bool PersEnvManager::playOk(EnvSe_Perspective_AvoidY* se)
 {
 	for (u8 i = 0; i < mSeCount; i++) {
-		if (mPersEnvSes[i] == se) {
+		if (mPersEnvSounds[i] == se) {
 			return true;
 		}
 	}
@@ -3390,8 +2942,8 @@ void PersEnvManager::exec()
 	}
 
 	for (u8 i = 0; i < mSeCount; i++) {
-		mPersEnvSes[i] = nullptr;
-		_0C[i]         = 10000.0f;
+		mPersEnvSounds[i] = nullptr;
+		mSeDistances[i]   = 10000.0f;
 	}
 
 	for (u8 i = 0; i < mSeCount; i++) {
@@ -3403,7 +2955,7 @@ void PersEnvManager::exec()
 
 			bool isAlreadyInList = false;
 			for (u8 j = 0; j < i; j++) {
-				if (mPersEnvSes[j] == se) {
+				if (mPersEnvSounds[j] == se) {
 					isAlreadyInList = true;
 					break;
 				}
@@ -3417,9 +2969,9 @@ void PersEnvManager::exec()
 			Vector3f pos  = navi->getPosition();
 			Vec naviPos   = *(Vec*)&pos;
 			f32 dist = getSoundDistance(soundDist, naviPos); // this is close. need to match with this and EnvSe_Perspective_AvoidY::play
-			if (_0C[i] > dist) {
-				_0C[i]         = dist;
-				mPersEnvSes[i] = se;
+			if (mSeDistances[i] > dist) {
+				mSeDistances[i]   = dist;
+				mPersEnvSounds[i] = se;
 			}
 		}
 	}

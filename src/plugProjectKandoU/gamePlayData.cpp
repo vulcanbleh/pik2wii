@@ -14,7 +14,7 @@
  * @note Address: N/A
  * @note Size: 0xE4
  */
-void _Print(char* name, ...) { OSReport("PlayData"); }
+static void _Print(char* name, ...) { OSReport("PlayData"); }
 
 namespace Game {
 
@@ -1276,6 +1276,7 @@ void PlayData::CaveOtakara::read(Stream& input)
 		mVisitStatus[i]      = input.readByte();
 	}
 }
+} // namespace Game
 
 namespace {
 const f32 repay_levs[10] = {
@@ -1283,6 +1284,7 @@ const f32 repay_levs[10] = {
 };
 } // namespace
 
+namespace Game {
 /**
  * @note Address: 0x801E8E5C
  * @note Size: 0x124
@@ -1336,8 +1338,8 @@ void PlayData::experienceRepayLevelFirstClear()
 {
 	int id = getRepayLevel();
 
-	if (id > 0) {
-		for (int i = 0; i <= -1; i++) {
+	if (id >= 0) {
+		for (int i = 0; i <= id; i++) {
 			if (i < 16) {
 				int byte = i >> 3;
 				getDebtProgressFlags(1 - byte) |= 1 << (i - (byte << 3));
@@ -1423,8 +1425,9 @@ bool PlayData::courseJustOpen(int index)
 	if (!open) {
 		return false;
 	} else {
-		mBitfieldPerCourse[index] = open | PDCF_JustOpen;
-		return !(open & PDCF_JustOpen);
+		u8 course = mBitfieldPerCourse[index];
+		mBitfieldPerCourse[index] |= PDCF_JustOpen;
+		return !(course & PDCF_JustOpen);
 	}
 }
 

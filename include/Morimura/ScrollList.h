@@ -89,6 +89,8 @@ struct TIndexPane {
 
 	void doIconOffsetY();
 
+	inline void setOffset(f32 y) { mPane->setOffset(mPane->mOffset.x, mYOffset + y); }
+	
 	inline void setPaneOffset(f32 offset) { mPane->setOffsetY(mYOffset + offset); }
 
 	inline f32 getPaneYOffset() const { return mYOffset; }
@@ -151,13 +153,15 @@ struct TScrollList : public TTestBase {
 	void changeIndex();
 
 	inline TIndexPane* getIndexPane(int i) const { return mIndexPaneList[i]; }
-
+	
 	inline void updateIDPaneYOffset(int id, f32 yoffs)
 	{
 		// should be using r4 instead of r3
 		getIndexPane(id)->setPaneOffset(yoffs);
 		getIndexPane(id)->mYOffset = getIndexPane(id)->getPaneOffsetY();
 	}
+
+	inline f32 getHeight() const { return mIndexPaneList[1]->getMainPane()->getOffsetY() - mIndexPaneList[0]->getMainPane()->getOffsetY(); }
 
 	// _00     = VTBL1
 	// _18     = VTBL2

@@ -1,7 +1,6 @@
 #include "PSGame/BASARC.h"
 #include "PSSystem/PSSystemIF.h"
 #include "PSAutoBgm/PSAutoBgm.h"
-#include "PSAutoBgm/Cycle.h"
 #include "PSGame/CameraMgr.h"
 #include "PSGame/EnvSe.h"
 #include "PSGame/PikScene.h"
@@ -56,7 +55,7 @@ ConductorList::~ConductorList()
 {
 	for (u8 i = 0; i < mCaveCount; i++) {
 		// works, but theres something weird going on here
-		delete[](&mCaveInfos->mFileNames)[i * 2];
+		delete[] (&mCaveInfos->mFileNames)[i * 2];
 	}
 
 	delete[] mCaveInfos;
@@ -177,7 +176,7 @@ void ConductorList::getSeqAndWaveFromConductor(char const* cndName, u8* wScene, 
 	// NEW UNITS
 	if (IS_SAME_STRING_N("new", cndName, strlen("new"))) {
 		strcpy(newSeqName, cndName);
-		strcpy(&newSeqName[6], ".bms");
+		strcpy(&newSeqName[6], ".bms\0");
 		*bmsName = newSeqName;
 		*wScene  = PSSystem::WaveScene::WSCENE37_EmergenceCave + getAutoBgmInfo(0, 0);
 		return;
@@ -347,7 +346,9 @@ CameraMgr::CameraMgr()
  * @note Address: 0x80334D70
  * @note Size: 0x60
  */
-CameraMgr::~CameraMgr() { }
+CameraMgr::~CameraMgr()
+{
+}
 
 /**
  * @note Address: 0x80334DD0
@@ -377,7 +378,10 @@ void CameraMgr::update(u8 id, f32 distance)
  * @note Address: 0x80334E40
  * @note Size: 0x10
  */
-f32 CameraMgr::getCurrentCamDistVol(u8 id) { return mCamDistVolume[id]; }
+f32 CameraMgr::getCurrentCamDistVol(u8 id)
+{
+	return mCamDistVolume[id];
+}
 
 /**
  * @note Address: 0x80334E50
@@ -534,7 +538,10 @@ void SceneInfo::setStageFlag(SceneInfo::FlagDef flag, SceneInfo::FlagBitShift sh
  * @note Address: 0x80335560
  * @note Size: 0x10
  */
-SceneInfo::FlagDef SceneInfo::getFlag(SceneInfo::FlagBitShift shift) const { return (SceneInfo::FlagDef)(mStageFlags >> shift & 1); }
+SceneInfo::FlagDef SceneInfo::getFlag(SceneInfo::FlagBitShift shift) const
+{
+	return (SceneInfo::FlagDef)(mStageFlags >> shift & 1);
+}
 
 /**
  * @note Address: 0x80335570
@@ -560,7 +567,9 @@ PikScene::PikScene(u8 id)
  * @note Address: 0x80335620
  * @note Size: 0x60
  */
-PikScene::~PikScene() { }
+PikScene::~PikScene()
+{
+}
 
 /**
  * @note Address: 0x80335680
@@ -614,14 +623,14 @@ PSSystem::Scene* PikSceneMgr::newAndSetGlobalScene()
 	P2ASSERTLINE(1028, PSSystem::SingletonBase<PSSystem::SeqDataList>::getInstance()->onlyLoad("/user/Totaka/BgmList.txt",
 	                                                                                           JKRDvdRipper::ALLOC_DIR_TOP));
 
-	JAInter::SoundInfo seInfo = { 0x00001F00, 255, 0, 0, 0x3F800000, 0x7f000000 };
-	P2ASSERTLINE(1040, seInfo.mVolume.byteView[0] <= 127);
+	JAInter::SoundInfo seInfo = { 0x00001F00, 255, 0, 0, 1.0f, 127, 0 };
+	P2ASSERTLINE(1040, seInfo.mVolume <= 127);
 	PSSystem::SeSeq* seSeq = new PSSystem::SeSeq("se.bms", seInfo);
 	P2ASSERTLINE(1043, seSeq);
 	seSeq->init();
 	mScenes->appendSeq(seSeq);
 
-	JAInter::SoundInfo bgmInfo = { 0x00000000, 0x7F, 1, 0, 0x3F800000, 0x32000000 };
+	JAInter::SoundInfo bgmInfo = { 0x00000000, 0x7F, 1, 0, 1.0f, 50, 0 };
 	PSSystem::BgmSeq* bgmSeq   = newStreamBgm(P2_STREAM_SOUND_ID(PSSTR_OPTION), bgmInfo);
 	P2ASSERTLINE(1061, bgmSeq);
 	bgmSeq->init();
@@ -724,7 +733,7 @@ PSSystem::BgmSeq* PikSceneMgr::newStreamBgm(u32 id, JAInter::SoundInfo& info)
  */
 PSSystem::BgmSeq* PikSceneMgr::initBossBgm(SceneInfo& info, u8* wScene)
 {
-	JAInter::SoundInfo soundInfo = { 0x00000000, 127, 2, 0, 0x3F800000, 0x28000000 };
+	JAInter::SoundInfo soundInfo = { 0x00000000, 127, 2, 0, 1.0f, 40, 0 };
 
 	PSSystem::DirectedBgm* seq;
 	if (curSceneIsBigBossFloor()) {
@@ -740,7 +749,7 @@ PSSystem::BgmSeq* PikSceneMgr::initBossBgm(SceneInfo& info, u8* wScene)
 	seq->assertValidTrack();
 
 	seq->mRootTrack->mBeatInterval = 60;
-	P2ASSERTLINE(1267, soundInfo.mVolume.byteView[0] <= 127);
+	P2ASSERTLINE(1267, soundInfo.mVolume <= 127);
 	return seq;
 }
 
@@ -750,7 +759,7 @@ PSSystem::BgmSeq* PikSceneMgr::initBossBgm(SceneInfo& info, u8* wScene)
  */
 void PikSceneMgr::initAdditionalBgm(SceneInfo& info, PSSystem::Scene* scene)
 {
-	JAInter::SoundInfo soundInfo = { 0x00000000, 0x7F, 0x01, 0, 0x3F800000, 0x32000000 };
+	JAInter::SoundInfo soundInfo = { 0x00000000, 0x7F, 0x01, 0, 1.0f, 50, 0 };
 
 	PSSystem::BgmSeq* seq;
 	switch (info.mSceneType) {
@@ -776,7 +785,7 @@ void PikSceneMgr::initAdditionalBgm(SceneInfo& info, PSSystem::Scene* scene)
 
 	case SceneInfo::CHALLENGE_MODE:
 		soundInfo._05                 = 4;
-		soundInfo.mVolume.byteView[0] = 35;
+		soundInfo.mVolume             = 35;
 		soundInfo.mFlag               = 0x1F00;
 		JADUtility::AccessMode flag   = (JADUtility::AccessMode)mAccessMode;
 		PSSystem::DirectedBgm* seqold = (PSSystem::DirectedBgm*)scene->mSeqMgr.getFirstSeq();
@@ -807,7 +816,7 @@ PSSystem::BgmSeq* PikSceneMgr::initMainBgm(SceneInfo& info, u8* wScene)
 	JADUtility::AccessMode mode = (JADUtility::AccessMode)mAccessMode;
 	PSSystem::BgmSeq* bgm       = nullptr;
 
-	JAInter::SoundInfo soundInfo = { 0x1F00, 127, 255, 0, 0x3F800000, 0x32000000 };
+	JAInter::SoundInfo soundInfo = { 0x1F00, 127, 255, 0, 1.0f, 50, 0 };
 	soundInfo._05                = 1;
 
 	CaveFloorInfo& cinfo = static_cast<CaveFloorInfo&>(info);
@@ -992,7 +1001,7 @@ PSSystem::BgmSeq* PikSceneMgr::initMainBgm(SceneInfo& info, u8* wScene)
 	}
 
 	P2ASSERTLINE(1749, bgm);
-	P2ASSERTLINE(1750, soundInfo.mVolume.byteView[0] <= 127);
+	P2ASSERTLINE(1750, soundInfo.mVolume <= 127);
 
 	return bgm;
 	/*
@@ -3048,4 +3057,7 @@ PSSystem::DirectedBgm* PSGetDirectedMainBgmA()
  * @note Address: N/A
  * @note Size: 0xC
  */
-void PSSetBgmSelectAsToolMode() { PSSystem::DirectorBase::sToolMode = true; }
+void PSSetBgmSelectAsToolMode()
+{
+	PSSystem::DirectorBase::sToolMode = true;
+}

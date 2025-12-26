@@ -339,7 +339,7 @@ bool Navi::procActionButton()
 			if (otherTargetSprout) {
 				NaviNukuAdjustStateArg nukuAdjustArg2;
 				setupNukuAdjustArg(otherTargetSprout, nukuAdjustArg2);
-				nukuAdjustArg2._18 = 1;
+				nukuAdjustArg2.mIsFollowing  = true;
 				otherNavi->mFsm->transit(otherNavi, NSID_NukuAdjust, &nukuAdjustArg2);
 			}
 		}
@@ -3989,7 +3989,7 @@ void Navi::holeinAllPikis(Vector3f& pos)
 				buffer[pikis] = piki;
 				pikis++;
 			} else {
-				piki->mFsm->transitForce(piki, 0, nullptr);
+				piki->mFsm->transitForce(piki, PIKISTATE_Walk, nullptr);
 				buffer[pikis] = piki;
 				pikis++;
 			}
@@ -4021,7 +4021,7 @@ void Navi::fountainonAllPikis(Vector3f& pos)
 				buffer[pikis] = piki;
 				pikis++;
 			} else {
-				piki->mFsm->transitForce(piki, 0, nullptr);
+				piki->mFsm->transitForce(piki, PIKISTATE_Walk, nullptr);
 				buffer[pikis] = piki;
 				pikis++;
 			}
@@ -4053,7 +4053,7 @@ void Navi::demowaitAllPikis()
 				buffer[pikis] = piki;
 				pikis++;
 			} else {
-				piki->mFsm->transitForce(piki, 0, nullptr);
+				piki->mFsm->transitForce(piki, PIKISTATE_Walk, nullptr);
 				buffer[pikis] = piki;
 				pikis++;
 			}
@@ -5860,7 +5860,7 @@ void Navi::findNextThrowPiki()
 u32 Navi::ogGetNextThrowPiki()
 {
 	Piki* nextPiki = mNextThrowPiki;
-	return (!nextPiki) ? 0 : ((3 * nextPiki->mPikiKind) + 1) + nextPiki->mHappaKind;
+	return (!nextPiki) ? 0 : ((PikiGrowthStageCount * nextPiki->mPikiKind) + 1) + nextPiki->mHappaKind;
 }
 
 // extern f32 pikmin2_cosf(f32 theta);

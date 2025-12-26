@@ -110,12 +110,13 @@ void TTitleMgr::init()
 {
 	sys->heapStatusStart("J3DDrawBuffer", nullptr);
 
-	mDrawBufferA          = new J3DDrawBuffer(0x400);
-	j3dSys.mDrawBuffer[0] = mDrawBufferA;
+	mDrawBufferA = new J3DDrawBuffer(0x400);
+	j3dSys.setDrawBuffer(mDrawBufferA, J3DSys::SYSDRAW_Opa);
 
-	mDrawBufferB                     = new J3DDrawBuffer(0x400);
-	j3dSys.mDrawBuffer[1]            = mDrawBufferB;
-	j3dSys.mDrawBuffer[1]->mSortType = J3DDrawBuffer::J3DSORT_Z;
+	mDrawBufferB = new J3DDrawBuffer(0x400);
+	j3dSys.setDrawBuffer(mDrawBufferB, J3DSys::SYSDRAW_Xlu);
+	j3dSys.getDrawBuffer(J3DSys::SYSDRAW_Xlu)->setZSort();
+
 	mDrawBufferA->frameInit();
 	mDrawBufferB->frameInit();
 
@@ -893,7 +894,7 @@ void TTitleMgr::updateState()
 
 	mLightMgr.update();
 	updateCameras();
-	PSMTXCopy(mCameraMgr.mLookMatrix.mMatrix.mtxView, j3dSys.mViewMtx);
+	j3dSys.setViewMtx(mCameraMgr.mLookMatrix.mMatrix.mtxView);
 	mBlackPlane.updateAfterCamera();
 	mPikminMgr.update();
 	mKoganeMgr.mObject->update();
@@ -927,26 +928,21 @@ void TTitleMgr::checkEncounter_()
 			f32 distmax = 1000.0f;
 
 			if (mKoganeMgr.mObject->isCalc()) {
-				piki->checkClosestEnemy(mKoganeMgr.mObject, distmax);
+				// just using operator- isn't how ebisawa rolls
+				Vector2f dist(mKoganeMgr.mObject->mPosition.x - piki->mPosition.x, mKoganeMgr.mObject->mPosition.y - piki->mPosition.y);
+				if (dist.length() < distmax) {
+					distmax         = dist.length();
+					piki->mEnemyObj = mKoganeMgr.mObject;
+				}
 			}
-			if (mChappyMgr.mObject->isCalc()) {
-				piki->checkClosestEnemy(mChappyMgr.mObject, distmax);
-			}
-			// if (mKoganeMgr.mObject->isCalc()) {
-			// 	Vector2f dist = mKoganeMgr.mObject->mPosition - piki->mPosition;
-			// 	if (dist.length() < distmax) {
-			// 		distmax         = dist.length();
-			// 		piki->mEnemyObj = mKoganeMgr.mObject;
-			// 	}
-			// }
 
-			// if (mChappyMgr.mObject->isCalc()) {
-			// 	Vector2f dist = mChappyMgr.mObject->mPosition - piki->mPosition;
-			// 	if (dist.length() < distmax) {
-			// 		distmax         = dist.length();
-			// 		piki->mEnemyObj = mChappyMgr.mObject;
-			// 	}
-			// }
+			if (mChappyMgr.mObject->isCalc()) {
+				Vector2f dist(mChappyMgr.mObject->mPosition.x - piki->mPosition.x, mChappyMgr.mObject->mPosition.y - piki->mPosition.y);
+				if (dist.length() < distmax) {
+					distmax         = dist.length();
+					piki->mEnemyObj = mChappyMgr.mObject;
+				}
+			}
 		}
 	}
 }

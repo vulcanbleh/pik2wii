@@ -1266,7 +1266,7 @@ struct ActTeki : public Action, virtual SysShape::MotionListener {
 	// _00-_0C = Action
 	// _0C-_10 = MotionListener*
 	Game::EnemyBase* mFollowingTeki;  // _10
-	bool mToPanicFinish;              // _14
+	bool mIsLeafChappy;               // _14
 	bool mToEmote;                    // _15
 	Game::Footmark* mTargetFootprint; // _18
 	s32 mUnused0;                     // _1C

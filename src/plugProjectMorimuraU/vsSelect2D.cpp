@@ -80,7 +80,7 @@ void TVsSelectIndPane::draw()
 		indMtx[1][1] = mMtxYOffset;
 		indMtx[1][2] = 0.0f;
 	} else {
-		PSMTXRotRad(mtx, J2DROTATE_Z, mRotation * 0.01745329f);
+		PSMTXRotRad(mtx, J2DROTATE_Z, MTXDegToRad(mRotation));
 		indMtx[0][0] = mtx[0][0] * 0.5f;
 		indMtx[0][1] = mtx[0][1] * 0.5f;
 		indMtx[0][2] = 0.0f;
@@ -1141,7 +1141,7 @@ void TVsSelect::doCreate(JKRArchive* arc)
 		mIndexPaneList[i]->mPane->show();
 	}
 
-	f32 calc = mIndexPaneList[0]->mPane->mOffset.y - mIndexPaneList[1]->mPane->mOffset.y;
+	f32 calc = getHeight();
 
 	mIndexGroup               = new TIndexGroup;
 	mIndexGroup->mHeight      = calc;
@@ -1176,9 +1176,8 @@ void TVsSelect::doCreate(JKRArchive* arc)
 	int max = (mStageCount - something) + 2;
 	for (int i = 0; i < max; i++) {
 		for (int j = 0; j < mNumActiveRows; j++) {
-			TIndexPane* indpane = mIndexPaneList[j];
-			indpane->mPane->setOffsetY(indpane->mYOffset + calc);
-			mIndexPaneList[j]->mYOffset = mIndexPaneList[j]->mPane->mOffset.y;
+			mIndexPaneList[j]->setOffset(calc);
+			mIndexPaneList[j]->mYOffset = mIndexPaneList[j]->getPaneOffsetY();
 		}
 		updateIndex(0);
 		mIndexGroup->reset();

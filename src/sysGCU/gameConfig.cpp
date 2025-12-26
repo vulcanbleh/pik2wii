@@ -5,7 +5,7 @@
 
 // TODO: How is this string actually (not) used?
 DEFINE__PRINT("gameConfig");
-void fakeMatch_printGameConfig()
+static void fakeMatch_printGameConfig()
 {
 	printf("gameConfig");
 }

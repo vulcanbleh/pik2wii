@@ -3,6 +3,7 @@
 
 #include "JSystem/JStudio/TVariableValue.h"
 #include "JSystem/JStudio/data.h"
+#include "JSystem/JParticle/JPAEmitter.h"
 #include "RevoSDK/gx.h"
 #include "RevoSDK/vec.h"
 
@@ -201,6 +202,24 @@ struct TAdaptor_particle : public TAdaptor {
 	    , _0C()
 	{
 	}
+
+	struct TJPAEmitter_stopDrawParticle_ {
+		TJPAEmitter_stopDrawParticle_(JPABaseEmitter* emitter)
+		    : mEmitter(emitter)
+		{
+		}
+
+		~TJPAEmitter_stopDrawParticle_()
+		{
+			if (mEmitter) {
+				mEmitter->stopDrawParticle();
+			}
+		}
+
+		void set(JPABaseEmitter* emitter) { mEmitter = emitter; }
+
+		JPABaseEmitter* mEmitter; // _00
+	};
 
 	// ~TAdaptor_particle();
 

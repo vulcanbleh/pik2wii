@@ -599,7 +599,7 @@ void SingleGameSection::playMovie_helloPikmin(Piki* piki)
 		moviePlayer->play(arg);
 		playData->setMeetPikmin(piki->mPikiKind);
 		playData->setContainer(piki->mPikiKind);
-		disableTimer(1);
+		disableTimer(DEMOTIMER_Piki_Seed_In_Ground);
 		break;
 	}
 	case Yellow: {

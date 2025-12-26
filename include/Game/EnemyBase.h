@@ -81,10 +81,10 @@ enum EnemyEvent {
 	EB_NoInterrupt         = 0x200000,   // cannot currently interrupt anim/action - cannot be stunned, bitters will be queued
 	EB_BitterImmune        = 0x400000,   // cannot be bittered
 	EB_24                  = 0x800000,   // unknown
-	EB_PS1                 = 0x1000000,  // sound-related
-	EB_PS2                 = 0x2000000,  // sound-related
-	EB_PS3                 = 0x4000000,  // sound-related
-	EB_PS4                 = 0x8000000,  // sound-related
+	EB_IsAnimated          = 0x1000000,  // set when an enemy (non-blended) animation is playing, needed for .bas based sounds to work
+	EB_PS2                 = 0x2000000,  // disabled on animation start, never enabled, has similar purpose to EB_IsBlendAnimated
+	EB_IsBlendAnimated     = 0x4000000,  // set when an enemy blended animation is playing
+	EB_PS4                 = 0x8000000,  // disabled on animation start, never enabled
 	EB_Alive               = 0x10000000, //
 	EB_CollisionActive     = 0x20000000, //
 	EB_ModelHidden         = 0x40000000, //
@@ -288,8 +288,8 @@ struct EnemyBase : public Creature, public SysShape::MotionListener, virtual pub
 		animator->mNormalizedTime = 1.0f;
 		animator->getAnimator(0).startAnim(0, listener);
 
-		disableEvent(0, EB_PS1 + EB_PS2 + EB_PS3 + EB_PS4);
-		enableEvent(0, EB_PS1);
+		disableEvent(0, EB_IsAnimated + EB_PS2 + EB_IsBlendAnimated + EB_PS4);
+		enableEvent(0, EB_IsAnimated);
 
 		setPSEnemyBaseAnime();
 	}
@@ -560,6 +560,14 @@ struct EnemyBase : public Creature, public SysShape::MotionListener, virtual pub
 		f32 diffZ   = targetZ - z;
 		f32 diffX   = targetX - x;
 		return SQUARE(diffX) + SQUARE(diffZ);
+	}
+	
+	inline bool isCreatureIn2DRadius(f32 rad, Vector3f& pos)
+	{
+		Vector3f targetCreaturePos;
+		targetCreaturePos.z = mTargetCreature->getPosition().z;
+		targetCreaturePos.x = mTargetCreature->getPosition().x;
+		return inRadius(rad, pos, targetCreaturePos);
 	}
 
 	// Creature: _000 - _178

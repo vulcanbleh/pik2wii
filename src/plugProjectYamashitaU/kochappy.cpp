@@ -26,18 +26,12 @@ void Obj::changeMaterial()
 
 	j3dModel->calcMaterial();
 
-	J3DTexture* j3dTexture = mModel->getJ3DModel()->getModelData()->getTexture();
-	ResTIMG* newTexture    = mModel->getJ3DModel()->getModelData()->getTexture()->getResTIMG(0);
+	mModel->mJ3dModel->mModelData->getTexture()->changeImage(texture, 0);
 
-	*newTexture = *texture;
-
-	j3dTexture->setImageOffset((u32)texture, 0);
-	j3dTexture->setPaletteOffset((u32)texture, 0);
-
-	for (u16 i = 0; i < modelData->getMaterialTable().getMaterialNum(); i++) {
+	for (u16 i = 0; i < modelData->getMaterialNum(); i++) {
 		J3DMatPacket* packet = j3dModel->getMatPacket(i);
 		j3dSys.setMatPacket(packet);
-		J3DMaterial* material = modelData->getMaterialTable().getMaterialNodePointer(i);
+		J3DMaterial* material = modelData->getMaterialNodePointer(i);
 		material->diff(packet->getShapePacket()->mDiffFlag);
 	}
 }

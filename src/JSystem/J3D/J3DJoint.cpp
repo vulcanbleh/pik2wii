@@ -429,8 +429,7 @@ void J3DJoint::entryIn()
 			J3DShapePacket* shapePacket = j3dSys.getModel()->getShapePacket(mesh->getShape()->getIndex());
 			if (!matPacket->isLocked()) {
 				if (mesh->getMaterialAnm()) {
-					J3DMaterialAnm* piVar8 = mesh->getMaterialAnm();
-					piVar8->calc(mesh);
+					mesh->getMaterialAnm()->calc(mesh);
 				}
 				mesh->calc(anmMtx);
 			}

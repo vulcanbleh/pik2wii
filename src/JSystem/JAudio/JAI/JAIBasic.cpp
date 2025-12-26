@@ -54,11 +54,11 @@ JAIBasic::JAIBasic()
 	mFlags._04    = false;
 	_14           = 0;
 	mCameras      = nullptr;
-	_10           = 0;
-	_0C           = 2;
+	mCurrentTick  = 0;
+	mFileLoadType = 2;
 	_1C           = nullptr;
 	mHeap         = nullptr;
-	_18           = 0;
+	mRawDataPtr   = nullptr;
 	msCurrentHeap = JASDram;
 }
 
@@ -273,114 +273,19 @@ void JAIBasic::initCamera()
 		JAInter::Const::nullCamera.mVec2->x = 0.0f;
 		JAInter::Const::nullCamera.mVec2->y = 0.0f;
 		JAInter::Const::nullCamera.mVec2->z = -50.0f;
-		Vec v1                              = { 0.0f, 1.0f, 0.0f };
-		Vec v2                              = JAInter::Const::dummyZeroVec;
-		// Vec v2 = { JAInter::Const::dummyZeroVec.x, JAInter::Const::dummyZeroVec.y, JAInter::Const::dummyZeroVec.z };
+		Vec v1;
+		v1.x = 0.0f;
+		v1.y = 1.0f;
+		v1.z = 0.0f;
+		Vec v2;
+		v2.x = JAInter::Const::dummyZeroVec.x;
+		v2.y = JAInter::Const::dummyZeroVec.y;
+		v2.z = JAInter::Const::dummyZeroVec.z;
 		C_MTXLookAt(JAInter::Const::camMtx, JAInter::Const::nullCamera.mVec1, &v1, &v2);
 		for (u32 i = 0; i < JAIGlobalParameter::audioCameraMax; i++) {
-			if (i < JAIGlobalParameter::audioCameraMax) {
-				mCameras[i].mVec1 = JAInter::Const::nullCamera.mVec1;
-				mCameras[i].mVec2 = JAInter::Const::nullCamera.mVec2;
-				mCameras[i].mMtx  = &JAInter::Const::camMtx;
-			}
+			setCameraInfo(JAInter::Const::nullCamera.mVec1, JAInter::Const::nullCamera.mVec2, JAInter::Const::camMtx, i);
 		}
 	}
-	/*
-	stwu     r1, -0x30(r1)
-	mflr     r0
-	li       r5, 0x20
-	stw      r0, 0x34(r1)
-	stw      r31, 0x2c(r1)
-	stw      r30, 0x28(r1)
-	mr       r30, r3
-	lwz      r31, audioCameraMax__18JAIGlobalParameter@sda21(r13)
-	lwz      r4, msCurrentHeap__8JAIBasic@sda21(r13)
-	mulli    r3, r31, 0xc
-	addi     r3, r3, 0x10
-	bl       __nwa__FUlP7JKRHeapi
-	lis      r4, __defctor__Q27JAInter6CameraFv@ha
-	mr       r7, r31
-	addi     r4, r4, __defctor__Q27JAInter6CameraFv@l
-	li       r5, 0
-	li       r6, 0xc
-	bl       __construct_new_array
-	stw      r3, 4(r30)
-	lwz      r3, 4(r30)
-	lwz      r0, 0(r3)
-	cmplwi   r0, 0
-	bne      lbl_800AC678
-	lis      r3, nullCamera__Q27JAInter5Const@ha
-	lfs      f4, lbl_80516F10@sda21(r2)
-	addi     r31, r3, nullCamera__Q27JAInter5Const@l
-	lfs      f0, lbl_80516F14@sda21(r2)
-	lwz      r5, 0(r31)
-	lis      r3, camMtx__Q27JAInter5Const@ha
-	lis      r4, dummyZeroVec__Q27JAInter5Const@ha
-	lfs      f3, lbl_80516F18@sda21(r2)
-	stfs     f4, 0(r5)
-	addi     r3, r3, camMtx__Q27JAInter5Const@l
-	addi     r5, r1, 0x14
-	addi     r6, r1, 8
-	lwz      r7, 0(r31)
-	stfs     f4, 4(r7)
-	lwz      r7, 0(r31)
-	stfs     f0, 8(r7)
-	lwz      r7, 4(r31)
-	stfs     f4, 0(r7)
-	lwz      r7, 4(r31)
-	stfs     f4, 4(r7)
-	lwz      r7, 4(r31)
-	stfs     f0, 8(r7)
-	lfsu     f2, dummyZeroVec__Q27JAInter5Const@l(r4)
-	stfs     f4, 0x14(r1)
-	lfs      f1, 4(r4)
-	lfs      f0, 8(r4)
-	lwz      r4, 0(r31)
-	stfs     f3, 0x18(r1)
-	stfs     f4, 0x1c(r1)
-	stfs     f2, 8(r1)
-	stfs     f1, 0xc(r1)
-	stfs     f0, 0x10(r1)
-	bl       C_MTXLookAt
-	lis      r4, nullCamera__Q27JAInter5Const@ha
-	lis      r3, camMtx__Q27JAInter5Const@ha
-	addi     r6, r4, nullCamera__Q27JAInter5Const@l
-	li       r10, 0
-	addi     r4, r3, camMtx__Q27JAInter5Const@l
-	li       r9, 0
-	b        lbl_800AC66C
-
-lbl_800AC634:
-	cmplw    r0, r10
-	lwz      r8, 4(r31)
-	lwz      r7, 0(r6)
-	ble      lbl_800AC664
-	lwz      r5, 4(r30)
-	addi     r3, r9, 4
-	addi     r0, r9, 8
-	stwx     r7, r5, r9
-	lwz      r5, 4(r30)
-	stwx     r8, r5, r3
-	lwz      r3, 4(r30)
-	stwx     r4, r3, r0
-
-lbl_800AC664:
-	addi     r9, r9, 0xc
-	addi     r10, r10, 1
-
-lbl_800AC66C:
-	lwz      r0, audioCameraMax__18JAIGlobalParameter@sda21(r13)
-	cmplw    r10, r0
-	blt      lbl_800AC634
-
-lbl_800AC678:
-	lwz      r0, 0x34(r1)
-	lwz      r31, 0x2c(r1)
-	lwz      r30, 0x28(r1)
-	mtlr     r0
-	addi     r1, r1, 0x30
-	blr
-	*/
 }
 
 /**
@@ -395,8 +300,7 @@ lbl_800AC678:
  */
 void JAIBasic::setInitFileLoadSwitch(u8 a1)
 {
-	// Generated from stb r4, 0xC(r3)
-	_0C = a1;
+	mFileLoadType = a1;
 }
 
 /**
@@ -405,7 +309,7 @@ void JAIBasic::setInitFileLoadSwitch(u8 a1)
  */
 BOOL JAIBasic::initReadFile()
 {
-	switch (_0C) {
+	switch (mFileLoadType) {
 	case 0:
 	case 1:
 		break;
@@ -438,7 +342,7 @@ void JAIBasic::processFrameWork()
 		JAInter::SequenceMgr::processGFrameSequence();
 		JAInter::StreamMgr::processGFrameStream();
 	}
-	_10++;
+	mCurrentTick++;
 }
 
 /**
@@ -446,17 +350,17 @@ void JAIBasic::processFrameWork()
  * @note Size: 0x64
  * startSoundBasic__8JAIBasicFUlPP8JAISoundPQ27JAInter5ActorUlUcPQ27JAInter9SoundInfo
  */
-void JAIBasic::startSoundBasic(u32 id, JAISound** handlePtr, JAInter::Actor* actor, u32 p4, u8 p5, JAInter::SoundInfo* info)
+void JAIBasic::startSoundBasic(u32 id, JAISound** handlePtr, JAInter::Actor* actor, u32 fadeTime, u8 camId, JAInter::SoundInfo* info)
 {
 	switch (id & JAISoundID_TypeMask) {
 	case JAISoundID_Type_Sequence:
-		startSoundBasic(id, (JAISequence**)handlePtr, actor, p4, p5, info);
+		startSoundBasic(id, (JAISequence**)handlePtr, actor, fadeTime, camId, info);
 		break;
 	case JAISoundID_Type_Se:
-		startSoundBasic(id, (JAISe**)handlePtr, actor, p4, p5, info);
+		startSoundBasic(id, (JAISe**)handlePtr, actor, fadeTime, camId, info);
 		break;
 	case JAISoundID_Type_Stream:
-		startSoundBasic(id, (JAIStream**)handlePtr, actor, p4, p5, info);
+		startSoundBasic(id, (JAIStream**)handlePtr, actor, fadeTime, camId, info);
 		break;
 	}
 }
@@ -466,13 +370,13 @@ void JAIBasic::startSoundBasic(u32 id, JAISound** handlePtr, JAInter::Actor* act
  * @note Size: 0x84
  * startSoundBasic__8JAIBasicFUlPP11JAISequencePQ27JAInter5ActorUlUcPQ27JAInter9SoundInfo
  */
-void JAIBasic::startSoundBasic(u32 id, JAISequence** handlePtr, JAInter::Actor* actor, u32 p4, u8 p5, JAInter::SoundInfo* info)
+void JAIBasic::startSoundBasic(u32 id, JAISequence** handlePtr, JAInter::Actor* actor, u32 fadeTime, u8 camId, JAInter::SoundInfo* info)
 {
 	if (mFlags._01 != true && (!JAInter::SeMgr::seHandle || (JAInter::SeMgr::seHandle->mSoundID & 0x3FF) != (id & 0x3FF))) {
 		if (!handlePtr) {
 			handlePtr = &JAInter::SequenceMgr::FixSeqBufPointer[info->_05];
 		}
-		JAInter::SequenceMgr::storeSeqBuffer(handlePtr, actor, id, p4, p5, info);
+		JAInter::SequenceMgr::storeSeqBuffer(handlePtr, actor, id, fadeTime, camId, info);
 	}
 }
 
@@ -481,10 +385,10 @@ void JAIBasic::startSoundBasic(u32 id, JAISequence** handlePtr, JAInter::Actor* 
  * @note Size: 0x64
  * startSoundBasic__8JAIBasicFUlPP5JAISePQ27JAInter5ActorUlUcPQ27JAInter9SoundInfo
  */
-void JAIBasic::startSoundBasic(u32 id, JAISe** handlePtr, JAInter::Actor* actor, u32 p4, u8 p5, JAInter::SoundInfo* info)
+void JAIBasic::startSoundBasic(u32 id, JAISe** handlePtr, JAInter::Actor* actor, u32 fadeTime, u8 camId, JAInter::SoundInfo* info)
 {
 	if (JAInter::SeMgr::seEntryCancel[id >> 0xC] == 0) {
-		JAInter::SeMgr::storeSeBuffer(handlePtr, actor, id, p4, p5, info);
+		JAInter::SeMgr::storeSeBuffer(handlePtr, actor, id, fadeTime, camId, info);
 	} else if (handlePtr) {
 		*handlePtr = nullptr;
 	}
@@ -495,10 +399,10 @@ void JAIBasic::startSoundBasic(u32 id, JAISe** handlePtr, JAInter::Actor* actor,
  * @note Size: 0x58
  * startSoundBasic__8JAIBasicFUlPP9JAIStreamPQ27JAInter5ActorUlUcPQ27JAInter9SoundInfo
  */
-void JAIBasic::startSoundBasic(u32 id, JAIStream** handlePtr, JAInter::Actor* actor, u32 p4, u8 p5, JAInter::SoundInfo* info)
+void JAIBasic::startSoundBasic(u32 id, JAIStream** handlePtr, JAInter::Actor* actor, u32 fadeTime, u8 camId, JAInter::SoundInfo* info)
 {
 	if (mFlags._02 != true && JAInter::StreamMgr::flags._01 == 0) {
-		JAInter::StreamMgr::storeStreamBuffer(handlePtr, actor, id, p4, p5, info);
+		JAInter::StreamMgr::storeStreamBuffer(handlePtr, actor, id, fadeTime, camId, info);
 	}
 }
 
@@ -994,10 +898,10 @@ void JAIBasic::setSeExtParameter(JAISound* handle)
 	}
 	u8 format = JAInter::SoundTable::getInfoFormat(handle->mSoundID);
 	if ((format & 4) != 0) {
-		handle->setVolume(handle->mSoundInfo->mVolume.byteView[0] / 127.0f, 0, SOUNDPARAM_Dopplar);
+		handle->setVolume(handle->mSoundInfo->mVolume / 127.0f, 0, SOUNDPARAM_Dopplar);
 	}
 	if ((format & 8) != 0) {
-		handle->setFxmix(handle->mSoundInfo->mVolume.byteView[1] / 127.0f, 0, SOUNDPARAM_Dopplar);
+		handle->setFxmix(handle->mSoundInfo->mFxMix / 127.0f, 0, SOUNDPARAM_Dopplar);
 	}
 	if ((format & 2) != 0) {
 		handle->setPitch(handle->mSoundInfo->mPitch, 0, SOUNDPARAM_Dopplar);
@@ -1071,7 +975,7 @@ void JAIBasic::stopAudio(u32 p1, bool p2)
 	if (p1 < 5) {
 		p1 = 5;
 	}
-	msAudioStopTime = msBasic->_10 + p1;
+	msAudioStopTime = msBasic->mCurrentTick + p1;
 	msStopMode      = p2;
 	msStopStatus    = 1;
 	msDspLevel      = JASDriver::getDSPLevel_f32();
@@ -1174,18 +1078,18 @@ void JAIBasic::resumeAudio()
  */
 s32 JAIBasic::stopCallBack(void*)
 {
-	if (msAudioStopTime == msBasic->_10) {
+	if (msAudioStopTime == msBasic->mCurrentTick) {
 		msStopStatus = 3;
 		if (msStopMode != false) {
 			JASAudioThread::stop();
 		}
 		return -1;
 	}
-	if (msAudioStopTime - 4 == msBasic->_10) {
+	if (msAudioStopTime - 4 == msBasic->mCurrentTick) {
 		if (msStopStatus == 1) {
 			for (u32 i = 0; i < 0x40; i++) {
 				JASDSPChannel* channel = JASDSPChannel::getHandle(i);
-				if ((channel->_00 & 0xFF) == 0) {
+				if ((channel->mStatus & 0xFF) == 0) {
 					channel->drop();
 				}
 			}

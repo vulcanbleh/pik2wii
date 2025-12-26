@@ -32,6 +32,8 @@ static const u32 padding[] = { 0, 0, 0 };
 
 namespace PSM {
 
+int Scene_Ground::cEvenning_fadeOuTime = 150;
+int Scene_Ground::cEvenning_fadeInTime = 150;
 /**
  * @note Address: 0x80467630
  * @note Size: 0x84
@@ -514,10 +516,13 @@ void Scene_Game::bossKilled(PSM::EnemyBoss* obj)
 	PSM::BossBgmFader::Mgr* mgr = PSSystem::SingletonBase<PSM::BossBgmFader::Mgr>::getInstance();
 	if (!mgr->checkBossActive() && seq) {
 		seq = PSMGetMiddleBossSeq();
-		if (seq && (seq->mJumpPort._70 == 2 || seq->mJumpPort._70 == 8)) {
+		if (seq
+		    && (seq->mJumpPort.mCurrentTrackId == EnemyMidBoss::BossBgm_AttackPrep
+		        || seq->mJumpPort.mCurrentTrackId == EnemyMidBoss::BossBgm_AttackLong)) {
 			obj->jumpRequest(PSM::EnemyMidBoss::BossBgm_MainLoop);
 		}
 	}
+
 
 	/*
 	stwu     r1, -0x20(r1)
@@ -1273,7 +1278,7 @@ bool Scene_Game::akubiOK()
 		result = true;
 	}
 
-	if (result && getMiddleBossBgm() && getMiddleBossBgm()->mJumpPort._70 != 0) {
+	if (result && getMiddleBossBgm() && getMiddleBossBgm()->mJumpPort.mCurrentTrackId != 0) {
 		result = false;
 	}
 	return result;
@@ -1554,7 +1559,7 @@ void Scene_Ground::changeEnvSE_Noon()
 Scene_Cave::Scene_Cave(u8 p1, PSGame::SceneInfo* info)
     : Scene_Game(p1, info)
     , mPollutUpTimer(-1)
-    , _5C(false)
+    , mHasStartedBossBgm(false)
 {
 	PSGame::CaveFloorInfo* floorInfo = static_cast<PSGame::CaveFloorInfo*>(info);
 	switch (floorInfo->mAlphaType) {
@@ -1860,7 +1865,7 @@ void Scene_Cave::init()
 void Scene_Cave::bossAppear(PSM::EnemyBoss* obj, u16 flag)
 {
 	if (isBossFloor()) {
-		if (_5C) {
+		if (mHasStartedBossBgm) {
 			return;
 		}
 		MiddleBossSeq* seq = PSMGetMiddleBossSeq();
@@ -1868,7 +1873,7 @@ void Scene_Cave::bossAppear(PSM::EnemyBoss* obj, u16 flag)
 			seq->startSeq(flag);
 			seq->setAvoidJumpTimer_Checked(180);
 		}
-		_5C = 1;
+		mHasStartedBossBgm = 1;
 	} else {
 		Scene_Game::bossAppear(obj, flag);
 	}
@@ -1886,7 +1891,8 @@ void Scene_Cave::bossKilled(PSM::EnemyBoss* obj)
 		if (seq) {
 			if (!check) {
 				seq->stopSeq(40);
-			} else if (seq->mJumpPort._70 == 2 || seq->mJumpPort._70 == 8) {
+			} else if (seq->mJumpPort.mCurrentTrackId == EnemyMidBoss::BossBgm_AttackPrep
+			           || seq->mJumpPort.mCurrentTrackId == EnemyMidBoss::BossBgm_AttackLong) {
 				obj->jumpRequest(PSM::EnemyMidBoss::BossBgm_MainLoop);
 			}
 		}
@@ -1895,7 +1901,9 @@ void Scene_Cave::bossKilled(PSM::EnemyBoss* obj)
 		bool check         = PSSystem::SingletonBase<BossBgmFader::Mgr>::getInstance()->checkBossActive();
 		if (!check && seq) {
 			seq = PSMGetMiddleBossSeq();
-			if (seq && (seq->mJumpPort._70 == 2 || seq->mJumpPort._70 == 8)) {
+			if (seq
+			    && (seq->mJumpPort.mCurrentTrackId == EnemyMidBoss::BossBgm_AttackPrep
+			        || seq->mJumpPort.mCurrentTrackId == EnemyMidBoss::BossBgm_AttackLong)) {
 				obj->jumpRequest(PSM::EnemyMidBoss::BossBgm_MainLoop);
 			}
 		}

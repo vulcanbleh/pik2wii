@@ -258,7 +258,7 @@ void Obj::onInit(CreatureInitArg* arg)
 
 	u16 kageMatIdx = modelData->mMaterialTable.mMaterialNames->getIndex("kage_mat");
 
-	_37C = modelData->mMaterialTable.mMaterials[kageMatIdx];
+	mBodyMaterial = modelData->mMaterialTable.mMaterials[kageMatIdx];
 
 	if (gameSystem && gameSystem->isZukanMode()) {
 		mWraithFallTimer = 0.0f;
@@ -292,7 +292,7 @@ Obj::Obj()
 	mFSM                = nullptr;
 	mTyre               = nullptr;
 	mFadeTimer          = 1.0f;
-	_37C                = nullptr;
+	mBodyMaterial                = nullptr;
 	mEfxMove            = nullptr;
 	mEfxRun             = nullptr;
 	mEfxTyreup          = nullptr;
@@ -1245,30 +1245,20 @@ void BlackMan::Obj::changeMaterial()
 	J3DModel* j3dModel      = mModel->mJ3dModel;
 	J3DModelData* modelData = j3dModel->getModelData();
 
-	_37C->mTevBlock->setTevKColor(0, mActiveColor);
-
-	_37C->mTevBlock->setTevKColor(3, mFadeColor);
+	mBodyMaterial->getTevBlock()->setTevKColor(0, mActiveColor);
+	mBodyMaterial->getTevBlock()->setTevKColor(3, mFadeColor);
 
 	j3dModel->calcMaterial();
 
 	mMatLoopAnimator->animate(30.0f);
 
-	J3DTexMtxInfo* texInfo = &modelData->mMaterialTable.mMaterials[0]->mTexGenBlock->getTexMtx(0)->getTexMtxInfo();
+	modelData->getMaterialNodePointer(0)->getTexGenBlock()->getTexMtx(0)->getTexMtxInfo().setMtx(copyMatrix);
 
-	for (int x = 0; x < 3; x++) {
-		for (int y = 0; y < 4; y++) {
-			texInfo->mEffectMtx[x][y] = copyMatrix[x][y];
-		}
-	}
+	modelData->getTexture()->changeImage(gameSystem->getXfbTexture()->getTexInfo(), 0);
 
-	texInfo->mEffectMtx[3][0] = texInfo->mEffectMtx[3][1] = texInfo->mEffectMtx[3][2] = 0.0f;
-	texInfo->mEffectMtx[3][3]                                                         = 1.0f;
-
-	xfbUpdate(j3dModel, modelData);
-
-	for (u16 i = 0; i < modelData->mMaterialTable.mMaterialNum; i++) {
-		j3dSys.mMatPacket = &j3dModel->mMatPackets[i];
-		modelData->mMaterialTable.mMaterials[i]->diff(j3dSys.mMatPacket->mShapePacket->mDiffFlag);
+	for (u16 i = 0; i < modelData->getMaterialNum(); i++) {
+		j3dSys.setMatPacket(j3dModel->getMatPacket(i));
+		modelData->getMaterialNodePointer(i)->diff(j3dSys.getMatPacket()->getShapePacket()->mDiffFlag);
 	}
 
 	/*

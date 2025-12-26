@@ -31,6 +31,8 @@ struct TSimple_ArgDirScale : public TSimple1 {
 	inline TSimple_ArgDirScale(u16 effectID)
 	    : TSimple1(effectID)
 	{
+		mGroup    = 0;
+		mResMgrId = 1;
 	}
 
 	virtual bool create(Arg*); // _08
@@ -72,7 +74,7 @@ struct T2DNewmap : public TSimple2 {
  */
 struct T2DOnyonKira : public TChasePosDir {
 	T2DOnyonKira(Vector2f& pos, Vector2f& pos2)
-	    : TChasePosDir(0, pos, pos2)
+	    : TChasePosDir(PID_WMap_OnyonKira, pos, pos2)
 	{
 		mResMgrId = 1;
 	}
@@ -90,7 +92,7 @@ struct T2DOnyonKira : public TChasePosDir {
 
 struct T2DRocketA : public TSimple_ArgDirScale {
 	inline T2DRocketA()
-	    : TSimple_ArgDirScale(PID_RocketA)
+	    : TSimple_ArgDirScale(PID_WMap_RocketSmoke)
 	{
 		mResMgrId = 1;
 	}

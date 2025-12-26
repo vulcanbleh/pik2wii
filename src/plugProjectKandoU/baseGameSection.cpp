@@ -519,8 +519,8 @@ void BaseGameSection::initJ3D()
 	addGenNode(mOpaqueDrawBuffer);
 	addGenNode(mTransparentDrawBuffer);
 
-	j3dSys.mDrawBuffer[0] = mOpaqueDrawBuffer->get(DB_NormalLayer)->mBuffer;
-	j3dSys.mDrawBuffer[1] = mTransparentDrawBuffer->get(DB_NormalLayer)->mBuffer;
+	j3dSys.setDrawBuffer(mOpaqueDrawBuffer->get(DB_NormalLayer)->mBuffer, J3DSys::SYSDRAW_Opa);
+	j3dSys.setDrawBuffer(mTransparentDrawBuffer->get(DB_NormalLayer)->mBuffer, J3DSys::SYSDRAW_Xlu);
 
 	System::FragmentationChecker frag("poyol", false);
 }
@@ -953,13 +953,13 @@ void BaseGameSection::saveToGeneratorCache(CourseInfo* courseinfo)
 	generatorCache->beginSave(courseinfo->mCourseIndex);
 	FOREACH_NODE(Generator, generatorCache->getFirstGenerator(), node)
 	{
-		if (node->mReservedNum & 1) {
+		if (node->isReservedFlag(Generator::Reserved_doSaveGen)) {
 			generatorCache->saveGenerator(node);
 		}
 	}
 	FOREACH_NODE(Generator, generatorCache->getFirstGenerator(), node)
 	{
-		if (node->mReservedNum & 1 && node->mReservedNum & 2) {
+		if (node->isReservedFlag(Generator::Reserved_doSaveGen) && node->isReservedFlag(Generator::Reserved_doSaveCreature)) {
 			generatorCache->saveCreature(node);
 		}
 	}

@@ -18,7 +18,7 @@ namespace efx2d {
 bool T2DCursor::create(Arg* arg)
 {
 	if (sys->getDeltaTime() < 0.016949152f) {
-		mEfxID = PID_RocketA;
+		mEfxID = PID_2DCursor_2;
 	}
 
 	if (TChasePos::create(arg)) {

@@ -19,7 +19,7 @@ FogMgr::FogMgr()
     , mType(GX_FOG_LINEAR)
     , mNearZ(640.0f)
     , mFarZ(3024.0f)
-    , mColor(0xAD, 0xB1, 0xFC, 0xFF)
+    , mColor(173, 177, 252, 255)
 {
 }
 
@@ -56,7 +56,10 @@ void FogMgr::set(Graphics& graphics)
  */
 void FogMgr::setColor(Color4& color)
 {
-	mColor.colorView = color;
+	mColor.GXColorView.r = color.r;
+	mColor.GXColorView.g = color.g;
+	mColor.GXColorView.b = color.b;
+	mColor.GXColorView.a = color.a;
 }
 
 /**
@@ -65,5 +68,8 @@ void FogMgr::setColor(Color4& color)
  */
 void FogMgr::getColor(Color4& color)
 {
-	color = mColor.colorView;
+	color.r = mColor.GXColorView.r;
+	color.g = mColor.GXColorView.g;
+	color.b = mColor.GXColorView.b;
+	color.a = mColor.GXColorView.a;
 }

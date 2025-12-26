@@ -849,20 +849,19 @@ s32 JASAramStream::dvdErrorCheck(void*)
 {
 	u32 status = DVDGetDriveStatus();
 
-	// WHY WILL THIS NOT SPAWN A JUMP TABLE
 	switch (status) {
 	case DVD_STATE_END:
 		sSystemPauseFlag = false;
 		break;
 	case DVD_STATE_WAITING:
 	case DVD_STATE_COVER_CLOSED:
-	case DVD_STATE_NO_DISK:
+	//case DVD_STATE_NO_DISK:
 	case DVD_STATE_COVER_OPEN:
-	case DVD_STATE_WRONG_DISK:
-	case DVD_STATE_MOTOR_STOPPED:
-	case DVD_STATE_PAUSING:
-	case DVD_STATE_IGNORED:
-	case DVD_STATE_CANCELED:
+	//case DVD_STATE_WRONG_DISK:
+	//case DVD_STATE_MOTOR_STOPPED:
+	//case DVD_STATE_PAUSING:
+	//case DVD_STATE_IGNORED:
+	//case DVD_STATE_CANCELED:
 	case DVD_STATE_RETRY:
 	case 0xFFFFFFFF:
 	default:

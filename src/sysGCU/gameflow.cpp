@@ -67,7 +67,9 @@ GameFlow::GameFlow()
  * @note Size: 0x48
  * Matches size.
  */
-GameFlow::~GameFlow() { }
+GameFlow::~GameFlow()
+{
+}
 
 /**
  * @note Address: 0x804241D0
@@ -130,7 +132,7 @@ SectionInfo* GameFlow::getSectionInfo(int id)
 	P2ASSERTBOUNDSLINE(201, 0, id, SN_SECTION_COUNT);
 
 	for (u32 i = 0; i < SN_SECTION_COUNT; i++) {
-		if (id == sSectionInfo[i].mId.mSectionId) {
+		if (id == sSectionInfo[i].mId.mSectionId[0]) {
 			sectionInfo = &sSectionInfo[i];
 			break;
 		}
