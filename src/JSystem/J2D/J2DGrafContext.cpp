@@ -24,20 +24,15 @@ void J2DGrafContext::setPort()
 	setScissor();
 	setup2D();
 
-	f32 x0 = mBounds.i.x;
-	f32 y0 = mBounds.i.y;
-	f32 x1 = mBounds.f.x;
-	f32 y1 = mBounds.f.y;
+	JGeometry::TBox2<float> bounds(mBounds);
 
-	if (x0 < 0.0f) {
-		x0 = 0.0f;
-	}
-
-	if (y0 < 0.0f) {
-		y0 = 0.0f;
-	}
-
-	GXSetViewport(x0, y0, x1 - x0, y1 - y0, 0.0f, 1.0f);
+	if (bounds.i.x < 0.0f) {
+        bounds.i.x = 0.0f;
+    }
+    if (bounds.i.y < 0.0f) {
+        bounds.i.y = 0.0f;
+    }
+    GXSetViewport(bounds.i.x, bounds.i.y, bounds.getWidth(), bounds.getHeight(), 0.0f, 1.0f);
 }
 
 /**
@@ -197,14 +192,13 @@ void J2DGrafContext::fillBox(const JGeometry::TBox2f& box)
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_CLR_RGBA, GX_F32, 0);
 
 	GXBegin(GX_QUADS, GX_VTXFMT0, 4);
-	f32 z = 0.0f;
-	GXPosition3f32(box.i.x, box.i.y, z);
+	GXPosition3f32(box.i.x, box.i.y, 0.0f);
 	GXColor1u32(mColorTL);
-	GXPosition3f32(box.f.x, box.i.y, z);
+	GXPosition3f32(box.f.x, box.i.y, 0.0f);
 	GXColor1u32(mColorTR);
-	GXPosition3f32(box.f.x, box.f.y, z);
+	GXPosition3f32(box.f.x, box.f.y, 0.0f);
 	GXColor1u32(mColorBL);
-	GXPosition3f32(box.i.x, box.f.y, z);
+	GXPosition3f32(box.i.x, box.f.y, 0.0f);
 	GXColor1u32(mColorBR);
 	GXEnd();
 
@@ -222,16 +216,15 @@ void J2DGrafContext::drawFrame(const JGeometry::TBox2f& box)
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_CLR_RGBA, GX_F32, 0);
 
 	GXBegin(GX_LINESTRIP, GX_VTXFMT0, 5);
-	f32 z = 0;
-	GXPosition3f32(box.i.x, box.i.y, z);
+	GXPosition3f32(box.i.x, box.i.y, 0);
 	GXColor1u32(mColorTL);
-	GXPosition3f32(box.f.x, box.i.y, z);
+	GXPosition3f32(box.f.x, box.i.y, 0);
 	GXColor1u32(mColorTR);
-	GXPosition3f32(box.f.x, box.f.y, z);
+	GXPosition3f32(box.f.x, box.f.y, 0);
 	GXColor1u32(mColorBL);
-	GXPosition3f32(box.i.x, box.f.y, z);
+	GXPosition3f32(box.i.x, box.f.y, 0);
 	GXColor1u32(mColorBR);
-	GXPosition3f32(box.i.x, box.i.y, z);
+	GXPosition3f32(box.i.x, box.i.y, 0);
 	GXColor1u32(mColorTL);
 	GXEnd();
 
@@ -250,11 +243,10 @@ inline void J2DGrafContext::line(JGeometry::TVec2f start, JGeometry::TVec2f end)
 	GXLoadPosMtxImm(mPosMtx, 0);
 	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_CLR_RGBA, GX_F32, 0);
 
-	f32 z = 0;
 	GXBegin(GX_LINES, GX_VTXFMT0, 2);
-	GXPosition3f32(start.x, start.y, z);
+	GXPosition3f32(start.x, start.y, 0);
 	GXColor1u32(mColorTL);
-	GXPosition3f32(end.x, end.y, z);
+	GXPosition3f32(end.x, end.y, 0);
 	GXColor1u32(mColorBR);
 	GXEnd();
 
