@@ -1562,7 +1562,7 @@ void JAIStream::setStreamPrepareFlag(u8 flag) { JAInter::StreamMgr::streamUpdate
  */
 bool JAIStream::checkStreamReady()
 {
-	if (mState == SOUNDSTATE_Ready && JAInter::StreamMgr::getSystemStatus() == 1) {
+	if (JAInter::StreamMgr::getSystemStatus() == 1) {
 		return true;
 	}
 	return false;
@@ -2246,7 +2246,7 @@ void JAInter::LinkSound::getUsedEndFirstObject()
 {
 	// UNUSED FUNCTION
 }
-
+#pragma dont_inline on
 /**
  * @note Address: 0x800B5858
  * @note Size: 0x98
@@ -2269,7 +2269,7 @@ int JAInter::MoveParaSet::set(f32 value, u32 moveTime)
 	mMoveCounter = moveTime + 1;
 	return MOVEPARA_SetTarget;
 }
-
+#pragma dont_inline reset
 /**
  * @note Address: 0x800B58F0
  * @note Size: 0x4C
