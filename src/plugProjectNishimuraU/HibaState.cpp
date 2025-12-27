@@ -4,6 +4,12 @@
 #include "efx/TEnemyBomb.h"
 #include "types.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-HibaState";
+}
+
 namespace Game {
 namespace Hiba {
 
@@ -14,9 +20,9 @@ namespace Hiba {
 void FSM::init(EnemyBase* enemy)
 {
 	create(HIBA_Count);
-	registerState(new StateDead);
-	registerState(new StateWait);
-	registerState(new StateAttack);
+	registerState(new StateDead("dead"));
+	registerState(new StateWait("wait"));
+	registerState(new StateAttack("attack"));
 }
 
 /**
@@ -89,7 +95,7 @@ void StateWait::exec(EnemyBase* enemy)
 	Obj* hiba = OBJ(enemy);
 	hiba->mTimer += sys->getDeltaTime();
 
-	if (hiba->mHealth <= 0.0f) {
+	if (hiba->isDead()) {
 		transit(hiba, HIBA_Dead, nullptr);
 		return;
 	}
@@ -129,7 +135,7 @@ void StateAttack::exec(EnemyBase* enemy)
 	Obj* hiba = OBJ(enemy);
 
 	// If dead or we're done being active, then finish
-	if ((hiba->mHealth <= 0.0f) || (hiba->mTimer > CG_PROPERPARMS(hiba).mActiveTime.mValue)) {
+	if ((hiba->isDead()) || (hiba->mTimer > CG_PROPERPARMS(hiba).mActiveTime.mValue)) {
 		hiba->finishMotion();
 	}
 
@@ -139,7 +145,7 @@ void StateAttack::exec(EnemyBase* enemy)
 	hiba->interactFireAttack();
 
 	if (hiba->mCurAnim->mIsPlaying && (hiba->mCurAnim->mType == KEYEVENT_END)) {
-		if (hiba->mHealth <= 0.0f) {
+		if (hiba->isDead()) {
 			transit(hiba, HIBA_Dead, nullptr);
 			return;
 		}
