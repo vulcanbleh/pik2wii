@@ -3,6 +3,12 @@
 #include "PS.h"
 #include "efx/TEnemyBomb.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-ElecHibaState";
+}
+
 namespace Game {
 namespace ElecHiba {
 
@@ -13,10 +19,10 @@ namespace ElecHiba {
 void FSM::init(EnemyBase* enemy)
 {
 	create(ELECHIBA_Count);
-	registerState(new StateDead);
-	registerState(new StateWait);
-	registerState(new StateSign);
-	registerState(new StateAttack);
+	registerState(new StateDead("dead"));
+	registerState(new StateWait("wait"));
+	registerState(new StateSign("sign"));
+	registerState(new StateAttack("attack"));
 }
 
 /**
@@ -123,7 +129,7 @@ void StateWait::exec(EnemyBase* enemy)
 		if (elecHiba->isWaitFinish()) {
 			transit(elecHiba, ELECHIBA_Sign, nullptr);
 		}
-	} else if (elecHiba->mHealth <= 0.0f) {
+	} else if (elecHiba->isDead()) {
 		transit(elecHiba, ELECHIBA_Dead, nullptr);
 	} else if (elecHiba->mWaitTimer > CG_PROPERPARMS(elecHiba).mWaitTime.mValue) {
 		transit(elecHiba, ELECHIBA_Sign, nullptr);
@@ -169,7 +175,7 @@ void StateSign::exec(EnemyBase* enemy)
 	elecHiba->mWaitTimer += sys->getDeltaTime();
 	elecHiba->getJAIObject()->startSound(PSSE_EN_ELEC_HIBA_CHARGE, 0);
 
-	if (elecHiba->mHealth <= 0.0f) {
+	if (elecHiba->isDead()) {
 		Obj* childHiba = elecHiba->getChildObjPtr();
 		if (childHiba) {
 			elecHiba->finishChargeEffect();
@@ -232,7 +238,7 @@ void StateAttack::exec(EnemyBase* enemy)
 		if (elecHiba->isAttackFinish()) {
 			transit(elecHiba, ELECHIBA_Wait, nullptr);
 		}
-	} else if (elecHiba->mHealth <= 0.0f) {
+	} else if (elecHiba->isDead()) {
 		transit(elecHiba, ELECHIBA_Dead, nullptr);
 	} else if (elecHiba->mWaitTimer > CG_PROPERPARMS(elecHiba).mActiveTime.mValue) {
 		transit(elecHiba, ELECHIBA_Wait, nullptr);

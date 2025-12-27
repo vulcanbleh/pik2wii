@@ -176,23 +176,9 @@ struct State : public EnemyFSMState {
 	// _00-_10 	= EnemyFSMState
 };
 
-struct StateAttack : public State {
-	inline StateAttack()
-	    : State(GASHIBA_Attack, "attack")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
 struct StateDead : public State {
-	inline StateDead()
-	    : State(GASHIBA_Dead, "dead")
+	inline StateDead(const char* name)
+	    : State(GASHIBA_Dead, name)
 	{
 	}
 
@@ -205,8 +191,22 @@ struct StateDead : public State {
 };
 
 struct StateWait : public State {
-	inline StateWait()
-	    : State(GASHIBA_Wait, "wait")
+	inline StateWait(const char* name)
+	    : State(GASHIBA_Wait, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateAttack : public State {
+	inline StateAttack(const char* name)
+	    : State(GASHIBA_Attack, name)
 	{
 	}
 

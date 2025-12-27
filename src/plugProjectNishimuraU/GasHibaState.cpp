@@ -4,6 +4,12 @@
 #include "efx/TEnemyBomb.h"
 #include "types.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-GasHibaState";
+}
+
 namespace Game {
 namespace GasHiba {
 /**
@@ -13,9 +19,9 @@ namespace GasHiba {
 void FSM::init(EnemyBase* enemy)
 {
 	create(GASHIBA_Count);
-	registerState(new StateDead);
-	registerState(new StateWait);
-	registerState(new StateAttack);
+	registerState(new StateDead("dead"));
+	registerState(new StateWait("wait"));
+	registerState(new StateAttack("attack"));
 }
 
 /**
@@ -91,7 +97,7 @@ void StateWait::exec(EnemyBase* enemy)
 	hiba->setInitLivingThing();
 	hiba->updateLivingThing();
 
-	if (hiba->mHealth <= 0.0f) {
+	if (hiba->isDead()) {
 		transit(hiba, GASHIBA_Dead, nullptr);
 		return;
 	}
@@ -131,7 +137,7 @@ void StateAttack::exec(EnemyBase* enemy)
 	Obj* hiba = OBJ(enemy);
 
 	// If dead or we're done attacking, then finish
-	if ((hiba->mHealth <= 0.0f)
+	if ((hiba->isDead())
 	    || ((CG_PROPERPARMS(hiba).mWaitTime.mValue > 0.0f) && (hiba->mTimer > CG_PROPERPARMS(hiba).mActiveTime.mValue))) {
 		hiba->finishMotion();
 	}
@@ -149,7 +155,7 @@ void StateAttack::exec(EnemyBase* enemy)
 
 	if (hiba->mCurAnim->mIsPlaying
 	    && ((u32)hiba->mCurAnim->mType == KEYEVENT_END) /* Epoch: wtf is this, needs cleanup. Surely an enum (+1 from INTNS)? */) {
-		if (hiba->mHealth <= 0.0f) {
+		if (hiba->isDead()) {
 			transit(hiba, GASHIBA_Dead, nullptr);
 			return;
 		}
