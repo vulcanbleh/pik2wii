@@ -6,6 +6,12 @@
 #include "LoadResource.h"
 #include "PlatAttacher.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "itemMgr";
+}
+
 namespace Game {
 
 ItemMgr* itemMgr;
@@ -21,8 +27,8 @@ BaseItem::BaseItem(int objectTypeID)
 	mNodeItemMgr              = nullptr;
 	_188                      = 0;
 	_184                      = 0;
-	mVelocity                 = 0.0f;
-	mPosition                 = 0.0f;
+	mVelocity.set(0.0f, 0.0f, 0.0f);
+	mPosition.set(0.0f, 0.0f, 0.0f);
 	mCollTree                 = new CollTree;
 	mBoundingSphere.mPosition = Vector3f::zero;
 	mBoundingSphere.mRadius   = 1.0f;
@@ -171,7 +177,6 @@ void BaseItem::update()
 	if (isAlive()) {
 		updateCell();
 		if (0 > mCellLayerIndex || mCellLayerIndex > 10) {
-			getTypeName();
 			JUT_PANICLINE(365, "cellLayerindex overflow\n");
 		}
 		do_updateLOD();
@@ -247,11 +252,8 @@ void BaseItem::move(f32 step)
 void BaseItem::movieStartAnimation(u32 animId)
 {
 	if (mAnimator.mAnimMgr) {
-		getCreatureName();
 		mAnimator.startAnim(animId, nullptr);
 		mAnimSpeed = 30.0f;
-	} else {
-		getCreatureName();
 	}
 }
 
@@ -261,7 +263,6 @@ void BaseItem::movieStartAnimation(u32 animId)
  */
 void BaseItem::movieStartDemoAnimation(SysShape::AnimInfo* animInfo)
 {
-	getTypeName();
 	mAnimator.startExAnim(animInfo);
 	mAnimSpeed = 30.0f;
 	P2ASSERTLINE(498, mAnimator.assertValid(mModel));
@@ -646,6 +647,7 @@ PlatAttacher* BaseItemMgr::loadPlatAttacher(JKRFileLoader* loader, char* path)
 	// Line 0x404: platAttacher not found. :-)
 	if (data == nullptr) {
 		JUT_PANICLINE(1028, "platAttacher %s not found !\n", path);
+		return nullptr;
 	} else {
 		RamStream stream(data, -1);
 		stream.setMode(STREAM_MODE_BINARY, -1);
@@ -741,7 +743,6 @@ void TNodeItemMgr::killAll()
 {
 	for (TObjectNode<BaseItem>* node = (TObjectNode<BaseItem>*)mNodeObjectMgr.mNode.mChild; node != nullptr;
 	     node                        = (TObjectNode<BaseItem>*)mNodeObjectMgr.mNode.mChild) {
-		node->mContents->getCreatureName();
 		BaseItem* creature = node->mContents;
 		CreatureKillArg arg(CKILL_DontCountAsDeath);
 		creature->kill(&arg);
