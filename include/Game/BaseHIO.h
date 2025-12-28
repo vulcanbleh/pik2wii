@@ -33,9 +33,9 @@ struct BaseHIOSection : public Section {
 	void createScreenRootNode();
 	void setDisplay(JFWDisplay*, int);
 
-	HIORootNode* mRootNode;       // _3C
-	u8 _40[4];                    // _40
-	Controller* mDebugController; // _44, uses port 4, not actually used for anything
+	HIORootNode* mRootNode;       // _40
+	u8 _44[4];                    // _44
+	Controller* mDebugController; // _48, uses port 4, not actually used for anything
 };
 
 /**
