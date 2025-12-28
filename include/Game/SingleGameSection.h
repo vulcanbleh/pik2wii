@@ -86,38 +86,35 @@ struct SingleGameSection : public BaseGameSection {
 	inline void setCurrState(StateType* state) { mCurrentState = state; }
 	inline StateType* getCurrState() { return mCurrentState; }
 
-	f32 mTimer;                                           // _174
-	bool mTimerEnabled;                                   // _178
-	u32 mTimerType;                                       // _17C
-	u8 mOpenMenuFlags;                                    // _180
-	struct Game::ItemCave::Item* mCurrentCave;            // _184
-	struct Game::ItemHole::Item* mHole;                   // _188
-	struct Game::ItemBigFountain::Item* mFountain;        // _18C
-	u32 mCaveIndex;                                       // _190
-	bool mIsExitingMap;                                   // _194
-	char mCaveFilename[0x20];                             // _195
-	bool mDoEnd;                                          // _1B5
-	DvdThreadCommand mDvdThread;                          // _1B8
-	Delegate<Game::SingleGameSection>* mLoadGameCallback; // _224
-	u8 mIsGameStarted;                                    // _228, used to tell if new entry effects should play on opening the world map
-	Game::CourseInfo* mCurrentCourseInfo;                 // _22C
-	ID32 mCaveID;                                         // _230
-	bool mInCave;                                         // _23C
-	bool mTreasureRadarActive;                            // _23D
-	bool mNeedTreasureCalc;                               // _23E
-	Delegate<Game::SingleGameSection>* mCaveSaveCallback; // _240
-	efx::TChasePos* mWeatherEfx;                          // _244
-	int mCurrentFloor;                                    // _248
-	Game::SingleGame::FSM* mFsm;                          // _24C
-	Game::SingleGame::State* mCurrentState;               // _250
-	KindCounter mCaveTreasureCounter;                     // _254
-	KindCounter mCaveUpgradeCounter;                      // _25C
-	KindCounter mOtakaraCounter;                          // _264
-	KindCounter mItemCounter;                             // _26C
-	u8 mDoTrackCarcass;                                   // _274
-#if BUILDTARGET == USADEMO1
-	u8 _DemoPadding2[0x4];
-#endif
+	f32 mTimer;                                           // _178
+	bool mTimerEnabled;                                   // _17C
+	u32 mTimerType;                                       // _180
+	u8 mOpenMenuFlags;                                    // _184
+	struct Game::ItemCave::Item* mCurrentCave;            // _188
+	struct Game::ItemHole::Item* mHole;                   // _18C
+	struct Game::ItemBigFountain::Item* mFountain;        // _190
+	u32 mCaveIndex;                                       // _194
+	bool mIsExitingMap;                                   // _198
+	char mCaveFilename[0x20];                             // _199
+	bool mDoEnd;                                          // _1B9
+	DvdThreadCommand mDvdThread;                          // _1BC
+	Delegate<Game::SingleGameSection>* mLoadGameCallback; // _228
+	u8 mIsGameStarted;                                    // _22C, used to tell if new entry effects should play on opening the world map
+	Game::CourseInfo* mCurrentCourseInfo;                 // _230
+	ID32 mCaveID;                                         // _234
+	bool mInCave;                                         // _240
+	bool mTreasureRadarActive;                            // _241
+	bool mNeedTreasureCalc;                               // _242
+	Delegate<Game::SingleGameSection>* mCaveSaveCallback; // _244
+	efx::TChasePos* mWeatherEfx;                          // _248
+	int mCurrentFloor;                                    // _24C
+	Game::SingleGame::FSM* mFsm;                          // _250
+	Game::SingleGame::State* mCurrentState;               // _254
+	KindCounter mCaveTreasureCounter;                     // _258
+	KindCounter mCaveUpgradeCounter;                      // _260
+	KindCounter mOtakaraCounter;                          // _268
+	KindCounter mItemCounter;                             // _270
+	u8 mDoTrackCarcass;                                   // _278
 };
 } // namespace Game
 

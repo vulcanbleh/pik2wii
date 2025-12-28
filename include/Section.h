@@ -70,18 +70,13 @@ struct Section : public ISection {
 	JFWDisplay* mDisplay;    // _24
 	JUTFader* mFader;        // _28
 	Graphics* mGraphics;     // _2C
-	f32 mTimeStep;           // _30
-	bool mIsMainActive;      // _34
-	bool mIsDisplayNew;      // _35
-	u8 _36;                  // _36
-	bool mIsLoadingDVD;      // _37
-	u8 _38;                  // _38
-#if BUILDTARGET == USADEMO1
-	OSTime mOsTime;               // _40
-	JUTGamePad* mDemoController1; // _48
-	JUTGamePad* mDemoController2; // _4C
-	f32 mTimer;                   // _50
-#endif
+	JKRHeap* _30;            // _30
+	f32 mTimeStep;           // _34
+	bool mIsMainActive;      // _38
+	bool mIsDisplayNew;      // _39
+	u8 _36;                  // _40
+	bool mIsLoadingDVD;      // _41
+	u8 _38;                  // _42
 };
 
 #endif

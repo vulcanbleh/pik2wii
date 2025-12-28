@@ -120,55 +120,55 @@ struct VsGameSection : public BaseGameSection {
 	static int mBlueWinCount;
 	static int mDrawCount;
 
-	bool mIsVersusMode;                            // _174
-	VSFifo* mVsFifo;                               // _178
-	StateMachine<Game::VsGameSection>* mFsm;       // _17C
-	VsGame::State* mCurrentState;                  // _180
-	DvdThreadCommand mDvdThreadCommand;            // _184
-	f32 mGhostIconTimers[2];                       // _1F0
-	BitFlag<u8> mMenuFlags;                        // _1F8
-	struct ItemHole::Item* mHole;                  // _1FC
-	struct ItemBigFountain::Item* mFountain;       // _200
-	bool mIsMenuRunning;                           // _204
-	bool mIsChallengePerfect;                      // _205
-	int mDeadPikiCount;                            // _208 - pikmin spawn queue
-	ChallengeGame::StageList* mChallengeStageList; // _20C
-	VsGame::StageList* mVsStageList;               // _210
-	PikiContainer mContainer1;                     // _214
-	PikiContainer mContainer2;                     // _21C
-	char mCaveInfoFilename[128];                   // _248
-	char mEditFilename[128];                       // _2A4
-	int mCurrentFloor;                             // _324
-	int mEditNumber;                               // _328
-	VsGame::TekiMgr* mTekiMgr;                     // _32C
-	VsGame::CardMgr* mCardMgr;                     // _330
-	ChallengeGame::StageData* mChallengeStageData; // _334
-	int mChallengeStageNum;                        // _338
-	VsGame::StageData* mVsStageData;               // _33C
-	int mVsStageNum;                               // _340
-	int mOlimarHandicap;                           // _344
-	int mLouieHandicap;                            // _348
-	int mVsWinner;                                 // _34C
-	f32 mPikminRatio;                              // _350
-	f32 mPikminCountTimer;                         // _354
-	f32 mRedBlueYellowScore[2];                    // _358
-	f32 mCherryScore[2];                           // _360
-	f32 mMaxCherryScore[2];                        // _368
-	f32 mYellowScore[2];                           // _370
-	f32 mRedBlueScore[2];                          // _378
-	Pellet* mMarbleRedBlue[2];                     // _380
-	Pellet* mMarbleYellow[VS_YELLOW_MARLBE_NUM];   // _388
-	int mDopeCounts[2][2];                         // _3A4
-	int mPlayer2Cherries;                          // _3B4
-	int mPlayer1Cherries;                          // _3B8
-	int mPokoCount;                                // _3BC
-	f32 mTimeLimit;                                // _3C0
-	int mCardCount;                                // _3C4
-	f32 mSpawnTimer;                               // _3C8
-	int mMaxCherries;                              // _3CC
-	Pellet** mCherryArray;                         // _3D0
-	int mMarbleCount[2];                           // _3D4
-	int mYellowMarbleCounts[2];                    // _3DC
+	bool mIsVersusMode;                            // _178
+	VSFifo* mVsFifo;                               // _17C
+	StateMachine<Game::VsGameSection>* mFsm;       // _180
+	VsGame::State* mCurrentState;                  // _184
+	DvdThreadCommand mDvdThreadCommand;            // _188
+	f32 mGhostIconTimers[2];                       // _1F4
+	BitFlag<u8> mMenuFlags;                        // _1FC
+	struct ItemHole::Item* mHole;                  // _200
+	struct ItemBigFountain::Item* mFountain;       // _204
+	bool mIsMenuRunning;                           // _208
+	bool mIsChallengePerfect;                      // _209
+	int mDeadPikiCount;                            // _20C - pikmin spawn queue
+	ChallengeGame::StageList* mChallengeStageList; // _210
+	VsGame::StageList* mVsStageList;               // _214
+	PikiContainer mContainer1;                     // _218
+	PikiContainer mContainer2;                     // _220
+	char mCaveInfoFilename[128];                   // _24C
+	char mEditFilename[128];                       // _2A8
+	int mCurrentFloor;                             // _328
+	int mEditNumber;                               // _32C
+	VsGame::TekiMgr* mTekiMgr;                     // _330
+	VsGame::CardMgr* mCardMgr;                     // _334
+	ChallengeGame::StageData* mChallengeStageData; // _338
+	int mChallengeStageNum;                        // _33C
+	VsGame::StageData* mVsStageData;               // _340
+	int mVsStageNum;                               // _344
+	int mOlimarHandicap;                           // _348
+	int mLouieHandicap;                            // _34C
+	int mVsWinner;                                 // _350
+	f32 mPikminRatio;                              // _354
+	f32 mPikminCountTimer;                         // _358
+	f32 mRedBlueYellowScore[2];                    // _35C
+	f32 mCherryScore[2];                           // _364
+	f32 mMaxCherryScore[2];                        // _36C
+	f32 mYellowScore[2];                           // _374
+	f32 mRedBlueScore[2];                          // _37C
+	Pellet* mMarbleRedBlue[2];                     // _384
+	Pellet* mMarbleYellow[VS_YELLOW_MARLBE_NUM];   // _38C
+	int mDopeCounts[2][2];                         // _3A8
+	int mPlayer2Cherries;                          // _3B8
+	int mPlayer1Cherries;                          // _3BC
+	int mPokoCount;                                // _3C0
+	f32 mTimeLimit;                                // _3C4
+	int mCardCount;                                // _3C8
+	f32 mSpawnTimer;                               // _3CC
+	int mMaxCherries;                              // _3D0
+	Pellet** mCherryArray;                         // _3D4
+	int mMarbleCount[2];                           // _3D8
+	int mYellowMarbleCounts[2];                    // _3E0
 };
 } // namespace Game
 
