@@ -1536,7 +1536,7 @@ config.libs = [
             Object(NonMatching, "plugProjectYamashitaU/enemyMgrBase.cpp"),
             Object(NonMatching, "plugProjectYamashitaU/enemyFSM.cpp"),
             Object(NonMatching, "plugProjectYamashitaU/singleGS_ZukanParms.cpp"),
-            Object(NonMatching, "plugProjectYamashitaU/treasureLightMgr.cpp"),
+            Object(Matching, "plugProjectYamashitaU/treasureLightMgr.cpp"),
             Object(NonMatching, "plugProjectYamashitaU/effectAnimator.cpp"),
         ],
     },
