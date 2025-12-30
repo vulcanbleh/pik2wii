@@ -229,8 +229,8 @@ cflags_base = [
 # Metrowerks library flags
 cflags_revo = [
     *cflags_base,
-    "-use_lmw_stmw on",
     "-str reuse,readonly",
+    "-fp_contract off",
     "-common off",
     "-inline auto",
 ]
@@ -1428,7 +1428,7 @@ config.libs = [
     },
     {
         "lib": "kpad",
-        "cflags": [*cflags_revo, "-str noreadonly"],  # unknown
+        "cflags": [*cflags_revo, "-str noreadonly", "-ipa file",],  # unknown
         "mw_version": "GC/3.0a3p1",  # unknown
         "progress_category": "sdk",
         "objects": [

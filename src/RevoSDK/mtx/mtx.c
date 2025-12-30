@@ -212,9 +212,94 @@ void C_MTXConcatArray(void)
  * @note Address: N/A
  * @note Size: 0x158
  */
-void PSMTXConcatArray(void)
-{
-	// UNUSED FUNCTION
+void PSMTXConcatArray(const register Mtx a, const register Mtx* srcBase, register Mtx* dstBase, register u32 count) {
+    register f32 va0, va1, va2, va3, va4, va5;
+    register f32 vb0, vb1, vb2, vb3, vb4, vb5;
+    register f32 vd0, vd1, vd2, vd3, vd4, vd5;
+    register f32 u01;
+    register f32* u01Ptr = Unit01;
+
+    asm {
+        psq_l va0, 0(a), 0, 0;
+        psq_l va1, 8(a), 0, 0;
+        psq_l va2, 16(a), 0, 0;
+        psq_l va3, 24(a), 0, 0;
+        subi count, count, 1;
+        psq_l va4, 32(a), 0, 0;
+        psq_l va5, 40(a), 0, 0;
+        mtctr count;
+        psq_l u01, 0(u01Ptr), 0, 0;
+        psq_l vb0, 0(srcBase), 0, 0;
+        psq_l vb2, 16(srcBase), 0, 0;
+        ps_muls0 vd0, vb0, va0;
+        ps_muls0 vd2, vb0, va2;
+        ps_muls0 vd4, vb0, va4;
+        psq_l vb4, 32(srcBase), 0, 0;
+        ps_madds1 vd0, vb2, va0, vd0;
+        ps_madds1 vd2, vb2, va2, vd2;
+        ps_madds1 vd4, vb2, va4, vd4;
+        psq_l vb1, 8(srcBase), 0, 0;
+        ps_madds0 vd0, vb4, va1, vd0;
+        ps_madds0 vd2, vb4, va3, vd2;
+        ps_madds0 vd4, vb4, va5, vd4;
+        psq_l vb3, 24(srcBase), 0, 0;
+        psq_st vd0, 0(dstBase), 0, 0;
+        ps_muls0 vd1, vb1, va0;
+        ps_muls0 vd3, vb1, va2;
+        ps_muls0 vd5, vb1, va4;
+        psq_l vb5, 40(srcBase), 0, 0;
+        psq_st vd2, 16(dstBase), 0, 0;
+        ps_madds1 vd1, vb3, va0, vd1;
+        ps_madds1 vd3, vb3, va2, vd3;
+        ps_madds1 vd5, vb3, va4, vd5;
+    _loop:
+        addi srcBase, srcBase, sizeof(Mtx);
+        ps_madds0 vd1, vb5, va1, vd1;
+        ps_madds0 vd3, vb5, va3, vd3;
+        ps_madds0 vd5, vb5, va5, vd5;
+        psq_l vb0, 0(srcBase), 0, 0;
+        psq_st vd4, 32(dstBase), 0, 0;
+        ps_madd vd1, u01, va1, vd1;
+        ps_madd vd3, u01, va3, vd3;
+        ps_madd vd5, u01, va5, vd5;
+        psq_l vb2, 16(srcBase), 0, 0;
+        psq_st vd1, 8(dstBase), 0, 0;
+        ps_muls0 vd0, vb0, va0;
+        ps_muls0 vd2, vb0, va2;
+        ps_muls0 vd4, vb0, va4;
+        psq_l vb4, 32(srcBase), 0, 0;
+        psq_st vd3, 24(dstBase), 0, 0;
+        ps_madds1 vd0, vb2, va0, vd0;
+        ps_madds1 vd2, vb2, va2, vd2;
+        ps_madds1 vd4, vb2, va4, vd4;
+        psq_l vb1, 8(srcBase), 0, 0;
+        psq_st vd5, 40(dstBase), 0, 0;
+        addi dstBase, dstBase, sizeof(Mtx);
+        ps_madds0 vd0, vb4, va1, vd0;
+        ps_madds0 vd2, vb4, va3, vd2;
+        ps_madds0 vd4, vb4, va5, vd4;
+        psq_l vb3, 24(srcBase), 0, 0;
+        psq_st vd0, 0(dstBase), 0, 0;
+        ps_muls0 vd1, vb1, va0;
+        ps_muls0 vd3, vb1, va2;
+        ps_muls0 vd5, vb1, va4;
+        psq_l vb5, 40(srcBase), 0, 0;
+        psq_st vd2, 16(dstBase), 0, 0;
+        ps_madds1 vd1, vb3, va0, vd1;
+        ps_madds1 vd3, vb3, va2, vd3;
+        ps_madds1 vd5, vb3, va4, vd5;
+        bdnz _loop;
+        psq_st vd4, 32(dstBase), 0, 0;
+        ps_madds0 vd1, vb5, va1, vd1;
+        ps_madds0 vd3, vb5, va3, vd3;
+        ps_madds0 vd5, vb5, va5, vd5;
+        ps_madd vd1, u01, va1, vd1;
+        ps_madd vd3, u01, va3, vd3;
+        ps_madd vd5, u01, va5, vd5;
+        psq_st vd1, 8(dstBase), 0, 0;
+        psq_st vd3, 24(dstBase), 0, 0;
+        psq_st vd5, 40(dstBase), 0, 0;
+    }
 }
 
 /**
@@ -230,7 +315,6 @@ void C_MTXTranspose(void)
  * @note Address: 0x800EA3CC
  * @note Size: 0x50
  */
-#pragma scheduling off
 void PSMTXTranspose(const register Mtx src, register Mtx xPose)
 {
 	register f32 c_zero = 0.0f;
@@ -357,9 +441,59 @@ void C_MTXInvXpose(void)
  * @note Address: N/A
  * @note Size: 0xC8
  */
-void PSMTXInvXpose(void)
-{
-	// UNUSED FUNCTION
+ASM u32 PSMTXInvXpose(const register Mtx src, register Mtx invX) {
+#ifdef __MWERKS__ // clang-format off
+	psq_l f0, 0(src), 1, 0
+	psq_l f1, 4(src), 0, 0
+	psq_l f2, 16(src), 1, 0
+	ps_merge10 f6, f1, f0
+	psq_l f3, 20(src), 0, 0
+	psq_l f4, 32(src), 1, 0
+	ps_merge10 f7, f3, f2
+	psq_l f5, 36(src), 0, 0
+	ps_mul f11, f3, f6
+	ps_merge10 f8, f5, f4
+	ps_mul f13, f5, f7
+	ps_msub f11, f1, f7, f11
+	ps_mul f12, f1, f8
+	ps_msub f13, f3, f8, f13
+	ps_msub f12, f5, f6, f12
+	ps_mul f10, f3, f4
+	ps_mul f9, f0, f5
+	ps_mul f8, f1, f2
+	ps_msub f10, f2, f5, f10
+	ps_msub f9, f1, f4, f9
+	ps_msub f8, f0, f3, f8
+	ps_mul f7, f0, f13
+	ps_sub f1, f1, f1
+	ps_madd f7, f2, f12, f7
+	ps_madd f7, f4, f11, f7
+	ps_cmpo0 cr0, f7, f1
+	bne skip_return
+	li r3, 0
+	blr
+skip_return:
+	fres f0, f7
+	psq_st f1, 12(invX), 1, 0
+	ps_add f6, f0, f0
+	ps_mul f5, f0, f0
+	psq_st f1, 28(invX), 1, 0
+	ps_nmsub f0, f7, f5, f6
+	psq_st f1, 44(invX), 1, 0
+	ps_muls0 f13, f13, f0
+	ps_muls0 f12, f12, f0
+	ps_muls0 f11, f11, f0
+    psq_st f13, 0(invX), 0, 0
+	psq_st f12, 16(invX), 0, 0
+	ps_muls0 f10, f10, f0
+    ps_muls0 f9, f9, f0
+	psq_st f11, 32(invX), 0, 0
+	psq_st f10, 8(invX), 1, 0
+	ps_muls0 f8, f8, f0
+	li r3, 1
+    psq_st f9, 24(invX), 1, 0
+	psq_st f8, 40(invX), 1, 0
+#endif // clang-format on
 }
 
 /**
@@ -370,7 +504,6 @@ void C_MTXRotRad(void)
 {
 	// UNUSED FUNCTION
 }
-#pragma scheduling reset
 /**
  * @note Address: 0x800EA514
  * @note Size: 0x70
@@ -378,8 +511,8 @@ void C_MTXRotRad(void)
 void PSMTXRotRad(Mtx m, char axis, f32 rad)
 {
 	f32 sinA, cosA;
-	sinA = sinf(rad);
-	cosA = cosf(rad);
+	sinA = sin(rad);
+	cosA = cos(rad);
 	PSMTXRotTrig(m, axis, sinA, cosA);
 }
 

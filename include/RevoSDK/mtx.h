@@ -11,6 +11,9 @@ extern "C" {
 
 /////////////// TYPE DEFINES ///////////////
 #define MTXDegToRad(a) ((a) * 0.01745329252f)
+#define MTXRadToDeg(a) ((a) * 57.29577951f)
+
+#define MTXRowCol(m, r, c) ((m)[(r)][(c)])
 
 typedef f32 Mtx[3][4];
 typedef f32 Mtx23[2][3];
@@ -34,6 +37,7 @@ void PSMTXConcat(const Mtx A, const Mtx B, Mtx concat);
 
 void PSMTXTranspose(const Mtx src, Mtx xPose);
 u32 PSMTXInverse(const Mtx src, Mtx inv);
+u32 PSMTXInvXpose(const Mtx src, Mtx xPose);
 
 void __PSMTXRotAxisRadInternal(Mtx mtx, const Vec* axis, f32 sinA, f32 cosA);
 void PSMTXRotRad(Mtx mtx, char axis, f32 angle);
@@ -61,6 +65,7 @@ void PSMTX44Copy(Mtx44 src, Mtx44 dest);
 void C_MTXFrustum(Mtx44 m, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, f32 arg6);
 void C_MTXPerspective(Mtx44 mtx, f32 fovY, f32 aspect, f32 n, f32 f);
 void C_MTXOrtho(Mtx44 mtx, f32 t, f32 b, f32 l, f32 r, f32 n, f32 f);
+void PSMTX44MultVec(const Mtx44 m, const Vec* src, Vec* dst);
 ////////////////////////////////////////////
 
 ///////// CODED C MATRIX FUNCTIONS /////////

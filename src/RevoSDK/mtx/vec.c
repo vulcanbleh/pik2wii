@@ -208,9 +208,14 @@ void C_VECDotProduct(void)
  * @note Address: N/A
  * @note Size: 0x20
  */
-void PSVECDotProduct(void)
-{
-	// UNUSED FUNCTION
+asm f32 PSVECDotProduct(const register Vec* a, const register Vec* b) {
+    psq_l f2, Vec.y(a), 0, 0
+    psq_l f3, Vec.y(b), 0, 0
+    ps_mul f2, f2, f3
+    psq_l f5, Vec.x(a), 0, 0
+    psq_l f4, Vec.x(b), 0, 0
+    ps_madd f3, f5, f4, f2
+    ps_sum0 f1, f3, f2, f2
 }
 
 /**
@@ -252,9 +257,27 @@ ASM void PSVECCrossProduct(const register Vec* vec1, const register Vec* vec2, r
  * @note Address: N/A
  * @note Size: 0xD8
  */
-void C_VECHalfAngle(void)
-{
-	// UNUSED FUNCTION
+void C_VECHalfAngle(const Vec* a, const Vec* b, Vec* half) {
+    Vec aTmp;
+    Vec bTmp;
+    Vec hTmp;
+
+    aTmp.x = -a->x;
+    aTmp.y = -a->y;
+    aTmp.z = -a->z;
+    bTmp.x = -b->x;
+    bTmp.y = -b->y;
+    bTmp.z = -b->z;
+
+    PSVECNormalize(&aTmp, &aTmp);
+    PSVECNormalize(&bTmp, &bTmp);
+    PSVECAdd(&aTmp, &bTmp, &hTmp);
+
+    if (PSVECDotProduct(&hTmp, &hTmp) > 0.0f) {
+        PSVECNormalize(&hTmp, half);
+        return;
+    }
+    *half = hTmp;
 }
 
 /**
@@ -297,7 +320,43 @@ void C_VECDistance(void)
  * @note Address: N/A
  * @note Size: 0x54
  */
-void PSVECDistance(void)
-{
-	// UNUSED FUNCTION
+f32 PSVECDistance(const register Vec* a, const register Vec* b) {
+    register f32 v0yz, v1yz, v0xy, v1xy, dyz, dxy;
+    register f32 sqdist, rdist;
+    register f32 nwork0, nwork1;
+    register f32 c_half, c_three, c_zero;
+
+    asm {
+        psq_l v0yz, 0x4(a), 0, 0
+        psq_l v1yz, 0x4(b), 0, 0
+        ps_sub dyz, v0yz, v1yz
+        psq_l v0xy, 0x0(a), 0, 0
+        psq_l v1xy, 0x0(b), 0, 0
+        ps_mul dyz, dyz, dyz
+        ps_sub dxy, v0xy, v1xy
+    }
+
+    c_half  = 0.5f;
+
+    asm {
+        ps_madd sqdist, dxy, dxy, dyz
+        fsubs c_zero, c_half, c_half
+        ps_sum0 sqdist, sqdist, dyz, dyz
+        fcmpu cr0, c_zero, sqdist
+        beq L_00000CBC
+    }
+
+    c_three = 3.0f;
+
+    asm {
+        frsqrte rdist, sqdist
+        fmuls nwork0, rdist, rdist
+        fmuls nwork1, rdist, c_half
+        fnmsubs nwork0, nwork0, sqdist, c_three
+        fmuls rdist, nwork0, nwork1
+        fmuls sqdist, sqdist, rdist
+    L_00000CBC:
+    }
+
+    return sqdist;
 }
