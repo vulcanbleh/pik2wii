@@ -229,8 +229,8 @@ cflags_base = [
 # Metrowerks library flags
 cflags_revo = [
     *cflags_base,
-    "-use_lmw_stmw on",
     "-str reuse,readonly",
+    "-fp_contract off",
     "-common off",
     "-inline auto",
 ]
@@ -1428,7 +1428,7 @@ config.libs = [
     },
     {
         "lib": "kpad",
-        "cflags": [*cflags_revo, "-str noreadonly"],  # unknown
+        "cflags": [*cflags_revo, "-str noreadonly", "-ipa file",],  # unknown
         "mw_version": "GC/3.0a3p1",  # unknown
         "progress_category": "sdk",
         "objects": [
@@ -1536,7 +1536,7 @@ config.libs = [
             Object(NonMatching, "plugProjectYamashitaU/enemyMgrBase.cpp"),
             Object(NonMatching, "plugProjectYamashitaU/enemyFSM.cpp"),
             Object(NonMatching, "plugProjectYamashitaU/singleGS_ZukanParms.cpp"),
-            Object(Matching, "plugProjectYamashitaU/treasureLightMgr.cpp"),
+            Object(NonMatching, "plugProjectYamashitaU/treasureLightMgr.cpp"),
             Object(NonMatching, "plugProjectYamashitaU/effectAnimator.cpp"),
         ],
     },

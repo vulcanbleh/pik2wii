@@ -2049,6 +2049,9 @@ RevoSDK/gd/GDGeometry.c:
 
 RevoSDK/gx/GXInit.c:
 	.text       start:0x80121C7C end:0x80122E48
+	.data       start:0x80571600 end:0x80571840
+	.bss        start:0x805F2B40 end:0x805F31C0
+	.sdata      start:0x8066AB28 end:0x8066AB30
 	.sbss       start:0x8066C240 end:0x8066C268
 	.sdata2     start:0x8066EA78 end:0x8066EAA0
 
@@ -2096,18 +2099,22 @@ RevoSDK/gx/GXPerf.c:
 
 RevoSDK/mtx/mtx.c:
 	.text       start:0x80129720 end:0x8012A388
+	.sdata      start:0x8066AB88 end:0x8066AB90
+	.sdata2     start:0x8066EB88 end:0x8066EBA8
 
 RevoSDK/mtx/mtxvec.c:
 	.text       start:0x8012A388 end:0x8012A4B8
 
 RevoSDK/mtx/mtx44.c:
 	.text       start:0x8012A4B8 end:0x8012A71C
+	.sdata2     start:0x8066EBA8 end:0x8066EBC0
 
 RevoSDK/mtx/mtx44vec.c:
 	.text       start:0x8012A71C end:0x8012A794
 
 RevoSDK/mtx/vec.c:
 	.text       start:0x8012A794 end:0x8012A9EC
+	.sdata2     start:0x8066EBC0 end:0x8066EBD0
 
 RevoSDK/NdevExi2A/DebuggerDriver.c:
 	.text       start:0x8012A9EC end:0x8012AD20
@@ -2249,7 +2256,7 @@ RevoSDK/si/SISamplingRate.c:
 
 RevoSDK/vi/vi.c:
 	.text       start:0x8013CC60 end:0x8013F6AC
-	.data       start:0x8057FDC0 end:0x80589A80
+	.data       start:0x8057FDC0 end:0x805808A8
 	.sdata      start:0x8066AC60 end:0x8066ACC0
 	.sbss       start:0x8066C480 end:0x8066C660
 
@@ -2261,12 +2268,14 @@ RevoSDK/vi/vi3in1.c:
 
 RevoSDK/thp/THPDec.c:
 	.text       start:0x8014176C end:0x80144B3C
+	.data       start:0x805808A8 end:0x805808F0
 
 RevoSDK/thp/THPAudio.c:
 	.text       start:0x80144B3C end:0x80144FD0
 
 RevoSDK/tpl/TPL.c:
 	.text       start:0x80144FD0 end:0x801451E4
+	.data       start:0x805808F0 end:0x80580920
 
 RevoSDK/usb/usb.c:
 	.text       start:0x801451E4 end:0x80146310
@@ -2301,6 +2310,8 @@ RevoSDK/wud/debug_msg.c:
 
 RevoSDK/arc/arc.c:
 	.text       start:0x801593B0 end:0x80159D30
+	.data       start:0x80583D48 end:0x80583DB8
+	.sdata      start:0x8066ACE0 end:0x8066ACE8
 
 RevoSDK/bte/gki_buffer.c:
 	.text       start:0x80159D30 end:0x8015B174
@@ -2454,10 +2465,15 @@ RevoSDK/ipc/memory.c:
 
 RevoSDK/ipc/ipcProfile.c:
 	.text       start:0x8018B2B4 end:0x8018B478
-	.bss        start:0x8062EE40 end:0x80630480
+	.bss        start:0x8062EE40 end:0x8062EF40
 
 RevoSDK/kpad/KPAD.c:
 	.text       start:0x8018B478 end:0x8018E540
+	.data       start:0x805895F0 end:0x80589660
+	.bss        start:0x8062EF40 end:0x80630450
+	.sdata      start:0x8066ADB0 end:0x8066AE20
+	.sbss       start:0x8066C770 end:0x8066C790
+	.sdata2     start:0x8066ED30 end:0x8066ED90
 
 RevoSDK/mem/mem_heapCommon.c:
 	.text       start:0x8018E540 end:0x8018EAEC
