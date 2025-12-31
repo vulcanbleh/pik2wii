@@ -235,6 +235,13 @@ cflags_revo = [
     "-inline auto",
 ]
 
+cflags_trk = [
+    *cflags_base,
+    "-str reuse,readonly",
+    "-common off",
+    "-inline auto",
+]
+
 # Game code flags
 cflags_pikmin = [
     *cflags_base,
@@ -800,8 +807,8 @@ config.libs = [
     },
     {
         "lib": "TRK_Hollywood_Revolution",
-        "cflags": [*cflags_revo, "-inline deferred", "-sdata 0", "-sdata2 0"],
-        "mw_version": "GC/1.3.2",
+        "cflags": [*cflags_trk, "-inline deferred", "-sdata 0", "-sdata2 0"],
+        "mw_version": "GC/2.7",
         "progress_category": "sdk",
         "objects": [
             Object(NonMatching, "RevoSDK/TRK_Hollywood_Revolution/mainloop.c"),
@@ -852,7 +859,7 @@ config.libs = [
     },
     {
         "lib": "runtime",
-        "cflags": [*cflags_revo, "-inline deferred"],
+        "cflags": [*cflags_trk, "-inline deferred"],
         "mw_version": "GC/3.0a3p1",
         "progress_category": "sdk",
         "objects": [
@@ -1328,7 +1335,7 @@ config.libs = [
     },
     {
         "lib": "arc",
-        "cflags": [*cflags_revo, "-str noreadonly"],  # unknown
+        "cflags": [*cflags_revo, "-str noreadonly", "-ipa file"],  # unknown
         "mw_version": "GC/3.0a3p1",  # unknown
         "progress_category": "sdk",
         "objects": [
@@ -1428,7 +1435,7 @@ config.libs = [
     },
     {
         "lib": "kpad",
-        "cflags": [*cflags_revo, "-str noreadonly", "-ipa file",],  # unknown
+        "cflags": [*cflags_revo, "-str noreadonly", "-ipa file"],  # unknown
         "mw_version": "GC/3.0a3p1",  # unknown
         "progress_category": "sdk",
         "objects": [
@@ -2425,7 +2432,7 @@ config.libs = [
             Object(NonMatching, "egg/core/eggDvdRipper.cpp"),
             Object(NonMatching, "egg/core/eggDvdFile.cpp"),
             Object(Matching, "egg/core/eggDisposer.cpp"),
-            Object(NonMatching, "egg/core/eggArchive.cpp"),
+            Object(Matching, "egg/core/eggArchive.cpp"),
             Object(NonMatching, "egg/core/eggLongStopWatch.cpp"),
             Object(NonMatching, "egg/core/eggDecomp.cpp"),
         ],

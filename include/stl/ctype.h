@@ -11,15 +11,37 @@ extern "C" {
 
 int tolower(int __c);
 
-inline int isalpha(int c) { return (int)(__ctype_map[(u8)c] & __letter); }
-inline int isdigit(int c) { return (int)(__ctype_map[(u8)c] & __digit); }
-inline int isspace(int c) { return (int)(__ctype_map[(u8)c] & __whitespace); }
-inline int isupper(int c) { return (int)(__ctype_map[(u8)c] & __upper_case); }
-inline int isxdigit(int c) { return (int)(__ctype_map[(u8)c] & __hex_digit); }
+inline int isalpha(int c) {
+    return ((c < 0) || (c >= 0x100)) ? 0 : (int)(_current_locale.ctype_cmpt_ptr->ctype_map_ptr[c] & 0x1);
+}
+
+inline int isdigit(int c) {
+    return ((c < 0) || (c >= 0x100)) ? 0 : (int)(_current_locale.ctype_cmpt_ptr->ctype_map_ptr[c] & 0x8);
+}
+
+inline int isspace(int c) { 
+    return ((c < 0) || (c >= 0x100)) ? 0 : (int)(_current_locale.ctype_cmpt_ptr->ctype_map_ptr[c] & 0x100); 
+}
+
+inline int isupper(int c) { 
+    return ((c < 0) || (c >= 0x100)) ? 0 : (int)(_current_locale.ctype_cmpt_ptr->ctype_map_ptr[c] & 0x200); 
+}
+
+inline int isxdigit(int c) { 
+    return ((c < 0) || (c >= 0x100)) ? 0 : (int)(_current_locale.ctype_cmpt_ptr->ctype_map_ptr[c] & 0x400); 
+}
+
+inline int toupper(int c) {
+    return ((c < 0) || (c >= 0x100)) ? c : (int) (_current_locale.ctype_cmpt_ptr->upper_map_ptr[c]);
+}
+
+inline int _tolower(int c) {
+    return ((c < 0) || (c >= 0x100)) ? c : (int) (_current_locale.ctype_cmpt_ptr->lower_map_ptr[c]);
+}
+
 inline int isprintable(int c) { return (int)(__ctype_map[(u8)c] & __printable); }
 // added underscore to avoid naming conflicts
-inline int _tolower(int c) { return (c == -1 ? -1 : (int)__lower_map[(u8)c]); }
-inline int toupper(int c) { return (c == -1 ? -1 : (int)__upper_map[(u8)c]); }
+
 
 #ifdef __cplusplus
 }

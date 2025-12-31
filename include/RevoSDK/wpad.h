@@ -77,6 +77,7 @@ typedef void (*WPADFlushCallback)(u32 result);
 #define WPAD_DEV_FUTURE 251
 #define WPAD_DEV_NOT_SUPPORTED 252
 #define WPAD_DEV_NOT_FOUND 253
+#define WPAD_DEV_NULL 254
 #define WPAD_DEV_UNKNOWN 255
 
 #define WPAD_FMT_CORE 0
@@ -422,8 +423,6 @@ s32 WPADGetStatus(void);
 
 void WPADInit(void);
 u8 WPADGetDpdSensitivity(void);
-
-void WPADRegisterAllocator(WPADAlloc, WPADFree);
 
 WPADExtensionCallback WPADSetExtensionCallback(s32, WPADExtensionCallback);
 WPADConnectCallback WPADSetConnectCallback(s32, WPADConnectCallback callback);
