@@ -62,7 +62,6 @@ f32 THPDinamicsProc::complessor(f32 input)
 	f32 input2 = input;
 	P2ASSERTLINE(156, mDemoInfo);
 
-	//f32 volume = (mDemoInfo->mEnableDyn) ? mDemoInfo->calcDinamic(input2) : input;
 	return (mDemoInfo->mEnableDyn) ? mDemoInfo->calcDinamic(input2) : input;
 	FORCE_DONT_INLINE;
 }
