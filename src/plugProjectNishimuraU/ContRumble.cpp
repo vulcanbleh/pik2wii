@@ -1,5 +1,5 @@
 #include "Game/rumble.h"
-#include "RevoSDK/pad.h"
+#include "RevoSDK/wpad.h"
 #include "System.h"
 
 namespace Game {
@@ -36,7 +36,7 @@ void RumbleNode::update()
 				f32 intensityStart = mRumbleData->mIntensities[i];
 				f32 intensityEnd   = mRumbleData->mIntensities[nextIdx];
 
-				mCurrentIntensity = ((1.0f - t) * intensityStart) + (t * intensityEnd);
+				mCurrentIntensity = ((t * intensityEnd) + (1.0f - t) * intensityStart);
 				break;
 			}
 		}
@@ -120,7 +120,7 @@ void ContRumble::init()
 		mActiveNodes->add(current);
 	}
 
-	PADControlMotor(mPadChannel, 2);
+	WPADControlMotor(mPadChannel, WPAD_MOTOR_STOP);
 }
 
 /**
@@ -155,7 +155,7 @@ void ContRumble::update()
 
 		if (mTotalIntensity < 1.0f) {
 			if (mIsActive) {
-				PADControlMotor(mPadChannel, PAD_MOTOR_STOP);
+				WPADControlMotor(mPadChannel, WPAD_MOTOR_STOP);
 			}
 			return;
 		} else {
@@ -163,7 +163,7 @@ void ContRumble::update()
 		}
 
 		if (mIsActive) {
-			PADControlMotor(mPadChannel, PAD_MOTOR_RUMBLE);
+			WPADControlMotor(mPadChannel, WPAD_MOTOR_RUMBLE);
 			return;
 		}
 
@@ -176,7 +176,7 @@ void ContRumble::update()
 		}
 
 		if (mIsActive) {
-			PADControlMotor(mPadChannel, PAD_MOTOR_STOP_HARD);
+			WPADControlMotor(mPadChannel, WPAD_MOTOR_STOP);
 		}
 	}
 }
@@ -188,7 +188,7 @@ void ContRumble::update()
 void ContRumble::setController(bool isActive)
 {
 	if (!isActive && mIsActive) {
-		PADControlMotor(mPadChannel, PAD_MOTOR_STOP_HARD);
+		WPADControlMotor(mPadChannel, WPAD_MOTOR_STOP);
 	}
 
 	mIsActive = isActive;
@@ -237,7 +237,7 @@ void ContRumble::rumbleStop()
 	}
 
 	if (child) {
-		PADControlMotor(mPadChannel, PAD_MOTOR_STOP_HARD);
+		WPADControlMotor(mPadChannel, WPAD_MOTOR_STOP);
 	}
 }
 
@@ -262,7 +262,7 @@ void ContRumble::rumbleStop(int idx)
 
 	if (child) {
 		if (mParentNode->mChild) { // why. WHY.
-			PADControlMotor(mPadChannel, PAD_MOTOR_STOP_HARD);
+			WPADControlMotor(mPadChannel, WPAD_MOTOR_STOP);
 		}
 	}
 }

@@ -58,10 +58,10 @@ bool DvdStatus::update()
 				JUT_PANICLINE(170, "no display.\n");
 			}
 
-			PADControlMotor(PAD_CHAN0, PAD_MOTOR_STOP_HARD);
-			PADControlMotor(PAD_CHAN1, PAD_MOTOR_STOP_HARD);
-			PADControlMotor(PAD_CHAN2, PAD_MOTOR_STOP_HARD);
-			PADControlMotor(PAD_CHAN3, PAD_MOTOR_STOP_HARD);
+			WPADControlMotor(WPAD_CHAN0, WPAD_MOTOR_STOP);
+			WPADControlMotor(WPAD_CHAN1, WPAD_MOTOR_STOP);
+			WPADControlMotor(WPAD_CHAN2, WPAD_MOTOR_STOP);
+			WPADControlMotor(WPAD_CHAN3, WPAD_MOTOR_STOP);
 			mCPULockNum = sys->disableCPULockDetector();
 			ebi::FileSelect::TMgr::onDvdErrorOccured();
 			ebi::Save::TMgr::onDvdErrorOccured();

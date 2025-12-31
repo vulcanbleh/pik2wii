@@ -211,7 +211,7 @@ bool RumbleMgr::isRumbleUpdateOn()
 	}
 
 	for (int i = 0; i < 4; i++) {
-		PADControlMotor(i, PAD_MOTOR_STOP_HARD);
+		WPADControlMotor(i, WPAD_MOTOR_STOP);
 	}
 
 	return false;

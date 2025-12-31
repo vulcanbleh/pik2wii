@@ -4,6 +4,7 @@
 #include "JSystem/JKernel/JKRDisposer.h"
 #include "JSystem/JSupport/JSUList.h"
 #include "RevoSDK/pad.h"
+#include "RevoSDK/wpad.h"
 #include "types.h"
 
 struct JUTGamePadRecordBase {
