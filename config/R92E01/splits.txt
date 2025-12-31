@@ -6681,8 +6681,8 @@ utilityU/PSMainSide_Sound.cpp:
 	.ctors      start:0x80535090 end:0x80535094
 	.rodata     start:0x8055CC40 end:0x8055CE18
 	.data       start:0x805D08E8 end:0x805D09E0
-	.bss        start:0x8063E550 end:0x8063E580
-	.sdata      start:0x8066B798 end:0x8066B7C0
+	.bss        start:0x8063E550 end:0x8063E560
+	.sdata      start:0x8066B798 end:0x8066B7B0
 	.sbss       start:0x8066D398 end:0x8066D3A8
 	.sdata2     start:0x80675DA0 end:0x80675DC0
 
@@ -6696,6 +6696,8 @@ utilityU/PSMainSide_CreaturePrm.cpp:
 	.ctors      start:0x80535094 end:0x80535098
 	.rodata     start:0x8055D068 end:0x8055D178
 	.data       start:0x805D0A08 end:0x805D0B28
+	.bss        start:0x8063E560 end:0x8063E570
+	.sdata      start:0x8066B7B0 end:0x8066B7C0
 	.sbss       start:0x8066D3A8 end:0x8066D3B0
 	.sdata2     start:0x80675DC0 end:0x80675DE8
 
@@ -6718,6 +6720,7 @@ egg/gfx/eggDrawHelper.cpp:
 	extabindex  start:0x80006BD8 end:0x80006C08
 	.text       start:0x804F87D8 end:0x804F900C
 	.ctors      start:0x80535098 end:0x8053509C
+	.bss        start:0x8063E570 end:0x8063E580
 	.sbss       start:0x8066D3B0 end:0x8066D3B8
 	.sdata2     start:0x80675DF0 end:0x80675E00
 
