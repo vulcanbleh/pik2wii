@@ -9,17 +9,18 @@ CreaturePrm sInsReal;
 // clang-format off
 THPDemoDinamics sThpDemoDinamics[THP_COUNT]
 	= { { 0.8f,  0.38f, 0.94f, true,  "Opening1" },
-		{ 0.9f,  0.22f, 0.98f, true,  "Opening2" },
+		{ 0.7f,  0.22f, 0.98f, true,  "Opening2" },
 		{ 0.7f,  0.38f, 0.98f, true,  "Ending1" },
 		{ 0.8f,  0.44f, 0.99f, true,  "Ending2" },
-		{ 0.57f, 1.00f, 1.00f, false, "Staffroll" },
-		{ 0.5f,  1.00f, 1.00f, false, "Play1" },
+		{ 0.8f,  1.00f, 1.00f, false, "Staffroll" },
+		{ 0.7f,  1.00f, 1.00f, false, "Play1" },
 		{ 0.7f,  1.00f, 1.00f, false, "Play2" },
 		{ 0.7f,  1.00f, 1.00f, false, "Play3" },
 		{ 0.7f,  1.00f, 1.00f, false, "Play4" },
 		{ 0.7f,  1.00f, 1.00f, false, "Play5" },
 		{ 0.7f,  1.00f, 1.00f, false, "Play6" },
-		{ 0.7f,  1.00f, 1.00f, false, "Crime" }, };
+		{ 0.7f,  1.00f, 1.00f, false, "Crime" },
+		{ 0.7f,  1.00f, 1.00f, false, "Play7" }, };
 // clang-format on
 
 /**
@@ -28,7 +29,7 @@ THPDemoDinamics sThpDemoDinamics[THP_COUNT]
  */
 void THPDinamicsProc::setSetting(THP_ID id)
 {
-	P2ASSERTLINE(118, id < THP_COUNT);
+	P2ASSERTLINE(137, id < THP_COUNT);
 	setSetting(&sThpDemoDinamics[id]);
 }
 
@@ -50,10 +51,19 @@ f32 sBoss_DistMax     = 4000.0f;
 void THPDinamicsProc::setSetting(THPDemoDinamics* dyn)
 {
 	mDemoInfo = dyn;
-	P2ASSERTLINE(125, dyn);
-	P2ASSERTBOUNDSLINE2(126, 0.0f, dyn->_04, 1.0f);
-	P2ASSERTBOUNDSLINE2(127, 0.0f, dyn->_08, 1.0f);
-	P2ASSERTLINE(128, dyn->mBaseVolumeModifier > 0.0f);
+	P2ASSERTLINE(144, dyn);
+	P2ASSERTBOUNDSLINE2(145, 0.0f, dyn->_04, 1.0f);
+	P2ASSERTBOUNDSLINE2(146, 0.0f, dyn->_08, 1.0f);
+	P2ASSERTLINE(147, dyn->mBaseVolumeModifier > 0.0f);
+}
+
+f32 THPDinamicsProc::complessor(f32 input)
+{
+	f32 input2 = input;
+	P2ASSERTLINE(156, mDemoInfo);
+
+	return (mDemoInfo->mEnableDyn) ? mDemoInfo->calcDinamic(input2) : input;
+	FORCE_DONT_INLINE;
 }
 
 /**
@@ -62,10 +72,7 @@ void THPDinamicsProc::setSetting(THPDemoDinamics* dyn)
  */
 f32 THPDinamicsProc::dinamics(f32 input)
 {
-	f32 input2 = input;
-	P2ASSERTLINE(137, mDemoInfo);
-
-	f32 volume = (mDemoInfo->mEnableDyn) ? mDemoInfo->calcDinamic(input2) : input;
+	f32 volume = complessor(input);
 	return volume * mDemoInfo->mBaseVolumeModifier;
 }
 

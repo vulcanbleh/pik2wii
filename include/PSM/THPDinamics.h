@@ -17,7 +17,8 @@ enum THP_ID {
 	PLAY_5                = 9,
 	PLAY_6                = 10,
 	CRIME                 = 11,
-	THP_COUNT             = 12,
+	PLAY_7                = 12,
+	THP_COUNT             = 13,
 };
 
 struct THPDemoDinamics {
@@ -68,7 +69,7 @@ struct THPDinamicsProc {
 	void setSetting(THPDemoDinamics* dyn);
 	f32 dinamics(f32 input);
 
-	void complessor(f32);
+	f32 complessor(f32);
 
 	inline f32 doAudioDinamics(u16 vol, int val) { return SHORT_FLOAT_MAX * dinamics((vol * val >> 15) / SHORT_FLOAT_MAX); }
 

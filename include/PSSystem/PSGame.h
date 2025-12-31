@@ -12,24 +12,24 @@
 namespace PSSystem {
 inline PSSystem::SceneMgr* getSceneMgr()
 {
-	P2ASSERTLINE(467, spSceneMgr);
+	P2ASSERTLINE(469, spSceneMgr);
 
 	return spSceneMgr;
 }
 
-inline void validateSceneMgr(SceneMgr* mgr) { P2ASSERTLINE(476, mgr); }
+inline void validateSceneMgr(SceneMgr* mgr) { P2ASSERTLINE(478, mgr); }
 
 inline Scene* getChildScene(SceneMgr* mgr)
 {
 	Scene* scene = mgr->mScenes->mChild;
-	P2ASSERTLINE(485, scene);
+	P2ASSERTLINE(487, scene);
 	return scene;
 }
 
 inline SeqBase* getSeqFromScene(Scene* scene, u32 id)
 {
 	SeqBase* seq = scene->mSeqMgr.getSeq(id);
-	P2ASSERTLINE(487, seq);
+	P2ASSERTLINE(489, seq);
 	return seq;
 }
 
@@ -39,21 +39,21 @@ inline SeqBase* getSeqDataCheck(SceneMgr* mgr, int id)
 {
 	mgr->checkScene();
 	Scene* scene = mgr->mScenes->mChild;
-	P2ASSERTLINE(485, scene);
+	P2ASSERTLINE(487, scene);
 	SeqBase* seq = scene->mSeqMgr.getSeq(id);
-	P2ASSERTLINE(487, seq);
+	P2ASSERTLINE(489, seq);
 	return seq;
 }
 
 inline PSGame::SeMgr* getSeMgrInstance()
 {
-	P2ASSERTLINE(567, SingletonBase<PSGame::SeMgr>::sInstance);
+	P2ASSERTLINE(569, SingletonBase<PSGame::SeMgr>::sInstance);
 	return static_cast<PSGame::SeMgr*>(SingletonBase<PSGame::SeMgr>::sInstance);
 }
 
 inline PSGame::SoundTable::SePerspInfo* getSoundCategoryInfo(PSGame::SoundTable::CategoryMgr* mgr, u8 soundCat)
 {
-	P2ASSERTLINE(93, mgr->mPerspInfo[soundCat]);
+	P2ASSERTLINE(95, mgr->mPerspInfo[soundCat]);
 	return mgr->mPerspInfo[soundCat];
 }
 
