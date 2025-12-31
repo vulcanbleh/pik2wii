@@ -3,6 +3,9 @@
 
 #include <nw4r/types_nw4r.h>
 
+
+#define offsetof(type, memb) ((u32) & ((type*)0)->memb)
+
 namespace nw4r {
 namespace ut {
 

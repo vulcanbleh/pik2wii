@@ -26,6 +26,7 @@ extern "C" {
 #define KPAD_DPD_RESO_CY (KPAD_DPD_RESO_WY / 2)
 
 #define KPAD_USE_OBJECTS 2
+#define KPAD_MAX_SAMPLES 16
 
 typedef struct Vec2 {
     f32 x;
@@ -186,6 +187,7 @@ void KPADSetSensorHeight(KPADChannel, f32);
 void KPADSetPosParam(KPADChannel, f32, f32);
 void KPADSetHoriParam(KPADChannel, f32, f32);
 void KPADSetDistParam(KPADChannel, f32, f32);
+void KPADSetAccParam(KPADChannel, f32, f32);
 
 void KPADReset(void);
 s32 KPADRead(KPADChannel, KPADStatus[], u32);
