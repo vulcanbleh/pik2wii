@@ -582,7 +582,7 @@ void JUTGamePad::CRumble::clear(JUTGamePad* pad)
 void JUTGamePad::CRumble::startMotor(int port)
 {
 	if (isEnabledPort(port) != 0) {
-		PADControlMotor(port, 1);
+		WPADControlMotor(port, 1);
 		mStatus[port] = 1;
 	}
 }
@@ -596,7 +596,7 @@ void JUTGamePad::CRumble::stopMotor(int chan, bool doHardStop)
 {
 	if (isEnabledPort(chan) != 0) {
 		u8 command = doHardStop ? PAD_MOTOR_STOP_HARD : PAD_MOTOR_STOP;
-		PADControlMotor(chan, command);
+		WPADControlMotor(chan, command);
 		mStatus[chan] = 0;
 	}
 }
