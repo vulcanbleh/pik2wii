@@ -190,79 +190,9 @@ struct State : public EnemyFSMState {
 	// _00-_10 	= EnemyFSMState
 };
 
-struct StateAppear : public State {
-	inline StateAppear()
-	    : State(SOKKURI_Appear, "appear")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
 struct StateDead : public State {
-	inline StateDead()
-	    : State(SOKKURI_Dead, "dead")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateDisappear : public State {
-	inline StateDisappear()
-	    : State(SOKKURI_Disappear, "disappear")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateFlick : public State {
-	inline StateFlick()
-	    : State(SOKKURI_Flick, "flick")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateMoveGround : public State {
-	inline StateMoveGround()
-	    : State(SOKKURI_MoveGround, "moveground")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateMoveWater : public State {
-	inline StateMoveWater()
-	    : State(SOKKURI_MoveWater, "movewater")
+	inline StateDead(const char* name)
+	    : State(SOKKURI_Dead, name)
 	{
 	}
 
@@ -275,8 +205,8 @@ struct StateMoveWater : public State {
 };
 
 struct StatePress : public State {
-	inline StatePress()
-	    : State(SOKKURI_Press, "press")
+	inline StatePress(const char* name)
+	    : State(SOKKURI_Press, name)
 	{
 	}
 
@@ -289,8 +219,36 @@ struct StatePress : public State {
 };
 
 struct StateStay : public State {
-	inline StateStay()
-	    : State(SOKKURI_Stay, "stay")
+	inline StateStay(const char* name)
+	    : State(SOKKURI_Stay, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateAppear : public State {
+	inline StateAppear(const char* name)
+	    : State(SOKKURI_Appear, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateDisappear : public State {
+	inline StateDisappear(const char* name)
+	    : State(SOKKURI_Disappear, name)
 	{
 	}
 
@@ -303,8 +261,50 @@ struct StateStay : public State {
 };
 
 struct StateWait : public State {
-	inline StateWait()
-	    : State(SOKKURI_Wait, "wait")
+	inline StateWait(const char* name)
+	    : State(SOKKURI_Wait, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateMoveGround : public State {
+	inline StateMoveGround(const char* name)
+	    : State(SOKKURI_MoveGround, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateMoveWater : public State {
+	inline StateMoveWater(const char* name)
+	    : State(SOKKURI_MoveWater, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateFlick : public State {
+	inline StateFlick(const char* name)
+	    : State(SOKKURI_Flick, name)
 	{
 	}
 

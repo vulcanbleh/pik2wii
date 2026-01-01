@@ -3,10 +3,14 @@
 #include "Game/Entities/Sokkuri.h"
 #include "RevoSDK/rand.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-SokkuriState";
+}
+
 namespace Game {
 namespace Sokkuri {
-
-const char statename[] = "246-SokkuriState";
 
 /**
  * @note Address: 0x802EFA24
@@ -15,15 +19,15 @@ const char statename[] = "246-SokkuriState";
 void FSM::init(EnemyBase* enemy)
 {
 	create(SOKKURI_Count);
-	registerState(new StateDead);
-	registerState(new StatePress);
-	registerState(new StateStay);
-	registerState(new StateAppear);
-	registerState(new StateDisappear);
-	registerState(new StateWait);
-	registerState(new StateMoveGround);
-	registerState(new StateMoveWater);
-	registerState(new StateFlick);
+	registerState(new StateDead("dead"));
+	registerState(new StatePress("press"));
+	registerState(new StateStay("stay"));
+	registerState(new StateAppear("appear"));
+	registerState(new StateDisappear("disappear"));
+	registerState(new StateWait("wait"));
+	registerState(new StateMoveGround("moveground"));
+	registerState(new StateMoveWater("movewater"));
+	registerState(new StateFlick("flick"));
 }
 
 /**
@@ -186,7 +190,7 @@ void StateAppear::exec(EnemyBase* enemy)
 {
 	Obj* sokkuri = OBJ(enemy);
 
-	if (sokkuri->mHealth <= 0.0f) {
+	if (sokkuri->isDead()) {
 		transit(sokkuri, SOKKURI_Dead, nullptr);
 
 	} else if (EnemyFunc::isStartFlick(sokkuri, false)) {
@@ -228,7 +232,7 @@ void StateDisappear::init(EnemyBase* enemy, StateArg* stateArg)
 void StateDisappear::exec(EnemyBase* enemy)
 {
 	Obj* sokkuri = OBJ(enemy);
-	if (sokkuri->mHealth <= 0.0f) {
+	if (sokkuri->isDead()) {
 		transit(sokkuri, SOKKURI_Dead, nullptr);
 
 	} else if (sokkuri->mCurAnim->mIsPlaying) {
@@ -271,7 +275,7 @@ void StateWait::init(EnemyBase* enemy, StateArg* stateArg)
 void StateWait::exec(EnemyBase* enemy)
 {
 	Obj* sokkuri = OBJ(enemy);
-	if (sokkuri->mHealth <= 0.0f) {
+	if (sokkuri->isDead()) {
 		transit(sokkuri, SOKKURI_Dead, nullptr);
 
 	} else if (EnemyFunc::isStartFlick(sokkuri, false)) {
@@ -332,7 +336,7 @@ void StateMoveGround::exec(EnemyBase* enemy)
 	Obj* sokkuri = OBJ(enemy);
 	sokkuri->updateMoveState();
 
-	if (sokkuri->mHealth <= 0.0f) {
+	if (sokkuri->isDead()) {
 		transit(sokkuri, SOKKURI_Dead, nullptr);
 		return;
 	}
@@ -371,8 +375,8 @@ void StateMoveGround::exec(EnemyBase* enemy)
 
 	} else {
 		Vector3f targetPos = Vector3f(sokkuri->mTargetPosition);
-		EnemyFunc::walkToTarget(sokkuri, targetPos, sokkuri->mMoveVelocity, parms->mGeneral.mTurnSpeed.mValue,
-		                        parms->mGeneral.mMaxTurnAngle.mValue);
+		EnemyFunc::walkToTarget(sokkuri, targetPos, sokkuri->mMoveVelocity, CG_GENERALPARMS(sokkuri).mTurnSpeed.mValue,
+		                        CG_GENERALPARMS(sokkuri).mMaxTurnAngle.mValue);
 	}
 
 	sokkuri->mTimer += sys->getDeltaTime();
@@ -413,7 +417,7 @@ void StateMoveWater::exec(EnemyBase* enemy)
 	Obj* sokkuri = OBJ(enemy);
 	sokkuri->updateMoveState();
 
-	if (sokkuri->mHealth <= 0.0f) {
+	if (sokkuri->isDead()) {
 		transit(sokkuri, SOKKURI_Dead, nullptr);
 		return;
 	}
@@ -446,8 +450,8 @@ void StateMoveWater::exec(EnemyBase* enemy)
 
 		} else {
 			Vector3f targetPos = Vector3f(sokkuri->mTargetPosition);
-			EnemyFunc::walkToTarget(sokkuri, targetPos, sokkuri->mMoveVelocity, parms->mProperParms.mUnderwaterRotationRate.mValue,
-			                        parms->mProperParms.mUnderwaterRotationMaxSpeed.mValue);
+			EnemyFunc::walkToTarget(sokkuri, targetPos, sokkuri->mMoveVelocity, CG_PROPERPARMS(sokkuri).mUnderwaterRotationRate.mValue,
+			                        CG_PROPERPARMS(sokkuri).mUnderwaterRotationMaxSpeed.mValue);
 		}
 	}
 
@@ -490,7 +494,7 @@ void StateFlick::exec(EnemyBase* enemy)
 {
 	Obj* sokkuri = OBJ(enemy);
 
-	if (sokkuri->mHealth <= 0.0f) {
+	if (sokkuri->isDead()) {
 		transit(sokkuri, SOKKURI_Dead, nullptr);
 		return;
 	}

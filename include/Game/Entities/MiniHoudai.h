@@ -271,7 +271,7 @@ struct FSM : public EnemyStateMachine {
 };
 
 struct State : public EnemyFSMState {
-	inline State(int stateID, char* name)
+	inline State(int stateID, const char* name)
 	    : EnemyFSMState(stateID)
 	{
 		mName = name;
@@ -281,51 +281,9 @@ struct State : public EnemyFSMState {
 	// _00-_10 	= EnemyFSMState
 };
 
-struct StateAttack : public State {
-	inline StateAttack()
-	    : State(MINIHOUDAI_Attack, "attack")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
 struct StateDead : public State {
-	inline StateDead()
-	    : State(MINIHOUDAI_Dead, "dead")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateFlick : public State {
-	inline StateFlick()
-	    : State(MINIHOUDAI_Flick, "flick")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateLost : public State {
-	inline StateLost()
-	    : State(MINIHOUDAI_Lost, "lost")
+	inline StateDead(const char* name)
+	    : State(MINIHOUDAI_Dead, name)
 	{
 	}
 
@@ -338,8 +296,50 @@ struct StateLost : public State {
 };
 
 struct StateRebirth : public State {
-	inline StateRebirth()
-	    : State(MINIHOUDAI_Rebirth, "rebirth")
+	inline StateRebirth(const char* name)
+	    : State(MINIHOUDAI_Rebirth, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateLost : public State {
+	inline StateLost(const char* name)
+	    : State(MINIHOUDAI_Lost, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateAttack : public State {
+	inline StateAttack(const char* name)
+	    : State(MINIHOUDAI_Attack, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateFlick : public State {
+	inline StateFlick(const char* name)
+	    : State(MINIHOUDAI_Flick, name)
 	{
 	}
 
@@ -352,8 +352,8 @@ struct StateRebirth : public State {
 };
 
 struct StateTurn : public State {
-	inline StateTurn()
-	    : State(MINIHOUDAI_Turn, "turn")
+	inline StateTurn(const char* name)
+	    : State(MINIHOUDAI_Turn, name)
 	{
 	}
 
@@ -366,8 +366,8 @@ struct StateTurn : public State {
 };
 
 struct StateTurnHome : public State {
-	inline StateTurnHome()
-	    : State(MINIHOUDAI_TurnHome, "turnhome")
+	inline StateTurnHome(const char* name)
+	    : State(MINIHOUDAI_TurnHome, name)
 	{
 	}
 
@@ -380,8 +380,8 @@ struct StateTurnHome : public State {
 };
 
 struct StateTurnPath : public State {
-	inline StateTurnPath()
-	    : State(MINIHOUDAI_TurnPath, "turnpath")
+	inline StateTurnPath(const char* name)
+	    : State(MINIHOUDAI_TurnPath, name)
 	{
 	}
 
@@ -394,8 +394,8 @@ struct StateTurnPath : public State {
 };
 
 struct StateWalk : public State {
-	inline StateWalk()
-	    : State(MINIHOUDAI_Walk, "walk")
+	inline StateWalk(const char* name)
+	    : State(MINIHOUDAI_Walk, name)
 	{
 	}
 
@@ -408,8 +408,8 @@ struct StateWalk : public State {
 };
 
 struct StateWalkHome : public State {
-	inline StateWalkHome()
-	    : State(MINIHOUDAI_WalkHome, "walkhome")
+	inline StateWalkHome(const char* name)
+	    : State(MINIHOUDAI_WalkHome, name)
 	{
 	}
 
@@ -422,8 +422,8 @@ struct StateWalkHome : public State {
 };
 
 struct StateWalkPath : public State {
-	inline StateWalkPath()
-	    : State(MINIHOUDAI_WalkPath, "walkpath")
+	inline StateWalkPath(const char* name)
+	    : State(MINIHOUDAI_WalkPath, name)
 	{
 	}
 

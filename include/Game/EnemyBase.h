@@ -472,6 +472,8 @@ struct EnemyBase : public Creature, public SysShape::MotionListener, virtual pub
 		f32 angleDist = turnToTarget(targetPos, turnSpeed, maxTurnAngle);
 		return isAngleWithin(angleDist, endAngle);
 	}
+	
+	inline Creature* getTarget() { return mTargetCreature; }
 
 	inline bool isTargetAttackable(Creature* target, f32 angleDiff, f32 attackDist, f32 attackAngle)
 	{

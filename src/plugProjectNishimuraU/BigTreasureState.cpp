@@ -6,12 +6,14 @@
 #include "RevoSDK/rand.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-BigTreasureState";
+}
+
 namespace Game {
 namespace BigTreasure {
-
-static const int someBigTreasureStateArray[3] = { 0, 0, 0 };
-
-static const char debugBigTreasureStateName[] = "246-BigTreasureState";
 
 /**
  * @note Address: 0x802D72CC
@@ -20,18 +22,18 @@ static const char debugBigTreasureStateName[] = "246-BigTreasureState";
 void FSM::init(EnemyBase* enemy)
 {
 	create(BIGTREASURE_Count);
-	registerState(new StateDead);
-	registerState(new StateStay);
-	registerState(new StateLand);
-	registerState(new StateWait);
-	registerState(new StateItemWait);
-	registerState(new StateFlick);
-	registerState(new StatePreAttack);
-	registerState(new StateAttack);
-	registerState(new StatePutItem);
-	registerState(new StateDropItem);
-	registerState(new StateWalk);
-	registerState(new StateItemWalk);
+	registerState(new StateDead("dead"));
+	registerState(new StateStay("stay"));
+	registerState(new StateLand("land"));
+	registerState(new StateWait("wait"));
+	registerState(new StateItemWait("itemwait"));
+	registerState(new StateFlick("flick"));
+	registerState(new StatePreAttack("preattack"));
+	registerState(new StateAttack("attack"));
+	registerState(new StatePutItem("putitem"));
+	registerState(new StateDropItem("dropitem"));
+	registerState(new StateWalk("walk"));
+	registerState(new StateItemWalk("itemwalk"));
 }
 
 /**
@@ -260,7 +262,7 @@ void StateLand::exec(EnemyBase* enemy)
 			}
 
 		} else if ((u32)titan->mCurAnim->mType == KEYEVENT_END) {
-			if (titan->mHealth <= 0.0f) {
+			if (titan->isDead()) {
 				transit(titan, BIGTREASURE_Dead, nullptr);
 			} else if (EnemyFunc::isStartFlick(titan, false)) {
 				if (titan->isCapturedTreasure()) {
@@ -315,7 +317,7 @@ void StateWait::exec(EnemyBase* enemy)
 	Obj* titan = OBJ(enemy);
 	titan->mStateTimer += sys->getDeltaTime();
 
-	if (titan->mHealth <= 0.0f) {
+	if (titan->isDead()) {
 		titan->mNextState = BIGTREASURE_Dead;
 		titan->finishMotion();
 	} else if (EnemyFunc::isStartFlick(titan, false)) {
@@ -445,7 +447,7 @@ void StateFlick::exec(EnemyBase* enemy)
 			titan->startBossFlickBGM();
 
 		} else if ((u32)titan->mCurAnim->mType == KEYEVENT_END) {
-			if (titan->mHealth <= 0.0f) {
+			if (titan->isDead()) {
 				transit(titan, BIGTREASURE_Dead, nullptr);
 
 			} else {
@@ -701,7 +703,7 @@ void StateDropItem::exec(EnemyBase* enemy)
 			titan->endBlendAnimation();
 
 		} else if ((u32)titan->mCurAnim->mType == KEYEVENT_END) {
-			if (titan->mHealth <= 0.0f) {
+			if (titan->isDead()) {
 				transit(titan, BIGTREASURE_Dead, nullptr);
 			} else if (EnemyFunc::isStartFlick(titan, false)) {
 				transit(titan, BIGTREASURE_Flick, nullptr);
@@ -750,7 +752,7 @@ void StateWalk::exec(EnemyBase* enemy)
 	Obj* titan = OBJ(enemy);
 	titan->getTargetPosition();
 
-	if (titan->mHealth <= 0.0f) {
+	if (titan->isDead()) {
 		transit(titan, BIGTREASURE_Dead, nullptr);
 		return;
 	}
@@ -816,7 +818,7 @@ void StateItemWalk::exec(EnemyBase* enemy)
 	Obj* titan = OBJ(enemy);
 	titan->getTargetPosition();
 
-	if (titan->mHealth <= 0.0f) {
+	if (titan->isDead()) {
 		transit(titan, BIGTREASURE_Dead, nullptr);
 		return;
 	}

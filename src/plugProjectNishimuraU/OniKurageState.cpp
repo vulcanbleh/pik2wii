@@ -8,6 +8,12 @@
 #include "efx/TKurage.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-OniKurageState";
+}
+
 namespace Game {
 namespace OniKurage {
 
@@ -18,18 +24,18 @@ namespace OniKurage {
 void FSM::init(EnemyBase* enemy)
 {
 	create(ONIKURAGE_Count);
-	registerState(new StateDead);
-	registerState(new StateWait);
-	registerState(new StateMove);
-	registerState(new StateChase);
-	registerState(new StateAttack);
-	registerState(new StateFall);
-	registerState(new StateDrop);
-	registerState(new StateLand);
-	registerState(new StateGround);
-	registerState(new StateTakeOff);
-	registerState(new StateFlyFlick);
-	registerState(new StateGroundFlick);
+	registerState(new StateDead("dead"));
+	registerState(new StateWait("wait"));
+	registerState(new StateMove("move"));
+	registerState(new StateChase("chase"));
+	registerState(new StateAttack("attack"));
+	registerState(new StateFall("fall"));
+	registerState(new StateDrop("drop"));
+	registerState(new StateLand("land"));
+	registerState(new StateGround("ground"));
+	registerState(new StateTakeOff("takeoff"));
+	registerState(new StateFlyFlick("flyflick"));
+	registerState(new StateGroundFlick("groundflick"));
 }
 
 /**
@@ -201,7 +207,7 @@ void StateMove::exec(EnemyBase* enemy)
 	} else {
 		Vector3f position  = kurage->getPosition();
 		Vector3f targetPos = Vector3f(kurage->mTargetPosition);
-		if (kurage->mStateTimer > 10.0f || (sqrDistanceXZ(position, targetPos)) < 625.0f) {
+		if (kurage->mStateTimer > 10.0f || (sqrDistanceXZ(position, kurage->mTargetPosition)) < 625.0f) {
 			kurage->mNextState = ONIKURAGE_Wait;
 			kurage->finishMotion();
 
@@ -327,7 +333,7 @@ void StateAttack::init(EnemyBase* enemy, StateArg* stateArg)
 void StateAttack::exec(EnemyBase* enemy)
 {
 	Obj* kurage = OBJ(enemy);
-	if ((kurage->mHealth <= 0.0f || kurage->isFinishNaviSuck())
+	if ((kurage->isDead() || kurage->isFinishNaviSuck())
 	    && (kurage->isNaviSucked() || kurage->mStateTimer > CG_PROPERPARMS(kurage).mSuckTime.mValue
 	        || kurage->mFallTimer > CG_PROPERPARMS(kurage).mShakeTime.mValue)) {
 		kurage->finishMotion();
@@ -369,7 +375,7 @@ void StateAttack::exec(EnemyBase* enemy)
 			}
 
 		} else if ((u32)kurage->mCurAnim->mType == KEYEVENT_END) {
-			if (kurage->mHealth <= 0.0f) {
+			if (kurage->isDead()) {
 				transit(kurage, ONIKURAGE_Dead, nullptr);
 				return;
 			}
@@ -446,7 +452,7 @@ void StateFall::exec(EnemyBase* enemy)
 	kurage->mStateTimer += sys->getDeltaTime();
 
 	if (kurage->mCurAnim->mIsPlaying && (u32)kurage->mCurAnim->mType == KEYEVENT_END) {
-		if (kurage->mHealth <= 0.0f) {
+		if (kurage->isDead()) {
 			transit(kurage, ONIKURAGE_Dead, nullptr);
 		} else {
 			transit(kurage, ONIKURAGE_Land, nullptr);
@@ -496,7 +502,7 @@ void StateDrop::exec(EnemyBase* enemy)
 	kurage->mStateTimer += sys->getDeltaTime();
 
 	if (kurage->mCurAnim->mIsPlaying && (u32)kurage->mCurAnim->mType == KEYEVENT_END) {
-		if (kurage->mHealth <= 0.0f) {
+		if (kurage->isDead()) {
 			transit(kurage, ONIKURAGE_Dead, nullptr);
 		} else {
 			transit(kurage, ONIKURAGE_Land, nullptr);
@@ -540,7 +546,7 @@ void StateLand::exec(EnemyBase* enemy)
 {
 	Obj* kurage = OBJ(enemy);
 	if (kurage->mCurAnim->mIsPlaying && (u32)kurage->mCurAnim->mType == KEYEVENT_END) {
-		if (kurage->mHealth <= 0.0f) {
+		if (kurage->isDead()) {
 			transit(kurage, ONIKURAGE_Dead, nullptr);
 		} else {
 			transit(kurage, ONIKURAGE_Ground, nullptr);
@@ -588,7 +594,7 @@ void StateTakeOff::exec(EnemyBase* enemy)
 			kurage->enableEvent(0, EB_Untargetable);
 
 		} else if ((u32)kurage->mCurAnim->mType == KEYEVENT_END) {
-			if (kurage->mHealth <= 0.0f) {
+			if (kurage->isDead()) {
 				transit(kurage, ONIKURAGE_Dead, nullptr);
 			} else {
 				transit(kurage, ONIKURAGE_Wait, nullptr);
@@ -627,14 +633,14 @@ void StateGround::init(EnemyBase* enemy, StateArg* stateArg)
 void StateGround::exec(EnemyBase* enemy)
 {
 	Obj* kurage = OBJ(enemy);
-	if (kurage->mHealth <= 0.0f || kurage->mStuckPikminCount == 0 || kurage->mStateTimer > CG_PROPERPARMS(kurage).mGroundTime.mValue) {
+	if (kurage->isDead() || kurage->mStuckPikminCount == 0 || kurage->mStateTimer > CG_PROPERPARMS(kurage).mGroundTime.mValue) {
 		kurage->finishMotion();
 	}
 
 	kurage->mStateTimer += sys->getDeltaTime();
 
 	if (kurage->mCurAnim->mIsPlaying && (u32)kurage->mCurAnim->mType == KEYEVENT_END) {
-		if (kurage->mHealth <= 0.0f) {
+		if (kurage->isDead()) {
 			transit(kurage, ONIKURAGE_Dead, nullptr);
 		} else if (kurage->mStuckPikminCount != 0 || kurage->isNaviSucked()) {
 			transit(kurage, ONIKURAGE_GroundFlick, nullptr);
@@ -762,7 +768,7 @@ void StateGroundFlick::exec(EnemyBase* enemy)
 			kurage->mFlickTimer = 0.0f;
 
 		} else if ((u32)kurage->mCurAnim->mType == KEYEVENT_END) {
-			if (kurage->mHealth <= 0.0f) {
+			if (kurage->isDead()) {
 				transit(kurage, ONIKURAGE_Dead, nullptr);
 
 			} else {

@@ -842,121 +842,9 @@ struct State : public EnemyFSMState {
 	// _00-_10 	= EnemyFSMState
 };
 
-struct StateAttack : public State {
-	inline StateAttack()
-	    : State(BIGTREASURE_Attack, "attack")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
 struct StateDead : public State {
-	inline StateDead()
-	    : State(BIGTREASURE_Dead, "dead")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateDropItem : public State {
-	inline StateDropItem()
-	    : State(BIGTREASURE_DropItem, "dropitem")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateFlick : public State {
-	inline StateFlick()
-	    : State(BIGTREASURE_Flick, "flick")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateItemWait : public State {
-	inline StateItemWait()
-	    : State(BIGTREASURE_ItemWait, "itemwait")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateItemWalk : public State {
-	inline StateItemWalk()
-	    : State(BIGTREASURE_ItemWalk, "itemwalk")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateLand : public State {
-	inline StateLand()
-	    : State(BIGTREASURE_Land, "land")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StatePreAttack : public State {
-	inline StatePreAttack()
-	    : State(BIGTREASURE_PreAttack, "preattack")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StatePutItem : public State {
-	inline StatePutItem()
-	    : State(BIGTREASURE_PutItem, "putitem")
+	inline StateDead(const char* name)
+	    : State(BIGTREASURE_Dead, name)
 	{
 	}
 
@@ -969,8 +857,22 @@ struct StatePutItem : public State {
 };
 
 struct StateStay : public State {
-	inline StateStay()
-	    : State(BIGTREASURE_Stay, "stay")
+	inline StateStay(const char* name)
+	    : State(BIGTREASURE_Stay, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateLand : public State {
+	inline StateLand(const char* name)
+	    : State(BIGTREASURE_Land, name)
 	{
 	}
 
@@ -983,8 +885,92 @@ struct StateStay : public State {
 };
 
 struct StateWait : public State {
-	inline StateWait()
-	    : State(BIGTREASURE_Wait, "wait")
+	inline StateWait(const char* name)
+	    : State(BIGTREASURE_Wait, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateItemWait : public State {
+	inline StateItemWait(const char* name)
+	    : State(BIGTREASURE_ItemWait, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateFlick : public State {
+	inline StateFlick(const char* name)
+	    : State(BIGTREASURE_Flick, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StatePreAttack : public State {
+	inline StatePreAttack(const char* name)
+	    : State(BIGTREASURE_PreAttack, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateAttack : public State {
+	inline StateAttack(const char* name)
+	    : State(BIGTREASURE_Attack, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StatePutItem : public State {
+	inline StatePutItem(const char* name)
+	    : State(BIGTREASURE_PutItem, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateDropItem : public State {
+	inline StateDropItem(const char* name)
+	    : State(BIGTREASURE_DropItem, name)
 	{
 	}
 
@@ -997,8 +983,22 @@ struct StateWait : public State {
 };
 
 struct StateWalk : public State {
-	inline StateWalk()
-	    : State(BIGTREASURE_Walk, "walk")
+	inline StateWalk(const char* name)
+	    : State(BIGTREASURE_Walk, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateItemWalk : public State {
+	inline StateItemWalk(const char* name)
+	    : State(BIGTREASURE_ItemWalk, name)
 	{
 	}
 
