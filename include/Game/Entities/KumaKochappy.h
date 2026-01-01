@@ -162,7 +162,7 @@ struct FSM : public EnemyStateMachine {
 };
 
 struct State : public EnemyFSMState {
-	inline State(int stateID, char* name)
+	inline State(int stateID, const char* name)
 	    : EnemyFSMState(stateID)
 	{
 		mName = name;
@@ -172,37 +172,9 @@ struct State : public EnemyFSMState {
 	// _00-_10 	= EnemyFSMState
 };
 
-struct StateAttack : public State {
-	inline StateAttack()
-	    : State(KUMAKOCHAPPY_Attack, "attack")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
 struct StateDead : public State {
-	inline StateDead()
-	    : State(KUMAKOCHAPPY_Dead, "dead")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateFlick : public State {
-	inline StateFlick()
-	    : State(KUMAKOCHAPPY_Flick, "flick")
+	inline StateDead(const char* name)
+	    : State(KUMAKOCHAPPY_Dead, name)
 	{
 	}
 
@@ -215,8 +187,8 @@ struct StateFlick : public State {
 };
 
 struct StatePress : public State {
-	inline StatePress()
-	    : State(KUMAKOCHAPPY_Press, "press")
+	inline StatePress(const char* name)
+	    : State(KUMAKOCHAPPY_Press, name)
 	{
 	}
 
@@ -229,8 +201,36 @@ struct StatePress : public State {
 };
 
 struct StateWait : public State {
-	inline StateWait()
-	    : State(KUMAKOCHAPPY_Wait, "wait")
+	inline StateWait(const char* name)
+	    : State(KUMAKOCHAPPY_Wait, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateAttack : public State {
+	inline StateAttack(const char* name)
+	    : State(KUMAKOCHAPPY_Attack, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateFlick : public State {
+	inline StateFlick(const char* name)
+	    : State(KUMAKOCHAPPY_Flick, name)
 	{
 	}
 
@@ -243,8 +243,8 @@ struct StateWait : public State {
 };
 
 struct StateWalk : public State {
-	inline StateWalk()
-	    : State(KUMAKOCHAPPY_Walk, "walk")
+	inline StateWalk(const char* name)
+	    : State(KUMAKOCHAPPY_Walk, name)
 	{
 	}
 
@@ -257,8 +257,8 @@ struct StateWalk : public State {
 };
 
 struct StateWalkPath : public State {
-	inline StateWalkPath()
-	    : State(KUMAKOCHAPPY_WalkPath, "walkpath")
+	inline StateWalkPath(const char* name)
+	    : State(KUMAKOCHAPPY_WalkPath, name)
 	{
 	}
 

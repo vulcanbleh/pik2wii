@@ -3,10 +3,14 @@
 #include "Game/Entities/Kabuto.h"
 #include "efx/THebi.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-KabutoState";
+}
+
 namespace Game {
 namespace Kabuto {
-
-static const char unusedKabutoName[] = "246-KabutoState";
 
 /**
  * @note Address: 0x802E1834
@@ -15,19 +19,19 @@ static const char unusedKabutoName[] = "246-KabutoState";
 void Kabuto::FSM::init(EnemyBase* enemy)
 {
 	create(KABUTO_StateCount);
-	registerState(new StateDead);
-	registerState(new StateWait);
-	registerState(new StateTurn);
-	registerState(new StateMove);
-	registerState(new StateFlick);
-	registerState(new StateAttack);
-	registerState(new StateFixStay);
-	registerState(new StateFixAppear);
-	registerState(new StateFixHide);
-	registerState(new StateFixWait);
-	registerState(new StateFixTurn);
-	registerState(new StateFixAttack);
-	registerState(new StateFixFlick);
+	registerState(new StateDead("dead"));
+	registerState(new StateWait("wait"));
+	registerState(new StateTurn("turn"));
+	registerState(new StateMove("move"));
+	registerState(new StateFlick("flick"));
+	registerState(new StateAttack("attack"));
+	registerState(new StateFixStay("fixstay"));
+	registerState(new StateFixAppear("fixappear"));
+	registerState(new StateFixHide("fixhide"));
+	registerState(new StateFixWait("fixwait"));
+	registerState(new StateFixTurn("fixturn"));
+	registerState(new StateFixAttack("fixattack"));
+	registerState(new StateFixFlick("fixflick"));
 }
 
 /**

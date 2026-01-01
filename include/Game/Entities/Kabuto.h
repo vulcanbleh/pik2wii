@@ -180,7 +180,7 @@ struct FSM : public EnemyStateMachine {
 };
 
 struct State : public EnemyFSMState {
-	inline State(int stateID, char* name)
+	inline State(int stateID, const char* name)
 	    : EnemyFSMState(stateID)
 	{
 		mName = name;
@@ -190,65 +190,9 @@ struct State : public EnemyFSMState {
 	// _00-_10 	= EnemyFSMState
 };
 
-struct StateAttack : public State {
-	inline StateAttack()
-	    : State(KABUTO_Attack, "attack")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
 struct StateDead : public State {
-	inline StateDead()
-	    : State(KABUTO_Dead, "dead")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateFlick : public State {
-	inline StateFlick()
-	    : State(KABUTO_Flick, "flick")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateMove : public State {
-	inline StateMove()
-	    : State(KABUTO_Move, "move")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateTurn : public State {
-	inline StateTurn()
-	    : State(KABUTO_Turn, "turn")
+	inline StateDead(const char* name)
+	    : State(KABUTO_Dead, name)
 	{
 	}
 
@@ -261,8 +205,8 @@ struct StateTurn : public State {
 };
 
 struct StateWait : public State {
-	inline StateWait()
-	    : State(KABUTO_Wait, "wait")
+	inline StateWait(const char* name)
+	    : State(KABUTO_Wait, name)
 	{
 	}
 
@@ -274,9 +218,9 @@ struct StateWait : public State {
 	// _00-_10 	= EnemyFSMState
 };
 
-struct StateFixAppear : public State {
-	inline StateFixAppear()
-	    : State(KABUTO_FixAppear, "fixappear")
+struct StateTurn : public State {
+	inline StateTurn(const char* name)
+	    : State(KABUTO_Turn, name)
 	{
 	}
 
@@ -288,9 +232,9 @@ struct StateFixAppear : public State {
 	// _00-_10 	= EnemyFSMState
 };
 
-struct StateFixAttack : public State {
-	inline StateFixAttack()
-	    : State(KABUTO_FixAttack, "fixattack")
+struct StateMove : public State {
+	inline StateMove(const char* name)
+	    : State(KABUTO_Move, name)
 	{
 	}
 
@@ -302,9 +246,9 @@ struct StateFixAttack : public State {
 	// _00-_10 	= EnemyFSMState
 };
 
-struct StateFixFlick : public State {
-	inline StateFixFlick()
-	    : State(KABUTO_FixFlick, "fixflick")
+struct StateFlick : public State {
+	inline StateFlick(const char* name)
+	    : State(KABUTO_Flick, name)
 	{
 	}
 
@@ -316,9 +260,9 @@ struct StateFixFlick : public State {
 	// _00-_10 	= EnemyFSMState
 };
 
-struct StateFixHide : public State {
-	inline StateFixHide()
-	    : State(KABUTO_FixHide, "fixhide")
+struct StateAttack : public State {
+	inline StateAttack(const char* name)
+	    : State(KABUTO_Attack, name)
 	{
 	}
 
@@ -331,8 +275,8 @@ struct StateFixHide : public State {
 };
 
 struct StateFixStay : public State {
-	inline StateFixStay()
-	    : State(KABUTO_FixStay, "fixstay")
+	inline StateFixStay(const char* name)
+	    : State(KABUTO_FixStay, name)
 	{
 	}
 
@@ -344,9 +288,23 @@ struct StateFixStay : public State {
 	// _00-_10 	= EnemyFSMState
 };
 
-struct StateFixTurn : public State {
-	inline StateFixTurn()
-	    : State(KABUTO_FixTurn, "fixturn")
+struct StateFixAppear : public State {
+	inline StateFixAppear(const char* name)
+	    : State(KABUTO_FixAppear, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateFixHide : public State {
+	inline StateFixHide(const char* name)
+	    : State(KABUTO_FixHide, name)
 	{
 	}
 
@@ -359,8 +317,50 @@ struct StateFixTurn : public State {
 };
 
 struct StateFixWait : public State {
-	inline StateFixWait()
-	    : State(KABUTO_FixWait, "fixwait")
+	inline StateFixWait(const char* name)
+	    : State(KABUTO_FixWait, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateFixTurn : public State {
+	inline StateFixTurn(const char* name)
+	    : State(KABUTO_FixTurn, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateFixAttack : public State {
+	inline StateFixAttack(const char* name)
+	    : State(KABUTO_FixAttack, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateFixFlick : public State {
+	inline StateFixFlick(const char* name)
+	    : State(KABUTO_FixFlick, name)
 	{
 	}
 

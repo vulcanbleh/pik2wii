@@ -2,6 +2,12 @@
 #include "Game/EnemyFunc.h"
 #include "Game/Entities/KumaKochappy.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-KumaKochappyState";
+}
+
 namespace Game {
 namespace KumaKochappy {
 
@@ -12,13 +18,13 @@ namespace KumaKochappy {
 void FSM::init(EnemyBase* enemy)
 {
 	create(KUMAKOCHAPPY_StateCount);
-	registerState(new StateDead);
-	registerState(new StatePress);
-	registerState(new StateWait);
-	registerState(new StateAttack);
-	registerState(new StateFlick);
-	registerState(new StateWalk);
-	registerState(new StateWalkPath);
+	registerState(new StateDead("dead"));
+	registerState(new StatePress("press"));
+	registerState(new StateWait("wait"));
+	registerState(new StateAttack("attack"));
+	registerState(new StateFlick("flick"));
+	registerState(new StateWalk("walk"));
+	registerState(new StateWalkPath("walkpath"));
 }
 
 /**
@@ -103,7 +109,7 @@ void StateWait::init(EnemyBase* enemy, StateArg* stateArg)
 void StateWait::exec(EnemyBase* enemy)
 {
 	Obj* kuma = OBJ(enemy);
-	if (kuma->mHealth <= 0.0f) {
+	if (kuma->isDead()) {
 		transit(kuma, KUMAKOCHAPPY_Dead, nullptr);
 		return;
 	}
@@ -115,11 +121,7 @@ void StateWait::exec(EnemyBase* enemy)
 
 	Creature* target = kuma->getSearchedTarget();
 	if (target) {
-		// more nonsense going on in here than this
-		f32 dist = kuma->turnToTarget(target, CG_GENERALPARMS(kuma).mMaxTurnAngle.mValue, CG_GENERALPARMS(kuma).mTurnSpeed.mValue);
-
-		// this isn't the comparison, probably a bool spat out from an inline
-		if (FABS(dist) <= CG_GENERALPARMS(kuma).mTurnSpeed.mValue) {
+		if (kuma->isTargetAttackable(target, CG_GENERALPARMS(kuma).mMaxAttackRange(), CG_GENERALPARMS(kuma).mMaxAttackAngle())) {
 			kuma->mNextState = KUMAKOCHAPPY_Attack;
 			kuma->finishMotion();
 		} else {
@@ -143,260 +145,6 @@ void StateWait::exec(EnemyBase* enemy)
 			transit(kuma, kuma->mNextState, nullptr);
 		}
 	}
-	/*
-	stwu     r1, -0xf0(r1)
-	mflr     r0
-	stw      r0, 0xf4(r1)
-	stfd     f31, 0xe0(r1)
-	psq_st   f31, 232(r1), 0, qr0
-	stfd     f30, 0xd0(r1)
-	psq_st   f30, 216(r1), 0, qr0
-	stfd     f29, 0xc0(r1)
-	psq_st   f29, 200(r1), 0, qr0
-	stfd     f28, 0xb0(r1)
-	psq_st   f28, 184(r1), 0, qr0
-	stfd     f27, 0xa0(r1)
-	psq_st   f27, 168(r1), 0, qr0
-	stfd     f26, 0x90(r1)
-	psq_st   f26, 152(r1), 0, qr0
-	stw      r31, 0x8c(r1)
-	stw      r30, 0x88(r1)
-	stw      r29, 0x84(r1)
-	stw      r28, 0x80(r1)
-	lfs      f0, lbl_8051CE90@sda21(r2)
-	mr       r30, r4
-	lfs      f1, 0x200(r4)
-	mr       r28, r3
-	fcmpo    cr0, f1, f0
-	cror     2, 0, 2
-	bne      lbl_802E5374
-	lwz      r12, 0(r3)
-	li       r5, 0
-	li       r6, 0
-	lwz      r12, 0x1c(r12)
-	mtctr    r12
-	bctrl
-	b        lbl_802E5648
-
-lbl_802E5374:
-	mr       r3, r30
-	li       r4, 0
-	bl       isStartFlick__Q24Game9EnemyFuncFPQ24Game9EnemyBaseb
-	clrlwi.  r0, r3, 0x18
-	beq      lbl_802E53AC
-	mr       r3, r28
-	mr       r4, r30
-	lwz      r12, 0(r28)
-	li       r5, 4
-	li       r6, 0
-	lwz      r12, 0x1c(r12)
-	mtctr    r12
-	bctrl
-	b        lbl_802E5648
-
-lbl_802E53AC:
-	mr       r3, r30
-	bl       getSearchedTarget__Q34Game12KumaKochappy3ObjFv
-	or.      r29, r3, r3
-	beq      lbl_802E5598
-	mr       r4, r29
-	lwz      r5, 0xc0(r30)
-	lwz      r12, 0(r29)
-	addi     r3, r1, 0x68
-	lfs      f30, 0x58c(r5)
-	lwz      r12, 8(r12)
-	lfs      f31, 0x564(r5)
-	mtctr    r12
-	bctrl
-	mr       r4, r30
-	lfs      f2, 0x68(r1)
-	lwz      r12, 0(r30)
-	addi     r3, r1, 0x74
-	lfs      f1, 0x6c(r1)
-	lfs      f0, 0x70(r1)
-	lwz      r12, 8(r12)
-	stfs     f2, 0x50(r1)
-	stfs     f1, 0x54(r1)
-	stfs     f0, 0x58(r1)
-	mtctr    r12
-	bctrl
-	lfs      f5, 0x74(r1)
-	lis      r3, atanTable___5JMath@ha
-	lfs      f3, 0x7c(r1)
-	addi     r3, r3, atanTable___5JMath@l
-	lfs      f1, 0x50(r1)
-	lfs      f0, 0x58(r1)
-	lfs      f4, 0x78(r1)
-	fsubs    f1, f1, f5
-	fsubs    f2, f0, f3
-	stfs     f5, 0x5c(r1)
-	stfs     f4, 0x60(r1)
-	stfs     f3, 0x64(r1)
-	bl       "atan2___Q25JMath18TAtanTable<1024,f>CFff"
-	bl       roundAng__Ff
-	lwz      r12, 0(r30)
-	fmr      f26, f1
-	mr       r3, r30
-	lwz      r12, 0x64(r12)
-	mtctr    r12
-	bctrl
-	fmr      f2, f1
-	fmr      f1, f26
-	bl       angDist__Fff
-	mr       r4, r30
-	fmr      f28, f1
-	lwz      r12, 0(r30)
-	addi     r3, r1, 0x14
-	li       r31, 0
-	lwz      r12, 8(r12)
-	mtctr    r12
-	bctrl
-	mr       r4, r29
-	addi     r3, r1, 8
-	lwz      r12, 0(r29)
-	lfs      f29, 0x14(r1)
-	lwz      r12, 8(r12)
-	mtctr    r12
-	bctrl
-	mr       r4, r30
-	lfs      f0, 8(r1)
-	lwz      r12, 0(r30)
-	addi     r3, r1, 0x2c
-	fsubs    f26, f0, f29
-	lwz      r12, 8(r12)
-	mtctr    r12
-	bctrl
-	mr       r4, r29
-	addi     r3, r1, 0x20
-	lwz      r12, 0(r29)
-	lfs      f29, 0x30(r1)
-	lwz      r12, 8(r12)
-	mtctr    r12
-	bctrl
-	mr       r4, r30
-	lfs      f0, 0x24(r1)
-	lwz      r12, 0(r30)
-	addi     r3, r1, 0x44
-	fsubs    f27, f0, f29
-	lwz      r12, 8(r12)
-	mtctr    r12
-	bctrl
-	mr       r4, r29
-	addi     r3, r1, 0x38
-	lwz      r12, 0(r29)
-	lfs      f29, 0x4c(r1)
-	lwz      r12, 8(r12)
-	mtctr    r12
-	bctrl
-	fmuls    f1, f27, f27
-	lfs      f2, 0x40(r1)
-	fmuls    f0, f31, f31
-	fsubs    f2, f2, f29
-	fmadds   f1, f26, f26, f1
-	fmadds   f1, f2, f2, f1
-	fcmpo    cr0, f1, f0
-	bge      lbl_802E5568
-	lfs      f0, lbl_8051CE98@sda21(r2)
-	fabs     f2, f28
-	lfs      f1, lbl_8051CE94@sda21(r2)
-	fmuls    f0, f0, f30
-	frsp     f2, f2
-	fmuls    f0, f1, f0
-	fcmpo    cr0, f2, f0
-	cror     2, 0, 2
-	bne      lbl_802E5568
-	li       r31, 1
-
-lbl_802E5568:
-	clrlwi.  r0, r31, 0x18
-	beq      lbl_802E5584
-	li       r0, 3
-	mr       r3, r30
-	stw      r0, 0x2cc(r30)
-	bl       finishMotion__Q24Game9EnemyBaseFv
-	b        lbl_802E55B8
-
-lbl_802E5584:
-	li       r0, 5
-	mr       r3, r30
-	stw      r0, 0x2cc(r30)
-	bl       finishMotion__Q24Game9EnemyBaseFv
-	b        lbl_802E55B8
-
-lbl_802E5598:
-	mr       r3, r30
-	bl       setTargetParentPosition__Q34Game12KumaKochappy3ObjFv
-	cmplwi   r3, 0
-	beq      lbl_802E55B8
-	li       r0, 6
-	mr       r3, r30
-	stw      r0, 0x2cc(r30)
-	bl       finishMotion__Q24Game9EnemyBaseFv
-
-lbl_802E55B8:
-	mr       r3, r30
-	bl       isFinishMotion__Q24Game9EnemyBaseFv
-	clrlwi.  r0, r3, 0x18
-	beq      lbl_802E55D4
-	lfs      f1, lbl_8051CE9C@sda21(r2)
-	mr       r3, r30
-	bl       setAnimSpeed__Q24Game9EnemyBaseFf
-
-lbl_802E55D4:
-	lwz      r3, 0x188(r30)
-	lbz      r0, 0x24(r3)
-	cmplwi   r0, 0
-	beq      lbl_802E5648
-	lwz      r0, 0x1c(r3)
-	cmplwi   r0, 2
-	bne      lbl_802E5620
-	mr       r3, r30
-	lwz      r12, 0(r30)
-	lwz      r12, 0xf4(r12)
-	mtctr    r12
-	bctrl
-	lwz      r12, 0(r3)
-	li       r4, 0x596a
-	li       r5, 0
-	lwz      r12, 0xc(r12)
-	mtctr    r12
-	bctrl
-	b        lbl_802E5648
-
-lbl_802E5620:
-	cmplwi   r0, 0x3e8
-	bne      lbl_802E5648
-	mr       r3, r28
-	mr       r4, r30
-	lwz      r12, 0(r28)
-	li       r6, 0
-	lwz      r5, 0x2cc(r30)
-	lwz      r12, 0x1c(r12)
-	mtctr    r12
-	bctrl
-
-lbl_802E5648:
-	psq_l    f31, 232(r1), 0, qr0
-	lfd      f31, 0xe0(r1)
-	psq_l    f30, 216(r1), 0, qr0
-	lfd      f30, 0xd0(r1)
-	psq_l    f29, 200(r1), 0, qr0
-	lfd      f29, 0xc0(r1)
-	psq_l    f28, 184(r1), 0, qr0
-	lfd      f28, 0xb0(r1)
-	psq_l    f27, 168(r1), 0, qr0
-	lfd      f27, 0xa0(r1)
-	psq_l    f26, 152(r1), 0, qr0
-	lfd      f26, 0x90(r1)
-	lwz      r31, 0x8c(r1)
-	lwz      r30, 0x88(r1)
-	lwz      r29, 0x84(r1)
-	lwz      r0, 0xf4(r1)
-	lwz      r28, 0x80(r1)
-	mtlr     r0
-	addi     r1, r1, 0xf0
-	blr
-	*/
 }
 
 /**
@@ -429,7 +177,7 @@ void StateAttack::init(EnemyBase* enemy, StateArg* stateArg)
 void StateAttack::exec(EnemyBase* enemy)
 {
 	Obj* kuma = OBJ(enemy);
-	if (kuma->mHealth <= 0.0f) {
+	if (kuma->isDead()) {
 		transit(kuma, KUMAKOCHAPPY_Dead, nullptr);
 		return;
 	}
@@ -441,8 +189,8 @@ void StateAttack::exec(EnemyBase* enemy)
 			                            CG_GENERALPARMS(kuma).mAttackDamage.mValue, nullptr, nullptr);
 			int totalEat = naviEat + EnemyFunc::eatPikmin(kuma, nullptr);
 
-			EnemyFunc::flickStickPikmin(kuma, CG_GENERALPARMS(kuma).mShakeChance.mValue, CG_GENERALPARMS(kuma).mShakeKnockback.mValue,
-			                            CG_GENERALPARMS(kuma).mShakeDamage.mValue, kuma->getFaceDir(), nullptr);
+			EnemyFunc::flickStickPikmin(kuma, CG_GENERALPARMS(kuma).mShakeChance(), CG_GENERALPARMS(kuma).mShakeKnockback(),
+			                            CG_GENERALPARMS(kuma).mShakeDamage(), kuma->getFaceDir(), nullptr);
 
 			if (!totalEat) {
 				kuma->startMotion(KUMAKOCHAPPYANIM_Eat, nullptr);
@@ -452,7 +200,7 @@ void StateAttack::exec(EnemyBase* enemy)
 			EnemyFunc::swallowPikmin(kuma, CG_PROPERPARMS(kuma).mPoisonDamage.mValue, nullptr);
 
 		} else if (kuma->mCurAnim->mType == KEYEVENT_END) {
-			if (kuma->mHealth <= 0.0f) {
+			if (kuma->isDead()) {
 				transit(kuma, KUMAKOCHAPPY_Dead, nullptr);
 				return;
 			}
@@ -464,23 +212,19 @@ void StateAttack::exec(EnemyBase* enemy)
 
 			Creature* target = kuma->getSearchedTarget();
 			if (target) {
-				// more nonsense going on in here than this
-				f32 dist = kuma->turnToTarget(target, CG_GENERALPARMS(kuma).mMaxTurnAngle.mValue, CG_GENERALPARMS(kuma).mTurnSpeed.mValue);
-
-				// this isn't the comparison, probably a bool spat out from an inline
-				if (FABS(dist) <= CG_GENERALPARMS(kuma).mTurnSpeed.mValue) {
+				if (kuma->isTargetAttackable(target, CG_GENERALPARMS(kuma).mMaxAttackRange(), CG_GENERALPARMS(kuma).mMaxAttackAngle())) {
 					transit(kuma, KUMAKOCHAPPY_Attack, nullptr);
 					return;
 				} else {
 					transit(kuma, KUMAKOCHAPPY_Walk, nullptr);
 					return;
 				}
-
 			} else {
 				Vector3f* parentPos = kuma->setTargetParentPosition();
 				if (parentPos) {
 					Vector3f pos = kuma->getPosition();
-					if (inRadius(CG_GENERALPARMS(kuma).mHomeRadius.mValue, pos, *parentPos)) {
+					f32 dist     = sqrDistanceXZ(pos, *parentPos);
+					if (dist < SQUARE(CG_GENERALPARMS(kuma).mHomeRadius())) {
 						transit(kuma, KUMAKOCHAPPY_Wait, nullptr);
 						return;
 					} else {
@@ -847,23 +591,23 @@ void StateFlick::init(EnemyBase* enemy, StateArg* stateArg)
 void StateFlick::exec(EnemyBase* enemy)
 {
 	Obj* kuma = OBJ(enemy);
-	if (kuma->mHealth <= 0.0f) {
+	if (kuma->isDead()) {
 		transit(kuma, KUMAKOCHAPPY_Dead, nullptr);
 		return;
 	}
 
 	if (kuma->mCurAnim->mIsPlaying) {
 		if (kuma->mCurAnim->mType == KEYEVENT_2) {
-			EnemyFunc::flickStickPikmin(kuma, CG_GENERALPARMS(kuma).mShakeChance.mValue, CG_GENERALPARMS(kuma).mShakeKnockback.mValue,
-			                            CG_GENERALPARMS(kuma).mShakeDamage.mValue, kuma->getFaceDir(), nullptr);
-			EnemyFunc::flickNearbyPikmin(kuma, CG_GENERALPARMS(kuma).mShakeRange.mValue, CG_GENERALPARMS(kuma).mShakeKnockback.mValue,
-			                             CG_GENERALPARMS(kuma).mShakeDamage.mValue, kuma->getFaceDir(), nullptr);
-			EnemyFunc::flickNearbyNavi(kuma, CG_GENERALPARMS(kuma).mShakeRange.mValue, CG_GENERALPARMS(kuma).mShakeKnockback.mValue,
-			                           CG_GENERALPARMS(kuma).mShakeDamage.mValue, kuma->getFaceDir(), nullptr);
+			EnemyFunc::flickStickPikmin(kuma, CG_GENERALPARMS(kuma).mShakeChance(), CG_GENERALPARMS(kuma).mShakeKnockback(),
+			                            CG_GENERALPARMS(kuma).mShakeDamage(), kuma->getFaceDir(), nullptr);
+			EnemyFunc::flickNearbyPikmin(kuma, CG_GENERALPARMS(kuma).mShakeRange(), CG_GENERALPARMS(kuma).mShakeKnockback(),
+			                             CG_GENERALPARMS(kuma).mShakeDamage(), kuma->getFaceDir(), nullptr);
+			EnemyFunc::flickNearbyNavi(kuma, CG_GENERALPARMS(kuma).mShakeRange(), CG_GENERALPARMS(kuma).mShakeKnockback(),
+			                           CG_GENERALPARMS(kuma).mShakeDamage(), kuma->getFaceDir(), nullptr);
 			kuma->mFlickTimer = 0.0f;
 
 		} else if (kuma->mCurAnim->mType == KEYEVENT_END) {
-			if (kuma->mHealth <= 0.0f) {
+			if (kuma->isDead()) {
 				transit(kuma, KUMAKOCHAPPY_Dead, nullptr);
 				return;
 			}
@@ -875,26 +619,22 @@ void StateFlick::exec(EnemyBase* enemy)
 
 			Creature* target = kuma->getSearchedTarget();
 			if (target) {
-				// more nonsense going on in here than this
-				f32 dist = kuma->turnToTarget(target, CG_GENERALPARMS(kuma).mMaxTurnAngle.mValue, CG_GENERALPARMS(kuma).mTurnSpeed.mValue);
-
-				// this isn't the comparison, probably a bool spat out from an inline
-				if (FABS(dist) <= CG_GENERALPARMS(kuma).mTurnSpeed.mValue) {
+				if (kuma->isTargetAttackable(target, CG_GENERALPARMS(kuma).mMaxAttackRange(), CG_GENERALPARMS(kuma).mMaxAttackAngle())) {
 					transit(kuma, KUMAKOCHAPPY_Attack, nullptr);
 					return;
 				} else {
 					transit(kuma, KUMAKOCHAPPY_Walk, nullptr);
 					return;
 				}
-
-			} else {
+			}  else {
 				Vector3f* parentPos = kuma->setTargetParentPosition();
 				if (parentPos) {
 					Vector3f pos = kuma->getPosition();
-					if (inRadius(CG_GENERALPARMS(kuma).mHomeRadius.mValue, pos, *parentPos)) {
+					f32 dist     = sqrDistanceXZ(pos, *parentPos);
+					if (dist < SQUARE(CG_GENERALPARMS(kuma).mHomeRadius())) {
 						transit(kuma, KUMAKOCHAPPY_Wait, nullptr);
 						return;
-					} else {
+					}  else {
 						transit(kuma, KUMAKOCHAPPY_WalkPath, nullptr);
 						return;
 					}
@@ -1266,7 +1006,7 @@ void StateWalk::exec(EnemyBase* enemy)
 {
 	bool check = true;
 	Obj* kuma  = OBJ(enemy);
-	if (kuma->mHealth <= 0.0f) {
+	if (kuma->isDead()) {
 		transit(kuma, KUMAKOCHAPPY_Dead, nullptr);
 		return;
 	}
@@ -1279,24 +1019,23 @@ void StateWalk::exec(EnemyBase* enemy)
 	Creature* target = kuma->getSearchedTarget();
 	if (target) {
 		// more nonsense going on in here than this
-		f32 dist = kuma->turnToTarget(target, CG_GENERALPARMS(kuma).mMaxTurnAngle.mValue, CG_GENERALPARMS(kuma).mTurnSpeed.mValue);
+		f32 dist = kuma->turnToTarget(target, CG_GENERALPARMS(kuma).mTurnSpeed(), CG_GENERALPARMS(kuma).mMaxTurnAngle());
 
 		// this isn't the comparison, probably a bool spat out from an inline
-		if (FABS(dist) <= CG_GENERALPARMS(kuma).mTurnSpeed.mValue) {
+		if (kuma->isTargetAttackable(target, dist, CG_GENERALPARMS(kuma).mMaxAttackRange(), CG_GENERALPARMS(kuma).mMaxAttackAngle())) {
 			kuma->mNextState = KUMAKOCHAPPY_Attack;
 			kuma->finishMotion();
 			kuma->setAnimSpeed(60.0f);
-		} else if (FABS(dist) <= CG_GENERALPARMS(kuma).mMaxAttackAngle.mValue) {
+		} else if (!isAngleWithin(dist, CG_GENERALPARMS(kuma).mMaxAttackAngle())) {
 			check = false;
-			// transit(kuma, KUMAKOCHAPPY_Walk, nullptr);
-			// return;
 		}
 
 	} else {
 		Vector3f* parentPos = kuma->setTargetParentPosition();
 		if (parentPos) {
 			Vector3f pos = kuma->getPosition();
-			if (inRadius(CG_GENERALPARMS(kuma).mHomeRadius.mValue, pos, *parentPos)) {
+			f32 dist     = sqrDistanceXZ(pos, *parentPos);
+			if (dist < SQUARE(CG_GENERALPARMS(kuma).mHomeRadius())) {
 				kuma->mNextState = KUMAKOCHAPPY_Wait;
 				kuma->finishMotion();
 			} else {
@@ -1312,17 +1051,9 @@ void StateWalk::exec(EnemyBase* enemy)
 	if (kuma->isFinishMotion()) {
 		kuma->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	} else if (check) {
-		f32 moveSpeed         = CG_GENERALPARMS(kuma).mMoveSpeed.mValue;
-		f32 sinTheta          = (f32)sin(kuma->getFaceDir());
-		f32 y                 = kuma->getTargetVelocity().y;
-		f32 cosTheta          = (f32)cos(kuma->getFaceDir());
-		kuma->mTargetVelocity = Vector3f(moveSpeed * sinTheta, y, moveSpeed * cosTheta);
+		kuma->setTargetSpeed(CG_GENERALPARMS(kuma).mMoveSpeed());
 	} else {
-		f32 moveSpeed         = CG_GENERALPARMS(kuma).mMoveSpeed.mValue * 0.5f;
-		f32 sinTheta          = (f32)sin(kuma->getFaceDir());
-		f32 y                 = kuma->getTargetVelocity().y;
-		f32 cosTheta          = (f32)cos(kuma->getFaceDir());
-		kuma->mTargetVelocity = Vector3f(moveSpeed * sinTheta, y, moveSpeed * cosTheta);
+		kuma->setTargetSpeed(0.5f * CG_GENERALPARMS(kuma).mMoveSpeed());
 	}
 
 	if (kuma->mCurAnim->mIsPlaying && kuma->mCurAnim->mType == KEYEVENT_END) {
@@ -1722,7 +1453,7 @@ void StateWalkPath::init(EnemyBase* enemy, StateArg* stateArg)
 void StateWalkPath::exec(EnemyBase* enemy)
 {
 	Obj* kuma = OBJ(enemy);
-	if (kuma->mHealth <= 0.0f) {
+	if (kuma->isDead()) {
 		transit(kuma, KUMAKOCHAPPY_Dead, nullptr);
 		return;
 	}
@@ -1734,10 +1465,7 @@ void StateWalkPath::exec(EnemyBase* enemy)
 
 	Creature* target = kuma->getSearchedTarget();
 	if (target) {
-		f32 minRange = CG_GENERALPARMS(kuma).mMaxAttackAngle();
-		f32 maxRange = CG_GENERALPARMS(kuma).mMaxAttackRange();
-		f32 dist     = kuma->getAngDist(target);
-		if (kuma->isTargetAttackable(target, dist, minRange, maxRange)) {
+		if (kuma->isTargetAttackable(target, CG_GENERALPARMS(kuma).mMaxAttackRange(), CG_GENERALPARMS(kuma).mMaxAttackAngle())) {
 			kuma->mNextState = KUMAKOCHAPPY_Attack;
 			kuma->finishMotion();
 			kuma->setAnimSpeed(60.0f);
@@ -1750,11 +1478,12 @@ void StateWalkPath::exec(EnemyBase* enemy)
 		Vector3f* parentPos = kuma->setTargetParentPosition();
 		if (parentPos) {
 			Vector3f pos = kuma->getPosition();
-			if (inRadius(CG_GENERALPARMS(kuma).mHomeRadius.mValue, pos, *parentPos)) {
+			f32 dist     = sqrDistanceXZ(pos, *parentPos);
+			if (dist < SQUARE(CG_GENERALPARMS(kuma).mHomeRadius())) {
 				kuma->mNextState = KUMAKOCHAPPY_Wait;
 				kuma->finishMotion();
 			} else {
-				f32 dist = kuma->turnToTarget(*parentPos, CG_GENERALPARMS(kuma).mTurnSpeed(), CG_GENERALPARMS(kuma).mMaxTurnAngle());
+				kuma->turnToTarget(*parentPos, CG_GENERALPARMS(kuma).mTurnSpeed(), CG_GENERALPARMS(kuma).mMaxTurnAngle());
 			}
 		} else {
 			kuma->mNextState = KUMAKOCHAPPY_Wait;
@@ -1765,12 +1494,7 @@ void StateWalkPath::exec(EnemyBase* enemy)
 	if (kuma->isFinishMotion()) {
 		kuma->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	} else {
-		f32 moveSpeed = CG_GENERALPARMS(kuma).mSearchHeight.mValue; // ??????????????????????????????????
-		f32 sinTheta  = (f32)sin(kuma->getFaceDir());
-		f32 y         = kuma->getTargetVelocity().y;
-		f32 cosTheta  = (f32)cos(kuma->getFaceDir());
-
-		kuma->mTargetVelocity = Vector3f(moveSpeed * sinTheta, y, moveSpeed * cosTheta);
+		kuma->setTargetSpeed(CG_GENERALPARMS(kuma).mSearchHeight()); // ????
 	}
 
 	if (kuma->mCurAnim->mIsPlaying && kuma->mCurAnim->mType == KEYEVENT_END) {
