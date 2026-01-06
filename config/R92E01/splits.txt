@@ -2437,7 +2437,76 @@ RevoSDK/bte/hidd_conn.c:
 	.text       start:0x801723F8 end:0x801724B8
 
 RevoSDK/bte/hidd_mgmt.c:
-	.text       start:0x801724B8 end:0x801872DC
+	.text       start:0x801724B8 end:0x80172580
+
+RevoSDK/bte/hidd_pm.c:
+	.text       start:0x80172580 end:0x801728FC
+
+RevoSDK/bte/hidh_api.c:
+	.text       start:0x801728FC end:0x8017367C
+
+RevoSDK/bte/hidh_conn.c:
+	.text       start:0x8017367C end:0x801756BC
+
+RevoSDK/bte/l2c_api.c:
+	.text       start:0x801756BC end:0x80176288
+
+RevoSDK/bte/l2c_csm.c:
+	.text       start:0x80176288 end:0x80177764
+
+RevoSDK/bte/l2c_link.c:
+	.text       start:0x80177764 end:0x801788F0
+
+RevoSDK/bte/l2c_main.c:
+	.text       start:0x801788F0 end:0x80179920
+
+RevoSDK/bte/l2c_utils.c:
+	.text       start:0x80179920 end:0x8017B7E4
+
+RevoSDK/bte/port_api.c:
+	.text       start:0x8017B7E4 end:0x8017B834
+
+RevoSDK/bte/port_rfc.c:
+	.text       start:0x8017B834 end:0x8017CC30
+
+RevoSDK/bte/port_utils.c:
+	.text       start:0x8017CC30 end:0x8017D208
+
+RevoSDK/bte/rfc_l2cap_if.c:
+	.text       start:0x8017D208 end:0x8017DB3C
+
+RevoSDK/bte/rfc_mx_fsm.c:
+	.text       start:0x8017DB3C end:0x8017E780
+
+RevoSDK/bte/rfc_port_fsm.c:
+	.text       start:0x8017E780 end:0x8017F920
+
+RevoSDK/bte/rfc_port_if.c:
+	.text       start:0x8017F920 end:0x8017FE4C
+
+RevoSDK/bte/rfc_ts_frames.c:
+	.text       start:0x8017FE4C end:0x80181494
+
+RevoSDK/bte/rfc_utils.c:
+	.text       start:0x80181494 end:0x80181C74
+
+RevoSDK/bte/sdp_api.c:
+	.text       start:0x80181C74 end:0x80182ADC
+
+RevoSDK/bte/sdp_db.c:
+	.text       start:0x80182ADC end:0x801837A8
+
+RevoSDK/bte/sdp_discovery.c:
+	.text       start:0x801837A8 end:0x80184A20
+
+RevoSDK/bte/sdp_main.c:
+	.text       start:0x80184A20 end:0x8018558C
+
+RevoSDK/bte/sdp_server.c:
+	.text       start:0x8018558C end:0x8018629C
+
+RevoSDK/bte/sdp_utils.c:
+	.text       start:0x8018629C end:0x801872DC
 
 RevoSDK/enc/encutility.c:
 	.text       start:0x801872DC end:0x80187518
@@ -4334,19 +4403,31 @@ plugProjectNishimuraU/SnakeCrow.cpp:
 
 plugProjectNishimuraU/KumaChappyState.cpp:
 	.text       start:0x8031666C end:0x80319C54
+	.rodata     start:0x8054E678 end:0x8054E6C8
+	.data       start:0x805AB430 end:0x805AB598
+	.sdata2     start:0x80671CC0 end:0x80671CF0
 
 plugProjectNishimuraU/KumaChappyAnimator.cpp:
 	.text       start:0x80319C54 end:0x80319CAC
+	.data       start:0x805AB598 end:0x805AB5C0
 
 plugProjectNishimuraU/KumaChappyMgr.cpp:
 	.text       start:0x80319CAC end:0x8031A02C
+	.rodata     start:0x8054E6C8 end:0x8054E6F8
+	.data       start:0x805AB5C0 end:0x805AB6F8
+	.sdata2     start:0x80671CF0 end:0x80671D10
 
 plugProjectNishimuraU/KumaChappy.cpp:
 	.text       start:0x8031A02C end:0x8031AFC4
+	.rodata     start:0x8054E6F8 end:0x8054E738
+	.data       start:0x805AB6F8 end:0x805ABA44
+	.sdata2     start:0x80671D10 end:0x80671D60
 
 plugProjectNishimuraU/FuefukiState.cpp:
 	.text       start:0x8031AFC4 end:0x8031C43C
+	.rodata     start:0x8054E738 end:0x8054E780
 	.data       start:0x805ABA48 end:0x805ABBB0
+	.sdata2     start:0x80671D60 end:0x80671DA0
 
 plugProjectNishimuraU/FuefukiAnimator.cpp:
 	.text       start:0x8031C43C end:0x8031C494
@@ -4354,11 +4435,14 @@ plugProjectNishimuraU/FuefukiAnimator.cpp:
 
 plugProjectNishimuraU/FuefukiMgr.cpp:
 	.text       start:0x8031C494 end:0x8031C944
+	.rodata     start:0x8054E780 end:0x8054E7A8
 	.data       start:0x805ABBD8 end:0x805ABD68
+	.sdata2     start:0x80671DA0 end:0x80671DC8
 
 plugProjectNishimuraU/Fuefuki.cpp:
 	.text       start:0x8031C944 end:0x8031DFF0
 	.data       start:0x805ABD68 end:0x805AC128
+	.sdata2     start:0x80671DC8 end:0x80671E10
 
 plugProjectNishimuraU/KoganemushiMgr.cpp:
 	.text       start:0x8031DFF0 end:0x8031E2B4
