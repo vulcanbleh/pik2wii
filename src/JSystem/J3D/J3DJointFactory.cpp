@@ -24,8 +24,8 @@ J3DJoint* J3DJointFactory::create(int jointIndex)
 	joint->mScaleCompensate      = mInitData[mIndexMap[jointIndex]].mIgnoreParentScaling;
 	joint->mTransformInfo        = mInitData[mIndexMap[jointIndex]].mTransformInfo;
 	joint->mBoundingSphereRadius = mInitData[mIndexMap[jointIndex]].mRadius;
-	joint->mMin                  = mInitData[mIndexMap[jointIndex]].mMin;
-	joint->mMax                  = mInitData[mIndexMap[jointIndex]].mMax;
+	joint->mMin                  = getMin(jointIndex);
+	joint->mMax                  = getMax(jointIndex);
 	joint->mMtxCalc              = nullptr;
 	if (joint->mScaleCompensate == 0xFF) {
 		joint->mScaleCompensate = 0;

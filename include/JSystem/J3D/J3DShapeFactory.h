@@ -34,8 +34,8 @@ struct J3DShapeFactory {
 		return (GXVtxDescList*)((u8*)mVtxDescLists + mInitData[mInitDataIndices[no]].mVtxDescListIndex);
 	}
 	f32 getRadius(int no) const { return mInitData[mInitDataIndices[no]].mRadius; }
-	JGeometry::TVec3f& getMin(int no) const { return mInitData[mInitDataIndices[no]].mMin; }
-	JGeometry::TVec3f& getMax(int no) const { return mInitData[mInitDataIndices[no]].mMax; }
+	Vec& getMin(int no) const { return mInitData[mInitDataIndices[no]].mMin; }
+	Vec& getMax(int no) const { return mInitData[mInitDataIndices[no]].mMax; }
 
 	J3DShapeInitData* mInitData;         // _00
 	u16* mInitDataIndices;               // _04

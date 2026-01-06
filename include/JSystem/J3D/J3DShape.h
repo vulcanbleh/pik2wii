@@ -39,8 +39,8 @@ struct J3DShapeInitData {
 	u16 mShapeMtxInitDataIndex;  // _06
 	u16 mShapeDrawInitDataIndex; // _08
 	f32 mRadius;                 // _0C
-	JGeometry::TVec3f mMin;      // _10
-	JGeometry::TVec3f mMax;      // _1C
+	Vec mMin;      				 // _10
+	Vec mMax;      				 // _1C
 };
 
 struct J3DShape {
@@ -89,8 +89,8 @@ struct J3DShape {
 	u32 getMtxGroupNum() const { return mMtxGroupNum; }
 	J3DShapeDraw* getShapeDraw(u32 idx) const { return mShapeDraw[idx]; }
 	J3DShapeMtx* getShapeMtx(u32 idx) const { return mShapeMtx[idx]; }
-	JGeometry::TVec3f* getMin() { return &mMin; }
-	JGeometry::TVec3f* getMax() { return &mMax; }
+	Vec* getMin() { return &mMin; }
+	Vec* getMax() { return &mMax; }
 
 	static u8* sOldVcdVatCmd;
 	static u8 sEnvelopeFlag;
@@ -102,8 +102,8 @@ struct J3DShape {
 	u16 mMtxGroupNum;             // _0A
 	u32 mFlags;                   // _0C
 	f32 mRadius;                  // _10
-	JGeometry::TVec3f mMin;       // _14
-	JGeometry::TVec3f mMax;       // _20
+	Vec mMin;       			  // _14
+	Vec mMax;       			  // _20
 	u8* mVcdVatCmd;               // _2C
 	GXVtxDescList* mVtxDesc;      // _30
 	bool mHasNBT;                 // _34

@@ -49,7 +49,7 @@ struct SceneInfo {
 
 	SceneInfo();
 
-	SceneInfo(SceneInfo& other) { (*this) = other; }
+	//SceneInfo(SceneInfo& other) { (*this) = other; }
 
 	virtual bool isCaveFloor() { return false; } // _08 (weak)
 

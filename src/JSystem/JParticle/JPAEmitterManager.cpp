@@ -90,7 +90,7 @@ JPABaseEmitter* JPAEmitterManager::createSimpleEmitterID(const JGeometry::TVec3f
 		emit->mParticleCallback = pcback;
 		emit->mGroupID          = groupID;
 		emit->mResMgrID         = resMgrID;
-		emit->mGlobalTrs        = pos;
+		emit->mGlobalTrs.set(pos);
 		return emit;
 	}
 

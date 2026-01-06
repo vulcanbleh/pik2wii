@@ -198,6 +198,8 @@ struct JPAChildShape {
 	f32 getAlphaInhRate() const { return mData->mInheritAlpha; }
 	f32 getGravity() const { return mData->mGravity; }
 	u32 getTexIdx() const { return mData->mTexIdx; }
+	f32 getTiming() const { return mData->mTiming; }
+	u8 getStep() const { return mData->mStep; }
 
 	u32 getType() const { return mData->mFlags & 0xF; }
 	bool isFieldAffected() const { return mData->mFlags & 0x200000; }
