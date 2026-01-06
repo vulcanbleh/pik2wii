@@ -31,8 +31,8 @@ struct J3DJoint {
 
 	const u16 getJntNo() const { return mJointIdx; }
 	J3DMaterial* getMesh() { return mMaterial; }
-	JGeometry::TVec3f* getMax() { return &mMax; }
-	JGeometry::TVec3f* getMin() { return &mMin; }
+	Vec* getMax() { return &mMax; }
+	Vec* getMin() { return &mMin; }
 
 	void setYounger(J3DJoint* parent) { mYounger = parent; }
 	void setCallBack(J3DJointCallBack callback) { mFunction = callback; }
@@ -63,8 +63,8 @@ struct J3DJoint {
 	u8 mScaleCompensate;             // _17
 	J3DTransformInfo mTransformInfo; // _18
 	f32 mBoundingSphereRadius;       // _38, bounding sphere radius
-	JGeometry::TVec3f mMin;          // _3C
-	JGeometry::TVec3f mMax;          // _48
+	Vec mMin;          				 // _3C
+	Vec mMax;          				 // _48
 	J3DMtxCalc* mMtxCalc;            // _54
 	J3DMaterial* mMaterial;          // _58
 };

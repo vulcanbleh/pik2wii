@@ -36,7 +36,7 @@ J3DShape* J3DShapeFactory::create(int id, u32 flags, GXVtxDescList* vtxDescList)
 	shape->mShapeDraw   = new J3DShapeDraw*[shape->mMtxGroupNum];
 	shape->mMin         = getMin(id);
 	shape->mMax         = getMax(id);
-	shape->mVcdVatCmd   = mVcdVatCmdBuffer + id * 0xC0;
+	shape->mVcdVatCmd   = mVcdVatCmdBuffer + id * J3DShape::kVcdVatDLSize;
 
 	for (int i = 0; i < shape->mMtxGroupNum; i++) {
 		shape->mShapeMtx[i]  = newShapeMtx(flags, id, i);

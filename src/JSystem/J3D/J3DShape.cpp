@@ -22,8 +22,12 @@ void J3DShape::initialize()
 	mMtxGroupNum = 0;
 	mFlags       = 0;
 	mRadius      = 0.0f;
-	mMin.set(0.0f, 0.0f, 0.0f);
-	mMax.set(0.0f, 0.0f, 0.0f);
+	mMin.x 		 = 0.0f;
+    mMin.y 		 = 0.0f;
+    mMin.z 		 = 0.0f;
+    mMax.x 		 = 0.0f;
+    mMax.y 		 = 0.0f;
+    mMax.z 		 = 0.0f;
 	mVtxDesc           = nullptr;
 	mShapeMtx          = nullptr;
 	mShapeDraw         = nullptr;
