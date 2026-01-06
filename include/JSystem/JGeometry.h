@@ -267,10 +267,8 @@ struct TVec3 {
 	// it up.
 	inline TVec3& operator=(const TVec3& other)
 	{
-		x = other.x;
-		y = other.y;
-		z = other.z;
-		return *this;
+		setTVec3f(&other.x, &this->x);
+        return *this;
 	}
 
 	void set(T x, T y, T z)
@@ -331,26 +329,40 @@ struct TVec3 {
 	// 	y = vec.y;
 	// 	z = vec.z;
 	// }
+	
+	inline void setTVec3f(const f32* vec_a, f32* vec_b) {
+#ifdef __MWERKS__
+    const register f32* v_a = vec_a;
+    register f32* v_b = vec_b;
+
+    register f32 a_x;
+    register f32 b_x;
+
+		asm {
+			psq_l a_x, 0(v_a), 0, 0
+			lfs b_x, 8(v_a)
+			psq_st a_x, 0(v_b), 0, 0
+			stfs b_x, 8(v_b)
+		};
+#endif
+	}
+	inline void setTVec3f(const Vec& vec_a, Vec& vec_b) {
+		setTVec3f(&vec_a.x, &vec_b.x);
+	}
 
 	void add(const TVec3<f32>& b)
 	{
-		x += b.x;
-		y += b.y;
-		z += b.z;
+		JMathInlineVEC::PSVECAdd((Vec*)&x, (Vec*)&b.x, (Vec*)&x);
 	}
 
 	void sub(const TVec3<f32>& b)
 	{
-		x -= b.x;
-		y -= b.y;
-		z -= b.z;
+		JMathInlineVEC::PSVECSubtract((Vec*)&x, (Vec*)&b.x, (Vec*)&x);
 	}
 
 	void sub(const TVec3<T>& a, const TVec3<T>& b)
 	{
-		x = a.x - b.x;
-		y = a.y - b.y;
-		z = a.z - b.z;
+		JMathInlineVEC::PSVECSubtract((Vec*)&a.x, (Vec*)&b.x, (Vec*)&x);
 	}
 
 	void scale(T scale)
@@ -369,35 +381,49 @@ struct TVec3 {
 
 	void scaleAdd(T scale, const TVec3<T>& a, const TVec3<T>& b)
 	{
-		x = a.x * scale + b.x;
-		y = a.y * scale + b.y;
-		z = a.z * scale + b.z;
+		JMAVECScaleAdd((Vec*)&a, (Vec*)&b, (Vec*)this, scale);
 	}
 
 	void zero() { x = y = z = 0.0f; }
 
-	f32 squared() const { return x * x + y * y + z * z; }
+	f32 squared() const { return JMathInlineVEC::PSVECSquareMag((Vec*)&x); }
+	
+	void negateInternal(TVec3<f32>* dst) {
+#ifdef __MWERKS__ // clang-format off
+        register f32* rdst = &dst->x;
+        const register f32* src = &x;
+        register f32 x_y;
+        register f32 z;
+
+        asm {
+            psq_l  x_y, 0(src), 0, 0
+            ps_neg x_y, x_y
+            psq_st x_y, 0(rdst), 0, 0
+            lfs    z,   8(src)
+            fneg   z,   z
+            stfs   z,   8(rdst)
+        };
+#endif // clang-format on
+    }
+	
+	void negate() {
+        negateInternal(this);
+    }
 
 	f32 length() const
 	{
-		f32 sq = squared();
-		f32 norm;
-		if (sq <= 0.0f) {
-			norm = sq;
-		} else {
-			norm = sq * fsqrt_step(sq);
-		}
-		return norm;
+		return PSVECMag((Vec*)this);
 	}
 
-	void setLength(f32 length)
+	f32 setLength(f32 length)
 	{
-		if (squared() <= TUtilf::epsilon()) {
-			return;
-		}
 		f32 sq   = squared();
+		if (sq <= TUtilf::epsilon()) {
+			return 0.0f;
+		}
 		f32 norm = TUtilf::inv_sqrt(sq);
 		scale(norm * length);
+		return norm * sq;
 	}
 
 	void setLength(const TVec3<f32>& other, f32 length)
@@ -431,26 +457,39 @@ struct TVec3 {
 		}
 		f32 norm = TUtilf::inv_sqrt(sq);
 		scale(norm, other);
-		return norm;
+		return norm * sq;
 	}
 
-	void cross(const TVec3<f32>& a, const TVec3<f32>& b) { set(a.y * b.z - a.z * b.y, a.z * b.x - a.x * b.z, a.x * b.y - a.y * b.x); }
+	void cross(const TVec3<f32>& a, const TVec3<f32>& b) { PSVECCrossProduct((Vec*)&a, (Vec*)&b, (Vec*)this); }
 
-	f32 dot(const TVec3<f32>& a) const { return x * a.x + y * a.y + z * a.z; }
+	f32 dot(const TVec3<f32>& a) const { return JMathInlineVEC::PSVECDotProduct((Vec*)this, (Vec*)&a); }
 
-	// idk why they didn't use set for this one but go figure.
+	inline void mulInternal(register const f32* a, register const f32* b, register float* dst) {
+#ifdef __MWERKS__
+    register f32 a_x_y;
+    register f32 b_x_y;
+    register f32 x_y;
+    register f32 za;
+    register f32 zb;
+    register f32 z;
+
+		asm {
+			psq_l  a_x_y, 0(a), 0, 0
+			psq_l  b_x_y, 0(b), 0, 0
+			ps_mul x_y, a_x_y, b_x_y
+			psq_st x_y, 0(dst), 0, 0
+		};
+		dst[2] = a[2] * b[2];
+#endif
+	}
 	void mul(const TVec3<f32>& a, const TVec3<f32>& b)
 	{
-		x = a.x * b.x;
-		y = a.y * b.y;
-		z = a.z * b.z;
+		mulInternal(&a.x, &b.x, &this->x);
 	}
 
 	void mul(const TVec3<f32>& a)
 	{
-		x *= a.x;
-		y *= a.y;
-		z *= a.z;
+		mul(*this, a);
 	}
 
 	bool isAbove(const TVec3<T>& other) const { return (x >= other.x) && (y >= other.y) && (z >= other.z); }

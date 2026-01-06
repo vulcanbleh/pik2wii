@@ -1107,15 +1107,14 @@ void JPAResource::calcWorkData_c(JPAEmitterWorkData* data)
 	PSMTXCopy(data->mEmitter->mGlobalRot, data->mRotationMtx);
 	PSMTXConcat(data->mRotationMtx, mtx2, data->mGlobalRot);
 	PSMTXConcat(data->mGlobalRot, mtx, data->mGlobalSR);
-	data->mEmitterPos = data->mEmitter->mLocalTrs;
+	data->mEmitterPos.set(data->mEmitter->mLocalTrs);
 
 	JPABaseEmitter* emit = data->mEmitter;
-	data->mGlobalScl.x   = emit->mGlobalScl.x * emit->mLocalScl.x;
-	data->mGlobalScl.y   = emit->mGlobalScl.y * emit->mLocalScl.y;
-	data->mGlobalScl.z   = emit->mGlobalScl.z * emit->mLocalScl.z;
+	
+	data->mGlobalScl.mul(emit->mGlobalScl, emit->mLocalScl);
 
 	JPAGetDirMtx(data->mEmitter->mLocalDir, data->mDirectionMtx);
-	data->mPublicScale = data->mEmitter->mGlobalScl;
+	data->mPublicScale.set(data->mEmitter->mGlobalScl);
 	PSMTXMultVec(mtx3.mMatrix.mtxView, (Vec*)&data->mEmitter->mLocalTrs, (Vec*)&data->mGlobalPos);
 }
 

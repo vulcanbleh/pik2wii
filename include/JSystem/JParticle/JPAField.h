@@ -19,40 +19,17 @@ struct JPAFieldBase {
 	JGeometry::TVec3f _04; // _04
 };
 
-struct JPAFieldAir : public JPAFieldBase {
-	virtual ~JPAFieldAir() { }                                                // _08 (weak)
-	virtual void prepare(JPAEmitterWorkData*, JPAFieldBlock*);                // _0C
-	virtual void calc(JPAEmitterWorkData*, JPAFieldBlock*, JPABaseParticle*); // _10
-
-	// _00     = VTBL
-	// _00-_10 = JPAFieldBase
-};
-
-/**
- * @size{0x34}
- */
-struct JPAFieldConvection : public JPAFieldBase {
-	virtual ~JPAFieldConvection() { }                                         // _08 (weak)
-	virtual void prepare(JPAEmitterWorkData*, JPAFieldBlock*);                // _0C
-	virtual void calc(JPAEmitterWorkData*, JPAFieldBlock*, JPABaseParticle*); // _10
-
-	// _00     = VTBL
-	// _00-_10 = JPAFieldBase
-	JGeometry::TVec3f _10; // _10
-	JGeometry::TVec3f _1C; // _1C
-	JGeometry::TVec3f _28; // _28
-};
-
-struct JPAFieldDrag : public JPAFieldBase {
-	virtual ~JPAFieldDrag() { }                                               // _08 (weak)
-	virtual void calc(JPAEmitterWorkData*, JPAFieldBlock*, JPABaseParticle*); // _10
-
-	// _00     = VTBL
-	// _00-_10 = JPAFieldBase
-};
-
 struct JPAFieldGravity : public JPAFieldBase {
 	virtual ~JPAFieldGravity() { }                                            // _08 (weak)
+	virtual void prepare(JPAEmitterWorkData*, JPAFieldBlock*);                // _0C
+	virtual void calc(JPAEmitterWorkData*, JPAFieldBlock*, JPABaseParticle*); // _10
+
+	// _00     = VTBL
+	// _00-_10 = JPAFieldBase
+};
+
+struct JPAFieldAir : public JPAFieldBase {
+	virtual ~JPAFieldAir() { }                                                // _08 (weak)
 	virtual void prepare(JPAEmitterWorkData*, JPAFieldBlock*);                // _0C
 	virtual void calc(JPAEmitterWorkData*, JPAFieldBlock*, JPABaseParticle*); // _10
 
@@ -81,12 +58,50 @@ struct JPAFieldNewton : public JPAFieldBase {
 	f32 _1C;               // _1C
 };
 
+/**
+ * @size{0x24}
+ */
+struct JPAFieldVortex : public JPAFieldBase {
+	virtual ~JPAFieldVortex() { }                                             // _08 (weak)
+	virtual void prepare(JPAEmitterWorkData*, JPAFieldBlock*);                // _0C
+	virtual void calc(JPAEmitterWorkData*, JPAFieldBlock*, JPABaseParticle*); // _10
+
+	// _00     = VTBL
+	// _00-_10 = JPAFieldBase
+	JGeometry::TVec3f _10; // _10
+	f32 _1C;               // _1C
+	f32 _20;               // _20
+};
+
 struct JPAFieldRandom : public JPAFieldBase {
 	virtual ~JPAFieldRandom() { }                                             // _08 (weak)
 	virtual void calc(JPAEmitterWorkData*, JPAFieldBlock*, JPABaseParticle*); // _10
 
 	// _00     = VTBL
 	// _00-_10 = JPAFieldBase
+};
+
+struct JPAFieldDrag : public JPAFieldBase {
+	virtual ~JPAFieldDrag() { }                                               // _08 (weak)
+	virtual void calc(JPAEmitterWorkData*, JPAFieldBlock*, JPABaseParticle*); // _10
+
+	// _00     = VTBL
+	// _00-_10 = JPAFieldBase
+};
+
+/**
+ * @size{0x34}
+ */
+struct JPAFieldConvection : public JPAFieldBase {
+	virtual ~JPAFieldConvection() { }                                         // _08 (weak)
+	virtual void prepare(JPAEmitterWorkData*, JPAFieldBlock*);                // _0C
+	virtual void calc(JPAEmitterWorkData*, JPAFieldBlock*, JPABaseParticle*); // _10
+
+	// _00     = VTBL
+	// _00-_10 = JPAFieldBase
+	JGeometry::TVec3f _10; // _10
+	JGeometry::TVec3f _1C; // _1C
+	JGeometry::TVec3f _28; // _28
 };
 
 /**
@@ -102,21 +117,6 @@ struct JPAFieldSpin : public JPAFieldBase {
 	JGeometry::TVec3f _10; // _10
 	JGeometry::TVec3f _1C; // _1C
 	JGeometry::TVec3f _28; // _28
-};
-
-/**
- * @size{0x24}
- */
-struct JPAFieldVortex : public JPAFieldBase {
-	virtual ~JPAFieldVortex() { }                                             // _08 (weak)
-	virtual void prepare(JPAEmitterWorkData*, JPAFieldBlock*);                // _0C
-	virtual void calc(JPAEmitterWorkData*, JPAFieldBlock*, JPABaseParticle*); // _10
-
-	// _00     = VTBL
-	// _00-_10 = JPAFieldBase
-	JGeometry::TVec3f _10; // _10
-	f32 _1C;               // _1C
-	f32 _20;               // _20
 };
 
 #endif

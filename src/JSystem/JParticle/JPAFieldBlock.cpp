@@ -13,7 +13,8 @@
  */
 void JPAFieldBase::calcAffect(JPAFieldBlock* block, JPABaseParticle* particle)
 {
-	JGeometry::TVec3f vec = _04;
+	JGeometry::TVec3f vec;
+	vec = _04;
 	if (!particle->checkStatus(0x4) && block->checkStatus(0x8 | 0x30 | 0x40)) {
 		vec.scale(calcFadeAffect(block, particle->mTime));
 	}
@@ -177,10 +178,12 @@ void JPAFieldVortex::calc(JPAEmitterWorkData* workData, JPAFieldBlock* block, JP
 	vec.sub(particle->mLocalPosition, vec);
 
 	f32 sq = vec.squared();
-	if (sq > _1C)
+	if (sq > _1C){
 		sq = block->getMagRndm();
-	else
-		sq = (1.0f - sq * _20) * block->getMag() + sq * _20 * block->getMagRndm();
+	} else {
+		sq *= _20;
+		sq = (1.0f - sq) * block->getMag() + sq * block->getMagRndm();
+	}
 
 	vec.normalize();
 	_04.cross(vec, _10);

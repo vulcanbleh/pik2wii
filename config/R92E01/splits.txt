@@ -1499,13 +1499,13 @@ JSystem/JFramework/JFWDisplay.cpp:
 	.data       start:0x8056B6A0 end:0x8056B740
 	.bss        start:0x805D5830 end:0x805D5860
 	.sbss       start:0x8066BF10 end:0x8066BF38
-	.sdata2     start:0x8066E340 end:0x8066E36C
+	.sdata2     start:0x8066E340 end:0x8066E368
 
 JSystem/JParticle/JPABaseShape.cpp:
 	.text       start:0x800F1404 end:0x800F4EAC
 	.data       start:0x8056B740 end:0x8056B8E8
 	.sdata      start:0x8066AA88 end:0x8066AA90
-	.sdata2     start:0x8066E370 end:0x8066E3A0
+	.sdata2     start:0x8066E368 end:0x8066E3A0
 
 JSystem/JParticle/JPAChildShape.cpp:
 	.text       start:0x800F4EAC end:0x800F5014
@@ -3373,8 +3373,10 @@ plugProjectKandoU/itemPlant.cpp:
 
 plugProjectKandoU/itemRock.cpp:
 	.text       start:0x8026B09C end:0x8026D270
+	.rodata     start:0x8054A6C8 end:0x8054A748
 	.data       start:0x805995D0 end:0x80599F08
 	.sbss       start:0x8066CA88 end:0x8066CA90
+	.sdata2     start:0x806703E0 end:0x80670448
 
 plugProjectKandoU/aiBreakRock.cpp:
 	.text       start:0x8026D270 end:0x8026D740

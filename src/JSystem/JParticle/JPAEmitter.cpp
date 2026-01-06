@@ -61,6 +61,7 @@ void JPABaseEmitter::init(JPAEmitterManager* manager, JPAResource* resource)
 	mCurrentFrame  = 0;
 	mWaitTime      = 0;
 	mRateStepTimer = 0;
+	mTexAnmIdx 	   = 0;
 }
 
 /**
@@ -70,7 +71,7 @@ void JPABaseEmitter::init(JPAEmitterManager* manager, JPAResource* resource)
 JPABaseParticle* JPABaseEmitter::createParticle()
 {
 
-	if (mPtclPool->mNum != 0) {
+	if (mPtclPool->getNum() != 0) {
 		JPANode<JPABaseParticle>* node = mPtclPool->pop_front();
 		mAlivePtclBase.push_front(node);
 		mResource->getDyn()->calc(mManager->mWorkData);
@@ -87,7 +88,7 @@ JPABaseParticle* JPABaseEmitter::createParticle()
  */
 JPABaseParticle* JPABaseEmitter::createChild(JPABaseParticle* parent)
 {
-	if (mPtclPool->mNum != 0) {
+	if (mPtclPool->getNum() != 0) {
 		JPANode<JPABaseParticle>* node = mPtclPool->pop_front();
 		mAlivePtclChld.push_front(node);
 		node->mData.init_c(mManager->mWorkData, parent);

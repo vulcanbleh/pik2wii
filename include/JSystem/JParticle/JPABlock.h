@@ -114,6 +114,7 @@ struct JPADynamicsBlock {
 	f32 getInitVelRndm() { return mData->mInitialVelRndm; }
 	f32 getInitVelRatio() { return mData->mInitialVelRatio; }
 	f32 getAirRes() { return mData->mAirResist; }
+	f32 getLifetimeRndm() const { return mData->mLifeTimeRndm; }
 	f32 getMomentRndm() const { return mData->mMoment; }
 
 	// unused/inlined:
@@ -181,8 +182,8 @@ struct JPAFieldBlock {
 	inline f32 getVal1() const { return mData->mVal1; }
 	inline u16 getCycle() const { return mData->mCycle; }
 
-	inline void getPosOrig(JGeometry::TVec3f* pos) const { *pos = mData->mOffset; }
-	inline void getDirOrig(JGeometry::TVec3f* dir) const { *dir = mData->mVelocity; }
+	inline void getPosOrig(JGeometry::TVec3f* pos) const { pos->set(mData->mOffset); }
+	inline void getDirOrig(JGeometry::TVec3f* dir) const { dir->set(mData->mVelocity); }
 	inline f32 getMagOrig() const { return mData->mAmplitude; }
 
 	const Data* mData;           // _00

@@ -21,13 +21,13 @@ JPAParticleCallBack::~JPAParticleCallBack()
  */
 void JPABaseParticle::init_p(JPAEmitterWorkData* workData)
 {
-	JPAExtraShape* extraShape       = workData->mResource->mExtraShape;
 	JPABaseEmitter* emitter         = workData->mEmitter;
+	JPAExtraShape* extraShape       = workData->mResource->mExtraShape;
 	JPABaseShape* baseShape         = workData->mResource->mBaseShape;
 	JPADynamicsBlock* dynamicsBlock = workData->mResource->mDynamicsBlock;
 
 	mAge      = -1;
-	mLifeTime = (f32)emitter->mLifeTime * (1.0f - dynamicsBlock->mData->mLifeTimeRndm * emitter->mRandom.getRandF32());
+	mLifeTime = (1.0f - dynamicsBlock->getLifetimeRndm() * emitter->mRandom.getRandF32()) * emitter->mLifeTime;
 	mTime     = 0.0f;
 	initStatus(0);
 	PSMTXMultVecSR(workData->mGlobalSR, (Vec*)&workData->mVolumePos, (Vec*)&mLocalPosition);
@@ -204,6 +204,8 @@ void JPABaseParticle::init_c(JPAEmitterWorkData* workData, JPABaseParticle* part
 	} else {
 		mRotateSpeed = 0;
 	}
+	
+	mTexAnmIdx = 0;
 }
 
 /**
@@ -684,10 +686,12 @@ lbl_800954E8:
  */
 bool JPABaseParticle::canCreateChild(JPAEmitterWorkData* workData)
 {
+	 JPAChildShape* csp = workData->mResource->getCsp();
+	 
 	bool canCreate = false;
 
-	int timeLeft = mAge - (int)((mLifeTime - 1) * workData->mResource->mChildShape->mData->mTiming);
-	if (timeLeft >= 0 && timeLeft % (workData->mResource->mChildShape->mData->mStep + 1) == 0) {
+	int timeLeft = mAge - (int)((mLifeTime - 1) * csp->getTiming());
+	if (timeLeft >= 0 && timeLeft % (csp->getStep() + 1) == 0) {
 		canCreate = true;
 	}
 

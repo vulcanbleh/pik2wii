@@ -1272,7 +1272,7 @@ void dirTypeVel(const JPAEmitterWorkData* workData, const JPABaseParticle* parti
  */
 void dirTypePos(const JPAEmitterWorkData* workData, const JPABaseParticle* particle, JGeometry::TVec3<f32>* direction)
 {
-	*direction = particle->mLocalPosition;
+	particle->getLocalPosition(*direction);
 }
 
 /**
@@ -1281,10 +1281,8 @@ void dirTypePos(const JPAEmitterWorkData* workData, const JPABaseParticle* parti
  */
 void dirTypePosInv(const JPAEmitterWorkData* workData, const JPABaseParticle* particle, JGeometry::TVec3f* direction)
 {
-	dirTypePos(workData, particle, direction);
-	direction->x = -direction->x;
-	direction->y = -direction->y;
-	direction->z = -direction->z;
+	particle->getLocalPosition(*direction);
+    direction->negate();
 }
 
 /**
@@ -1293,7 +1291,7 @@ void dirTypePosInv(const JPAEmitterWorkData* workData, const JPABaseParticle* pa
  */
 void dirTypeEmtrDir(const JPAEmitterWorkData* workData, const JPABaseParticle* particle, JGeometry::TVec3f* direction)
 {
-	*direction = workData->mGlobalEmtrDir;
+	direction->set(workData->mGlobalEmtrDir);
 }
 
 /**
@@ -1568,6 +1566,7 @@ void JPADrawDBillboard(JPAEmitterWorkData* work, JPABaseParticle* particle)
 			transformMtx[2][3] = particlePos.z;
 			transformMtx[2][1] = 0.0f;
 			transformMtx[2][0] = 0.0f;
+			transformMtx[1][2] = 0.0f;
 			transformMtx[0][2] = 0.0f;
 			GXLoadPosMtxImm(transformMtx, 0);
 			p_prj[work->mProjectionType](work, transformMtx);
@@ -1609,11 +1608,9 @@ void JPADrawPoint(JPAEmitterWorkData* work, JPABaseParticle* ptcl)
 	if (ptcl->checkStatus(8) == 0) {
 		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 		GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-		f32 zero = 0.0f;
 		GXBegin(GX_POINTS, GX_VTXFMT1, 1);
 		GXPosition3f32(ptcl->mPosition.x, ptcl->mPosition.y, ptcl->mPosition.z);
-		GXTexCoord2f32(zero, zero);
-
+		GXTexCoord2f32(0.0f, 0.0f);
 		GXSetVtxDesc(GX_VA_POS, GX_INDEX8);
 		GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
 	}
@@ -1632,18 +1629,15 @@ void JPADrawLine(JPAEmitterWorkData* work, JPABaseParticle* particle)
 		JGeometry::TVec3f direction;
 		particle->getVelVec(direction);
 		if (!direction.isZero()) {
-			// local_28.setLength(work->mGlobalPtclScl.y * (25.0f * particle->mParticleScaleY));
-			// local_28.sub(local_1c, local_28);
+			direction.setLength(work->mGlobalPtclScl.y * (25.0f * particle->mParticleScaleY));
+			direction.sub(position, direction);
 			GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
 			GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
 			GXBegin(GX_LINES, GX_VTXFMT1, 2);
-			f32 zero = 0.0f;
-			f32 one  = 1.0f;
 			GXPosition3f32(position.x, position.y, position.z);
-			GXTexCoord2f32(zero, zero);
+			GXTexCoord2f32(0.0f, 0.0f);
 			GXPosition3f32(direction.x, direction.y, direction.z);
-			GXTexCoord2f32(zero, one);
-
+			GXTexCoord2f32(0.0f, 1.0f);
 			GXSetVtxDesc(GX_VA_POS, GX_INDEX8);
 			GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
 		}
@@ -1872,11 +1866,9 @@ void JPADrawStripe(JPAEmitterWorkData* work)
 		PSMTXMultVecArraySR(matrix, (f32*)local_e0, (f32*)local_e0, (f32*)2); // ???
 		GXPosition3f32(local_e0[0].x + local_ec.x, local_e0[0].y + local_ec.y, local_e0[0].z + local_ec.z);
 
-		f32 zero = 0.0f; // regswaps are mostly because of these needing to exist (they dont in TP)
-		f32 one  = 1.0f;
-		GXTexCoord2f32(zero, coord);
+		GXTexCoord2f32(0.0f, coord);
 		GXPosition3f32(local_e0[1].x + local_ec.x, local_e0[1].y + local_ec.y, local_e0[1].z + local_ec.z);
-		GXTexCoord2f32(one, coord);
+		GXTexCoord2f32(1.0f, coord);
 	}
 	GXSetVtxDesc(GX_VA_POS, GX_INDEX8);
 	GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
@@ -2355,11 +2347,9 @@ void JPADrawStripeX(JPAEmitterWorkData* work)
 		matrix[2][3] = 0.0f;
 		PSMTXMultVecArraySR(matrix, (f32*)local_a8, (f32*)local_a8, (f32*)2); // ???
 		GXPosition3f32(local_a8[0].x + position.x, local_a8[0].y + position.y, local_a8[0].z + position.z);
-		f32 zero = 0.0f;
-		f32 one  = 1.0f;
-		GXTexCoord2f32(zero, coord);
+		GXTexCoord2f32(0.0f, coord);
 		GXPosition3f32(local_a8[1].x + position.x, local_a8[1].y + position.y, local_a8[1].z + position.z);
-		GXTexCoord2f32(one, coord);
+		GXTexCoord2f32(1.0f, coord);
 	}
 
 	coord = start_coord;
@@ -2408,11 +2398,9 @@ void JPADrawStripeX(JPAEmitterWorkData* work)
 		PSMTXMultVecArraySR(matrix, (f32*)local_a8, (f32*)local_a8, (f32*)2); // ???
 		GXPosition3f32(local_a8[0].x + position.x, local_a8[0].y + position.y, local_a8[0].z + position.z);
 
-		f32 zero = 0.0f;
-		f32 one  = 1.0f;
-		GXTexCoord2f32(zero, coord);
+		GXTexCoord2f32(0.0f, coord);
 		GXPosition3f32(local_a8[1].x + position.x, local_a8[1].y + position.y, local_a8[1].z + position.z);
-		GXTexCoord2f32(one, coord);
+		GXTexCoord2f32(1.0f, coord);
 	}
 	GXSetVtxDesc(GX_VA_POS, GX_INDEX8);
 	GXSetVtxDesc(GX_VA_TEX0, GX_INDEX8);
