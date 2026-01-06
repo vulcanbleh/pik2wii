@@ -544,7 +544,7 @@ config.libs = [
             Object(Matching, "JSystem/JStudio/object-id.cpp"),
             Object(NonMatching, "JSystem/JStudio/stb.cpp"),
             Object(Matching, "JSystem/JStudio/stb-data.cpp"),
-            Object(NonMatching, "JSystem/JStudio/jstudio-math.cpp"),
+            Object(Matching, "JSystem/JStudio/jstudio-math.cpp"),
             Object(NonMatching, "JSystem/JStudio/ctb-data.cpp"),
             Object(NonMatching, "JSystem/JStudio/ctb.cpp"),
         ],
