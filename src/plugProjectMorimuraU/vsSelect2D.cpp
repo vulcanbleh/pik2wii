@@ -4111,13 +4111,15 @@ bool TVsSelect::doUpdate()
 	}
 	mPaneRulesInfo->setOffset(mRulesPanePos.x + mRulesMoveXPos, mRulesPanePos.y);
 
-	JGeometry::TVec3f vec1 = mPaneStageNameBg->getGlbVtx(GLBVTX_BtmLeft);
-	JGeometry::TVec3f vec2 = mPaneStageNameBg->getGlbVtx(GLBVTX_TopRight);
+	JGeometry::TVec3f vec1; 
+	vec1.set(mPaneStageNameBg->getGlbVtx(GLBVTX_BtmLeft));
+	JGeometry::TVec3f vec2; 
+	vec2.set(mPaneStageNameBg->getGlbVtx(GLBVTX_TopRight));
 	TVsSelectScreen* scrn  = static_cast<TVsSelectScreen*>(mMainScreen);
 	scrn->mCallbackScissor->mBounds.set(vec1.x, vec1.y, vec2.x, vec2.y);
 
-	vec1 = mPaneStageList->getGlbVtx(GLBVTX_BtmLeft);
-	vec2 = mPaneStageList->getGlbVtx(GLBVTX_TopRight);
+	vec1.set(mPaneStageList->getGlbVtx(GLBVTX_BtmLeft));
+	vec2.set(mPaneStageList->getGlbVtx(GLBVTX_TopRight));
 	mScissorBounds.set(vec1.x, vec1.y, vec2.x, vec2.y);
 
 	for (int i = 0; i < 2; i++) {
