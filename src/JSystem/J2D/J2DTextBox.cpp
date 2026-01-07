@@ -117,12 +117,8 @@ J2DTextBox::J2DTextBox(J2DPane* parent, JSURandomInputStream* input, u32 flags, 
 
 	if (mStringPtr) {
 		mStringLength = strLength;
-		int temp_r0   = (u16)strLength - 1;
-		u16 var_r26_2 = info.mMaxReadLength;
-
-		if (temp_r0 < var_r26_2) {
-			var_r26_2 = (u16)temp_r0;
-		}
+		
+		u16 var_r26_2 = strLength - 1 < info.mMaxReadLength ? u16(strLength - 1) : info.mMaxReadLength;
 
 		input->peek(mStringPtr, var_r26_2);
 		mStringPtr[var_r26_2] = 0;
@@ -135,19 +131,19 @@ J2DTextBox::J2DTextBox(J2DPane* parent, JSURandomInputStream* input, u32 flags, 
 
 	if (mat && mat->getTevBlock()) {
 		if (mat->getTevBlock()->getTevStageNum() != 1) {
-			J2DGXColorS10* color0p = mat->getTevBlock()->getTevColor(0);
+			J2DGXColorS10 color0p = *mat->getTevBlock()->getTevColor(0);
 			GXColorS10 color0;
-			color0.r = color0p->r;
-			color0.g = color0p->g;
-			color0.b = color0p->b;
-			color0.a = color0p->a;
+			color0.r = color0p.r;
+			color0.g = color0p.g;
+			color0.b = color0p.b;
+			color0.a = color0p.a;
 
-			J2DGXColorS10* color1p = mat->getTevBlock()->getTevColor(1);
+			J2DGXColorS10 color1p = *mat->getTevBlock()->getTevColor(1);
 			GXColorS10 color1;
-			color1.r = color1p->r;
-			color1.g = color1p->g;
-			color1.b = color1p->b;
-			color1.a = color1p->a;
+			color1.r = color1p.r;
+			color1.g = color1p.g;
+			color1.b = color1p.b;
+			color1.a = color1p.a;
 
 			mBlack = JUtility::TColor(((u8)color0.r << 0x18) | ((u8)color0.g << 0x10) | ((u8)color0.b << 8) | (u8)color0.a);
 			mWhite = JUtility::TColor(((u8)color1.r << 0x18) | ((u8)color1.g << 0x10) | ((u8)color1.b << 8) | (u8)color1.a);
@@ -196,7 +192,20 @@ void J2DTextBox::initiate(const ResFONT* resFont, const char* str, s16 strLength
 	mStringPtr    = nullptr;
 
 	if (str && strLength != 0) {
-		copyString(str, strLength);
+		size_t length   = strlen(str);
+		u16 finalLength = strLength;
+		if (strLength == -1) {
+			if (length >= 0xFFFF) {
+				length = 0xFFFE;
+			}
+			finalLength = length + 1;
+		}
+		mStringPtr = new char[finalLength];
+		if (finalLength != 0 && mStringPtr != nullptr) {
+			strncpy(mStringPtr, str, finalLength - 1);
+			mStringPtr[finalLength - 1] = '\0';
+			mStringLength               = finalLength;
+		}
 	}
 
 	mOffsetX     = 0.0f;
@@ -204,8 +213,9 @@ void J2DTextBox::initiate(const ResFONT* resFont, const char* str, s16 strLength
 	mCharSpacing = 0.0f;
 
 	if (!mFont) {
-		mLineSpacing = 0.0f;
-		mFontSize    = JGeometry::TVec2f(0.0f);
+		mLineSpacing   = 0.0f;
+		mFontSize.x    = 0.0f;
+		mFontSize.y    = 0.0f;
 
 	} else {
 		mLineSpacing = mFont->getLeading();
@@ -337,7 +347,7 @@ void J2DTextBox::draw(f32 x, f32 y)
 		return;
 	}
 
-	J2DPrint printer(mFont, mCharSpacing, mLineSpacing, mCharColor, mGradientColor, mBlack, mWhite);
+	J2DPrint printer(mFont, mCharSpacing, mLineSpacing, mCharColor.toUInt32(), mGradientColor.toUInt32(), mBlack.toUInt32(), mWhite.toUInt32());
 	printer.setFontSize(mFontSize.x, mFontSize.y);
 
 	makeMatrix(x, y, 0.0f, 0.0f);
@@ -371,7 +381,7 @@ void J2DTextBox::draw(f32 x, f32 y, f32 p3, J2DTextBoxHBinding hb)
 		return;
 	}
 
-	J2DPrint printer(mFont, mCharSpacing, mLineSpacing, mCharColor, mGradientColor, mBlack, mWhite);
+	J2DPrint printer(mFont, mCharSpacing, mLineSpacing, mCharColor.toUInt32(), mGradientColor.toUInt32(), mBlack.toUInt32(), mWhite.toUInt32());
 	printer.setFontSize(mFontSize.x, mFontSize.y);
 
 	makeMatrix(x, y, 0.0f, 0.0f);
@@ -453,7 +463,7 @@ void J2DTextBox::drawSelf(f32 x, f32 y)
  */
 void J2DTextBox::drawSelf(f32 x, f32 y, Mtx* mtx)
 {
-	J2DPrint printer(mFont, mCharSpacing, mLineSpacing, mCharColor, mGradientColor, mBlack, mWhite);
+	J2DPrint printer(mFont, mCharSpacing, mLineSpacing, mCharColor.toUInt32(), mGradientColor.toUInt32(), mBlack.toUInt32(), mWhite.toUInt32());
 	printer.setFontSize(mFontSize.x, mFontSize.y);
 	Mtx newMtx;
 	PSMTXConcat(*mtx, mGlobalMtx, newMtx);
