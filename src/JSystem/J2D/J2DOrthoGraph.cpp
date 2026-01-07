@@ -7,6 +7,7 @@
  */
 J2DOrthoGraph::J2DOrthoGraph()
     : J2DGrafContext(0.0f, 0.0f, 0.0f, 0.0f)
+	, mOrtho(0.0f, 0.0f, 0.0f, 0.0f)
 {
 	setLookat();
 }
@@ -17,6 +18,7 @@ J2DOrthoGraph::J2DOrthoGraph()
  */
 J2DOrthoGraph::J2DOrthoGraph(f32 left, f32 top, f32 right, f32 bottom, f32 nearPlaneDistance, f32 farPlaneDistance)
     : J2DGrafContext(left, top, right, bottom)
+	, mOrtho(0.0f, 0.0f, 0.0f, 0.0f)
 {
 	mOrtho = JGeometry::TBox2<f32>(0, 0, right, bottom);
 	mNear  = -farPlaneDistance;
@@ -89,7 +91,7 @@ void J2DDrawLine(f32 startX, f32 startY, f32 endX, f32 endY, JUtility::TColor co
 {
 	J2DOrthoGraph graph;
 	graph.setLineWidth(lineWidth);
-	graph.setColor(color);
+	graph.setColor(color.toUInt32());
 	graph.moveTo(startX, startY);
 	graph.lineTo(endX, endY);
 }
@@ -100,7 +102,7 @@ void J2DDrawLine(f32 startX, f32 startY, f32 endX, f32 endY, JUtility::TColor co
  */
 void J2DFillBox(f32 startX, f32 startY, f32 width, f32 height, JUtility::TColor fillColor)
 {
-	J2DFillBox(JGeometry::TBox2<f32>(startX, startY, startX + width, startY + height), fillColor);
+	J2DFillBox(JGeometry::TBox2<f32>(startX, startY, startX + width, startY + height), fillColor.toUInt32());
 }
 
 /**
@@ -110,7 +112,7 @@ void J2DFillBox(f32 startX, f32 startY, f32 width, f32 height, JUtility::TColor 
 void J2DFillBox(JGeometry::TBox2<f32> const& boxDimensions, JUtility::TColor fillColor)
 {
 	J2DOrthoGraph orthoGraph;
-	orthoGraph.setColor(fillColor);
+	orthoGraph.setColor(fillColor.toUInt32());
 	orthoGraph.fillBox(boxDimensions);
 }
 
@@ -121,7 +123,7 @@ void J2DFillBox(JGeometry::TBox2<f32> const& boxDimensions, JUtility::TColor fil
 void J2DFillBox(f32 startX, f32 startY, f32 endX, f32 endY, JUtility::TColor color1, JUtility::TColor color2, JUtility::TColor color3,
                 JUtility::TColor color4)
 {
-	J2DFillBox(JGeometry::TBox2<f32>(startX, startY, startX + endX, startY + endY), color1, color2, color3, color4);
+	J2DFillBox(JGeometry::TBox2<f32>(startX, startY, startX + endX, startY + endY), color1.toUInt32(), color2.toUInt32(), color3.toUInt32(), color4.toUInt32());
 }
 
 /**
@@ -132,7 +134,7 @@ void J2DFillBox(const JGeometry::TBox2<f32>& boxDimensions, JUtility::TColor col
                 JUtility::TColor color4)
 {
 	J2DOrthoGraph orthoGraph;
-	orthoGraph.setColor(color1, color2, color3, color4);
+	orthoGraph.setColor(color1.toUInt32(), color2.toUInt32(), color3.toUInt32(), color4.toUInt32());
 	orthoGraph.fillBox(boxDimensions);
 }
 
@@ -142,7 +144,7 @@ void J2DFillBox(const JGeometry::TBox2<f32>& boxDimensions, JUtility::TColor col
  */
 void J2DDrawFrame(f32 startX, f32 startY, f32 width, f32 height, JUtility::TColor frameColor, u8 lineWidth)
 {
-	J2DDrawFrame(JGeometry::TBox2<f32>(startX, startY, startX + width, startY + height), frameColor, lineWidth);
+	J2DDrawFrame(JGeometry::TBox2<f32>(startX, startY, startX + width, startY + height), frameColor.toUInt32(), lineWidth);
 }
 
 /**
@@ -152,7 +154,7 @@ void J2DDrawFrame(f32 startX, f32 startY, f32 width, f32 height, JUtility::TColo
 void J2DDrawFrame(JGeometry::TBox2<f32> const& frameBounds, JUtility::TColor frameColor, u8 lineWidth)
 {
 	J2DOrthoGraph orthoGraph;
-	orthoGraph.setColor(frameColor);
+	orthoGraph.setColor(frameColor.toUInt32());
 	orthoGraph.setLineWidth(lineWidth);
 	orthoGraph.drawFrame(frameBounds);
 }

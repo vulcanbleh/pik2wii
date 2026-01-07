@@ -42,7 +42,7 @@ J2DMaterialFactory::J2DMaterialFactory(const J2DMaterialBlock& header)
 	mBlendInfo     = JSUConvertOffsetToPtr<J2DBlendInfo>(&header, (void*)header.mBlendInfoOffset);
 	mDither        = JSUConvertOffsetToPtr<u8>(&header, (void*)header.mDitherOffset);
 }
-
+#pragma dont_inline on
 /**
  * @note Address: N/A
  * @note Size: 0xE0
@@ -68,7 +68,7 @@ u32 J2DMaterialFactory::countStages(int idx) const
 
 	return storedCount;
 }
-
+#pragma dont_inline reset
 /**
  * @note Address: 0x800534AC
  * @note Size: 0x9C8
