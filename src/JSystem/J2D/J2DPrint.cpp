@@ -24,7 +24,7 @@ J2DPrint::J2DPrint(JUTFont* font, f32 width)
  */
 J2DPrint::J2DPrint(JUTFont* font, JUtility::TColor charColor, JUtility::TColor gradColor)
 {
-	private_initiate(font, 0.0f, 0.0f, charColor, gradColor, TCOLOR_BLACK_U32, TCOLOR_WHITE_U32, true);
+	private_initiate(font, 0.0f, 0.0f, charColor.toUInt32(), gradColor.toUInt32(), TCOLOR_BLACK_U32, TCOLOR_WHITE_U32, true);
 }
 
 /**
@@ -34,7 +34,7 @@ J2DPrint::J2DPrint(JUTFont* font, JUtility::TColor charColor, JUtility::TColor g
 J2DPrint::J2DPrint(JUTFont* font, f32 width, f32 height, JUtility::TColor charColor, JUtility::TColor gradColor,
                    JUtility::TColor blackColor, JUtility::TColor whiteColor)
 {
-	private_initiate(font, width, height, charColor, gradColor, blackColor, whiteColor, false);
+	private_initiate(font, width, height, charColor.toUInt32(), gradColor.toUInt32(), blackColor.toUInt32(), whiteColor.toUInt32(), false);
 }
 
 /**
@@ -52,7 +52,7 @@ J2DPrint::~J2DPrint()
 void J2DPrint::initiate()
 {
 	if (mFont) {
-		mFont->setGX(mColorBlack, mColorWhite);
+		mFont->setGX(mColorBlack.toUInt32(), mColorWhite.toUInt32());
 	}
 }
 
@@ -88,7 +88,7 @@ void J2DPrint::private_initiate(JUTFont* font, f32 width, f32 height, JUtility::
 
 	if (mFont) {
 		setFontSize();
-		mFont->setGX(mColorBlack, mColorWhite);
+		mFont->setGX(mColorBlack.toUInt32(), mColorWhite.toUInt32());
 	}
 
 	initchar();
@@ -316,14 +316,7 @@ f32 J2DPrint::parse(const u8* inputString, int inputLength, int maxWidth, u16* o
 	textColor.a     = textColor.a * alpha / 255;
 	gradientColor.a = gradientColor.a * alpha / 255;
 
-	JUtility::TColor* topColor;
-	if (mActiveIsGradient) {
-		topColor = &gradientColor;
-	} else {
-		topColor = &textColor;
-	}
-
-	mFont->setGradColor(textColor, *topColor);
+	mFont->setGradColor(textColor.toUInt32(), mActiveIsGradient ? gradientColor.toUInt32() : textColor.toUInt32());
 
 	bool isMultiByteChar;
 	bool isPrintable;
@@ -600,13 +593,8 @@ u16 J2DPrint::doEscapeCode(const u8** strPtr, u8 alpha)
 		charColor        = mActiveCharColor;
 		charColor.a      = charColor.a * alpha / 255;
 		gradColor.a      = gradColor.a * alpha / 255;
-		JUtility::TColor* topColor;
-		if (mActiveIsGradient) {
-			topColor = &gradColor;
-		} else {
-			topColor = &charColor;
-		}
-		mFont->setGradColor(charColor, *topColor);
+
+		mFont->setGradColor(charColor.toUInt32(), mActiveIsGradient != 0 ? gradColor.toUInt32() : charColor.toUInt32());
 	} break;
 
 	case 'GC': { // grad color
@@ -614,13 +602,9 @@ u16 J2DPrint::doEscapeCode(const u8** strPtr, u8 alpha)
 		gradColor        = mActiveGradColor;
 		charColor.a      = charColor.a * alpha / 255;
 		gradColor.a      = gradColor.a * alpha / 255;
-		JUtility::TColor* topColor;
-		if (mActiveIsGradient) {
-			topColor = &gradColor;
-		} else {
-			topColor = &charColor;
-		}
-		mFont->setGradColor(charColor, *topColor);
+
+
+		mFont->setGradColor(charColor.toUInt32(), mActiveIsGradient != 0 ? gradColor.toUInt32() : charColor.toUInt32());
 	} break;
 
 	case 'FX': { // float x
@@ -647,17 +631,11 @@ u16 J2DPrint::doEscapeCode(const u8** strPtr, u8 alpha)
 		break;
 
 	case 'GM': { // grad ??
-		BOOL noGradient   = getNumberS32(strPtr, mActiveIsGradient == 0, mActiveIsGradient, 10) == 0;
-		mActiveIsGradient = !noGradient;
+		mActiveIsGradient = getNumberS32(strPtr, mActiveIsGradient == 0, mActiveIsGradient, 10);
 		charColor.a       = charColor.a * alpha / 255;
 		gradColor.a       = gradColor.a * alpha / 255;
-		JUtility::TColor* topColor;
-		if (mActiveIsGradient) {
-			topColor = &gradColor;
-		} else {
-			topColor = &charColor;
-		}
-		mFont->setGradColor(charColor, *topColor);
+
+		mFont->setGradColor(charColor.toUInt32(), mActiveIsGradient != 0 ? gradColor.toUInt32() : charColor.toUInt32());
 	} break;
 
 	case 'HM': // ??

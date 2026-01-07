@@ -9,7 +9,10 @@ JGeometry::TBox2f J2DPane::static_mBounds(0.0f, 0.0f, 0.0f, 0.0f);
  * @note Size: 0xC0
  */
 J2DPane::J2DPane()
-    : mTree(this)
+    : mBounds(0.0f, 0.0f, 0.0f, 0.0f)
+    , mGlobalBounds(0.0f, 0.0f, 0.0f, 0.0f)
+    , mClipRect(0.0f, 0.0f, 0.0f, 0.0f)
+    , mTree(this)
 {
 	mTransform    = nullptr;
 	mBloBlockType = 'PAN1';
@@ -36,13 +39,15 @@ void J2DPane::initiate()
 	mAnchorPoint.set(0.0f, 0.0f);
 	mBasePosition      = J2DPOS_TopLeft;
 	mRotationAxis      = J2DROTATE_Z;
-	mScale             = JGeometry::TVec2f(1.0f);
+	mScale.x           = 1.0f;
+	mScale.y           = 1.0f;
 	mCullMode          = GX_CULL_NONE;
 	mAlpha             = 255;
 	mIsInfluencedAlpha = true;
 	mColorAlpha        = 255;
 	mIsConnected       = 0;
 	calcMtx();
+	PSMTXIdentity(mGlobalMtx);
 }
 
 /**
@@ -52,6 +57,9 @@ void J2DPane::initiate()
  */
 J2DPane::J2DPane(J2DPane* parent, bool isVisible, u64 tag, const JGeometry::TBox2f& box)
     : mTree(this)
+    , mBounds(0.0f, 0.0f, 0.0f, 0.0f)
+    , mGlobalBounds(0.0f, 0.0f, 0.0f, 0.0f)
+    , mClipRect(0.0f, 0.0f, 0.0f, 0.0f)
     , mTransform(nullptr)
 {
 	initialize(parent, isVisible, tag, box);
@@ -83,6 +91,9 @@ void J2DPane::initialize(J2DPane* parent, bool isVisible, u64 tag, const JGeomet
  */
 J2DPane::J2DPane(u64 tag, const JGeometry::TBox2f& box)
     : mTree(this)
+	, mBounds(0.0f, 0.0f, 0.0f, 0.0f)
+    , mGlobalBounds(0.0f, 0.0f, 0.0f, 0.0f)
+    , mClipRect(0.0f, 0.0f, 0.0f, 0.0f)
     , mTransform(nullptr)
 {
 	initialize(tag, box);
@@ -102,8 +113,12 @@ void J2DPane::initialize(u64 tag, const JGeometry::TBox2f& box) { initialize(nul
  */
 J2DPane::J2DPane(J2DPane* parent, JSURandomInputStream* input, u8 version)
     : mTree(this)
+	, mBounds(0.0f, 0.0f, 0.0f, 0.0f)
+    , mGlobalBounds(0.0f, 0.0f, 0.0f, 0.0f)
+    , mClipRect(0.0f, 0.0f, 0.0f, 0.0f)
     , mTransform(nullptr)
 {
+	PSMTXIdentity(mGlobalMtx);
 	if (version == 0) {
 		J2DScrnBlockHeader header;
 		int position = input->getPosition();
@@ -137,13 +152,11 @@ void J2DPane::makePaneStream(J2DPane* parent, JSURandomInputStream* input)
 	input->read(&tag, 4);
 	mTag = tag;
 
-	JGeometry::TVec2f topLeft;
-	topLeft.x = input->readS16();
-	topLeft.y = input->readS16();
-	JGeometry::TVec2f bottomRight;
-	bottomRight.x = input->readS16() + topLeft.x;
-	bottomRight.y = input->readS16() + topLeft.y;
-	mBounds.set(topLeft, bottomRight);
+	f32 x0 = input->readS16();
+    f32 y0 = input->readS16();
+    f32 x1 = x0 + input->readS16();
+    f32 y1 = y0 + input->readS16();
+    mBounds.set(x0, y0, x1, y1);
 	valuesRemaining -= 6;
 	mAngleX = 0.0f;
 	mAngleY = 0.0f;
@@ -191,31 +204,35 @@ void J2DPane::makePaneStream(J2DPane* parent, JSURandomInputStream* input)
  */
 void J2DPane::changeUseTrans(J2DPane* parent)
 {
-	JGeometry::TVec2f v1(0.0f, 0.0f);
+	f32 xOffset = 0.0f;
+    f32 yOffset = 0.0f;
+	
 	if (mBasePosition % 3 == 1) {
-		v1.x = mBounds.getWidth() / 2;
+		xOffset = mBounds.getWidth() / 2;
 	} else if (mBasePosition % 3 == 2) {
-		v1.x = mBounds.getWidth();
+		xOffset = mBounds.getWidth();
 	}
 
 	if (mBasePosition / 3 == 1) {
-		v1.y = mBounds.getHeight() / 2;
+		yOffset = mBounds.getHeight() / 2;
 	} else if (mBasePosition / 3 == 2) {
-		v1.y = mBounds.getHeight();
+		yOffset = mBounds.getHeight();
 	}
 
-	mOffset.x = mBounds.i.x + v1.x;
-	mOffset.y = mBounds.i.y + v1.y;
+	mOffset.x = mBounds.i.x + xOffset;
+	mOffset.y = mBounds.i.y + yOffset;
 
-	mAnchorPoint = v1;
-	v1.set(-mOffset.x, -mOffset.y);
-	mBounds.addPos(v1);
+	mAnchorPoint.x = xOffset;
+	mAnchorPoint.y = yOffset;
+	
+	f32 addX = -mOffset.x;
+    f32 addY = -mOffset.y;
+	mBounds.addPos(addX, addY);
 
 	if (parent) {
 		u8 parentBasePos = parent->mBasePosition;
 		f32 width        = parent->getWidth();
 		f32 height       = parent->getHeight();
-		v1.set(parent->getWidth(), parent->getHeight());
 
 		if (parentBasePos % 3 == 1) {
 			mOffset.x -= width / 2;
@@ -398,7 +415,7 @@ void J2DPane::draw(f32 x, f32 y, const J2DGrafContext* grafContext, bool isOrtho
  */
 void J2DPane::place(const JGeometry::TBox2f& box)
 {
-	JGeometry::TBox2f tmpBox;
+	JGeometry::TBox2f tmpBox(0.0f, 0.0f, 0.0f, 0.0f);
 
 	if (mBounds.i.x == 0.0f) {
 		tmpBox.i.x = 0.0f;
@@ -464,7 +481,8 @@ void J2DPane::move(f32 x, f32 y)
  */
 void J2DPane::add(f32 x, f32 y)
 {
-	mOffset.add(JGeometry::TVec2f(x, y));
+	mOffset.x += x;
+    mOffset.y += y;
 	calcMtx();
 }
 

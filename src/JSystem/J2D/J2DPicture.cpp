@@ -656,27 +656,25 @@ void J2DPicture::draw(f32 x, f32 y, f32 width, f32 height, bool a1, bool a2, boo
 		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_POS_XYZ, GX_S16, 8);
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 
-		f32 zero = 0.0f;
-
 		// bottom left
-		GXPosition3f32(zero, zero, zero);
+		GXPosition3f32(0.0f, 0.0f, 0.0f);
 		GXColor1u32(cornerColors[0]);
-		GXPosition2u16(coords[0].x, coords[0].y);
+		GXTexCoord2s16(coords[0].x, coords[0].y);
 
 		// bottom right
-		GXPosition3f32(width, zero, zero);
+		GXPosition3f32(width, 0.0f, 0.0f);
 		GXColor1u32(cornerColors[1]);
-		GXPosition2u16(coords[1].x, coords[1].y);
+		GXTexCoord2s16(coords[1].x, coords[1].y);
 
 		// top right
-		GXPosition3f32(width, height, zero);
+		GXPosition3f32(width, height, 0.0f);
 		GXColor1u32(cornerColors[3]);
-		GXPosition2u16(coords[3].x, coords[3].y);
+		GXTexCoord2s16(coords[3].x, coords[3].y);
 
 		// top left
-		GXPosition3f32(zero, height, zero);
+		GXPosition3f32(0.0f, height, 0.0f);
 		GXColor1u32(cornerColors[2]);
-		GXPosition2u16(coords[2].x, coords[2].y);
+		GXTexCoord2s16(coords[2].x, coords[2].y);
 
 		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_POS_XYZ, GX_U16, 0xf);
 		GXSetNumTexGens(0);
@@ -732,26 +730,25 @@ void J2DPicture::drawOut(const JGeometry::TBox2f& posBox, const JGeometry::TBox2
 		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_TEX_ST, GX_F32, 0);
 		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
 
-		f32 zero = 0.0f;
 		GXBegin(GX_QUADS, GX_VTXFMT0, 4);
 
 		// bottom left
-		GXPosition3f32((s16)posBox.i.x, (s16)posBox.i.y, zero);
+		GXPosition3f32((s16)posBox.i.x, (s16)posBox.i.y, 0.0f);
 		GXColor1u32(cornerColors[0]);
 		GXTexCoord2f32(s0, t0);
 
 		// bottom right
-		GXPosition3f32((s16)posBox.f.x, (s16)posBox.i.y, zero);
+		GXPosition3f32((s16)posBox.f.x, (s16)posBox.i.y, 0.0f);
 		GXColor1u32(cornerColors[1]);
 		GXTexCoord2f32(s1, t0);
 
 		// top right
-		GXPosition3f32((s16)posBox.f.x, (s16)posBox.f.y, zero);
+		GXPosition3f32((s16)posBox.f.x, (s16)posBox.f.y, 0.0f);
 		GXColor1u32(cornerColors[3]);
 		GXTexCoord2f32(s1, t1);
 
 		// top left
-		GXPosition3f32((s16)posBox.i.x, (s16)posBox.f.y, zero);
+		GXPosition3f32((s16)posBox.i.x, (s16)posBox.f.y, 0.0f);
 		GXColor1u32(cornerColors[2]);
 		GXTexCoord2f32(s0, t1);
 		GXEnd();
