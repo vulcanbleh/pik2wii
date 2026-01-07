@@ -2013,6 +2013,7 @@ RevoSDK/dvd/dvdqueue.c:
 
 RevoSDK/dvd/dvderror.c:
 	.text       start:0x8011C1B8 end:0x8011CABC
+	.bss        start:0x805F27C0 end:0x805F28C0
 	.sbss       start:0x8066C1D8 end:0x8066C1E8
 
 RevoSDK/dvd/dvdidutils.c:

@@ -123,16 +123,58 @@ J2DTevBlock* J2DMaterial::createTevBlock(int stageCount, bool p2)
  */
 J2DIndBlock* J2DMaterial::createIndBlock(int stageCount, bool p2)
 {
+	J2DIndBlock* block = nullptr;
 	if (p2) {
 		if (stageCount != 0) {
-			return new J2DIndBlockFull();
+			block = new J2DIndBlockFull();
+		} else {
+			block = new J2DIndBlockNull();
 		}
-		return new J2DIndBlockNull();
+	} else {
+		if (stageCount != 0) {
+			block = new (-4) J2DIndBlockFull();
+		} else {
+			block = new (-4) J2DIndBlockNull();
+		}
 	}
-	if (stageCount != 0) {
-		return new (-4) J2DIndBlockFull();
-	}
-	return new (-4) J2DIndBlockNull();
+	return block;
+}
+
+J2DMaterial::J2DMaterialAnmPointer::J2DMaterialAnmPointer()
+{
+	mColorAnm    = nullptr;
+	mColorIds[0] = 0xFFFF;
+
+	mSRTAnm    = nullptr;
+	mSRTIds[0] = 0xFFFF;
+	mSRTIds[1] = 0xFFFF;
+	mSRTIds[2] = 0xFFFF;
+	mSRTIds[3] = 0xFFFF;
+	mSRTIds[4] = 0xFFFF;
+	mSRTIds[5] = 0xFFFF;
+	mSRTIds[6] = 0xFFFF;
+	mSRTIds[7] = 0xFFFF;
+
+	mPatternAnm    = nullptr;
+	mPatternIds[0] = 0xFFFF;
+	mPatternIds[1] = 0xFFFF;
+	mPatternIds[2] = 0xFFFF;
+	mPatternIds[3] = 0xFFFF;
+	mPatternIds[4] = 0xFFFF;
+	mPatternIds[5] = 0xFFFF;
+	mPatternIds[6] = 0xFFFF;
+	mPatternIds[7] = 0xFFFF;
+
+	mTevAnm        = nullptr;
+	mTevCRegIds[0] = 0xFFFF;
+	mTevCRegIds[1] = 0xFFFF;
+	mTevCRegIds[2] = 0xFFFF;
+	mTevCRegIds[3] = 0xFFFF;
+
+	mTevKRegIds[0] = 0xFFFF;
+	mTevKRegIds[1] = 0xFFFF;
+	mTevKRegIds[2] = 0xFFFF;
+	mTevKRegIds[3] = 0xFFFF;
 }
 
 /**
@@ -159,7 +201,7 @@ void J2DMaterial::setAnimation(J2DAnmColor* animation)
 
 		if (animation) {
 			u32 count = animation->getUpdateMaterialNum();
-			u16 index = mIndex;
+			u16 index = getIndex();
 			for (u16 i = 0; i < count; i++) {
 				if (index == animation->getUpdateMaterialID(i)) {
 					mAnmPtr->mColorIds[0] = i;
