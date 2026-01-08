@@ -6,8 +6,8 @@
 #include "types.h"
 
 struct J3DFogInfo {
-	void operator=(const J3DFogInfo& other)
-	{
+	void operator=(const J3DFogInfo& other);
+	/*{
 		mType      = other.mType;
 		mAdjEnable = other.mAdjEnable;
 		mCenter    = other.mCenter;
@@ -19,7 +19,7 @@ struct J3DFogInfo {
 		for (int i = 0; i < 10; i++) {
 			mFogAdjTable[i] = other.mFogAdjTable[i];
 		}
-	}
+	}*/
 
 	u8 mType;             // _00
 	u8 mAdjEnable;        // _01

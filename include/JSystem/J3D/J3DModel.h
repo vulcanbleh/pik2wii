@@ -26,29 +26,6 @@ struct J3DModel;
 
 typedef void (*J3DCalcCallBack)(J3DModel*, u32 timing);
 
-// This belongs... somewhere
-inline void J3DCalcViewBaseMtx(Mtx view, Vec const& scale, const Mtx& base, Mtx dst)
-{
-	Mtx m;
-
-	m[0][0] = base[0][0] * scale.x;
-	m[0][1] = base[0][1] * scale.y;
-	m[0][2] = base[0][2] * scale.z;
-	m[0][3] = base[0][3];
-
-	m[1][0] = base[1][0] * scale.x;
-	m[1][1] = base[1][1] * scale.y;
-	m[1][2] = base[1][2] * scale.z;
-	m[1][3] = base[1][3];
-
-	m[2][0] = base[2][0] * scale.x;
-	m[2][1] = base[2][1] * scale.y;
-	m[2][2] = base[2][2] * scale.z;
-	m[2][3] = base[2][3];
-
-	PSMTXConcat(view, m, dst);
-}
-
 struct J3DUnkCalc1 {
 	virtual void calc(J3DModel* model);
 };

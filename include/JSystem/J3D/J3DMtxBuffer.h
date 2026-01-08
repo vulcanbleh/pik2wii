@@ -75,9 +75,12 @@ struct J3DMtxBuffer {
 	Mtx33*** mBumpMatrices[2];    // _24
 	u32 mViewCount;               // _2C
 	u32 mCurrentViewNumber;       // _30
+	Mtx* mUserAnmMtx;             // _34
 
-	// _34     = VTBL
+	// _38     = VTBL
 	virtual ~J3DMtxBuffer() { } // _08 (weak)
 };
+
+void J3DCalcViewBaseMtx(Mtx view, Vec const& scale, const Mtx& base, Mtx dst);
 
 #endif

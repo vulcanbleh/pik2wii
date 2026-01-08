@@ -15,22 +15,23 @@ struct J3DAnmKeyTableBase;
  * @fabricated
  */
 enum J3DAnmKind {
-	J3DAnmKind_Cluster        = 3,
-	J3DAnmKind_ClusterFull    = 12,
-	J3DAnmKind_ClusterKey     = 13,
-	J3DAnmKind_Color          = 1,
-	J3DAnmKind_ColorFull      = 10,
-	J3DAnmKind_ColorKey       = 11,
-	J3DAnmKind_TevRegKey      = 5,
-	J3DAnmKind_TextureSRTKey  = 4,
-	J3DAnmKind_TexPattern     = 2,
-	J3DAnmKind_Transform      = 0,
-	J3DAnmKind_TransformFull  = 9,
-	J3DAnmKind_TransformKey   = 8,
-	J3DAnmKind_VisibilityFull = 6,
-	J3DAnmKind_VtxColor       = 7,
-	J3DAnmKind_VtxColorFull   = 14,
-	J3DAnmKind_VtxColorKey    = 15
+	J3DAnmKind_Cluster        		  = 3,
+	J3DAnmKind_ClusterFull    		  = 12,
+	J3DAnmKind_ClusterKey     		  = 13,
+	J3DAnmKind_Color          		  = 1,
+	J3DAnmKind_ColorFull      		  = 10,
+	J3DAnmKind_ColorKey       		  = 11,
+	J3DAnmKind_TevRegKey     		  = 5,
+	J3DAnmKind_TextureSRTKey  		  = 4,
+	J3DAnmKind_TexPattern    		  = 2,
+	J3DAnmKind_Transform      		  = 0,
+	J3DAnmKind_TransformFull  		  = 9,
+	J3DAnmKind_TransformFullWithLerp  = 16,
+	J3DAnmKind_TransformKey   		  = 8,
+	J3DAnmKind_VisibilityFull 		  = 6,
+	J3DAnmKind_VtxColor       		  = 7,
+	J3DAnmKind_VtxColorFull  	 	  = 14,
+	J3DAnmKind_VtxColorKey    		  = 15
 };
 
 #pragma enumalwaysint off
@@ -49,6 +50,14 @@ struct J3DAnmBase {
 	    : mAttribute(0)
 	    , mUnused(0)
 	    , mTotalFrameCount(0)
+	    , mCurrentFrame(0.0f)
+	{
+	}
+	
+	inline J3DAnmBase(s16 totalFrameCount)
+	    : mAttribute(0)
+	    , mUnused(0)
+	    , mTotalFrameCount(totalFrameCount)
 	    , mCurrentFrame(0.0f)
 	{
 	}

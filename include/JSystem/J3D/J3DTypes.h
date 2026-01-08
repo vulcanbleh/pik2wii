@@ -303,13 +303,9 @@ struct J3DAlphaComp {
 };
 
 struct J3DBlendInfo {
-	inline J3DBlendInfo& operator=(const J3DBlendInfo& other)
+	J3DBlendInfo& operator=(const J3DBlendInfo& other)
 	{
-		mBlendMode = other.mBlendMode;
-		mSrcFactor = other.mSrcFactor;
-		mDstFactor = other.mDstFactor;
-		mLogicOp   = other.mLogicOp;
-		return *this;
+		__memcpy(this, &other, sizeof(J3DBlendInfo));
 	}
 
 	u8 mBlendMode; // _00
@@ -542,10 +538,7 @@ struct J3DLightObj {
 struct J3DTevOrderInfo {
 	inline J3DTevOrderInfo& operator=(const J3DTevOrderInfo& other)
 	{
-		mTexCoordID = other.mTexCoordID;
-		mTexMapID   = other.mTexMapID;
-		mChannelID  = other.mChannelID;
-		return *this;
+		*(u32*) this = *(u32*)&other;
 	}
 
 	u8 mTexCoordID; // _00
@@ -765,9 +758,7 @@ struct J3DTexCoord : public J3DTexCoordInfo {
 
 	void operator=(const J3DTexCoord& other)
 	{
-		mTexGenType = other.mTexGenType;
-		mTexGenSrc  = other.mTexGenSrc;
-		mTexGenMtx  = other.mTexGenMtx;
+		*(u32*) this = *(u32*)&other;
 	}
 
 	u8 getTexGenType() { return mTexGenType; }
@@ -793,13 +784,34 @@ struct J3DTextureSRTInfo {
 
 // hate this but whatever's in here can't have constructors bc of J3DTransform
 struct J3DTransformInfo {
-	inline J3DTransformInfo& operator=(const J3DTransformInfo& b)
+	/*inline J3DTransformInfo& operator=(const J3DTransformInfo& b)
 	{
 		mScale       = b.mScale;
 		mRotation    = b.mRotation;
 		mTranslation = b.mTranslation;
 		return *this;
-	}
+	}*/
+	
+#ifdef __MWERKS__
+    inline J3DTransformInfo& operator=(const register J3DTransformInfo& b) {
+        register const J3DTransformInfo& var_r31 = b;
+        register J3DTransformInfo& var_r30 = *this;
+        register f32 var_f31;
+        asm {
+            psq_l var_f31, J3DTransformInfo.mScale(var_r31), 0, 0
+            psq_st var_f31, J3DTransformInfo.mScale(var_r30), 0, 0
+        }
+        mScale.z = b.mScale.z;
+        *(u32*)&mRotation = *(u32*)&b.mRotation;
+        mRotation.z = b.mRotation.z;
+        asm {
+            psq_l var_f31, J3DTransformInfo.mTranslation(var_r31), 0, 0
+            psq_st var_f31, J3DTransformInfo.mTranslation(var_r30), 0, 0
+        }
+        mTranslation.z = b.mTranslation.z;
+        return *this;
+    }
+#endif
 
 	Vec mScale;       // _00
 	SVec mRotation;   // _0C
@@ -809,11 +821,11 @@ struct J3DTransformInfo {
 extern const J3DTransformInfo j3dDefaultTransformInfo;
 
 struct J3DNBTScaleInfo {
-	inline void operator=(const J3DNBTScaleInfo& other)
-	{
-		mHasScale = other.mHasScale;
-		mScale    = other.mScale;
-	}
+	void operator=(const J3DNBTScaleInfo& other);
+	//{
+	//	mHasScale = other.mHasScale;
+	//	mScale    = other.mScale;
+	//}
 
 	u8 mHasScale; // _00
 	Vec mScale;   // _04
@@ -821,10 +833,20 @@ struct J3DNBTScaleInfo {
 
 extern const J3DNBTScaleInfo j3dDefaultNBTScaleInfo;
 
-struct J3DNBTScale : public J3DNBTScaleInfo {
-	J3DNBTScale() { *(J3DNBTScaleInfo*)this = j3dDefaultNBTScaleInfo; }
+struct J3DNBTScale : public J3DNBTScaleInfo {	
+	J3DNBTScale() {
+        mHasScale = j3dDefaultNBTScaleInfo.mHasScale;
+        mScale.x = j3dDefaultNBTScaleInfo.mScale.x;
+        mScale.y = j3dDefaultNBTScaleInfo.mScale.y;
+        mScale.z = j3dDefaultNBTScaleInfo.mScale.z;
+    }
 
-	J3DNBTScale(const J3DNBTScaleInfo& info) { *(J3DNBTScaleInfo*)this = info; }
+    J3DNBTScale(const J3DNBTScaleInfo& info) {
+        mHasScale = info.mHasScale;
+        mScale.x = info.mScale.x;
+        mScale.y = info.mScale.y;
+        mScale.z = info.mScale.z;
+    }
 
 	Vec* getScale() { return &mScale; }
 };

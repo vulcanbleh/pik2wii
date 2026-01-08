@@ -23,6 +23,16 @@ extern const J3DIndTexCoordScaleInfo j3dDefaultIndTexCoordScaleInfo;
 struct J3DIndTexCoordScale : public J3DIndTexCoordScaleInfo {
 	J3DIndTexCoordScale() { *(J3DIndTexCoordScaleInfo*)this = j3dDefaultIndTexCoordScaleInfo; }
 	explicit J3DIndTexCoordScale(const J3DIndTexCoordScaleInfo& info) { *(J3DIndTexCoordScaleInfo*)this = info; }
+	
+	J3DIndTexCoordScale& operator=(const J3DIndTexCoordScale& other) {
+#if DEBUG
+        J3DIndTexCoordScaleInfo::operator=(other);
+#else
+        // Fakematch: Instruction order is wrong with __memcpy or J3DIndTexCoordScaleInfo::operator=
+        *(u32*)this = *(u32*)&other;
+#endif
+        return *this;
+    }
 
 	~J3DIndTexCoordScale() { }
 
@@ -33,15 +43,15 @@ struct J3DIndTexCoordScale : public J3DIndTexCoordScaleInfo {
 };
 
 struct J3DIndTexMtxInfo {
-	void operator=(const J3DIndTexMtxInfo& other)
-	{
+	void operator=(const J3DIndTexMtxInfo& other);
+	/*{
 		for (int i = 0; i < 2; i++) {
 			for (int j = 0; j < 3; j++) {
 				mOffsetMtx[i][j] = other.mOffsetMtx[i][j];
 			}
 		}
 		mScaleExp = *(s8*)&other.mScaleExp; // don't even ask.
-	}
+	}*/
 
 	Mtx23 mOffsetMtx; // _00
 	s8 mScaleExp;     // _18
@@ -91,6 +101,16 @@ extern const J3DIndTexOrderInfo j3dDefaultIndTexOrderNull;
 struct J3DIndTexOrder : public J3DIndTexOrderInfo {
 	J3DIndTexOrder() { *(J3DIndTexOrderInfo*)this = j3dDefaultIndTexOrderNull; }
 	J3DIndTexOrder(const J3DIndTexOrderInfo& info) { *(J3DIndTexOrderInfo*)this = info; }
+	
+	J3DIndTexOrder& operator=(J3DIndTexOrder const& other) {
+#if DEBUG
+        J3DIndTexOrderInfo::operator=(other);
+#else
+        // Fakematch: Instruction order is wrong with __memcpy or J3DIndTexCoordScaleInfo::operator=
+        *(u32*)this = *(u32*)&other;
+#endif
+        return *this;
+    }
 
 	u8 getCoord() const { return mTexCoordID; }
 	u8 getMap() const { return mTexMapID; }
