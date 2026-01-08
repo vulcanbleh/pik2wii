@@ -2528,7 +2528,7 @@ config.libs = [
             Object(NonMatching, "nw4r/g3d/g3d_resmat.cpp"),
             Object(Matching, "nw4r/g3d/g3d_resvtx.cpp"),
             Object(Matching, "nw4r/g3d/g3d_restex.cpp"),
-            Object(NonMatching, "nw4r/g3d/g3d_resnode.cpp"),
+            Object(Matching, "nw4r/g3d/g3d_resnode.cpp"),
             Object(Matching, "nw4r/g3d/g3d_resanm.cpp"),
             Object(Matching, "nw4r/g3d/g3d_resanmvis.cpp"),
             Object(Matching, "nw4r/g3d/g3d_resanmclr.cpp"),
