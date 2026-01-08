@@ -73,3 +73,39 @@ void J3DMaterialAnm::calc(J3DMaterial* material) const
 		}
 	}
 }
+
+void J3DMaterialAnm::setMatColorAnm(int idx, J3DMatColorAnm* pMatColorAnm) 
+{
+    if (pMatColorAnm == nullptr) {
+        mMatColAnmList[idx].setAnmFlag(false);
+    } else {
+        mMatColAnmList[idx] = *pMatColorAnm;
+    }
+}
+
+void J3DMaterialAnm::setTexMtxAnm(int idx, J3DTexMtxAnm* pTexMtxAnm) 
+{
+    if (pTexMtxAnm == nullptr) {
+        mTexMtxAnmList[idx].setAnmFlag(false);
+    } else {
+        mTexMtxAnmList[idx] = *pTexMtxAnm;
+    }
+}
+
+void J3DMaterialAnm::setTevColorAnm(int idx, J3DTevColorAnm* pTevColorAnm) 
+{
+    if (pTevColorAnm == nullptr) {
+        mTevColAnmList[idx].setAnmFlag(false);
+    } else {
+        mTevColAnmList[idx] = *pTevColorAnm;
+    }
+}
+
+void J3DMaterialAnm::setTevKColorAnm(int idx, J3DTevKColorAnm* pTevKColorAnm) 
+{
+    if (pTevKColorAnm == nullptr) {
+        mTevKColAnmList[idx].setAnmFlag(false);
+    } else {
+        mTevKColAnmList[idx] = *pTevKColorAnm;
+    }
+}

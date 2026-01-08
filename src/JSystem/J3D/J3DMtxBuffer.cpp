@@ -36,6 +36,7 @@ void J3DMtxBuffer::initialize()
 	mBumpMatrices[1]        = nullptr;
 	mViewCount              = 1;
 	mCurrentViewNumber      = 0;
+	mUserAnmMtx      		= nullptr;
 }
 
 /**
@@ -91,6 +92,7 @@ int J3DMtxBuffer::createAnmMtx(J3DModelData* data)
 	if (data->mJointTree.getJointNum()) {
 		mScaleFlags    = new u8[data->mJointTree.getJointNum()];
 		mWorldMatrices = new Mtx[data->mJointTree.getJointNum()];
+		mUserAnmMtx    = mWorldMatrices;
 	}
 	return JET_Success;
 }
@@ -200,173 +202,6 @@ int J3DMtxBuffer::createBumpMtxArray(J3DModelData* data, u32 viewNum)
 		}
 	}
 	return JET_Success;
-	/*
-	stwu     r1, -0x40(r1)
-	mflr     r0
-	stw      r0, 0x44(r1)
-	stmw     r20, 0x10(r1)
-	mr       r26, r4
-	mr       r25, r3
-	mr       r27, r5
-	lwz      r0, 0x1c(r4)
-	cmplwi   r0, 0
-	bne      lbl_80088DF4
-	lhz      r28, 0x5c(r26)
-	li       r20, 0
-	li       r31, 0
-	li       r21, 0
-	b        lbl_80088C74
-
-lbl_80088C34:
-	lwz      r3, 0x60(r26)
-	rlwinm   r0, r21, 2, 0xe, 0x1d
-	lwzx     r29, r3, r0
-	lwz      r3, 0x28(r29)
-	lwz      r12, 0(r3)
-	lwz      r12, 0x5c(r12)
-	mtctr    r12
-	bctrl
-	lbz      r0, 0(r3)
-	cmplwi   r0, 1
-	bne      lbl_80088C70
-	lwz      r3, 8(r29)
-	bl       countBumpMtxNum__8J3DShapeCFv
-	add      r20, r20, r3
-	addi     r31, r31, 1
-
-lbl_80088C70:
-	addi     r21, r21, 1
-
-lbl_80088C74:
-	clrlwi   r0, r21, 0x10
-	cmplw    r0, r28
-	blt      lbl_80088C34
-	clrlwi.  r0, r20, 0x10
-	beq      lbl_80088CB8
-	cmplwi   r27, 0
-	beq      lbl_80088CB8
-	mr       r23, r25
-	rlwinm   r24, r31, 2, 0xe, 0x1d
-	li       r20, 0
-
-lbl_80088C9C:
-	mr       r3, r24
-	bl       __nwa__FUl
-	addi     r20, r20, 1
-	stw      r3, 0x24(r23)
-	cmpwi    r20, 2
-	addi     r23, r23, 4
-	blt      lbl_80088C9C
-
-lbl_80088CB8:
-	slwi     r20, r27, 2
-	mr       r21, r25
-	li       r30, 0
-
-lbl_80088CC4:
-	lhz      r24, 0x5c(r26)
-	li       r29, 0
-	li       r28, 0
-	li       r22, 0
-	b        lbl_80088D28
-
-lbl_80088CD8:
-	lwz      r3, 0x60(r26)
-	rlwinm   r0, r28, 2, 0xe, 0x1d
-	lwzx     r23, r3, r0
-	lwz      r3, 0x28(r23)
-	lwz      r12, 0(r3)
-	lwz      r12, 0x5c(r12)
-	mtctr    r12
-	bctrl
-	lbz      r0, 0(r3)
-	cmplwi   r0, 1
-	bne      lbl_80088D24
-	mr       r3, r20
-	bl       __nwa__FUl
-	lwz      r4, 0x24(r21)
-	stwx     r3, r4, r22
-	addi     r22, r22, 4
-	lwz      r3, 8(r23)
-	stw      r29, 0x64(r3)
-	addi     r29, r29, 1
-
-lbl_80088D24:
-	addi     r28, r28, 1
-
-lbl_80088D28:
-	clrlwi   r0, r28, 0x10
-	cmplw    r0, r24
-	blt      lbl_80088CD8
-	addi     r30, r30, 1
-	addi     r21, r21, 4
-	cmpwi    r30, 2
-	blt      lbl_80088CC4
-	li       r24, 0
-	mr       r22, r25
-
-lbl_80088D4C:
-	lhz      r23, 0x5c(r26)
-	li       r25, 0
-	li       r21, 0
-	b        lbl_80088DC8
-
-lbl_80088D5C:
-	lwz      r3, 0x60(r26)
-	rlwinm   r0, r25, 2, 0xe, 0x1d
-	lwzx     r3, r3, r0
-	lwz      r3, 0x28(r3)
-	lwz      r12, 0(r3)
-	lwz      r12, 0x5c(r12)
-	mtctr    r12
-	bctrl
-	lbz      r0, 0(r3)
-	cmplwi   r0, 1
-	bne      lbl_80088DC4
-	li       r28, 0
-	li       r20, 0
-	b        lbl_80088DB8
-
-lbl_80088D94:
-	lhz      r0, 0x44(r26)
-	li       r4, 0x20
-	mulli    r3, r0, 0x24
-	bl       __nwa__FUli
-	lwz      r0, 0x24(r22)
-	addi     r28, r28, 1
-	lwzx     r4, r21, r0
-	stwx     r3, r4, r20
-	addi     r20, r20, 4
-
-lbl_80088DB8:
-	cmplw    r28, r27
-	blt      lbl_80088D94
-	addi     r21, r21, 4
-
-lbl_80088DC4:
-	addi     r25, r25, 1
-
-lbl_80088DC8:
-	clrlwi   r0, r25, 0x10
-	cmplw    r0, r23
-	blt      lbl_80088D5C
-	addi     r24, r24, 1
-	addi     r22, r22, 4
-	cmpwi    r24, 2
-	blt      lbl_80088D4C
-	clrlwi.  r0, r31, 0x10
-	beq      lbl_80088DF4
-	li       r0, 1
-	sth      r0, 0xc(r26)
-
-lbl_80088DF4:
-	lmw      r20, 0x10(r1)
-	li       r3, 0
-	lwz      r0, 0x44(r1)
-	mtlr     r0
-	addi     r1, r1, 0x40
-	blr
-	*/
 }
 
 /**
@@ -375,25 +210,169 @@ lbl_80088DF4:
  */
 void J3DMtxBuffer::calcWeightEnvelopeMtx()
 {
-	int max      = mJointTree->getWEvlpMtxNum();
-	u16* indices = mJointTree->getWEvlpMixIndex();
-	f32* weights = mJointTree->getWEvlpMixWeight();
-	for (int i = -1; i < max; i++) {
-		u8* scaleFlags    = mEnvelopeScaleFlags;
-		scaleFlags[i]     = 1;
-		Mtx* weightAnmMtx = &mWeightEnvelopeMatrices[i];
-		int mixNum        = mJointTree->getWEvlpMixMtxNum(i);
-		for (int j = 0; j < mixNum; j++) {
-			u16 idx       = indices[j];
-			f32 weight    = weights[j];
-			Mtx& invMtx   = mJointTree->getInvJointMtx(idx);
-			Mtx& worldMtx = mWorldMatrices[idx];
-			// I think it's this but as ASM? maybe?
-			PSMTXConcat(invMtx, worldMtx, *weightAnmMtx);
-			scaleFlags[i] &= mScaleFlags[j];
-		}
+	register MtxP weightAnmMtx;
+    register Mtx* worldMtx;
+    register Mtx* invMtx;
+    register f32 weight;
+    int idx;
+    int j;
+    int mixNum;
+    int i;
+    int max;
+    u16* indices;
+    f32* weights;
+    u8* scaleFlags;
+
+#if !__MWERKS__
+    register Mtx mtx;
+#else
+    register f32 var_f1;
+    register f32 var_f2;
+    register f32 var_f3;
+    register f32 var_f4;
+    register f32 var_f5;
+    register f32 var_f6;
+    register f32 var_f7;
+    register f32 var_f8;
+    register f32 var_f9;
+    register f32 var_f10;
+    register f32 var_f11;
+    register f32 var_f12;
+    register f32 var_f13;
+    register f32 var_f31;
+    register f32 var_f30;
+    register f32 var_f29;
+    register f32 var_f28;
+    register f32 var_f27;
+    register f32* var_r7 = J3DUnit01;
+#endif
+
+    i = -1;
+    max = mJointTree->getWEvlpMtxNum();
+    indices = mJointTree->getWEvlpMixIndex() - 1;
+    weights = mJointTree->getWEvlpMixWeight() - 1;
+
+    #if __MWERKS__
+    asm {
+        psq_l var_f27, 0x0(var_r7), 0, 0 /* qr0 */
+        ps_merge00 var_f10, var_f27, var_f27
+        ps_merge00 var_f12, var_f27, var_f27
+        ps_merge00 var_f31, var_f27, var_f27
+    }
+    #endif
+
+    while (++i < max) {
+        scaleFlags = &mEnvelopeScaleFlags[i];
+        *scaleFlags = 1;
+        weightAnmMtx = mWeightEnvelopeMatrices[i];
+
+        #if !__MWERKS__
+        weightAnmMtx[0][0] = weightAnmMtx[0][1] = weightAnmMtx[0][2] = weightAnmMtx[0][3] = 
+        weightAnmMtx[1][0] = weightAnmMtx[1][1] = weightAnmMtx[1][2] = weightAnmMtx[1][3] = 
+        weightAnmMtx[2][0] = weightAnmMtx[2][1] = weightAnmMtx[2][2] = weightAnmMtx[2][3] = 0.0f;
+        #else
+        asm {
+            ps_merge00 var_f9, var_f27, var_f27
+            ps_merge00 var_f11, var_f27, var_f27
+            ps_merge00 var_f13, var_f27, var_f27
+        }
+        #endif
+
+        j = 0;
+        mixNum = mJointTree->getWEvlpMixMtxNum(i);
+        do {
+            idx = *++indices;
+            worldMtx = &mWorldMatrices[idx];
+            invMtx = &mJointTree->getInvJointMtx((u16)idx);
+
+            #if !__MWERKS__
+            C_MTXConcat(*worldMtx, *invMtx, mtx);
+            #else
+            // Fakematch? Doesn't match if worldMtx and invMtx are used directly.
+            register void* var_r5 = worldMtx;
+            register void* var_r6 = invMtx;
+            asm {
+                psq_l var_f2, 0x0(var_r6), 0, 0 /* qr0 */
+                psq_l var_f1, 0x0(var_r5), 0, 0 /* qr0 */
+                psq_l var_f3, 0x10(var_r5), 0, 0 /* qr0 */
+                psq_l var_f5, 0x20(var_r5), 0, 0 /* qr0 */
+                ps_muls0 var_f8, var_f2, var_f1
+                psq_l var_f6, 0x10(var_r6), 0, 0 /* qr0 */
+                ps_muls0 var_f30, var_f2, var_f3
+                ps_muls0 var_f29, var_f2, var_f5
+                psq_l var_f7, 0x20(var_r6), 0, 0 /* qr0 */
+                ps_madds1 var_f8, var_f6, var_f1, var_f8
+                psq_l var_f2, 0x8(var_r5), 0, 0 /* qr0 */
+                ps_madds1 var_f30, var_f6, var_f3, var_f30
+                psq_l var_f4, 0x18(var_r5), 0, 0 /* qr0 */
+                ps_madds1 var_f29, var_f6, var_f5, var_f29
+                psq_l var_f6, 0x28(var_r5), 0, 0 /* qr0 */
+                ps_madds0 var_f8, var_f7, var_f2, var_f8
+            }
+            #endif
+
+            weight = *++weights;
+
+            #if !__MWERKS__
+            weightAnmMtx[0][0] += mtx[0][0] * weight;
+            weightAnmMtx[0][1] += mtx[0][1] * weight;
+            weightAnmMtx[0][2] += mtx[0][2] * weight;
+            weightAnmMtx[0][3] += mtx[0][3] * weight;
+            weightAnmMtx[1][0] += mtx[1][0] * weight;
+            weightAnmMtx[1][1] += mtx[1][1] * weight;
+            weightAnmMtx[1][2] += mtx[1][2] * weight;
+            weightAnmMtx[1][3] += mtx[1][3] * weight;
+            weightAnmMtx[2][0] += mtx[2][0] * weight;
+            weightAnmMtx[2][1] += mtx[2][1] * weight;
+            weightAnmMtx[2][2] += mtx[2][2] * weight;
+            weightAnmMtx[2][3] += mtx[2][3] * weight;
+            #else
+            asm {
+                ps_madds0 var_f30, var_f7, var_f4, var_f30
+                ps_madds0 var_f29, var_f7, var_f6, var_f29
+                psq_l var_f7, 0x8(var_r6), 0, 0 /* qr0 */
+                ps_madds0 var_f9, var_f8, weight, var_f9
+                ps_madds0 var_f11, var_f30, weight, var_f11
+                ps_madds0 var_f13, var_f29, weight, var_f13
+                psq_l var_f8, 0x18(var_r6), 0, 0 /* qr0 */
+                ps_muls0 var_f30, var_f7, var_f1
+                ps_muls0 var_f29, var_f7, var_f3
+                ps_muls0 var_f28, var_f7, var_f5
+                psq_l var_f7, 0x28(var_r6), 0, 0 /* qr0 */
+                psq_st var_f9, 0x0(weightAnmMtx), 0, 0 /* qr0 */
+                ps_madds1 var_f30, var_f8, var_f1, var_f30
+                ps_madds1 var_f29, var_f8, var_f3, var_f29
+                ps_madds1 var_f28, var_f8, var_f5, var_f28
+                ps_madds0 var_f30, var_f7, var_f2, var_f30
+                ps_madds0 var_f29, var_f7, var_f4, var_f29
+                ps_madds0 var_f28, var_f7, var_f6, var_f28
+                psq_st var_f11, 0x10(weightAnmMtx), 0, 0 /* qr0 */
+                psq_st var_f13, 0x20(weightAnmMtx), 0, 0 /* qr0 */
+                ps_madd var_f30, var_f27, var_f2, var_f30
+                ps_madd var_f29, var_f27, var_f4, var_f29
+                ps_madd var_f28, var_f27, var_f6, var_f28
+                ps_madds0 var_f10, var_f30, weight, var_f10
+                ps_madds0 var_f12, var_f29, weight, var_f12
+                ps_madds0 var_f31, var_f28, weight, var_f31
+            }
+            #endif
+
+            *scaleFlags &= mScaleFlags[idx];
+        } while (++j < mixNum);
+
+        #if __MWERKS__
+        asm {
+            psq_st var_f10, 0x8(weightAnmMtx), 0, 0 /* qr0 */
+            ps_merge00 var_f10, var_f27, var_f27
+            psq_st var_f12, 0x18(weightAnmMtx), 0, 0 /* qr0 */
+            ps_merge00 var_f12, var_f27, var_f27
+            psq_st var_f31, 0x28(weightAnmMtx), 0, 0 /* qr0 */
+            ps_merge00 var_f31, var_f27, var_f27
+        }
+        #endif
 	}
-	/*
+
+	/*	
 	stwu     r1, -0xa0(r1)
 	stfd     f31, 0x90(r1)
 	psq_st   f31, 152(r1), 0, qr0
@@ -871,4 +850,25 @@ void J3DMtxBuffer::calcBBoardMtx()
 			J3DPSCalcInverseTranspose(drawMtx, *getNrmMtx(i));
 		}
 	}
+}
+
+void J3DCalcViewBaseMtx(Mtx view, Vec const& scale, const Mtx& base, Mtx dst) {
+    Mtx m;
+
+	m[0][0] = base[0][0] * scale.x;
+	m[0][1] = base[0][1] * scale.y;
+	m[0][2] = base[0][2] * scale.z;
+	m[0][3] = base[0][3];
+
+	m[1][0] = base[1][0] * scale.x;
+	m[1][1] = base[1][1] * scale.y;
+	m[1][2] = base[1][2] * scale.z;
+	m[1][3] = base[1][3];
+
+	m[2][0] = base[2][0] * scale.x;
+	m[2][1] = base[2][1] * scale.y;
+	m[2][2] = base[2][2] * scale.z;
+	m[2][3] = base[2][3];
+
+	PSMTXConcat(view, m, dst);
 }

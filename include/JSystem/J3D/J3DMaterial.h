@@ -222,6 +222,7 @@ struct J3DMaterialTable {
 	J3DErrType allocTexMtxAnimator(J3DAnmTextureSRTKey*, J3DTexMtxAnm**);
 	J3DErrType entryTexMtxAnimator(J3DAnmTextureSRTKey*);
 	bool removeTexMtxAnimator(J3DAnmTextureSRTKey*);
+	int createTexMtxForAnimator(J3DAnmTextureSRTKey*);
 
 	J3DErrType allocTevRegAnimator(J3DAnmTevRegKey*, J3DTevColorAnm**, J3DTevKColorAnm**);
 	J3DErrType entryTevRegAnimator(J3DAnmTevRegKey*);

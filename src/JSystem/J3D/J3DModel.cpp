@@ -40,7 +40,7 @@ void J3DModel::initialize()
  * @note Address: 0x80066380
  * @note Size: 0xC4
  */
-int J3DModel::entryModelData(J3DModelData* data, u32 matFlags, u32 viewNum)
+int J3DModel::entryModelData(J3DModelData* data, u32 mdlFlags, u32 viewNum)
 {
 	mModelData = data;
 	mMtxBuffer = new J3DMtxBuffer;
@@ -52,12 +52,37 @@ int J3DModel::entryModelData(J3DModelData* data, u32 matFlags, u32 viewNum)
 	if (result) {
 		return result;
 	}
-	result = createMatPacket(data, matFlags);
+	result = createMatPacket(data, mdlFlags);
 	if (result) {
 		return result;
 	}
 	mVertexBuffer.setVertexData(&data->mVertexData);
 	prepareShapePackets();
+	
+	if (mdlFlags & J3DMODEL_Unk1) {
+        onFlag(J3DMODEL_Unk1);
+    }
+    if (mdlFlags & J3DMODEL_UseDefaultJ3D) {
+        onFlag(J3DMODEL_UseDefaultJ3D);
+    }
+    if (mdlFlags & J3DMODEL_LevelOfDetail) {
+        onFlag(J3DMODEL_LevelOfDetail);
+    }
+    if (mdlFlags & J3DMODEL_CreateNewDL) {
+        onFlag(J3DMODEL_CreateNewDL);
+    }
+    if (mdlFlags & J3DMODEL_UseSingleSharedDL) {
+        onFlag(J3DMODEL_UseSingleSharedDL);
+    }
+    if (mdlFlags & J3DMODEL_ShareDL) {
+        onFlag(J3DMODEL_ShareDL);
+    }
+    if (mdlFlags & J3DMODEL_SkinPosCpu) {
+        onFlag(J3DMODEL_SkinPosCpu);
+    }
+    if (mdlFlags & J3DMODEL_SkinNrmCpu) {
+        onFlag(J3DMODEL_SkinNrmCpu);
+    }
 	return 0;
 }
 

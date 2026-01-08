@@ -144,10 +144,14 @@ void J3DJointTree::calc(J3DMtxBuffer* buffer, const Vec& vec, const Mtx& mtx)
 {
 	mTransformCalc->init(vec, mtx);
 	J3DMtxCalc::setMtxBuffer(
-	    buffer); // this is a weak function thats supposed to not inline here, somehow. it's currently being manhandled.
+	    buffer); 
 	J3DJoint* root = mRootNode;
 	if (root) {
 		J3DJoint::mCurrentMtxCalc = mTransformCalc;
 		root->recursiveCalc();
 	}
+}
+
+void J3DMtxCalc::setMtxBuffer(J3DMtxBuffer* buffer) {
+    J3DMtxCalc::mMtxBuffer = buffer;
 }

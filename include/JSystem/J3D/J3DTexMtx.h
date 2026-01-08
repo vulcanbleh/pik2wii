@@ -25,8 +25,8 @@ enum J3DTEXMTX {
 
 struct J3DTexMtxInfo {
 
-	void operator=(J3DTexMtxInfo const& other)
-	{
+	void operator=(J3DTexMtxInfo const& other);
+	/*{
 		mEffectMtx[0][0] = other.mEffectMtx[0][0];
 		mEffectMtx[0][1] = other.mEffectMtx[0][1];
 		mEffectMtx[0][2] = other.mEffectMtx[0][2];
@@ -51,7 +51,7 @@ struct J3DTexMtxInfo {
 		mProjection = other.mProjection;
 		mInfo       = other.mInfo;
 		mSRT        = other.mSRT;
-	}
+	}*/
 
 	void setMtx(Mtx44 copyMatrix)
 	{
