@@ -833,10 +833,20 @@ struct J3DNBTScaleInfo {
 
 extern const J3DNBTScaleInfo j3dDefaultNBTScaleInfo;
 
-struct J3DNBTScale : public J3DNBTScaleInfo {
-	J3DNBTScale() { *(J3DNBTScaleInfo*)this = j3dDefaultNBTScaleInfo; }
+struct J3DNBTScale : public J3DNBTScaleInfo {	
+	J3DNBTScale() {
+        mHasScale = j3dDefaultNBTScaleInfo.mHasScale;
+        mScale.x = j3dDefaultNBTScaleInfo.mScale.x;
+        mScale.y = j3dDefaultNBTScaleInfo.mScale.y;
+        mScale.z = j3dDefaultNBTScaleInfo.mScale.z;
+    }
 
-	J3DNBTScale(const J3DNBTScaleInfo& info) { *(J3DNBTScaleInfo*)this = info; }
+    J3DNBTScale(const J3DNBTScaleInfo& info) {
+        mHasScale = info.mHasScale;
+        mScale.x = info.mScale.x;
+        mScale.y = info.mScale.y;
+        mScale.z = info.mScale.z;
+    }
 
 	Vec* getScale() { return &mScale; }
 };
