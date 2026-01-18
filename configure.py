@@ -620,11 +620,11 @@ config.libs = [
     },
     {
         "lib": "aralt",
-        "cflags": cflags_pikmin,
+        "cflags": cflags_revo,
         "mw_version": "GC/3.0a3p1",
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "aralt/aralt.c"),
+            Object(Matching, "aralt/aralt.c"),
         ],
     },
     {

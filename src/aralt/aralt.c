@@ -5,27 +5,25 @@
 #include "RevoSDK/os.h"
 #include "stl/mem.h"
 
-// im not sure what the deal with this label is, possibly fake?
-const void* lbl_8066A9C0 = (const void*)__AR_ARAM_BASE_MEMORY_TOP;
-
-void (*__AR_Callback)();
-BOOL __AR_init_flag;
-u32 __AR_InternalSize;
-u32 __AR_Size;
-u32 __ARH_BaseAdr;
-
-ARQRequest* __ARQRequestQueueHi;
-ARQRequest* __ARQRequestQueueLo;
-
-ARQRequest* __ARQRequestPendingHi;
-ARQRequest* __ARQRequestPendingLo;
-
-ARQCallback __ARQCallbackHi;
-ARQCallback __ARQCallbackLo;
-
-u32 __ARQChunkSize;
 BOOL __ARQ_init_flag;
+u32 __ARQChunkSize;
 
+ARQCallback __ARQCallbackLo;
+ARQCallback __ARQCallbackHi;
+
+ARQRequest* __ARQRequestPendingLo;
+ARQRequest* __ARQRequestPendingHi;
+
+ARQRequest* __ARQRequestQueueLo;
+ARQRequest* __ARQRequestQueueHi;
+
+u32 __ARH_BaseAdr;
+u32 __AR_Size;
+u32 __AR_InternalSize;
+BOOL __AR_init_flag;
+void (*__AR_Callback)();
+
+u32 __ARALT_AramStartAdr = __AR_ARAM_BASE_MEMORY_TOP;
 u32 __ARH_MemoryTop = __AR_ARAM_BASE_MEMORY_TOP;
 
 // at some point we might want to make these parameters void*
@@ -88,26 +86,25 @@ u32 ARInit(u32* stack_index_addr, u32 num_entries)
 
 	(void)OSRestoreInterrupts(level);
 
-	// I really suspect this label is fake, but I can't get it to generate otherwise
-	r30 = (u32)lbl_8066A9C0;
+	r30 = __ARALT_AramStartAdr;
 
 	r29 = r30 + 0x1300000U;
 
-	__ARH_MemoryTop = r29 + ARGetBaseAddress();
-
-	diff = r30 - r29;
-
+	__ARH_MemoryTop = ARGetBaseAddress() + r30;
 	__ARH_BaseAdr = r30;
 
-	OSReport("ARInit : Dummy ARAM enabled (RVL), area %p -> %p (size 0x%x)\n", __ARH_BaseAdr, r29, diff);
+	diff = r29 - r30;
 
-	__AR_InternalSize = diff;
-	__AR_Size         = diff;
+	OSReport("ARInit : Dummy ARAM enabled (RVL), area %p -> %p (size 0x%x)\n", __ARH_BaseAdr, r29, r29 - r30);
+
+	
+	__AR_InternalSize         = diff;
+	__AR_Size = __AR_InternalSize;
 
 	return ARGetBaseAddress();
 }
 
-u32 ARGetBaseAdress()
+u32 ARGetBaseAddress()
 {
 	return __AR_ARAM_USR_BASE_ADDR;
 }
