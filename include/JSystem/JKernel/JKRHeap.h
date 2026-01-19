@@ -5,6 +5,7 @@
 #include "JSystem/JSupport/JSUList.h"
 #include "RevoSDK/os.h"
 #include "types.h"
+#include <stl/new.h>
 
 typedef void JKRHeapErrorHandler(void*, u32, int);
 
@@ -362,10 +363,6 @@ struct JKRSolidHeap : public JKRHeap {
 	SolidList* mList; // _78
 };
 
-inline void* operator new(size_t size, void* mem)
-{
-	return mem;
-} // fabricated?
 void* operator new(size_t, JKRHeap*, int);
 void* operator new(size_t byteCount, int p2);
 void* operator new[](size_t, JKRHeap*, int);

@@ -1,5 +1,21 @@
 #include "RevoSDK/gx.h"
 
+
+// GXTexObj internal data
+typedef struct __GXTexObjInt_struct {
+    u32 mode0;
+    u32 mode1;
+    u32 image0;
+    u32 image3;
+    void* userData;
+    GXTexFmt fmt;
+    u32 tlutName;
+    u16 loadCnt;
+    u8 loadFmt;
+    u8 flags;
+} __GXTexObjInt;
+
+
 u8 GXTexMode0Ids[8]  = { 0x80, 0x81, 0x82, 0x83, 0xA0, 0xA1, 0xA2, 0xA3 };
 u8 GXTexMode1Ids[8]  = { 0x84, 0x85, 0x86, 0x87, 0xA4, 0xA5, 0xA6, 0xA7 };
 u8 GXTexImage0Ids[8] = { 0x88, 0x89, 0x8a, 0x8b, 0xA8, 0xA9, 0xAa, 0xAb };
@@ -536,13 +552,11 @@ void GXGetTexObjMaxAniso(void)
 	// UNUSED FUNCTION
 }
 
-/**
- * @note Address: N/A
- * @note Size: 0x8
- */
-void GXGetTexObjTlut(void)
+
+u32 GXGetTexObjTlut(const GXTexObj* tex_obj)
 {
-	// UNUSED FUNCTION
+	const __GXTexObjInt* t = (const __GXTexObjInt *)tex_obj;
+	return t->tlutName;
 }
 
 /**
