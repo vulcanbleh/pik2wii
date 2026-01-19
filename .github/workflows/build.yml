@@ -6,7 +6,7 @@ on:
 
 jobs:
   build:
-    container: ghcr.io/projectpiki/build:main
+    container: ghcr.io/vulcanbleh/build:main
 
     runs-on: ubuntu-latest
     strategy:
