@@ -40,10 +40,10 @@ namespace res {
 struct Layout {
     static const u32 SIGNATURE = FOURCC('l', 'y', 't', '1');
 
-    DataBlockHeader blockHeader; // at 0x0
-    u8 originType;               // at 0x8
-    u8 PADDING_0x9[0xC - 0x9];   // at 0x9
-    Size layoutSize;             // at 0xC
+    DataBlockHeader blockHeader; // _00
+    u8 originType;               // _08
+    u8 PADDING_0x9[0xC - 0x9];   // _09
+    Size layoutSize;             // _0C
 };
 
 } // namespace res
@@ -68,7 +68,7 @@ public:
     virtual AnimTransform *CreateAnimTransform(const AnimResource &animRes, ResourceAccessor *pResAcsr);	 // _18
     virtual void BindAnimation(AnimTransform* pAnimTrans);  											     // _1C
     virtual void UnbindAnimation(AnimTransform* pAnimTrans); 											     // _20
-    virtual void UnbindAllAnimation();															             // _24                       // at 0x24
+    virtual void UnbindAllAnimation();															             // _24
 	virtual bool BindAnimationAuto(const AnimResource &animRes, ResourceAccessor *pResAcsr); 			     // _28
     virtual void SetAnimationEnable(AnimTransform* pAnimTrans,  bool enable);							     // _2C
     virtual void CalculateMtx(const DrawInfo& rInfo); 													     // _30

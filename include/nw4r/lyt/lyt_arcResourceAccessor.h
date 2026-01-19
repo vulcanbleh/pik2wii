@@ -27,14 +27,14 @@ public:
     }
 
 public:
-    NW4R_UT_LINKLIST_NODE_DECL(); // at 0x0
+    NW4R_UT_LINKLIST_NODE_DECL(); // _00
 
 protected:
     static const int FONTNAMEBUF_MAX = 128;
 
 protected:
-    char mFontName[FONTNAMEBUF_MAX]; // at 0x8
-    ut::Font* mpFont;                // at 0x88
+    char mFontName[FONTNAMEBUF_MAX]; // _08
+    ut::Font* mpFont;                // _88
 };
 
 NW4R_UT_LINKLIST_TYPEDEF_DECL(FontRefLink);
@@ -56,9 +56,9 @@ public:
     ArcResourceAccessor();
 
     virtual void* GetResource(u32 type, const char* pName,
-                              u32* pSize); // at 0xC
+                              u32* pSize); // _C
 
-    virtual ut::Font* GetFont(const char* pName); // at 0x10
+    virtual ut::Font* GetFont(const char* pName); // _10
 
     bool Attach(void* pArchive, const char* pRootDir);
 
@@ -70,10 +70,10 @@ protected:
     static const int ROOTPATH_MAX = 128;
 
 protected:
-    ARCHandle mArcHandle;           // at 0x4
-    void* mArcBuf;                  // at 0x20
-    FontRefLinkList mFontList;      // at 0x24
-    char mResRootDir[ROOTPATH_MAX]; // at 0x30
+    ARCHandle mArcHandle;           // _04
+    void* mArcBuf;                  // _20
+    FontRefLinkList mFontList;      // _24
+    char mResRootDir[ROOTPATH_MAX]; // _30
 };
 
 } // namespace lyt

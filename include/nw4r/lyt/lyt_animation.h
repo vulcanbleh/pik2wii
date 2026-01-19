@@ -56,9 +56,9 @@ struct AnimationShareBlock {
  *
  ******************************************************************************/
 struct AnimationInfo {
-    u32 kind;                  // _0
-    u8 num;                    // _4
-    u8 PADDING_0x5[0x8 - 0x5]; // _5
+    u32 kind;                  // _00
+    u8 num;                    // _04
+    u8 PADDING_0x5[0x8 - 0x5]; // _05
 
     static const u32 SIGNATURE_ANMPANESRT = FOURCC('R', 'L', 'P', 'A');
     static const u32 SIGNATURE_ANMPANEVIS = FOURCC('R', 'L', 'V', 'I');
@@ -130,10 +130,10 @@ public:
     }
 
 public:
-    NW4R_UT_LINKLIST_NODE_DECL(); // _4
+    NW4R_UT_LINKLIST_NODE_DECL(); // _04
 
 protected:
-    const res::AnimationBlock* mpRes; // _C
+    const res::AnimationBlock* mpRes; // _0C
     f32 mFrame;                       // _10
 };
 
