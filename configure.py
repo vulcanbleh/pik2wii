@@ -2590,7 +2590,6 @@ config.libs = [
             Object(NonMatching, "nw4r/lyt/lyt_arcResourceAccessor.cpp"),
             Object(NonMatching, "nw4r/lyt/lyt_common.cpp"),
             Object(NonMatching, "nw4r/lyt/lyt_util.cpp"),
-            Object(NonMatching, "nw4r/lyt/lyt_u.cpp"),
         ],
     },
 ]

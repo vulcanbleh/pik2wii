@@ -14,6 +14,7 @@
 #include <nw4r/ut/ut_ResFont.h>
 #include <nw4r/ut/ut_ResFontBase.h>
 #include <nw4r/ut/ut_RomFont.h>
+#include <nw4r/ut/ut_RuntimeTypeInfo.h>
 #include <nw4r/ut/ut_TagProcessorBase.h>
 #include <nw4r/ut/ut_TextWriterBase.h>
 #include <nw4r/ut/ut_algorithm.h>
