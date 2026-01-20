@@ -24,9 +24,9 @@
 #include "JSystem/JSupport/JSUList.h"
 #include "RevoSDK/ar.h"
 #include "RevoSDK/mtx.h"
-#include "RevoSDK/stl.h"
 #include "RevoSDK/vec.h"
 #include "string.h"
+#include "stdio.h"
 #include "types.h"
 
 JAIBasic* JAIBasic::msBasic;

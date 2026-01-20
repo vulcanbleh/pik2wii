@@ -5,7 +5,7 @@
 #include "JSystem/JAudio/JAI/JAInter/Fx.h"
 #include "JSystem/JAudio/JAI/JAInter/InitData.h"
 #include "JSystem/JAudio/JAS/JASHeap.h"
-#include "RevoSDK/stl.h"
+#include "stdio.h"
 #include "string.h"
 #include "types.h"
 

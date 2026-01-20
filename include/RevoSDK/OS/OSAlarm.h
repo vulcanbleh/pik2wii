@@ -25,6 +25,7 @@ struct OSAlarm {
 	OSAlarm* next;          // _14
 	OSTime period;          // _18, period of periodic alarm
 	OSTime start;           // _20, start of periodic alarm
+	void* userData;       	// _28
 };
 
 // Queue struct for OSAlarm.
