@@ -4,6 +4,7 @@
 #include "RevoSDK/PPCArch.h"
 #include "RevoSDK/dvd.h"
 #include "types.h"
+#include "stdarg.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -47,6 +48,7 @@ void OSInit();
 
 // OS logging and reporting.
 void OSReport(const char* message, ...);
+void OSVReport(const char* message, va_list list);
 void OSPanic(const char* file, int line, const char* message, ...);
 
 #define OSError(...) OSPanic(__FILE__, __LINE__, __VA_ARGS__)
