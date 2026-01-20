@@ -3675,16 +3675,21 @@ plugProjectKandoU/gameSoundEvent.cpp:
 
 plugProjectKandoU/aiBattle.cpp:
 	.text       start:0x802B30A0 end:0x802B3DDC
+	.rodata     start:0x8054CC70 end:0x8054CCA8
 	.data       start:0x805A0430 end:0x805A0480
+	.sdata2     start:0x80670AF0 end:0x80670B30
 
 plugProjectKandoU/gameDeathCount.cpp:
 	.text       start:0x802B3DDC end:0x802B52E0
 	.ctors      start:0x80534E48 end:0x80534E4C
+	.rodata     start:0x8054CCA8 end:0x8054CCF0
 	.sbss       start:0x8066CC20 end:0x8066CC28
 
 plugProjectKandoU/aiBore.cpp:
 	.text       start:0x802B52E0 end:0x802B6328
+	.rodata     start:0x8054CCF0 end:0x8054CD30
 	.data       start:0x805A0480 end:0x805A05B8
+	.sdata2     start:0x80670B30 end:0x80670B68
 
 plugProjectKandoU/mapPartsView.cpp:
 	.text       start:0x802B6328 end:0x802B66CC
@@ -7090,7 +7095,8 @@ nw4r/db/db_console.cpp:
 
 nw4r/db/db_assert.cpp:
 	.text       start:0x80509D98 end:0x8050A228
-	.data       start:0x805D10B0 end:0x805D1140
+	.data       start:0x805D10B0 end:0x805D112F
+	.bss        start:0x80641C98 end:0x80641CC8
 	.sdata      start:0x8066B818 end:0x8066B820
 	.sbss       start:0x8066D470 end:0x8066D480
 

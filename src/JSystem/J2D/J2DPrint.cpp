@@ -2,7 +2,7 @@
 #include "JSystem/JKernel/JKRHeap.h"
 #include "PowerPC_EABI_Support\MSL_C\MSL_Common\strtold.h"
 #include "PowerPC_EABI_Support\MSL_C\MSL_Common\strtoul.h"
-#include "RevoSDK/stl.h"
+#include "stdio.h"
 
 const u8* J2DPrint::mStrBuff;
 bool J2DPrint::mHeapFlag;
