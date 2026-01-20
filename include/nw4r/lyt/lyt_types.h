@@ -585,7 +585,7 @@ struct TevSwapMode {
  ******************************************************************************/
 struct TexCoordGen {
     TexCoordGen() : reserve(0) {
-        Set(GX_TG_MTX2X4, GX_TG_TEX0, GX_IDENTITY);
+        Set(GX_TG_MTX3X4, GX_TG_TEX0, GX_IDENTITY);
     }
 
     void Set(GXTexGenType type, GXTexGenSrc src, u32 mtxID) {
