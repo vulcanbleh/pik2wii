@@ -11,6 +11,8 @@
 #include <RevoSDK/mem.h>
 #include <RevoSDK/os.h>
 
+#include <new.h>
+
 namespace EGG {
 
 // Forward declarations
@@ -134,8 +136,6 @@ private:
 
 ////////////////////////////////////////////////////////
 ////////////////// OPERATOR OVERRIDES //////////////////
-
-inline void* operator new(size_t size, void* mem) { return mem; } // fabricated?
 
 // void* operator new(size_t size);
 void* operator new(size_t size, EGG::Heap* pHeap, int align = 4);
