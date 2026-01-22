@@ -5,13 +5,37 @@
 
 
 #include <nw4r/g3d/g3d_3dsmax.h>
+#include <nw4r/g3d/g3d_anmchr.h>
+#include <nw4r/g3d/g3d_anmclr.h>
+#include <nw4r/g3d/g3d_anmobj.h>
+#include <nw4r/g3d/g3d_anmscn.h>
+#include <nw4r/g3d/g3d_anmshp.h>
+#include <nw4r/g3d/g3d_anmtexpat.h>
+#include <nw4r/g3d/g3d_anmtexsrt.h>
+#include <nw4r/g3d/g3d_anmvis.h>
 #include <nw4r/g3d/g3d_basic.h>
+#include <nw4r/g3d/g3d_calcmaterial.h>
 #include <nw4r/g3d/g3d_calcview.h>
+#include <nw4r/g3d/g3d_calcvtx.h>
+#include <nw4r/g3d/g3d_calcworld.h>
+#include <nw4r/g3d/g3d_camera.h>
 #include <nw4r/g3d/g3d_dcc.h>
+#include <nw4r/g3d/g3d_draw.h>
+#include <nw4r/g3d/g3d_draw1mat1shp.h>
+#include <nw4r/g3d/g3d_fog.h>
+#include <nw4r/g3d/g3d_init.h>
 #include <nw4r/g3d/g3d_light.h>
 #include <nw4r/g3d/g3d_maya.h>
 #include <nw4r/g3d/g3d_obj.h>
 #include <nw4r/g3d/g3d_rtti.h>
+#include <nw4r/g3d/g3d_scnmdl.h>
+#include <nw4r/g3d/g3d_scnmdl1mat1shp.h>
+#include <nw4r/g3d/g3d_scnmdlsmpl.h>
+#include <nw4r/g3d/g3d_scnobj.h>
+#include <nw4r/g3d/g3d_scnproc.h>
+//#include <nw4r/g3d/g3d_scnrfl.h>
+#include <nw4r/g3d/g3d_scnroot.h>
+#include <nw4r/g3d/g3d_state.h>
 #include <nw4r/g3d/g3d_workmem.h>
 #include <nw4r/g3d/g3d_xsi.h>
 

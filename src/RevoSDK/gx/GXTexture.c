@@ -25,6 +25,7 @@ u8 GXTexImage3Ids[8] = { 0x94, 0x95, 0x96, 0x97, 0xB4, 0xB5, 0xB6, 0xB7 };
 u8 GXTexTlutIds[8]   = { 0x98, 0x99, 0x9a, 0x9b, 0xB8, 0xB9, 0xBa, 0xBb };
 
 u8 GX2HWFiltConv[6] = { 0x00, 0x04, 0x01, 0x05, 0x02, 0x06 };
+u8 HW2GXFiltConv[8] = { 0x00, 0x02, 0x04, 0x00, 0x01, 0x03, 0x05, 0x00 };
 
 #define GET_TILE_COUNT(a, b) (((a) + (1 << (b)) - 1) >> (b))
 
@@ -410,27 +411,29 @@ void GXGetTexObjAll(void)
  * @note Address: N/A
  * @note Size: 0xC
  */
-void GXGetTexObjData(void)
-{
-	// UNUSED FUNCTION
+void* GXGetTexObjData(const GXTexObj* to) {
+    const __GXTexObjInt* t = (const __GXTexObjInt *)to;
+
+    return (void*)(GX_GET_REG(t->image3, 21, 0) << 5);
 }
 
 /**
  * @note Address: N/A
  * @note Size: 0x10
  */
-void GXGetTexObjWidth(void)
-{
-	// UNUSED FUNCTION
-}
+u16 GXGetTexObjWidth(const GXTexObj* to) {
+    const __GXTexObjInt* t = (const __GXTexObjInt *)to;
 
+    return (u32)GX_GET_REG(t->image0, 10, 0) + 1;
+}
 /**
  * @note Address: N/A
  * @note Size: 0x10
  */
-void GXGetTexObjHeight(void)
-{
-	// UNUSED FUNCTION
+u16 GXGetTexObjHeight(const GXTexObj* to) {
+    const __GXTexObjInt* t = (const __GXTexObjInt *)to;
+
+    return (u32)GX_GET_REG(t->image0, 10, 10) + 1;
 }
 
 /**
@@ -447,18 +450,22 @@ GXTexFmt GXGetTexObjFmt(GXTexObj* obj)
  * @note Address: N/A
  * @note Size: 0xC
  */
-void GXGetTexObjWrapS(void)
+GXTexWrapMode GXGetTexObjWrapS(const GXTexObj* to) 
 {
-	// UNUSED FUNCTION
+    const __GXTexObjInt* t = (const __GXTexObjInt *)to;
+
+    return GX_GET_REG(t->mode0, 2, 0);
 }
 
 /**
  * @note Address: N/A
  * @note Size: 0xC
  */
-void GXGetTexObjWrapT(void)
+GXTexWrapMode GXGetTexObjWrapT(const GXTexObj* to) 
 {
-	// UNUSED FUNCTION
+    const __GXTexObjInt* t = (const __GXTexObjInt *)to;
+
+    return GX_GET_REG(t->mode0, 2, 2);
 }
 
 /**
@@ -475,9 +482,19 @@ GXBool GXGetTexObjMipMap(GXTexObj* obj)
  * @note Address: N/A
  * @note Size: 0xE4
  */
-void GXGetTexObjLODAll(void)
-{
-	// UNUSED FUNCTION
+void GXGetTexObjLODAll(const GXTexObj* tex_obj, GXTexFilter* min_filt, GXTexFilter* mag_filt, f32* min_lod, f32* max_lod, f32* lod_bias, u8* bias_clamp, u8* do_edge_lod, GXAnisotropy* max_aniso) {
+    s16 tmp;
+    const __GXTexObjInt* t = (const __GXTexObjInt *)tex_obj;
+
+    *min_filt = HW2GXFiltConv[GX_GET_REG(t->mode0, 3, 5)];
+    *mag_filt = GX_GET_REG(t->mode0, 1, 4);
+    *min_lod = (u8)t->mode1 / 16.0f;
+    *max_lod = (u32)GX_GET_REG(t->mode1, 8, 8) / 16.0f;
+    tmp = (s32)GX_GET_REG(t->mode0, 8, 9);
+    *lod_bias = (s8)tmp / 32.0f;
+    *bias_clamp = (u32)GX_GET_REG(t->mode0, 1, 21);
+    *do_edge_lod = !GX_GET_REG(t->mode0, 1, 8);
+    *max_aniso = GX_GET_REG(t->mode0, 2, 19);
 }
 
 /**
@@ -564,7 +581,7 @@ u32 GXGetTexObjTlut(const GXTexObj* tex_obj)
  * @note Size: 0x17C
  */
 
-void GXLoadTexObjPreLoaded(GXTexObj* obj, GXTexRegion* region, GXTexMapID map)
+void GXLoadTexObjPreLoaded(const GXTexObj* obj, GXTexRegion* region, GXTexMapID map)
 {
 	u8 stackManipulation[0x18];
 
@@ -605,7 +622,7 @@ void GXLoadTexObjPreLoaded(GXTexObj* obj, GXTexRegion* region, GXTexMapID map)
  * @note Address: 0x800E7710
  * @note Size: 0x54
  */
-void GXLoadTexObj(GXTexObj* obj, GXTexMapID map)
+void GXLoadTexObj(const GXTexObj* obj, GXTexMapID map)
 {
 	GXTexRegion* ret = (GXTexRegion*)gx->texRegionCallback(obj, map);
 
@@ -623,7 +640,7 @@ void GXInitTlutObj(GXTlutObj* obj, void* table, GXTlutFmt format, u16 numEntries
 	internal->unk0 = 0;
 
 	GX_SET_REG(internal->unk0, format, 20, 21);
-	GX_SET_REG(internal->unk4, (u32)table >> 5, 11, 31);
+	GX_SET_REG(internal->unk4, (u32)table >> 5, 8, 31);
 	GX_SET_REG(internal->unk4, 100, 0, 7);
 
 	internal->numEntries = numEntries;

@@ -75,6 +75,13 @@ void C_MTXLightFrustum(Mtx m, f32 arg1, f32 arg2, f32 arg3, f32 arg4, f32 arg5, 
 void C_MTXLightOrtho(Mtx mtx, f32 t, f32 b, f32 l, f32 r, f32 scaleS, f32 scaleT, f32 transS, f32 transT);
 ////////////////////////////////////////////
 
+///////// QUAT FUNCTIONS /////////
+void PSQUATMultiply(const Quaternion* a, const Quaternion* b, Quaternion* prod);
+void PSQUATNormalize(const Quaternion* in, Quaternion* out);
+void C_QUATMtx(Quaternion* quat, const Mtx mtx);
+void C_QUATSlerp(const Quaternion* a, const Quaternion* b, Quaternion* out, f32 t);
+////////////////////////////////////////////
+
 ////////////// MATRIX INLINES //////////////
 static inline void MTXSetPosition(Mtx mtx, const Vec* pos)
 {
