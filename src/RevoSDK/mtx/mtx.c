@@ -212,7 +212,7 @@ void C_MTXConcatArray(void)
  * @note Address: N/A
  * @note Size: 0x158
  */
-void PSMTXConcatArray(const register Mtx a, const register Mtx* srcBase, register Mtx* dstBase, register u32 count) {
+void PSMTXConcatArray(const register Mtx a, const register Mtx srcBase, register Mtx dstBase, register u32 count) {
     register f32 va0, va1, va2, va3, va4, va5;
     register f32 vb0, vb1, vb2, vb3, vb4, vb5;
     register f32 vd0, vd1, vd2, vd3, vd4, vd5;

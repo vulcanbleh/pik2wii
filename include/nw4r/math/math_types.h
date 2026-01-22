@@ -573,9 +573,10 @@ inline u32 MTX34Inv(MTX34* pOut, const MTX34* pIn)
 	return PSMTXInverse(*pIn, *pOut);
 }
 
-// inline u32 MTX34InvTranspose(MTX34* pOut, const MTX34* pIn) {
-//     return PSMTXInvXpose(*pIn, *pOut);
-// }
+inline u32 MTX34InvTranspose(MTX34* pOut, const MTX34* pIn) 
+{
+    return PSMTXInvXpose(*pIn, *pOut);
+}
 
 inline MTX34* MTX34LookAt(MTX34* pMtx, const VEC3* pPos, const VEC3* pUp, const VEC3* pTarget)
 {
@@ -589,11 +590,11 @@ inline MTX34* MTX34Mult(MTX34* pOut, const MTX34* pA, const MTX34* pB)
 	return pOut;
 }
 
-// inline MTX34* MTX34MultArray(MTX34* pOut, const MTX34* p1, const MTX34* pSrc,
-//                              u32 len) {
-//     PSMTXConcatArray(*p1, *pSrc, *pOut, len);
-//     return pOut;
-// }
+inline MTX34* MTX34MultArray(MTX34* pOut, const MTX34* p1, const MTX34* pSrc, u32 len) 
+{
+    PSMTXConcatArray(*p1, *pSrc, *pOut, len);
+    return pOut;
+}
 
 inline MTX34* MTX34RotAxisRad(MTX34* pOut, const VEC3* pAxis, f32 frad)
 {

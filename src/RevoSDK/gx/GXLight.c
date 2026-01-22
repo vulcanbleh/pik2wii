@@ -178,9 +178,13 @@ void GXInitLightPos(GXLightObj* obj, f32 x, f32 y, f32 z)
  * @note Address: N/A
  * @note Size: 0x1C
  */
-void GXGetLightPos(GXLightObj* obj, f32* x, f32* y, f32* z)
+void GXGetLightPos(const GXLightObj* light, f32* x, f32* y, f32* z) 
 {
-	// UNUSED FUNCTION
+    const GXLightObjPriv* impl = (GXLightObjPriv*)light;
+
+    *x = impl->lpos[0];
+    *y = impl->lpos[1];
+    *z = impl->lpos[2];
 }
 
 /**
@@ -199,9 +203,13 @@ void GXInitLightDir(GXLightObj* obj, f32 nX, f32 nY, f32 nZ)
  * @note Address: N/A
  * @note Size: 0x28
  */
-void GXGetLightDir(GXLightObj* obj, f32* nX, f32* nY, f32* nZ)
+void GXGetLightDir(const GXLightObj* light, f32* x, f32* y, f32* z) 
 {
-	// UNUSED FUNCTION
+    const GXLightObjPriv* impl = (GXLightObjPriv*)light;
+
+    *x = -impl->ldir[0];
+    *y = -impl->ldir[1];
+    *z = -impl->ldir[2];
 }
 
 /**
@@ -294,7 +302,7 @@ static inline void PushLight(const register GXLightObjPriv* lt_obj, register voi
  * @note Address: 0x800E6C08
  * @note Size: 0x7C
  */
-void GXLoadLightObjImm(GXLightObj* obj, GXLightID light)
+void GXLoadLightObjImm(const GXLightObj* obj, GXLightID light)
 {
 	u32 addr;
 	u32 idx;
