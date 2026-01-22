@@ -1,6 +1,8 @@
 #ifndef _STD_ALGORITHM_H
 #define _STD_ALGORITHM_H
 
+#include "stl/iterator.h"
+
 #include "types.h"
 
 namespace std {
@@ -48,8 +50,8 @@ template <typename TPtr> inline long distance(TPtr first, TPtr last) {
 template <typename TPtr>
 inline long __distance(TPtr first, TPtr last, random_access_iterator_tag) {
     return static_cast<long>(last - first);
-}*/
-
+}
+*/
 template <typename TIt, typename TCompare>
 inline TIt min_element(TIt first, TIt last, TCompare compare) {
     TIt it = first;
@@ -82,7 +84,7 @@ inline void __selection_sort(TIt first, TIt last, TCompare compare) {
 }
 
 template <typename TCompare, typename TIt>
-void __sort132(TIt a1, TIt a2, TIt a3, TCompare compare){
+void __sort132(TIt a1, TIt a2, TIt a3, TCompare compare) __attribute__((never_inline)){
     bool b1 = !compare(*a3, *a1);
     bool b2 = !compare(*a2, *a3);
 

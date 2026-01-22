@@ -7,17 +7,17 @@ namespace workmem {
 namespace {
 
 union {
-    u8 mem[WORKMEM_SIZE]; // at 0x0
+    u8 mem[WORKMEM_SIZE]; 								// _00
     struct {
-        math::_VEC3 tmpScale[WORKMEM_NUMTMPSCALE]; // at 0x0
-        u32 mtxID[WORKMEM_NUMMTXID];               // at 0x6000
+        math::_VEC3 tmpScale[WORKMEM_NUMTMPSCALE]; 		// _00
+        u32 mtxID[WORKMEM_NUMMTXID];               		// _6000
     };
-    u8 byteCode[WORKMEM_NUMBYTECODE];                 // at 0x0
-    MdlZ mdlZ[WORKMEM_NUMMDLZ];                       // at 0x0
-    math::_MTX34 skinningMtx[WORKMEM_NUMSKINNINGMTX]; // at 0x0
-    math::_MTX34 bbMtx[WORKMEM_NUMBBMTX];             // at 0x0
-    u8 shpAnmResultBuf[WORKMEM_NUMSHPANMRESULT];      // at 0x0
-} sTemp;
+    u8 byteCode[WORKMEM_NUMBYTECODE];                 	// _00
+    MdlZ mdlZ[WORKMEM_NUMMDLZ];                       	// _00
+    math::_MTX34 skinningMtx[WORKMEM_NUMSKINNINGMTX]; 	// _00
+    math::_MTX34 bbMtx[WORKMEM_NUMBBMTX];             	// _00
+    u8 shpAnmResultBuf[WORKMEM_NUMSHPANMRESULT];      	// _00
+} sTemp ATTRIBUTE_ALIGN(128);
 
 } // namespace
 

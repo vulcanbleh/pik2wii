@@ -32,18 +32,15 @@ public:
     AnmObj(MEMAllocator* pAllocator, G3dObj* pParent)
         : G3dObj(pAllocator, pParent), mFlags(0) {}
 
-    virtual void G3dProc(u32 task, u32 param, void* pInfo) = 0; // at 0xC
-    virtual ~AnmObj() {}                                        // at 0x10
-
-    virtual void SetFrame(f32 frame) = 0; // at 0x1C
-    virtual f32 GetFrame() const = 0;     // at 0x20
-    virtual void UpdateFrame() = 0;       // at 0x24
-
-    virtual void SetUpdateRate(f32 rate) = 0; // at 0x28
-    virtual f32 GetUpdateRate() const = 0;    // at 0x2C
-
-    virtual bool Bind(const ResMdl mdl) = 0; // at 0x30
-    virtual void Release();                  // at 0x34
+    virtual void G3dProc(u32 task, u32 param, void* pInfo) = 0; // _0C
+    virtual ~AnmObj() {}                                        // _10
+    virtual void SetFrame(f32 frame) = 0; 						// _1C
+    virtual f32 GetFrame() const = 0;     						// _20
+    virtual void UpdateFrame() = 0;       						// _24
+    virtual void SetUpdateRate(f32 rate) = 0; 					// _28
+    virtual f32 GetUpdateRate() const = 0;    					// _2C
+    virtual bool Bind(const ResMdl mdl) = 0; 					// _30
+    virtual void Release();                  					// _34
 
     void SetAnmFlag(AnmFlag flag, bool value);
     bool TestAnmFlag(AnmFlag flag) const;
@@ -53,7 +50,7 @@ public:
     }
 
 private:
-    u32 mFlags; // at 0xC
+    u32 mFlags; // _0C
 };
 
 /******************************************************************************
@@ -108,11 +105,11 @@ public:
     }
 
 private:
-    f32 mFrame;                  // at 0x0
-    f32 mUpdateRate;             // at 0x4
-    f32 mStartFrame;             // at 0x8
-    f32 mEndFrame;               // at 0xC
-    PlayPolicyFunc mpPlayPolicy; // at 0x10
+    f32 mFrame;                  // _00
+    f32 mUpdateRate;             // _04
+    f32 mStartFrame;             // _08
+    f32 mEndFrame;               // _0C
+    PlayPolicyFunc mpPlayPolicy; // _10
 
     static f32 smBaseUpdateRate;
 };

@@ -617,11 +617,11 @@ inline MTX34* MTX34Scale(MTX34* pOut, const VEC3* pScale, const MTX34* pIn)
 	return pOut;
 }
 
-// inline QUAT* MTX34ToQUAT(QUAT* pQuat, const MTX34* pMtx)
-// {
-// 	C_QUATMtx(*pQuat, *pMtx);
-// 	return pQuat;
-// }
+inline QUAT* MTX34ToQUAT(QUAT* pQuat, const MTX34* pMtx)
+{
+ 	C_QUATMtx(*pQuat, *pMtx);
+ 	return pQuat;
+}
 
 inline MTX34* MTX34Trans(MTX34* pOut, const VEC3* pTrans, const MTX34* pIn)
 {
@@ -630,18 +630,18 @@ inline MTX34* MTX34Trans(MTX34* pOut, const VEC3* pTrans, const MTX34* pIn)
 }
 
 // QUAT
-// inline MTX34* QUATToMTX34(MTX34* pMtx, const QUAT* pQuat)
-// {
-// 	PSMTXQuat(*pMtx, *pQuat);
-// 	return pMtx;
-// }
+inline MTX34* QUATToMTX34(MTX34* pMtx, const QUAT* pQuat)
+{
+ 	//PSMTXQuat(*pMtx, *pQuat);
+ 	//return pMtx;
+}
 
 // @bug QUATSlerp macro changes this function name!
-// inline QUAT* C_QUATSlerp(QUAT* pOut, const QUAT* p1, const QUAT* p2, f32 t)
-// {
-// 	::C_QUATSlerp(*p1, *p2, *pOut, t);
-// 	return pOut;
-// }
+inline QUAT* C_QUATSlerp(QUAT* pOut, const QUAT* p1, const QUAT* p2, f32 t)
+{
+ 	::C_QUATSlerp(*p1, *p2, *pOut, t);
+ 	return pOut;
+}
 
 ////////////////////////////////////////////////////////
 

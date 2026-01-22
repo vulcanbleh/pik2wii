@@ -12,7 +12,7 @@ G3dObj::~G3dObj() {
 void G3dObj::Destroy() {
     G3dObj* pParent = GetParent();
 
-    if (pParent != NULL) {
+    if (pParent != nullptr) {
         pParent->G3dProc(G3DPROC_CHILD_DETACHED, 0, this);
     }
 

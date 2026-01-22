@@ -14,6 +14,12 @@ namespace math {
 /////////////////// GLOBAL FUNCTIONS ///////////////////
 
 f32 FrSqrt(f32 x);
+namespace detail {
+
+f32 FExp(f32 x);
+f32 FLog(f32 x);
+
+} // namespace detail
 
 ////////////////////////////////////////////////////////
 /////////////////// INLINE FUNCTIONS ///////////////////
@@ -59,6 +65,10 @@ inline f32 FSqrt(f32 x)
 	return x <= 0.0f ? 0.0f : x * FrSqrt(x);
 }
 
+inline f32 FMod(f32 x, f32 y) {
+    return fmodf(x, y);
+}
+
 inline f32 FModf(f32 x, f32* pY)
 {
 	return modff(x, pY);
@@ -69,9 +79,21 @@ inline f32 FCeil(f32 x)
 	return ceilf(x);
 }
 
+inline f32 FExp(f32 x) {
+    return detail::FExp(x);
+}
+
 inline f32 FFloor(f32 x)
 {
 	return floorf(x);
+}
+
+inline f32 FLog(f32 x) {
+    if (x > 0.0f) {
+        return detail::FLog(x);
+    }
+
+    return NW4R_MATH_QNAN;
 }
 
 inline f32 FSelect(register f32 value, register f32 ge_zero, register f32 lt_zero)

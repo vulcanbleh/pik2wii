@@ -531,7 +531,7 @@ struct ResIndMtxAndScaleDL {
 			u8 PADDING_0x3E[0x40 - 0x3E];         // _3E
 		} dl;
 
-		u8 data[0x40]; // at 0x0
+		u8 data[0x40]; // _0
 	};
 };
 
@@ -550,7 +550,8 @@ public:
 	void CallDisplayList(u8 indNum, bool sync) const;
 
 	bool GXGetIndTexMtx(GXIndTexMtxID id, math::MTX34* pMtx) const;
-	void GXSetIndTexMtx(GXIndTexMtxID id, const math::MTX34& rMtx, s8 scaleExp);
+	bool GXGetIndTexMtx(GXIndTexMtxID id, math::MTX34 *pMtx, s8 *pScaleExp) const;
+    void GXSetIndTexMtx(GXIndTexMtxID id, const math::MTX34 &rMtx, s8 scaleExp);
 
 	void EndEdit() { DCStore(false); }
 
@@ -628,6 +629,41 @@ private:
 	// _00-_04 = ResCommon
 };
 
+struct ResMatFurData {
+    enum LayerInterval {
+        UNIFORM = 0,
+        TIP = 1,
+    };
+    f32 length;                // _00
+    u32 lyrSize;               // _04
+    LayerInterval lyrInterval; // _08
+    f32 alphaCurve;            // _0C
+    f32 specCurve;             // _10
+};
+
+class ResMatFur : public ResCommon<ResMatFurData> {
+public:
+    NW4R_G3D_RESOURCE_FUNC_DEF(ResMatFur);
+
+    void SetLength(f32 len);
+    f32 GetLength() const;
+
+    u32 GetLyrSize() const;
+
+    void SetLytInterval(ResMatFurData::LayerInterval interval);
+    ResMatFurData::LayerInterval GetLytInterval() const;
+
+    void SetAlphaCurve(f32 curve);
+    f32 GetAlphaCurve() const;
+
+    void SetSpecCurve(f32 curve);
+    f32 GetSpecCurve() const;
+
+    f32 GetLyrRate(u32 idx) const;
+
+    ResMatFur CopyTo(void *pDst) const;
+};
+
 ////////////////////////////////////////////////////////
 ////////////////// MATERIAL RESOURCES //////////////////
 ////////////////////////////////////////////////////////
@@ -660,12 +696,13 @@ struct ResMatData {
 	s32 toResTevData;           // _28
 	u32 numResTexPlttInfo;      // _2C
 	s32 toResTexPlttInfo;       // _30
-	s32 toResUserData;          // _34
-	s32 toResMatDLData;         // _38
-	ResTexObjData texObjData;   // _3C
-	ResTlutObjData tlutObjData; // _140
-	ResTexSrtData texSrtData;   // _1A4
-	ResChanData chan;           // _3EC
+	s32 toResMatFurData;        // _34
+	s32 toResUserData;          // _38
+	s32 toResMatDLData;         // _40
+	ResTexObjData texObjData;   // _44
+	ResTlutObjData tlutObjData; // _144
+	ResTexSrtData texSrtData;   // _1A8
+	ResChanData chan;           // _3F0
 };
 
 /**
@@ -692,6 +729,8 @@ public:
 
 	ResTev GetResTev();
 	ResTev GetResTev() const;
+	
+	ResMatFur GetResMatFur();
 
 	u32 GetNumResTexPlttInfo() const { return ref().numResTexPlttInfo; }
 

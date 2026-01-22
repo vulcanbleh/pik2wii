@@ -47,10 +47,20 @@ extern GXTexFmt GXGetTexObjFmt(GXTexObj* obj);
 extern GXBool GXGetTexObjMipMap(GXTexObj* obj);
 extern u32 GXGetTexBufferSize(u16 width, u16 height, u32 format, GXBool mipmap, u8 max_lod);
 u32 GXGetTexObjTlut(const GXTexObj*);
+u16 GXGetTexObjWidth(const GXTexObj *obj);
+u16 GXGetTexObjHeight(const GXTexObj *obj);
+GXTexWrapMode GXGetTexObjWrapS(const GXTexObj *obj);
+u32 GXGetTexObjTlut(const GXTexObj *);
+GXTexWrapMode GXGetTexObjWrapT(const GXTexObj *);
+void *GXGetTexObjData(const GXTexObj *);
+void GXGetTexObjLODAll(const GXTexObj* obj, GXTexFilter* min_filt,
+                       GXTexFilter* mag_filt, f32* minLod, f32* maxLod,
+                       f32* lodBias, GXBool* biasClampEnable,
+                       GXBool* edgeLodEnable, GXAnisotropy* anisotropy);
 
 // Load functions.
-extern void GXLoadTexObjPreLoaded(GXTexObj* obj, GXTexRegion* region, GXTexMapID map);
-extern void GXLoadTexObj(GXTexObj* obj, GXTexMapID map);
+extern void GXLoadTexObjPreLoaded(const GXTexObj* obj, GXTexRegion* region, GXTexMapID map);
+extern void GXLoadTexObj(const GXTexObj* obj, GXTexMapID map);
 
 // Tlut functions.
 extern void GXInitTlutObj(GXTlutObj* obj, void* table, GXTlutFmt format, u16 numEntries);
