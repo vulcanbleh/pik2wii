@@ -34,12 +34,12 @@ typedef struct Quaternion {
 void PSMTXIdentity(Mtx mtx);
 void PSMTXCopy(const Mtx src, Mtx dest);
 void PSMTXConcat(const Mtx A, const Mtx B, Mtx concat);
+void PSMTXConcatArray(const Mtx, const Mtx, Mtx, u32);
 
 void PSMTXTranspose(const Mtx src, Mtx xPose);
 u32 PSMTXInverse(const Mtx src, Mtx inv);
 u32 PSMTXInvXpose(const Mtx src, Mtx xPose);
 
-void __PSMTXRotAxisRadInternal(Mtx mtx, const Vec* axis, f32 sinA, f32 cosA);
 void PSMTXRotRad(Mtx mtx, char axis, f32 angle);
 void PSMTXRotTrig(Mtx mtx, char axis, f32 sinA, f32 cosA);
 void PSMTXRotAxisRad(Mtx mtx, const Vec* axis, f32 angle);

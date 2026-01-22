@@ -3,6 +3,18 @@
 
 // Many thanks to OGWS and SS decomps for most of this work!
 
+
+#include <nw4r/g3d/g3d_3dsmax.h>
+#include <nw4r/g3d/g3d_basic.h>
+#include <nw4r/g3d/g3d_calcview.h>
+#include <nw4r/g3d/g3d_dcc.h>
+#include <nw4r/g3d/g3d_light.h>
+#include <nw4r/g3d/g3d_maya.h>
+#include <nw4r/g3d/g3d_obj.h>
+#include <nw4r/g3d/g3d_rtti.h>
+#include <nw4r/g3d/g3d_workmem.h>
+#include <nw4r/g3d/g3d_xsi.h>
+
 ////////////////////////////////////////////////////////
 /////////////////////// RESOURCES //////////////////////
 ////////////////////////////////////////////////////////

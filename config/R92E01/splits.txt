@@ -7192,8 +7192,8 @@ nw4r/g3d/g3d_anmscn.cpp:
 
 nw4r/g3d/g3d_obj.cpp:
 	.text       start:0x80514360 end:0x805143E8
-	.rodata     start:0x8055E5F0 end:0x8055E600
-	.data       start:0x805D1588 end:0x805D15A8
+	.rodata     start:0x8055E5F0 end:0x8055E5FC
+	.data       start:0x805D1588 end:0x805D15A4
 
 nw4r/g3d/g3d_anmobj.cpp:
 	.text       start:0x805143E8 end:0x805144A0
@@ -7219,10 +7219,12 @@ nw4r/g3d/g3d_state.cpp:
 
 nw4r/g3d/g3d_draw1mat1shp.cpp:
 	.text       start:0x80518420 end:0x80519154
+	.sdata2     start:0x806760E8 end:0x80676108
 
 nw4r/g3d/g3d_calcview.cpp:
 	.text       start:0x80519154 end:0x8051AFF4
-	.rodata     start:0x8055E650 end:0x8055E718
+	.rodata     start:0x8055E650 end:0x8055E66C
+	.sdata2     start:0x80676108 end:0x8067610C
 
 nw4r/g3d/g3d_dcc.cpp:
 	.text       start:0x8051AFF4 end:0x8051B0D0
@@ -7246,15 +7248,22 @@ nw4r/g3d/g3d_camera.cpp:
 
 nw4r/g3d/g3d_basic.cpp:
 	.text       start:0x8051E374 end:0x8051E638
+	.sdata2     start:0x80676158 end:0x80676164
 
 nw4r/g3d/g3d_maya.cpp:
 	.text       start:0x8051E638 end:0x8051F2F8
+	.rodata     start:0x8055E670 end:0x8055E6A8
+	.sdata2     start:0x80676168 end:0x8067617C
 
 nw4r/g3d/g3d_xsi.cpp:
 	.text       start:0x8051F2F8 end:0x8051FEB8
+	.rodata     start:0x8055E6A8 end:0x8055E6E0
+	.sdata2     start:0x80676180 end:0x8067618C
 
 nw4r/g3d/g3d_3dsmax.cpp:
 	.text       start:0x8051FEB8 end:0x80520968
+	.rodata     start:0x8055E6E0 end:0x8055E718
+	.sdata2     start:0x80676190 end:0x806761A4
 
 nw4r/g3d/g3d_scnobj.cpp:
 	.text       start:0x80520968 end:0x80522070
@@ -7285,14 +7294,15 @@ nw4r/g3d/g3d_calcmaterial.cpp:
 nw4r/g3d/g3d_init.cpp:
 	.text       start:0x80528180 end:0x8052827C
 	.data       start:0x805D17C0 end:0x805D1808
-	.sdata      start:0x8066B868 end:0x8066B870
+	.sdata      start:0x8066B868 end:0x8066B86C
 
 nw4r/g3d/g3d_fog.cpp:
 	.text       start:0x8052827C end:0x805283F0
-	.sdata2     start:0x806761C0 end:0x806761C8
+	.sdata2     start:0x806761C0 end:0x806761C4
 
 nw4r/g3d/g3d_light.cpp:
 	.text       start:0x805283F0 end:0x80528B14
+	.sdata2     start:0x806761C8 end:0x806761F4
 
 nw4r/g3d/g3d_calcvtx.cpp:
 	.text       start:0x80528B14 end:0x8052930C
