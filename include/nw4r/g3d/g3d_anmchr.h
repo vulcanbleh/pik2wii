@@ -22,33 +22,27 @@ public:
 
 public:
     AnmObjChr(MEMAllocator* pAllocator, u16* pBindingBuf, int numBinding);
-    virtual void G3dProc(u32 task, u32 param, void* pInfo) = 0; // _C
-    virtual ~AnmObjChr() {}                                     // _10
-
-    virtual void SetFrame(f32 frame) = 0; // _1C
-    virtual f32 GetFrame() const = 0;     // _20
-    virtual void UpdateFrame() = 0;       // _24
-
-    virtual void SetUpdateRate(f32 rate) = 0; // _28
-    virtual f32 GetUpdateRate() const = 0;    // _2C
-
-    virtual bool Bind(const ResMdl mdl) = 0; // _30
-    virtual void Release();                  // _34
-
+    
+	virtual void G3dProc(u32 task, u32 param, void* pInfo) = 0; 	// _0C
+    virtual ~AnmObjChr() {}                                     	// _10
+    virtual void SetFrame(f32 frame) = 0;						 	// _1C
+    virtual f32 GetFrame() const = 0;     							// _20
+    virtual void UpdateFrame() = 0;       							// _24
+    virtual void SetUpdateRate(f32 rate) = 0; 						// _28
+    virtual f32 GetUpdateRate() const = 0;    						// _2C
+    virtual bool Bind(const ResMdl mdl) = 0; 						// _30
+    virtual void Release();                  						// _34
     virtual const ChrAnmResult* GetResult(ChrAnmResult* pResult,
-                                          u32 idx) = 0; // _38
-
-    virtual AnmObjChrRes* Attach(int idx, AnmObjChrRes* pRes); // _3C
-    virtual AnmObjChrRes* Detach(int idx);                     // _40
-    virtual void DetachAll();                                  // _44
-
-    virtual void SetWeight(int idx, f32 weight); // _48
-    virtual f32 GetWeight(int idx) const;        // _4C
-
+                                          u32 idx) = 0; 			// _38
+    virtual AnmObjChrRes* Attach(int idx, AnmObjChrRes* pRes); 		// _3C
+    virtual AnmObjChrRes* Detach(int idx);                     		// _40
+    virtual void DetachAll();                                  		// _44
+    virtual void SetWeight(int idx, f32 weight); 					// _48
+    virtual f32 GetWeight(int idx) const;        					// _4C
     virtual bool Bind(const ResMdl mdl, u32 target,
-                      BindOption option) = 0; // _50
+                      BindOption option) = 0; 						// _50
     virtual void Release(const ResMdl mdl, u32 target,
-                         BindOption option) = 0; // _54
+                         BindOption option) = 0; 					// _54
 
     bool TestExistence(u32 idx) const;
     bool TestDefined(u32 idx) const;

@@ -27,8 +27,8 @@ void CalcVtx(ResMdl mdl, AnmObjShp* pAnmShp, ResVtxPosData** ppVtxPosTable,
 
         if (pResult->flags & ShpAnmResult::FLAG_ANM_VTXPOS) {
             struct KeyShape {
-                const math::VEC3* pVtx; // at 0x0
-                f32 weight;             // at 0x4
+                const math::VEC3* pVtx; // _00
+                f32 weight;             // _04
             };
 
             ResVtxPos basePos = pResult->baseShapeVtxSet.resVtxPos;
@@ -126,8 +126,8 @@ void CalcVtx(ResMdl mdl, AnmObjShp* pAnmShp, ResVtxPosData** ppVtxPosTable,
             ppVtxNrmTable != nullptr) {
 
             struct KeyShape {
-                const math::VEC3* pVtx; // at 0x0
-                f32 weight;             // at 0x4
+                const math::VEC3* pVtx; // _00
+                f32 weight;             // _04
             };
 
             ResVtxNrm baseNrm = pResult->baseShapeVtxSet.resVtxNrm;
@@ -225,8 +225,8 @@ void CalcVtx(ResMdl mdl, AnmObjShp* pAnmShp, ResVtxPosData** ppVtxPosTable,
             ppVtxClrTable != nullptr) {
 
             struct KeyShape {
-                const ut::Color* pVtx; // at 0x0
-                f32 weight;            // at 0x4
+                const ut::Color* pVtx; // _00
+                f32 weight;            // _04
             };
 
             ResVtxClr baseClr = pResult->baseShapeVtxSet.resVtxClr;
