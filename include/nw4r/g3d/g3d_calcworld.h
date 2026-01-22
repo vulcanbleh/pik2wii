@@ -38,16 +38,13 @@ void CalcSkinning(math::MTX34* pModelMtxArray, u32* pModelMtxAttribArray,
  ******************************************************************************/
 class ICalcWorldCallback {
 public:
-    virtual ~ICalcWorldCallback() {} // at 0x8
-
+    virtual ~ICalcWorldCallback() {} // _08
     virtual void ExecCallbackA(ChrAnmResult* pResult, ResMdl mdl,
-                               FuncObjCalcWorld* pFuncObj) = 0; // at 0xC
-
+                               FuncObjCalcWorld* pFuncObj) = 0; // _0C
     virtual void ExecCallbackB(WorldMtxManip* pManip, ResMdl mdl,
-                               FuncObjCalcWorld* pFuncObj) = 0; // at 0x10
-
+                               FuncObjCalcWorld* pFuncObj) = 0; // _10
     virtual void ExecCallbackC(math::MTX34* pMtxArray, ResMdl mdl,
-                               FuncObjCalcWorld* pFuncObj) = 0; // at 0x14
+                               FuncObjCalcWorld* pFuncObj) = 0; // _14
 };
 
 /******************************************************************************
@@ -75,9 +72,9 @@ public:
     }
 
 private:
-    math::MTX34* mpM; // at 0x0
-    math::VEC3* mpS;  // at 0x4
-    u32* mpWMAttr;    // at 0x8
+    math::MTX34* mpM; // _00
+    math::VEC3* mpS;  // _04
+    u32* mpWMAttr;    // _08
 };
 
 /******************************************************************************
@@ -121,10 +118,10 @@ public:
     }
 
 private:
-    ICalcWorldCallback* mpCallback; // at 0x0
-    u8 mTiming;                     // at 0x4
-    u8 PADDING_0x5;                 // at 0x5
-    u16 mNodeID;                    // at 0x6
+    ICalcWorldCallback* mpCallback; // _00
+    u8 mTiming;                     // _04
+    u8 PADDING_0x5;                 // _05
+    u16 mNodeID;                    // _06
 };
 
 } // namespace g3d
