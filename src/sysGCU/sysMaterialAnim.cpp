@@ -6,6 +6,12 @@
 #include "Sys/MatBaseAnimator.h"
 #include "System.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "matAnim";
+}
+
 namespace Sys {
 
 /**
@@ -250,7 +256,7 @@ void MatRepeatAnimator::do_animate(f32 rate)
 			mStarted = false;
 		}
 	} else {
-		u32 state = backward(rate);
+		u32 state = forward(-rate);
 		if (state == MatBaseAnimator::AtStart) {
 			mStarted = true;
 		}

@@ -8,8 +8,11 @@
 #include "nans.h"
 #include "trig.h"
 
-static const int unusedArray[] = { 0, 0, 0 };
-static const char name[]       = "movieMessage";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "movieMessage";
+}
 
 namespace P2JME {
 namespace Movie {
@@ -33,7 +36,7 @@ WindowPane::WindowPane()
  */
 void WindowPane::doInit()
 {
-	mInitialPosition = Vector3f(mPane->mOffset.x, mPane->mOffset.y, 0.0f);
+	mInitialPosition.set(mPane->getOffsetX(), mPane->getOffsetY(), 0.0f);
 }
 
 /**
@@ -201,8 +204,8 @@ PodIconScreen::PodIconScreen()
     , mAnmTexPattern(nullptr)
     , mAnmTexPatternTimer(0.0f)
 {
-	u16 y = sys->getRenderModeHeight();
-	u16 x = sys->getRenderModeWidth();
+	f32 y = sys->getRenderModeObj()->efbHeight;
+	f32 x = sys->getRenderModeObj()->fbWidth;
 	mInitialPos.set(x * 0.75f, y, 100.0f);
 	reset();
 	hide();
@@ -1321,7 +1324,7 @@ TControl::EModeFlag TControl::setMode(EModeFlag mode)
 		PodIconScreen* podIconScreen = mPodIcon;
 		if ((randFloat() * 2.0f)) {
 			_GXRenderModeObj* renderObj = System::getRenderModeObj();
-			u16 efbHeight               = renderObj->efbHeight;
+			u16 efbHeight               = System::getRenderModeObj()->efbHeight;
 			renderObj                   = System::getRenderModeObj();
 			u16 fbWidth                 = renderObj->fbWidth;
 			podIconScreen->mPosition.x  = (randFloat() * 0.5f + 0.3f) * fbWidth;

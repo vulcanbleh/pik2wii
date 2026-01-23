@@ -1,6 +1,12 @@
 #include "P2JME/messageObj.h"
 #include "System.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "messageObj";
+}
+
 namespace P2JME {
 
 /**

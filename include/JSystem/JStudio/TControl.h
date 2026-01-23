@@ -52,13 +52,7 @@ struct TControl : public stb::TControl {
 	// unused/inlined:
 	void forward_value(u32);
 
-	void setFactory(TFactory* factory)
-	{
-		stb::TFactory* stb_factory = factory;
-		fvb::TFactory* fvb_factory = factory == nullptr ? nullptr : &factory->mFvbFactory;
-		stb::TControl::setFactory(stb_factory);
-		mFvbControl.setFactory(fvb_factory);
-	}
+	void setFactory(TFactory* factory);
 
 	fvb::TObject* fvb_getObject(const void* id, u32 length) { return mFvbControl.getObject(id, length); }
 

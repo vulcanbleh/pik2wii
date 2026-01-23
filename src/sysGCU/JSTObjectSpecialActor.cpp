@@ -5,6 +5,12 @@
 #include "System.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "ObjectSpecialActor";
+}
+
 namespace Game {
 namespace P2JST {
 
@@ -119,7 +125,6 @@ void ObjectSpecialActor::update()
  */
 void ObjectSpecialActor::JSGSetAnimation(u32 commandID)
 {
-	JSGGetName();
 	JUT_ASSERTLINE(187, mCurrCommandCount < 16, "too many commands !\n");
 	mCommands[mCurrCommandCount++] = commandID;
 }
