@@ -35,6 +35,14 @@ TControl::~TControl()
 {
 }
 
+void TControl::setFactory(TFactory* factory)
+{
+	stb::TFactory* stb_factory = factory;
+	fvb::TFactory* fvb_factory = factory == nullptr ? nullptr : &factory->mFvbFactory;
+	stb::TControl::setFactory(stb_factory);
+	mFvbControl.setFactory(fvb_factory);
+}
+
 /**
  * @note Address: 0x8000CBA4
  * @note Size: 0x80

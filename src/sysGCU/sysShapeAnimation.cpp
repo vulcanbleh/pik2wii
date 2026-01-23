@@ -14,7 +14,6 @@ namespace SysShape {
 
 static void strippedFunc()
 {
-	OSReport("\0\0\0\0\0\0\0\0\0\0\0");
 	OSReport("sysShapeModel");
 }
 

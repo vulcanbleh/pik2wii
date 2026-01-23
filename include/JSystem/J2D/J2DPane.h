@@ -274,7 +274,8 @@ struct J2DPane {
 
 	inline void updateScale(f32 scaleX, f32 scaleY) // called scale in TP
 	{
-		mScale = JGeometry::TVec2f(scaleX, scaleY);
+		mScale.x = scaleX;
+        mScale.y = scaleY;
 		calcMtx();
 	}
 
@@ -309,7 +310,8 @@ struct J2DPane {
 
 	inline void setOffset(f32 x, f32 y) // called translate in TP
 	{
-		mOffset = JGeometry::TVec2f(x, y);
+		mOffset.x = x;
+		mOffset.y = y;
 		calcMtx();
 	}
 
@@ -330,6 +332,8 @@ struct J2DPane {
 		mOffset.y = y;
 		calcMtx();
 	}
+	
+	inline f32 getOffsetX() { return mOffset.x; }
 
 	inline f32 getOffsetY() { return mOffset.y; }
 

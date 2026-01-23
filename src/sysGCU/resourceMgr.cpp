@@ -2,6 +2,12 @@
 #include "Resource.h"
 #include "System.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "resourceMgr";
+}
+
 namespace Resource {
 
 /**
@@ -34,7 +40,9 @@ Node::~Node()
  */
 void Node::dump()
 {
-	// UNUSED FUNCTION
+	// here for rodata
+	OSReport("HeapID %3d %dKB(%d) used");
+	OSReport("\t%s");
 }
 
 /**
@@ -134,6 +142,8 @@ void MgrCommand::releaseCurrentHeap()
  */
 bool MgrCommand::isFinish()
 {
+	FORCE_DONT_INLINE
+	
 	bool result = false;
 
 	switch (mMode) {
@@ -239,9 +249,9 @@ void MgrCommand::aramLoadCallBackFunc()
  * @note Size: 0xBC
  */
 void MgrCommand::dvdLoadCallBackFunc()
-{
-	bool loaded      = true;
+{	
 	const char* path = mCommandNode.mNode->mName;
+	bool loaded      = true;
 	mCommandNode.mNode->mHeap->changeGroupID(mCommandNode.mNode->mHeapGroupID);
 	if (path[0]) {
 		u32 size;
@@ -357,10 +367,10 @@ Node* Mgr::createNewNode(char const* path)
 	u8 id     = mHeap->getCurrentGroupId();
 	int nodes = 0;
 
-	// this is extremely dumb, but the for loop wont unroll correctly unless its exactly like this
 	u8 useList[256];
-	for (u32 i = 0; i < 256; i += 4) {
-		*(u32*)&useList[i] = 0;
+	for (u32 i = 0; i < 64; i++) {
+		reinterpret_cast<u32*>(useList)[i] = 0;
+		
 	}
 
 	FOREACH_NODE(Node, mNodes.mChild, node)

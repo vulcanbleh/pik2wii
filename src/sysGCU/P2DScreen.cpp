@@ -96,10 +96,10 @@ Mgr_tuning::Mgr_tuning()
  */
 void Mgr_tuning::draw(Graphics& gfx, J2DGrafContext& context)
 {
-	u16 frameBufferWidth  = System::getRenderModeObj()->fbWidth;
-	u16 frameBufferHeight = System::getRenderModeObj()->efbHeight;
+	f32 frameBufferWidth  = System::getRenderModeObj()->fbWidth * 0.5f;
+	f32 frameBufferHeight = System::getRenderModeObj()->efbHeight * 0.5f;
 
-	rotate(frameBufferWidth * 0.5f, frameBufferHeight * 0.5f, J2DROTATE_Z, 0.0f);
+	rotate(frameBufferWidth, frameBufferHeight, J2DROTATE_Z, 0.0f);
 	updateScale(mScreenScaleX, mScreenScaleY);
 	setOffset(mTranslationX, mTranslationY);
 
