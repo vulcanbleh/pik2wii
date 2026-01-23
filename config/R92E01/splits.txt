@@ -6484,13 +6484,13 @@ sysGCU/fogMgr.cpp:
 sysGCU/aramMgr.cpp:
 	.text       start:0x804BA6C4 end:0x804BACAC
 	.rodata     start:0x8055A338 end:0x8055A370
-	.data       start:0x805CD4B0 end:0x805CD4F0
+	.data       start:0x805CD4B0 end:0x805CD4C0
 	.sbss       start:0x8066D278 end:0x8066D280
 
 sysGCU/resourceMgr.cpp:
 	.text       start:0x804BACAC end:0x804BBA5C
 	.rodata     start:0x8055A370 end:0x8055A3D0
-	.data       start:0x805CD4F0 end:0x805CD570
+	.data       start:0x805CD4C0 end:0x805CD57C
 
 sysGCU/resourceMgr2D.cpp:
 	.text       start:0x804BBA5C end:0x804BBB04
