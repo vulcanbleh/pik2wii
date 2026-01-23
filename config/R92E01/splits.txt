@@ -1951,7 +1951,7 @@ RevoSDK/ax/AXAux.c:
 RevoSDK/ax/AXCL.c:
 	.text       start:0x80112C10 end:0x80113674
 	.bss        start:0x805DB300 end:0x805DB400
-	.sbss       start:0x8066C018 end:0x8066C030
+	.sbss       start:0x8066C018 end:0x8066C034
 
 RevoSDK/ax/AXOut.c:
 	.text       start:0x80113674 end:0x80113D24
