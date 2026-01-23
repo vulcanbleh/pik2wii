@@ -1065,19 +1065,20 @@ config.libs = [
     },
     {
         "lib": "ax",
-        "cflags": [*cflags_revo, "-str noreadonly"],  # unknown
+        "cflags": [*cflags_revo, "-str noreadonly", "-ipa file"],  # unknown
         "mw_version": "GC/3.0a3p1",  # unknown
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "RevoSDK/ax/AX.c"),
-            Object(NonMatching, "RevoSDK/ax/AXAlloc.c"),
-            Object(NonMatching, "RevoSDK/ax/AXAux.c"),
-            Object(NonMatching, "RevoSDK/ax/AXCL.c"),
-            Object(NonMatching, "RevoSDK/ax/AXComp.c"),
-            Object(NonMatching, "RevoSDK/ax/AXOut.c"),
-            Object(NonMatching, "RevoSDK/ax/AXSPB.c"),
-            Object(NonMatching, "RevoSDK/ax/AXVPB.c"),
-            Object(NonMatching, "RevoSDK/ax/AXProf.c"),
+            Object(Matching, "RevoSDK/ax/AX.c"),
+            Object(Matching, "RevoSDK/ax/AXAlloc.c"),
+            Object(Matching, "RevoSDK/ax/AXAux.c"),
+            Object(Matching, "RevoSDK/ax/AXCL.c"),
+            Object(Matching, "RevoSDK/ax/AXOut.c"),
+            Object(Matching, "RevoSDK/ax/AXSPB.c"),
+            Object(Matching, "RevoSDK/ax/AXVPB.c"),
+            Object(Matching, "RevoSDK/ax/AXComp.c"),
+            Object(Matching, "RevoSDK/ax/DSPCode.c"),
+            Object(Matching, "RevoSDK/ax/AXProf.c"),
         ],
     },
     {
@@ -1111,7 +1112,6 @@ config.libs = [
         "mw_version": "GC/3.0a3p1",
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "RevoSDK/dsp/DSPCode.c"),
             Object(NonMatching, "RevoSDK/dsp/dsp.c"),
             Object(Matching, "RevoSDK/dsp/dsp_debug.c"),
             Object(NonMatching, "RevoSDK/dsp/dsp_task.c"),

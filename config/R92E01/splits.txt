@@ -1566,9 +1566,6 @@ JSystem/JParticle/JPATexture.cpp:
 RevoSDK/MSL_C/MSL_Common/locale.c:
 	.data       start:0x8056BFE0 end:0x8056C1D8
 
-RevoSDK/ax/AXComp.c:
-	.data       start:0x8056C700 end:0x8056D6C0
-
 JSystem/JStage/JSGSystem.cpp:
 	.text       start:0x800FE18C end:0x800FE204
 
@@ -1716,10 +1713,6 @@ RevoSDK/runtime/__init_cpp_exceptions.cpp:
 
 RevoSDK/MSL_C/MSL_Common/float.c:
 	.sdata      start:0x8066AAA8 end:0x8066AAB8
-
-RevoSDK/dsp/DSPCode.c:
-	.data       start:0x8056D6C0 end:0x8056F6C0
-	.sdata      start:0x8066AAC8 end:0x8066AAD8
 
 RevoSDK/runtime/Gecko_ExceptionPPC.cp:
 	.text       start:0x801049DC end:0x80104A40
@@ -1941,32 +1934,47 @@ RevoSDK/ai/ai.c:
 
 RevoSDK/ax/AX.c:
 	.text       start:0x80112070 end:0x801120CC
+	.data       start:0x8056C618 end:0x8056C660
+	.sdata      start:0x8066AAC0 end:0x8066AAC4
 	.sbss       start:0x8066BFC0 end:0x8066BFC8
 
 RevoSDK/ax/AXAlloc.c:
 	.text       start:0x801120CC end:0x801124E8
+	.bss        start:0x805D8068 end:0x805D8168
 	.sbss       start:0x8066BFC8 end:0x8066BFD0
 
 RevoSDK/ax/AXAux.c:
 	.text       start:0x801124E8 end:0x80112C10
+	.bss        start:0x805D8180 end:0x805DB300
 	.sbss       start:0x8066BFD0 end:0x8066C018
 
 RevoSDK/ax/AXCL.c:
 	.text       start:0x80112C10 end:0x80113674
-	.sbss       start:0x8066C018 end:0x8066C030
+	.bss        start:0x805DB300 end:0x805DB400
+	.sbss       start:0x8066C018 end:0x8066C034
 
 RevoSDK/ax/AXOut.c:
 	.text       start:0x80113674 end:0x80113D24
-	.bss        start:0x805DC1C0 end:0x805DC200
-	.sbss       start:0x8066C038 end:0x8066C078
+	.bss        start:0x805DB400 end:0x805DC200
+	.sbss       start:0x8066C038 end:0x8066C074
 
 RevoSDK/ax/AXSPB.c:
 	.text       start:0x80113D24 end:0x80114144
+	.bss        start:0x805DC200 end:0x805DC278
 	.sbss       start:0x8066C078 end:0x8066C0C8
 
 RevoSDK/ax/AXVPB.c:
 	.text       start:0x80114144 end:0x80114CAC
+	.data       start:0x8056C660 end:0x8056C700
+	.bss        start:0x805DC280 end:0x805ED980
 	.sbss       start:0x8066C0C8 end:0x8066C0E8
+
+RevoSDK/ax/AXComp.c:
+	.data       start:0x8056C700 end:0x8056D6C0
+
+RevoSDK/ax/DSPCode.c:
+	.data       start:0x8056D6C0 end:0x8056F6C0
+	.sdata      start:0x8066AAC8 end:0x8066AAD0
 
 RevoSDK/ax/AXProf.c:
 	.text       start:0x80114CAC end:0x80114CEC
