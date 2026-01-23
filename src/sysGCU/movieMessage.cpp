@@ -1324,7 +1324,7 @@ TControl::EModeFlag TControl::setMode(EModeFlag mode)
 		PodIconScreen* podIconScreen = mPodIcon;
 		if ((randFloat() * 2.0f)) {
 			_GXRenderModeObj* renderObj = System::getRenderModeObj();
-			u16 efbHeight               = System::getRenderModeObj()->efbHeight;
+			u16 efbHeight               = renderObj->efbHeight;
 			renderObj                   = System::getRenderModeObj();
 			u16 fbWidth                 = renderObj->fbWidth;
 			podIconScreen->mPosition.x  = (randFloat() * 0.5f + 0.3f) * fbWidth;
