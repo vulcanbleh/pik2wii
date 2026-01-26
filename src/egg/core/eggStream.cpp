@@ -1,5 +1,4 @@
 #include <egg/core/eggStream.h>
-#include <egg/prim/eggAssert.h>
 
 #include <stdarg.h>
 #include <stdio.h>
@@ -556,5 +555,6 @@ void RamStream::write(u8* pSrc, u32 size) {
 bool RamStream::eof() {
     return mPosition > mBufferSize;
 }
+
 
 } // namespace EGG
