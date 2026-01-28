@@ -9,6 +9,12 @@
 #include "RevoSDK/rand.h"
 #include "efx/TEnemyDive.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "jigumo";
+}
+
 namespace Game {
 namespace Jigumo {
 
@@ -119,7 +125,7 @@ void Obj::onInit(CreatureInitArg* initArg)
 	fadeEfxHamon();
 	mNextFaceDir       = mFaceDir;
 	mClimbingTimer     = 0;
-	mCurrentFaceNormal = Vector3f(0.0f, 1.0f, 0.0f);
+	mCurrentFaceNormal.set(0.0f, 1.0f, 0.0f);
 	mWantedFaceNormal  = mCurrentFaceNormal;
 	mPauseTriggerTime  = 0.0f;
 	mPauseTimer        = 0.0f;
@@ -280,7 +286,7 @@ void Obj::doGetLifeGaugeParam(LifeGaugeParam& param)
 {
 	bool isVisible = false;
 
-	param.mPosition = Vector3f(mPosition.x, C_PARMS->mLifeGaugeOffset * mScaleModifier + (C_GENERALPARMS.mLifeMeterHeight() + mPosition.y),
+	param.mPosition.set(mPosition.x, C_PARMS->mLifeGaugeOffset * mScaleModifier + (C_GENERALPARMS.mLifeMeterHeight() + mPosition.y),
 	                           mPosition.z);
 	param.mCurrHealthRatio = (mHealth / mMaxHealth);
 	param.mRadius          = 10.0f;
@@ -387,15 +393,21 @@ void Obj::outWaterCallback()
 
 	switch (getStateID()) {
 	case JIGUMO_Attack:
-		mEfxAttack->create(&fxArg);
+		if (!isEvent(0, EB_Bittered)){
+			mEfxAttack->create(&fxArg);
+		}
 		mEfxAttackW->fade();
 		break;
 	case JIGUMO_Carry:
-		mEfxBack->create(&fxArg);
+		if (!isEvent(0, EB_Bittered)){
+			mEfxBack->create(&fxArg);	
+		}
 		mEfxBackW->fade();
 		break;
 	case JIGUMO_Return:
-		mEfxSmoke->create(&fxArg);
+		if (!isEvent(0, EB_Bittered)){
+			mEfxSmoke->create(&fxArg);
+		}
 		break;
 	}
 }
@@ -413,11 +425,15 @@ void Obj::inWaterCallback(WaterBox* wb)
 	case JIGUMO_Attack:
 		mEffectPosition   = mPosition;
 		mEffectPosition.y = *mWaterBox->getSeaHeightPtr();
-		mEfxAttackW->create(&fxArg);
+		if (!isEvent(0, EB_Bittered)){
+			mEfxAttackW->create(&fxArg);
+		}
 		mEfxAttack->fade();
 		break;
 	case JIGUMO_Carry:
-		mEfxBackW->create(&fxArg);
+		if (!isEvent(0, EB_Bittered)){
+			mEfxBackW->create(&fxArg);
+		}
 		mEfxBack->fade();
 		break;
 	case JIGUMO_Return:
@@ -523,6 +539,7 @@ void Obj::doSimulationGround(f32 step)
  */
 void Obj::onKill(CreatureKillArg* killArg)
 {
+	effectStop();
 	EnemyBase::onKill(killArg);
 	killNest();
 }
@@ -576,7 +593,7 @@ void Obj::doStartStoneState()
 	setAlive(true);
 	setAtari(true);
 	int stateID = getStateID();
-	if (stateID == JIGUMO_Wait || stateID == JIGUMO_Appear || stateID == JIGUMO_Hide || stateID == JIGUMO_Search) {
+	if (stateID == JIGUMO_Hide || stateID == JIGUMO_Appear || stateID == JIGUMO_Wait || stateID == JIGUMO_Search) {
 		mBodyRadius = 30.0f * mScaleModifier;
 	}
 }
@@ -594,7 +611,7 @@ void Obj::doFinishStoneState()
 	}
 
 	int stateID = getStateID();
-	if (stateID == JIGUMO_Wait || stateID == JIGUMO_Appear || stateID == JIGUMO_Hide || stateID == JIGUMO_Search) {
+	if (stateID == JIGUMO_Hide || stateID == JIGUMO_Appear || stateID == JIGUMO_Wait || stateID == JIGUMO_Search) {
 		disableEvent(0, EB_LifegaugeVisible);
 		setAlive(false);
 		setAtari(false);
@@ -741,9 +758,10 @@ void Obj::walkFunc()
 
 		// adjust target velocity
 		f32 theta     = prevFaceDir + turnAngle;
-		f32 velocityX = walkSpeed * sinf(theta);
-		f32 velocityY = getTargetVelocity().y;
-		f32 velocityZ = walkSpeed * cosf(theta);
+		Vector3f velocity;
+		velocity.x = walkSpeed * sinf(theta);
+		velocity.y = getTargetVelocity().y;
+		velocity.z = walkSpeed * cosf(theta);
 
 		mNextFaceDir = prevFaceDir;
 
@@ -761,7 +779,7 @@ void Obj::walkFunc()
 		// Update the face direction and target velocity
 		mFaceDir += roundAng(PI * flipFaceDir + turnAngle);
 		mRotation.y     = mFaceDir;
-		mTargetVelocity = Vector3f(velocityX, velocityY, velocityZ);
+		setTargetVelocity(velocity);
 
 		// mPauseSpeedModifier is 0.15f by default, so this doesn't run
 		// but if modifier is meant to make speed 0... make speed HARD 0.
@@ -774,11 +792,7 @@ void Obj::walkFunc()
 	}
 
 	if (stateID == JIGUMO_Attack) {
-		f32 x = dolsinf(getFaceDir());
-		f32 y = getTargetVelocity().y;
-		f32 z = dolcosf(getFaceDir());
-
-		mTargetVelocity = Vector3f(walkSpeed * x, y, walkSpeed * z);
+		setTargetSpeed(walkSpeed);
 
 		return;
 	}
@@ -1371,11 +1385,11 @@ Vector3f Obj::getOffsetForMapCollision()
 
 	// we're going backwards, offset collision behind us 2 units
 	if (mIsReversing) {
-		return Vector3f(-2.0f * sinf(mFaceDir), 0.0f, -2.0f * cosf(mFaceDir));
+		return Vector3f(-2.0f * cosf(mFaceDir), 0.0f, -2.0f * sinf(mFaceDir));
 	}
 
 	// we're going forwards, offset collision in front of us 2 units
-	return Vector3f(2.0f * sinf(mFaceDir), 0.0f, 2.0f * cosf(mFaceDir));
+	return Vector3f(2.0f * cosf(mFaceDir), 0.0f, 2.0f * sinf(mFaceDir));
 }
 
 /**
@@ -1457,7 +1471,7 @@ void Obj::calcBaseTrMatrix()
 		}
 
 		if (isConstrained()) {
-			mWantedFaceNormal = Vector3f(0.0f, 1.0f, 0.0f);
+			mWantedFaceNormal.set(0.0f, 1.0f, 0.0f);
 		}
 
 		if (mCurrentFaceNormal.x != mWantedFaceNormal.x || mCurrentFaceNormal.y != mWantedFaceNormal.y
@@ -1588,7 +1602,7 @@ void Obj::velocityControl()
 FakePiki* Obj::getNearestPikiOrNavi(f32 angle, f32 radius)
 {
 	f32 pikiDist = radius;
-	pikiDist *= radius;
+	pikiDist *= pikiDist;
 
 	f32 naviDist = pikiDist;
 	Piki* piki   = EnemyFunc::getNearestPikmin(this, angle, radius, &pikiDist, nullptr);

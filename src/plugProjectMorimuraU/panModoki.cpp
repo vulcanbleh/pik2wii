@@ -13,6 +13,12 @@
 #include "efx/TPan.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "panModoki";
+}
+
 namespace Game {
 
 /**
@@ -97,7 +103,7 @@ void Obj::onInit(CreatureInitArg* args)
 	mWpIndex1             = 0;
 	mWpIndex3             = 0;
 	mWpIndex2             = 0;
-	mPelletCarryVelocity  = 0.0f;
+	mPelletCarryVelocity.set(0.0f, 0.0f, 0.0f);
 	mIsCarryStuck         = 0;
 
 	mBodyJoint = mModel->getJoint("body");
@@ -478,7 +484,7 @@ bool Obj::damageCallBack(Creature* source, f32 damage, CollPart* part)
  */
 bool Obj::pressCallBack(Creature* creature, f32 damage, CollPart* part)
 {
-	if (mHealth <= 0.0f) {
+	if (isDead()) {
 		return false;
 	}
 	if (creature && creature->isPiki()) {
@@ -703,6 +709,7 @@ void Obj::initMouthSlots()
  */
 void Obj::onKill(CreatureKillArg* settings)
 {
+	fadePulledSmokeEffect();
 	EnemyBase::onKill(settings);
 	throwUpEatItem();
 	releasePathFinder();
@@ -818,6 +825,8 @@ void Obj::findNextRoutePoint(bool cond)
 				mNextWayPointPosition   = mPosition;
 				mNextWayPointPosition.x = -(sinf(mFaceDir) * 100.0f - mNextWayPointPosition.x);
 				mNextWayPointPosition.z = -(cosf(mFaceDir) * 100.0f - mNextWayPointPosition.z);
+			} else {
+				mNextWayPointPosition   = Vector3f(routeMgr->getWayPoint(mWpIndex2)->mPosition);
 				return;
 			}
 
@@ -827,7 +836,7 @@ void Obj::findNextRoutePoint(bool cond)
 	}
 
 	WayPoint* wp2 = routeMgr->getWayPoint(mWpIndex2);
-	P2ASSERTLINE(993, wp2);
+	P2ASSERTLINE(995, wp2);
 	s16 idxArray[8];
 	int counter = 0;
 
@@ -1011,7 +1020,7 @@ bool Obj::isReachToGoal(f32 radius)
 
 	Creature* creature = mTargetCreature;
 	if (creature) {
-		P2ASSERTLINE(1200, creature);
+		P2ASSERTLINE(1202, creature);
 		rad += static_cast<Pellet*>(creature)->mConfig->mParams.mRadius.mData;
 	} else {
 		rad *= 2.0f;
@@ -1263,13 +1272,13 @@ void Obj::checkNearHomeGraphIndex()
 	WPSearchArg searchArgs(mPosition, nullptr, 0, 10.0f);
 	RouteMgr* route  = mapMgr->mRouteMgr;
 	WayPoint* nearWP = route->getNearestWayPoint(searchArgs);
-	JUT_ASSERTLINE(1369, nearWP, "P2Assert");
+	JUT_ASSERTLINE(1371, nearWP, "P2Assert");
 	s16 index = nearWP->mIndex;
 	mWpIndex1 = index;
 	mWpIndex3 = index;
 	mWpIndex2 = index;
 	nearWP    = route->getWayPoint(mWpIndex2);
-	JUT_ASSERTLINE(1374, nearWP, "P2Assert");
+	JUT_ASSERTLINE(1376, nearWP, "P2Assert");
 	mNextWayPointPosition = Vector3f(nearWP->mPosition);
 	WPEdgeSearchArg edgeSearchArgs(mPosition);
 	if (route->getNearestEdge(edgeSearchArgs)) {
@@ -1515,15 +1524,15 @@ bool Obj::isEndPathFinder()
 	if (mIsPathfinding) {
 		return true;
 	} else {
-		P2ASSERTLINE(1708, testPathfinder);
+		P2ASSERTLINE(1710, testPathfinder);
 		switch (testPathfinder->check(mPathID)) {
 		case 0:
 			testPathfinder->makepath(mPathID, &mPathNode);
 			mIsPathfinding = true;
 			return true;
 		case 2:
-			result         = false;
 			mIsPathfinding = false;
+			result         = false;
 			break;
 		case 1:
 			if (EnemyBase::getCurrAnimIndex() != 8) {
@@ -1554,7 +1563,7 @@ bool Obj::setPathFinder(bool cond)
 	mPelletCarryVelocity = 0.0f;
 	WPEdgeSearchArg args(mPosition);
 	RouteMgr* routeMgr = mapMgr->mRouteMgr;
-	P2ASSERTLINE(1756, routeMgr);
+	P2ASSERTLINE(1758, routeMgr);
 	if (routeMgr->getNearestEdge(args)) {
 		WayPoint* wp1   = args.mWp1;
 		WayPoint* wp2   = args.mWp2;
@@ -1599,7 +1608,7 @@ bool Obj::setPathFinder(bool cond)
 		mNextWayPointPosition.z = wpPos.z;
 		return true;
 	}
-	JUT_PANICLINE(1810, nullptr);
+	JUT_PANICLINE(1812, nullptr);
 	return false;
 }
 
@@ -1674,10 +1683,10 @@ void Obj::calcSlotGlobalPos(Vector3f& pos)
 	Pellet* pellet = static_cast<Pellet*>(mTargetCreature);
 	Matrixf matrix;
 	pellet = getCarryTarget();
-	P2ASSERTLINE(1903, pellet);
+	P2ASSERTLINE(1905, pellet);
 	f32 rad      = pellet->getPickRadius();
 	f32 angle    = mAlsoRotationOffset;
-	Vector3f dir = Vector3f(rad * sinf(angle), 0.0f, rad * cosf(angle));
+	Vector3f dir = Vector3f(rad * cosf(angle), 0.0f, rad * sinf(angle));
 	PSMTXCopy(pellet->mBaseTrMatrix.mMatrix.mtxView, matrix.mMatrix.mtxView);
 	pos = matrix.mtxMult(dir);
 }

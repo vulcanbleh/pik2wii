@@ -10,6 +10,12 @@
 #include "PSSystem/PSMainSide_ObjSound.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "kingChappyState";
+}
+
 namespace Game {
 namespace KingChappy {
 
@@ -43,7 +49,7 @@ void FSM::init(EnemyBase* enemy)
 StateWalk::StateWalk(int stateID)
     : State(stateID)
 {
-	mName = "walk";
+	setName("walk");
 }
 
 /**
@@ -123,7 +129,7 @@ void StateWalk::cleanup(EnemyBase* enemy)
 StateAttack::StateAttack(int stateID)
     : State(stateID)
 {
-	mName = "attack";
+	setName("attack");
 }
 
 /**
@@ -749,7 +755,7 @@ void StateAttack::cleanup(EnemyBase* enemy)
 StateDead::StateDead(int stateID)
     : State(stateID)
 {
-	mName = "dead";
+	setName("dead");
 }
 
 /**
@@ -813,7 +819,7 @@ void StateDead::cleanup(EnemyBase* enemy)
 StateFlick::StateFlick(int stateID)
     : State(stateID)
 {
-	mName = "flick";
+	setName("flick");
 }
 
 /**
@@ -1578,7 +1584,7 @@ void StateFlick::cleanup(EnemyBase* enemy)
 StateWarCry::StateWarCry(int stateID)
     : State(stateID)
 {
-	mName = "warcry";
+	setName("warcry");
 }
 
 /**
@@ -1687,7 +1693,7 @@ void StateWarCry::cleanup(EnemyBase* enemy)
 StateDamage::StateDamage(int stateID)
     : State(stateID)
 {
-	mName = "damage";
+	setName("damage");
 }
 
 /**
@@ -1771,7 +1777,7 @@ void StateDamage::cleanup(EnemyBase* enemy)
 StateTurn::StateTurn(int stateID)
     : State(stateID)
 {
-	mName = "turn";
+	setName("turn");
 }
 
 /**
@@ -1820,7 +1826,7 @@ void StateTurn::exec(EnemyBase* enemy)
 StateEat::StateEat(int stateID)
     : State(stateID)
 {
-	mName = "eat";
+	setName("eat");
 }
 
 /**
@@ -1862,7 +1868,7 @@ void StateEat::exec(EnemyBase* enemy)
 StateHide::StateHide(int stateID)
     : State(stateID)
 {
-	mName = "hide";
+	setName("hide");
 }
 
 /**
@@ -1935,7 +1941,7 @@ void StateHide::cleanup(EnemyBase* enemy)
 StateHideWait::StateHideWait(int stateID)
     : State(stateID)
 {
-	mName = "hidewait";
+	setName("hidewait");
 }
 
 /**
@@ -2013,7 +2019,7 @@ void StateHideWait::cleanup(EnemyBase* enemy)
 StateAppear::StateAppear(int stateID)
     : State(stateID)
 {
-	mName = "appear";
+	setName("appear");
 }
 
 /**
@@ -2105,7 +2111,7 @@ void StateAppear::exec(EnemyBase* enemy)
 StateCaution::StateCaution(int stateID)
     : State(stateID)
 {
-	mName = "caution";
+	setName("caution");
 }
 
 /**
@@ -2140,7 +2146,7 @@ void StateCaution::exec(EnemyBase* enemy)
 StateSwallow::StateSwallow(int stateID)
     : State(stateID)
 {
-	mName = "swallow";
+	setName("swallow");
 }
 
 /**

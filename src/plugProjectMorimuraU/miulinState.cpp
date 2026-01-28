@@ -5,6 +5,12 @@
 #include "Game/PikiMgr.h"
 #include "Game/rumble.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "miulinState";
+}
+
 namespace Game {
 namespace Miulin {
 
@@ -32,7 +38,7 @@ void FSM::init(EnemyBase* enemy)
 StateWait::StateWait(int stateID)
     : State(stateID)
 {
-	mName = "wait";
+	setName("wait");
 }
 
 /**
@@ -62,7 +68,7 @@ void StateWait::exec(EnemyBase* enemy)
 		return;
 	}
 
-	if (enemy->mHealth <= 0.0f) {
+	if (enemy->isDead()) {
 		transit(enemy, MIULIN_Dead, nullptr);
 	} else if (OBJ(enemy)->isAttackStart()) {
 		transit(enemy, MIULIN_AttackStart, nullptr);
@@ -83,7 +89,7 @@ void StateWait::exec(EnemyBase* enemy)
 StateWalk::StateWalk(int stateID)
     : State(stateID)
 {
-	mName = "walk";
+	setName("walk");
 }
 
 /**
@@ -167,7 +173,7 @@ void StateWalk::exec(EnemyBase* enemy)
 		}
 	}
 
-	if (enemy->mHealth <= 0.0f) {
+	if (enemy->isDead()) {
 		OBJ(enemy)->mNextState = MIULIN_Dead;
 		enemy->finishMotion();
 
@@ -200,7 +206,7 @@ void StateWalk::exec(EnemyBase* enemy)
 StateAttackStart::StateAttackStart(int stateID)
     : State(stateID)
 {
-	mName = "attackstart";
+	setName("attackstart");
 }
 
 /**
@@ -232,7 +238,7 @@ void StateAttackStart::exec(EnemyBase* enemy)
 StateAttacking::StateAttacking(int stateID)
     : State(stateID)
 {
-	mName = "attackind"; // thanks devs
+	setName("attackind"); // thanks devs
 }
 
 /**
@@ -267,7 +273,7 @@ void StateAttacking::exec(EnemyBase* enemy)
 			const f32 theta  = enemy->getFaceDir();
 
 			f32 weight = CG_PROPERPARMS(OBJ(enemy)).mMinAttackRange.mValue;
-			effectPos  = Vector3f(weight * sinf(theta), 0.0f, weight * cosf(theta));
+			effectPos.set(weight * sinf(theta), 0.0f, weight * cosf(theta));
 			pos += effectPos;
 
 			f32 maxY   = 20.0f + pos.y;
@@ -324,20 +330,20 @@ void StateAttacking::exec(EnemyBase* enemy)
 			EnemyFunc::flickNearbyNavi(enemy, range, knockback, damage, FLICK_BACKWARD_ANGLE, nullptr);
 
 			enemy->mFlickTimer = 0.0f;
-			effectPos          = Vector3f(-20.0f, 0.0f, 31.0f);
+			effectPos.set(-20.0f, 0.0f, 31.0f);
 			OBJ(enemy)->attackEffect(effectPos);
 			rumbleMgr->startRumble(RUMBLETYPE_Fixed12, pos, RUMBLEID_Both);
 			break;
 
 		case KEYEVENT_3:
-			effectPos = Vector3f(11.0f, 0.0f, 56.0f);
+			effectPos.set(11.0f, 0.0f, 56.0f);
 			OBJ(enemy)->attackEffect(effectPos);
 			rumbleMgr->startRumble(RUMBLETYPE_Fixed12, pos, RUMBLEID_Both);
 			break;
 
 		case KEYEVENT_END:
 			OBJ(enemy)->mNextState = MIULIN_AttackEnd;
-			if (!(enemy->mHealth <= 0.0f) && OBJ(enemy)->isAttackStart()) {
+			if (!(enemy->isDead()) && OBJ(enemy)->isAttackStart()) {
 				OBJ(enemy)->mNextState = MIULIN_Attacking;
 			}
 
@@ -354,7 +360,7 @@ void StateAttacking::exec(EnemyBase* enemy)
 StateAttackEnd::StateAttackEnd(int stateID)
     : State(stateID)
 {
-	mName = "attackend";
+	setName("attackend");
 }
 
 /**
@@ -375,7 +381,7 @@ void StateAttackEnd::init(EnemyBase* enemy, StateArg* stateArg)
  */
 void StateAttackEnd::exec(EnemyBase* enemy)
 {
-	if (enemy->mHealth <= 0.0f) {
+	if (enemy->isDead()) {
 		OBJ(enemy)->mNextState = MIULIN_Dead;
 	} else if (EnemyFunc::isStartFlick(enemy, false)) {
 		OBJ(enemy)->mNextState = MIULIN_Flick;
@@ -393,7 +399,7 @@ void StateAttackEnd::exec(EnemyBase* enemy)
 StateTurn::StateTurn(int stateID)
     : State(stateID)
 {
-	mName = "turn";
+	setName("turn");
 }
 
 /**
@@ -427,7 +433,7 @@ void StateTurn::init(EnemyBase* enemy, StateArg* stateArg)
  */
 void StateTurn::exec(EnemyBase* enemy)
 {
-	if (enemy->mHealth <= 0.0f) {
+	if (enemy->isDead()) {
 		OBJ(enemy)->mNextState = MIULIN_Dead;
 		enemy->finishMotion();
 
@@ -465,7 +471,7 @@ void StateTurn::exec(EnemyBase* enemy)
 StateFlick::StateFlick(int stateID)
     : State(stateID)
 {
-	mName = "flick";
+	setName("flick");
 }
 
 /**
@@ -502,7 +508,7 @@ void StateFlick::exec(EnemyBase* enemy)
 		enemy->mFlickTimer = 0.0f;
 
 	} else if (enemy->mCurAnim->mType == KEYEVENT_END) {
-		if (enemy->mHealth <= 0.0f) {
+		if (enemy->isDead()) {
 			transit(enemy, MIULIN_Dead, nullptr);
 
 		} else if (OBJ(enemy)->isAttackStart()) {
@@ -521,7 +527,7 @@ void StateFlick::exec(EnemyBase* enemy)
 StateDead::StateDead(int stateID)
     : State(stateID)
 {
-	mName = "dead";
+	setName("dead");
 }
 
 /**

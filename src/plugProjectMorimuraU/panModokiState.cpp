@@ -3,6 +3,12 @@
 #include "Game/Entities/PanModokiBase.h"
 #include "Game/Stickers.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "PanModokiState";
+}
+
 namespace Game {
 namespace PanModokiBase {
 
@@ -33,7 +39,7 @@ void FSM::init(EnemyBase* enemy)
 StateDead::StateDead(int stateID)
     : State(stateID)
 {
-	mName = "dead";
+	setName("dead");
 }
 
 /**
@@ -79,7 +85,7 @@ void StateDead::exec(EnemyBase* enemy)
 StateWalk::StateWalk(int stateID)
     : State(stateID)
 {
-	mName = "walk";
+	setName("walk");
 }
 
 /**
@@ -132,7 +138,7 @@ void StateWalk::exec(EnemyBase* enemy)
 StateBack::StateBack(int stateID)
     : State(stateID)
 {
-	mName = "back";
+	setName("back");
 }
 
 /**
@@ -245,7 +251,7 @@ void StateBack::exec(EnemyBase* enemy)
 StatePulled::StatePulled(int stateID)
     : State(stateID)
 {
-	mName = "pulled";
+	setName("pulled");
 }
 
 /**
@@ -357,7 +363,7 @@ void StatePulled::cleanup(EnemyBase* enemy)
 StateAppear::StateAppear(int stateID)
     : State(stateID)
 {
-	mName = "appear";
+	setName("appear");
 }
 
 /**
@@ -393,7 +399,7 @@ void StateAppear::exec(EnemyBase* enemy)
 StateHide::StateHide(int stateID)
     : State(stateID)
 {
-	mName = "hide";
+	setName("hide");
 }
 
 /**
@@ -443,7 +449,7 @@ void StateHide::exec(EnemyBase* enemy)
 StateDamage::StateDamage(int stateID)
     : State(stateID)
 {
-	mName = "damage";
+	setName("damage");
 }
 
 /**
@@ -499,7 +505,7 @@ void StateDamage::exec(EnemyBase* enemy)
 StateWait::StateWait(int stateID)
     : State(stateID)
 {
-	mName = "wait";
+	setName("wait");
 }
 
 /**
@@ -544,7 +550,7 @@ void StateWait::exec(EnemyBase* enemy)
 StateStick::StateStick(int stateID)
     : State(stateID)
 {
-	mName = "stick";
+	setName("stick");
 }
 
 /**
@@ -626,7 +632,7 @@ void StateStick::exec(EnemyBase* enemy)
 StateSucked::StateSucked(int stateID)
     : State(stateID)
 {
-	mName = "sucked";
+	setName("sucked");
 }
 
 /**
@@ -662,7 +668,7 @@ void StateSucked::exec(EnemyBase* enemy)
 StateCarryEnd::StateCarryEnd(int stateID)
     : State(stateID)
 {
-	mName = "carryend";
+	setName("carryend");
 }
 
 /**

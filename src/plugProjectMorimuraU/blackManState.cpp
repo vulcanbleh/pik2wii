@@ -8,6 +8,12 @@
 #include "PSSystem/PSMainSide_ObjSound.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "blackManState";
+}
+
 namespace Game {
 namespace BlackMan {
 
@@ -36,7 +42,7 @@ void FSM::init(EnemyBase* enemy)
 StateWalk::StateWalk(int stateID)
     : State(stateID)
 {
-	mName = "walk";
+	setName("walk");
 }
 
 /**
@@ -70,7 +76,7 @@ void StateWalk::exec(EnemyBase* enemy)
 {
 	Obj* wraith = OBJ(enemy);
 	wraith->walkFunc();
-	if (wraith->mHealth <= 0.0f) {
+	if (wraith->isDead()) {
 		transit(wraith, WRAITH_Dead, nullptr);
 		return;
 	}
@@ -127,7 +133,7 @@ void StateWalk::cleanup(EnemyBase* enemy)
 StateDead::StateDead(int stateID)
     : State(stateID)
 {
-	mName = "dead";
+	setName("dead");
 }
 
 /**
@@ -180,7 +186,7 @@ void StateDead::exec(EnemyBase* enemy)
 StateFreeze::StateFreeze(int stateID)
     : State(stateID)
 {
-	mName = "freeze";
+	setName("freeze");
 }
 
 /**
@@ -213,7 +219,7 @@ void StateFreeze::exec(EnemyBase* enemy)
 {
 	Obj* wraith = OBJ(enemy);
 	wraith->mFreezeTimer++;
-	if (wraith->mHealth <= 0.0f) {
+	if (wraith->isDead()) {
 		transit(wraith, WRAITH_Dead, nullptr);
 		return;
 	}
@@ -261,7 +267,7 @@ void StateFreeze::cleanup(EnemyBase* enemy)
 StateBend::StateBend(int stateID)
     : State(stateID)
 {
-	mName = "bend";
+	setName("bend");
 }
 
 /**
@@ -292,7 +298,7 @@ void StateBend::init(EnemyBase* enemy, StateArg* stateArg)
 void StateBend::exec(EnemyBase* enemy)
 {
 	Obj* wraith = OBJ(enemy);
-	if (wraith->mHealth <= 0.0f) {
+	if (wraith->isDead()) {
 		transit(wraith, WRAITH_Dead, nullptr);
 		return;
 	}
@@ -349,7 +355,7 @@ void StateBend::cleanup(EnemyBase* enemy)
 StateEscape::StateEscape(int stateID)
     : State(stateID)
 {
-	mName = "escape";
+	setName("escape");
 }
 
 /**
@@ -417,7 +423,7 @@ void StateEscape::exec(EnemyBase* enemy)
 StateFall::StateFall(int stateID)
     : State(stateID)
 {
-	mName = "fall";
+	setName("fall");
 }
 
 /**
@@ -472,7 +478,7 @@ void StateFall::exec(EnemyBase* enemy)
 StateRecover::StateRecover(int stateID)
     : State(stateID)
 {
-	mName = "recover";
+	setName("recover");
 }
 
 /**
@@ -548,7 +554,7 @@ void StateRecover::exec(EnemyBase* enemy)
 StateFlick::StateFlick(int stateID)
     : State(stateID)
 {
-	mName = "flick";
+	setName("flick");
 }
 
 /**
@@ -621,7 +627,7 @@ void StateFlick::cleanup(EnemyBase* enemy)
 StateTired::StateTired(int stateID)
     : State(stateID)
 {
-	mName = "tired";
+	setName("tired");
 }
 
 /**

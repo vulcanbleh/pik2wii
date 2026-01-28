@@ -233,7 +233,7 @@ void Object::changeMaterial()
 
 		mModel->mJ3dModel->calcMaterial();
 
-		mFbMaterial->getTexGenBlock()->getTexMtx(1)->getTexMtxInfo().setMtx(copyMatrix);
+		mFbMaterial->getTexGenBlock()->getTexMtx(1)->getTexMtxInfo().setEffectMtx(copyMatrix);
 
 		mModel->getJ3DModel()->getModelData()->getTexture()->changeImage(gameSystem->getXfbTexture()->getTexInfo(), mFbTextureID);
 	}

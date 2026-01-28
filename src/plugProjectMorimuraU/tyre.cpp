@@ -12,10 +12,14 @@
 #include "efx/TKch.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "tyre";
+}
+
 namespace Game {
 namespace Tyre {
-
-static const int unusedTyreArray[] = { 0, 0, 0 };
 
 Obj* curT;
 
@@ -223,10 +227,10 @@ void Obj::doGetLifeGaugeParam(LifeGaugeParam& param)
 void Obj::doStartStoneState()
 {
 	EnemyBase::doStartStoneState();
-	mTargetVelocity      = 0.0f;
-	mCurrentVelocity     = 0.0f;
+	mTargetVelocity.set(0.0f, 0.0f, 0.0f);
+	mCurrentVelocity.set(0.0f, 0.0f, 0.0f);
 	mSingleRotationRatio = 0.0f;
-	mAcceleration        = 0.0f;
+	mAcceleration.set(0.0f, 0.0f, 0.0f);
 	disableEvent(0, EB_Untargetable);
 	mCollTree->getCollPart('tyr1')->mSpecialID = 'st__';
 	mCollTree->getCollPart('tyr2')->mSpecialID = 'st__';
@@ -263,7 +267,7 @@ void Obj::doFinishStoneState()
 void Obj::collisionCallback(CollEvent& event)
 {
 	if (event.mCollidingCreature->isTeki()) {
-		mAcceleration = 0.0f;
+		mAcceleration.set(0.0f, 0.0f, 0.0f);
 	}
 	EnemyBase::collisionCallback(event);
 
@@ -382,7 +386,7 @@ void Obj::getShadowParam(ShadowParam& param)
 {
 	param.mPosition                 = mPosition;
 	param.mPosition.y               = mPosition.y + 2.0f;
-	param.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	param.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 	param.mBoundingSphere.mRadius   = 20.0f;
 	param.mSize                     = 10.0f;
 }
@@ -430,7 +434,7 @@ void Obj::frontRollMtxCalc()
 	Matrixf mat;
 	Vector3f rotation;
 	if (C_PARMS->mStaticRotation != 0.0f) {
-		rotation = Vector3f(0.0f, C_PARMS->mStaticRotation, 0.0f);
+		rotation.set(0.0f, C_PARMS->mStaticRotation, 0.0f);
 	} else {
 		f32 maxRotation = C_PARMS->mMaxRotation;
 		f32 minRotation = C_PARMS->mMinRotation;
@@ -457,7 +461,7 @@ void Obj::frontRollMtxCalc()
 			}
 		}
 
-		rotation = Vector3f(0.0f, mCurrentRotation2, 0.0f);
+		rotation.set(0.0f, mCurrentRotation2, 0.0f);
 
 		mat.makeTR(translation, rotation);
 	}
@@ -468,7 +472,7 @@ void Obj::frontRollMtxCalc()
 	PSMTXConcat(worldMat->mMatrix.mtxView, mat.mMatrix.mtxView, worldMat->mMatrix.mtxView);
 	PSMTXConcat(J3DSys::mCurrentMtx, mat.mMatrix.mtxView, J3DSys::mCurrentMtx);
 
-	rotation = Vector3f(mCurrentRotation, 0.0f, 0.0f);
+	rotation.set(mCurrentRotation, 0.0f, 0.0f);
 	mat.makeTR(translation, rotation);
 	PSMTXConcat(worldMat->mMatrix.mtxView, mat.mMatrix.mtxView, worldMat->mMatrix.mtxView);
 	PSMTXConcat(J3DSys::mCurrentMtx, mat.mMatrix.mtxView, J3DSys::mCurrentMtx);
@@ -608,6 +612,8 @@ void Obj::flick()
 {
 	cameraMgr->startVibration(VIBTYPE_MidFastShort, mPosition, CAMNAVI_Both);
 	rumbleMgr->startRumble(RUMBLETYPE_Fixed13, mPosition, RUMBLEID_Both);
+	
+	f32 threshold = 900.0f;
 
 	Iterator<Piki> iterPiki(pikiMgr);
 	CI_LOOP(iterPiki)
@@ -615,7 +621,7 @@ void Obj::flick()
 		Piki* obj = *iterPiki;
 		if (obj->isAlive() && obj->mFloorTriangle) {
 			f32 dist = getSquareDistanceTo2D(obj, mPosition);
-			if (dist < 900.0f) {
+			if (dist < threshold) {
 				InteractPress act(this, C_GENERALPARMS.mAttackDamage(), nullptr);
 				obj->stimulate(act);
 			}
@@ -627,7 +633,7 @@ void Obj::flick()
 	{
 		Navi* obj = *iterNavi;
 		f32 dist  = getSquareDistanceTo2D(obj, mPosition);
-		if (dist < 900.0f) {
+		if (dist < threshold) {
 			InteractPress act(this, C_GENERALPARMS.mAttackDamage(), nullptr);
 			obj->stimulate(act);
 		}

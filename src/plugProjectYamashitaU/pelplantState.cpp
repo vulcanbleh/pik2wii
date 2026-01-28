@@ -11,6 +11,12 @@
 
 #include "System.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "State";
+}
+
 namespace Game {
 namespace Pelplant {
 /**
@@ -83,13 +89,13 @@ StateWither::StateWither(int stateID, int nextState, int startAnimIdx, int endAn
 {
 	switch (stateID) {
 	case PELPLANT_WitherFull:
-		mName = "wither_big";
+		setName("wither_big");
 		return;
 	case PELPLANT_WitherMiddle:
-		mName = "wither_Middle";
+		setName("wither_Middle");
 		return;
 	case PELPLANT_WitherSmall:
-		mName = "wither_Small";
+		setName("wither_Small");
 		return;
 	}
 }
@@ -139,13 +145,13 @@ StateWait::StateWait(int stateID, int pelSize)
 	mPelSize = pelSize;
 	switch (mPelSize) {
 	case PELPLANTSIZE_Small:
-		mName = "wait_small";
+		setName("wait_small");
 		return;
 	case PELPLANTSIZE_Middle:
-		mName = "wait_middle";
+		setName("wait_middle");
 		return;
 	case PELPLANTSIZE_Full:
-		mName = "wait_big";
+		setName("wait_big");
 		return;
 	}
 }
@@ -273,7 +279,7 @@ StateGrow::StateGrow(int stateID, int animIdx, int nextState)
 {
 	mAnimIdx   = animIdx;
 	mNextState = nextState;
-	mName      = "grow";
+	setName("grow");
 }
 
 /**
@@ -357,7 +363,7 @@ void StateGrow::cleanup(Game::EnemyBase*)
 StateDamage::StateDamage(int stateID, int animIdx)
     : State(stateID)
 {
-	mName    = "damage";
+	setName("damage");
 	mAnimIdx = animIdx;
 }
 
@@ -408,7 +414,7 @@ void StateDamage::cleanup(EnemyBase* enemy)
 StateDead::StateDead(int stateID, int animIdx)
     : State(stateID)
 {
-	mName    = "dead";
+	setName("dead");
 	mAnimIdx = animIdx;
 }
 

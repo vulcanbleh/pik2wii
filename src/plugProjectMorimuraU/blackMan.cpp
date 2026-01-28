@@ -26,6 +26,12 @@
 #include "nans.h"
 #include "types.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "blackMan";
+}
+
 namespace Game {
 namespace BlackMan {
 
@@ -37,9 +43,6 @@ enum JointID {
 	lFoot = 2,
 	rFoot = 3,
 };
-
-static const int unusedArray[]     = { 0, 0, 0 };
-static const char unusedBlackMan[] = "blackMan";
 
 /**
  * @note Address: 0x803A5DB0
@@ -1143,7 +1146,7 @@ bool BlackMan::Obj::damageCallBack(Game::Creature* creature, f32 damage, CollPar
 			return EnemyBase::damageCallBack(creature, damage, part);
 		}
 	}
-	if (stateID == WRAITH_Freeze || stateID == WRAITH_Bend || isEvent(0, EB_Bittered)) {
+	if (stateID == WRAITH_Bend || stateID == WRAITH_Freeze || isEvent(0, EB_Bittered)) {
 		if (isEvent(0, EB_Bittered)) { // wraith doesn't take damage while bittered
 			return false;
 		}
@@ -1168,7 +1171,7 @@ bool BlackMan::Obj::hipdropCallBack(Game::Creature* creature, f32 damage, CollPa
 		mFSM->transit(this, 2, nullptr);
 		return EnemyBase::hipdropCallBack(creature, damage, part);
 	}
-	if (stateID == WRAITH_Freeze || stateID == WRAITH_Bend || isEvent(0, EB_Bittered)) {
+	if (stateID == WRAITH_Bend || stateID == WRAITH_Freeze || isEvent(0, EB_Bittered)) {
 		if (mTyre) {
 			if (isEvent(0, EB_Bittered)) {
 				damage = 0.1f;
@@ -1227,8 +1230,6 @@ void BlackMan::Obj::doEntry()
  */
 void BlackMan::Obj::changeMaterial()
 {
-	// not matching due to regswaps
-
 	Mtx44 copyMatrix;
 	PSMTX44Copy(sys->mGfx->mCurrentViewport->mCamera->mProjectionMtx, copyMatrix);
 
@@ -1252,7 +1253,7 @@ void BlackMan::Obj::changeMaterial()
 
 	mMatLoopAnimator->animate(30.0f);
 
-	modelData->getMaterialNodePointer(0)->getTexGenBlock()->getTexMtx(0)->getTexMtxInfo().setMtx(copyMatrix);
+	modelData->getMaterialNodePointer(0)->getTexGenBlock()->getTexMtx(0)->getTexMtxInfo().setEffectMtx(copyMatrix);
 
 	modelData->getTexture()->changeImage(gameSystem->getXfbTexture()->getTexInfo(), 0);
 
@@ -1260,212 +1261,6 @@ void BlackMan::Obj::changeMaterial()
 		j3dSys.setMatPacket(j3dModel->getMatPacket(i));
 		modelData->getMaterialNodePointer(i)->diff(j3dSys.getMatPacket()->getShapePacket()->mDiffFlag);
 	}
-
-	/*
-	stwu     r1, -0x60(r1)
-	mflr     r0
-	stw      r0, 0x64(r1)
-	addi     r4, r1, 0x10
-	stw      r31, 0x5c(r1)
-	stw      r30, 0x58(r1)
-	stw      r29, 0x54(r1)
-	mr       r29, r3
-	stw      r28, 0x50(r1)
-	lwz      r5, sys@sda21(r13)
-	lwz      r3, 0x24(r5)
-	lwz      r3, 0x25c(r3)
-	lwz      r3, 0x44(r3)
-	addi     r3, r3, 0xb4
-	bl       PSMTX44Copy
-	lfs      f5, 0x40(r1)
-	addi     r5, r1, 0xc
-	lfs      f4, 0x44(r1)
-	li       r4, 0
-	lfs      f1, lbl_8051F438@sda21(r2)
-	lfs      f3, 0x48(r1)
-	lfs      f2, 0x4c(r1)
-	lfs      f0, lbl_8051F480@sda21(r2)
-	stfs     f5, 0x30(r1)
-	stfs     f4, 0x34(r1)
-	stfs     f3, 0x38(r1)
-	stfs     f2, 0x3c(r1)
-	stfs     f1, 0x40(r1)
-	stfs     f1, 0x44(r1)
-	stfs     f1, 0x48(r1)
-	stfs     f0, 0x4c(r1)
-	lwz      r3, 0x174(r29)
-	lbz      r0, 0x380(r29)
-	lwz      r30, 8(r3)
-	lwz      r31, 4(r30)
-	stb      r0, 0xc(r1)
-	lbz      r0, 0x381(r29)
-	stb      r0, 0xd(r1)
-	lbz      r0, 0x382(r29)
-	stb      r0, 0xe(r1)
-	lbz      r0, 0x383(r29)
-	stb      r0, 0xf(r1)
-	lwz      r3, 0x37c(r29)
-	lwz      r3, 0x2c(r3)
-	lwz      r12, 0(r3)
-	lwz      r12, 0x70(r12)
-	mtctr    r12
-	bctrl
-	lbz      r0, 0x38c(r29)
-	addi     r5, r1, 8
-	li       r4, 3
-	stb      r0, 8(r1)
-	lbz      r0, 0x38d(r29)
-	stb      r0, 9(r1)
-	lbz      r0, 0x38e(r29)
-	stb      r0, 0xa(r1)
-	lbz      r0, 0x38f(r29)
-	stb      r0, 0xb(r1)
-	lwz      r3, 0x37c(r29)
-	lwz      r3, 0x2c(r3)
-	lwz      r12, 0(r3)
-	lwz      r12, 0x70(r12)
-	mtctr    r12
-	bctrl
-	mr       r3, r30
-	lwz      r12, 0(r30)
-	lwz      r12, 0x14(r12)
-	mtctr    r12
-	bctrl
-	lwz      r3, 0x358(r29)
-	lfs      f1, lbl_8051F4A4@sda21(r2)
-	bl       animate__Q23Sys15MatBaseAnimatorFf
-	lwz      r3, 0x60(r31)
-	li       r4, 0
-	lwz      r3, 0(r3)
-	lwz      r3, 0x28(r3)
-	lwz      r12, 0(r3)
-	lwz      r12, 0x50(r12)
-	mtctr    r12
-	bctrl
-	lfs      f0, 0x10(r1)
-	lis      r4, j3dSys@ha
-	lfs      f1, lbl_8051F438@sda21(r2)
-	addi     r28, r4, j3dSys@l
-	stfs     f0, 0x24(r3)
-	li       r29, 0
-	lfs      f0, lbl_8051F480@sda21(r2)
-	lfs      f2, 0x14(r1)
-	stfs     f2, 0x28(r3)
-	lfs      f2, 0x18(r1)
-	stfs     f2, 0x2c(r3)
-	lfs      f2, 0x1c(r1)
-	stfs     f2, 0x30(r3)
-	lfs      f2, 0x20(r1)
-	stfs     f2, 0x34(r3)
-	lfs      f2, 0x24(r1)
-	stfs     f2, 0x38(r3)
-	lfs      f2, 0x28(r1)
-	stfs     f2, 0x3c(r3)
-	lfs      f2, 0x2c(r1)
-	stfs     f2, 0x40(r3)
-	lfs      f2, 0x30(r1)
-	stfs     f2, 0x44(r3)
-	lfs      f2, 0x34(r1)
-	stfs     f2, 0x48(r3)
-	lfs      f2, 0x38(r1)
-	stfs     f2, 0x4c(r3)
-	lfs      f2, 0x3c(r1)
-	stfs     f2, 0x50(r3)
-	stfs     f1, 0x5c(r3)
-	stfs     f1, 0x58(r3)
-	stfs     f1, 0x54(r3)
-	stfs     f0, 0x60(r3)
-	lwz      r3, gameSystem__4Game@sda21(r13)
-	lwz      r5, 0x6c(r31)
-	lwz      r4, 0x54(r3)
-	lwz      r3, 4(r5)
-	lwz      r4, 0x20(r4)
-	lbz      r0, 0(r4)
-	stb      r0, 0(r3)
-	lbz      r0, 1(r4)
-	stb      r0, 1(r3)
-	lhz      r0, 2(r4)
-	sth      r0, 2(r3)
-	lhz      r0, 4(r4)
-	sth      r0, 4(r3)
-	lbz      r0, 6(r4)
-	stb      r0, 6(r3)
-	lbz      r0, 7(r4)
-	stb      r0, 7(r3)
-	lbz      r0, 8(r4)
-	stb      r0, 8(r3)
-	lbz      r0, 9(r4)
-	stb      r0, 9(r3)
-	lhz      r0, 0xa(r4)
-	sth      r0, 0xa(r3)
-	lwz      r0, 0xc(r4)
-	stw      r0, 0xc(r3)
-	lbz      r0, 0x10(r4)
-	stb      r0, 0x10(r3)
-	lbz      r0, 0x11(r4)
-	stb      r0, 0x11(r3)
-	lbz      r0, 0x12(r4)
-	stb      r0, 0x12(r3)
-	lbz      r0, 0x13(r4)
-	stb      r0, 0x13(r3)
-	lbz      r0, 0x14(r4)
-	stb      r0, 0x14(r3)
-	lbz      r0, 0x15(r4)
-	stb      r0, 0x15(r3)
-	lbz      r0, 0x16(r4)
-	stb      r0, 0x16(r3)
-	lbz      r0, 0x17(r4)
-	stb      r0, 0x17(r3)
-	lbz      r0, 0x18(r4)
-	stb      r0, 0x18(r3)
-	lbz      r0, 0x19(r4)
-	stb      r0, 0x19(r3)
-	lha      r0, 0x1a(r4)
-	sth      r0, 0x1a(r3)
-	lwz      r0, 0x1c(r4)
-	stw      r0, 0x1c(r3)
-	lwz      r3, 4(r5)
-	lwz      r0, 0x1c(r3)
-	add      r0, r4, r0
-	subf     r0, r3, r0
-	stw      r0, 0x1c(r3)
-	lwz      r3, 4(r5)
-	lwz      r0, 0xc(r3)
-	add      r0, r4, r0
-	subf     r0, r3, r0
-	stw      r0, 0xc(r3)
-	b        lbl_803A8234
-
-lbl_803A81FC:
-	lwz      r4, 0xc0(r30)
-	rlwinm   r3, r29, 6, 0xa, 0x19
-	rlwinm   r0, r29, 2, 0xe, 0x1d
-	add      r4, r4, r3
-	stw      r4, 0x3c(r28)
-	lwz      r3, 0x60(r31)
-	lwz      r4, 0x2c(r4)
-	lwzx     r3, r3, r0
-	lwz      r4, 0x34(r4)
-	lwz      r12, 0(r3)
-	lwz      r12, 0x24(r12)
-	mtctr    r12
-	bctrl
-	addi     r29, r29, 1
-
-lbl_803A8234:
-	lhz      r0, 0x5c(r31)
-	clrlwi   r3, r29, 0x10
-	cmplw    r3, r0
-	blt      lbl_803A81FC
-	lwz      r0, 0x64(r1)
-	lwz      r31, 0x5c(r1)
-	lwz      r30, 0x58(r1)
-	lwz      r29, 0x54(r1)
-	lwz      r28, 0x50(r1)
-	mtlr     r0
-	addi     r1, r1, 0x60
-	blr
-	*/
 }
 
 /**
@@ -1476,7 +1271,7 @@ void BlackMan::Obj::getShadowParam(ShadowParam& shadowParam)
 {
 	shadowParam.mPosition                 = mChestJointPosition;
 	shadowParam.mPosition.y               = mPosition.y + 2.0f;
-	shadowParam.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	shadowParam.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 	shadowParam.mBoundingSphere.mRadius   = 50.0f;
 	shadowParam.mSize                     = 30.0f;
 }
@@ -1527,7 +1322,7 @@ void BlackMan::Obj::walkFunc()
 		}
 	}
 
-	f32 rotationSpeed, moveSpeed, turnSpeed; // should be f31, f30, f29
+	f32 moveSpeed, rotationSpeed, turnSpeed; // should be f31, f30, f29
 	moveSpeed     = C_GENERALPARMS.mMoveSpeed();
 	rotationSpeed = C_GENERALPARMS.mMaxTurnAngle();
 	turnSpeed     = C_GENERALPARMS.mTurnSpeed();
@@ -1651,8 +1446,6 @@ void BlackMan::Obj::walkFunc()
 			return;
 		}
 	}
-
-	Vector3f deltaPosition = mTargetPosition - mPosition;
 
 	if (FABS(mTargetPosition.x - mPosition.x) < 100.0f && FABS(mTargetPosition.z - mPosition.z) < 100.0f) {
 
@@ -4849,8 +4642,8 @@ void BlackMan::Obj::recover()
 	}
 
 	if (!isEvent(0, EB_Bittered) && mTyre->isEvent(0, EB_Bittered)) {
+		f32 animScale = 0.5f;
 		if (getMotionFrame() >= 5.0f) {
-			f32 animScale = 0.5f;
 			setAnimSpeed(getReverseAnimSpeed(animScale));
 		} else if (getMotionFrame() < 1.0f) {
 			setAnimSpeed(EnemyAnimatorBase::defaultAnimSpeed);
@@ -4869,7 +4662,7 @@ void BlackMan::Obj::recover()
 	pos.y = leftMtx->mMatrix.structView.ty + rightMtx->mMatrix.structView.ty;
 	pos.z = leftMtx->mMatrix.structView.tz + rightMtx->mMatrix.structView.tz;
 
-	mTyre->mFrontTyreHeldPosition = Vector3f(pos.x * 0.5f, pos.y * 0.5f, pos.z * 0.5f);
+	mTyre->mFrontTyreHeldPosition.set(pos.x * 0.5f, pos.y * 0.5f, pos.z * 0.5f);
 
 	mLandPosition = mTyre->mFrontTyreHeldPosition;
 
