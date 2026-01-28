@@ -53,8 +53,8 @@ struct J3DTexMtxInfo {
 		mSRT        = other.mSRT;
 	}*/
 
-	void setMtx(Mtx44 copyMatrix)
-	{
+	void setEffectMtx(Mtx44 copyMatrix);
+	/*{
 		mEffectMtx[0][0] = copyMatrix[0][0];
 		mEffectMtx[0][1] = copyMatrix[0][1];
 		mEffectMtx[0][2] = copyMatrix[0][2];
@@ -72,7 +72,7 @@ struct J3DTexMtxInfo {
 
 		mEffectMtx[3][0] = mEffectMtx[3][1] = mEffectMtx[3][2] = 0.0f;
 		mEffectMtx[3][3]                                       = 1.0f;
-	}
+	}*/
 
 	// void setEffectMtx(Mtx);
 

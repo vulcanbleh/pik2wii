@@ -6,6 +6,12 @@
 #include "Game/rumble.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "jigumoState";
+}
+
 namespace Game {
 namespace Jigumo {
 
@@ -38,7 +44,7 @@ void FSM::init(EnemyBase* enemy)
 StateWait::StateWait(int stateID)
     : State(stateID)
 {
-	mName = "wait";
+	setName("wait");
 }
 
 /**
@@ -87,7 +93,7 @@ void StateWait::exec(EnemyBase* enemy)
 StateAppear::StateAppear(int stateID)
     : State(stateID)
 {
-	mName = "appear";
+	setName("appear");
 }
 
 /**
@@ -127,15 +133,7 @@ void StateAppear::exec(EnemyBase* enemy)
 	if (mAppearTimer > CG_PROPERPARMS(enemy).mHidingTime.mValue) {
 		if (enemy->isStopMotion()) {
 			f32 terrRad = CG_GENERALPARMS(enemy).mTerritoryRadius.mValue;
-			bool check;
-			if (EnemyFunc::isThereOlimar(enemy, terrRad, nullptr)) {
-				check = true;
-			} else if (EnemyFunc::isTherePikmin(enemy, terrRad, nullptr)) {
-				check = true;
-			} else {
-				check = false;
-			}
-
+			bool check = EnemyFunc::isPikminOrNaviInRange(enemy, terrRad);
 			if (check) {
 				enemy->startMotion();
 
@@ -158,7 +156,7 @@ void StateAppear::exec(EnemyBase* enemy)
 					enemy->createEfxHamon();
 				} else {
 					Vector3f dropPos = enemy->getPosition();
-					enemy->createDropEffect(dropPos, 0.53f * enemy->mScaleModifier);
+					enemy->createDropEffect(dropPos, 0.53f * enemy->getScaleMod());
 				}
 
 				enemy->disableEvent(0, EB_BitterImmune);
@@ -179,7 +177,7 @@ void StateAppear::exec(EnemyBase* enemy)
 StateHide::StateHide(int stateID)
     : State(stateID)
 {
-	mName = "hide";
+	setName("hide");
 }
 
 /**
@@ -244,7 +242,7 @@ void StateHide::exec(EnemyBase* enemy)
 StateDead::StateDead(int stateID)
     : State(stateID)
 {
-	mName = "dead";
+	setName("dead");
 }
 
 /**
@@ -286,7 +284,7 @@ void StateDead::exec(EnemyBase* enemy)
 StateAttack::StateAttack(int stateID)
     : State(stateID)
 {
-	mName = "attack";
+	setName("attack");
 }
 
 /**
@@ -390,7 +388,7 @@ void StateAttack::cleanup(EnemyBase* enemy)
 StateMiss::StateMiss(int stateID)
     : State(stateID)
 {
-	mName = "miss";
+	setName("miss");
 }
 
 /**
@@ -433,7 +431,7 @@ void StateMiss::exec(EnemyBase* enemy)
 StateReturn::StateReturn(int stateID)
     : State(stateID)
 {
-	mName = "return";
+	setName("return");
 }
 
 /**
@@ -454,7 +452,7 @@ void StateReturn::exec(EnemyBase* enemy)
 {
 	OBJ(enemy)->walkFunc();
 
-	if (enemy->mHealth <= 0.0f) {
+	if (enemy->isDead()) {
 		transit(enemy, JIGUMO_Dead, nullptr);
 		return;
 	}
@@ -497,7 +495,7 @@ void StateReturn::cleanup(EnemyBase* enemy)
 StateCarry::StateCarry(int stateID)
     : State(stateID)
 {
-	mName = "carry";
+	setName("carry");
 }
 
 /**
@@ -518,7 +516,7 @@ void StateCarry::exec(EnemyBase* enemy)
 {
 	OBJ(enemy)->walkFunc();
 
-	if (enemy->mHealth <= 0.0f) {
+	if (enemy->isDead()) {
 		transit(enemy, JIGUMO_Dead, nullptr);
 		return;
 	}
@@ -568,7 +566,7 @@ void StateCarry::cleanup(EnemyBase* enemy)
 StateFlick::StateFlick(int stateID)
     : State(stateID)
 {
-	mName = "flick";
+	setName("flick");
 }
 
 /**
@@ -627,7 +625,7 @@ void StateFlick::exec(EnemyBase* enemy)
 StateEat::StateEat(int stateID)
     : State(stateID)
 {
-	mName = "eat";
+	setName("eat");
 }
 
 /**
@@ -685,7 +683,7 @@ void StateEat::exec(EnemyBase* enemy)
 StateSearch::StateSearch(int stateID)
     : State(stateID)
 {
-	mName = "search";
+	setName("search");
 }
 
 /**
@@ -717,7 +715,7 @@ void StateSearch::exec(EnemyBase* enemy)
 		if (absF(angleDist) < 0.01f) {
 			enemy->finishMotion();
 			mAnimIdx                  = JIGUMOANIM_NULL;
-			OBJ(enemy)->mGoalPosition = Vector3f(target->getPosition());
+			OBJ(enemy)->mGoalPosition.set(target->getPosition());
 		} else if (animIdx == JIGUMOANIM_Wait) {
 			enemy->finishMotion();
 			mAnimIdx = JIGUMOANIM_Turn;
@@ -770,7 +768,7 @@ void StateSearch::exec(EnemyBase* enemy)
 StateSAttack::StateSAttack(int stateID)
     : State(stateID)
 {
-	mName = "sattack";
+	setName("sattack");
 }
 
 /**
@@ -867,7 +865,7 @@ void StateSAttack::cleanup(EnemyBase* enemy)
 StateSMiss::StateSMiss(int stateID)
     : State(stateID)
 {
-	mName = "smiss";
+	setName("smiss");
 }
 
 /**

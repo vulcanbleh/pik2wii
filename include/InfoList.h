@@ -27,15 +27,7 @@ struct InfoListBase : public JKRDisposer {
 
 	virtual ~InfoListBase() // _08
 	{
-		// this LOOKS like it should use pop() but IT DOES NOT, doing so destroys carryInfoMgr weak ordering
-		if (mPrev) {
-			mPrev->mNext = mNext;
-		}
-		if (mNext) {
-			mNext->mPrev = mPrev;
-		}
-		mNext = nullptr;
-		mPrev = nullptr;
+		pop();
 	}
 	virtual void init() { }          // _0C
 	virtual void update() { }        // _10
@@ -153,7 +145,7 @@ List* InfoMgr<Owner, List>::regist(Owner* owner)
 template <typename Owner, typename List>
 void InfoMgr<Owner, List>::scratch(Owner* owner)
 {
-	List* list = search(mActiveList.mNext, owner);
+	List* list = mActiveList.find(owner);
 	if (list) {
 		addInactiveList(list);
 	}

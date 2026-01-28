@@ -17,12 +17,15 @@
 #include "RevoSDK/rand.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "kingChappy";
+}
+
 namespace Game {
 namespace KingChappy {
 Obj* curK;
-
-static const u32 padding[]    = { 0, 0, 0 };
-static const char className[] = "kingChappy";
 
 /**
  * @note Address: 0x8035CCE8
@@ -152,7 +155,7 @@ void Obj::onInit(CreatureInitArg* initArg)
 		mHealth        = C_PROPERPARMS.mBigLife.mValue;
 		f32 scale      = C_PROPERPARMS.mBigScale.mValue;
 		mScaleModifier = scale;
-		mScale         = Vector3f(scale);
+		setScale(scale);
 		mCollTree->mPart->setScale(scale);
 		mCurLodSphere.mRadius = scale * C_GENERALPARMS.mOffCameraRadius.mValue;
 	}
@@ -234,7 +237,7 @@ void Obj::doUpdate()
 	mFootPosition.x -= 10.0f * sinf(mFaceDir);
 	mFootPosition.z -= 10.0f * cosf(mFaceDir);
 
-	mScale = Vector3f(mScaleModifier);
+	setScale(mScaleModifier);
 	mCollTree->mPart->setScale(mScaleModifier);
 
 	mFsm->exec(this);
@@ -812,7 +815,7 @@ void Obj::getShadowParam(ShadowParam& param)
 {
 	mBodyJoint->getWorldMatrix()->getTranslation(param.mPosition);
 	param.mPosition.y -= 20.0f;
-	param.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	param.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 	param.mBoundingSphere.mRadius   = 100.0f * mScaleModifier;
 	param.mSize                     = 45.0f * mScaleModifier;
 }
@@ -2486,7 +2489,7 @@ void Obj::checkDead(bool check)
 		}
 	}
 
-	if (mHealth <= 0.0f) {
+	if (isDead()) {
 		mAllowAnimBlending = check;
 
 		if (randFloat() < C_PROPERPARMS.mDeathRate()) {
@@ -2679,31 +2682,31 @@ void Obj::createEffect(int effectID)
 		}
 
 		mEfxYodare->create(&fxArgYodare);
-		mEfxYodare->setGlobalScale(mScaleModifier);
+		mEfxYodare->setGlobalScale(getScaleMod());
 		break;
 
 	case 1: // diving dust/water splash
 		if (mWaterBox) {
 			mEfxDiveWater->create(&fxArg);
-			mEfxDiveWater->setGlobalScale(mScaleModifier);
+			mEfxDiveWater->setGlobalScale(getScaleMod());
 		} else {
 			mEfxDiveSand->create(&fxArg);
-			mEfxDiveSand->setGlobalScale(mScaleModifier);
+			mEfxDiveSand->setGlobalScale(getScaleMod());
 		}
 		break;
 
 	case 2: // roaring falling rocks/shockwave
 		mEfxCryAB->create(&fxArg);
-		mEfxCryAB->setGlobalScale(mScaleModifier);
+		mEfxCryAB->setGlobalScale(getScaleMod());
 		break;
 
 	case 3: // roaring distortion effect
 		mEfxCryInd->create(&fxArg);
-		mEfxCryInd->setGlobalScale(mScaleModifier);
+		mEfxCryInd->setGlobalScale(getScaleMod());
 		break;
 
 	case 4: // explosion after eating a bomb
-		efx::ArgScale fxArgScale(mPosition, mScaleModifier);
+		efx::ArgScale fxArgScale(mPosition, getScaleMod());
 
 		efx::TKchDamage damageFX(mMouthJoint2->getWorldMatrix());
 		damageFX.create(&fxArgScale);
@@ -2712,7 +2715,7 @@ void Obj::createEffect(int effectID)
 
 	case 5: // nostril smoke
 		mEfxSmoke->create(&fxArg);
-		mEfxSmoke->setGlobalScale(mScaleModifier);
+		mEfxSmoke->setGlobalScale(getScaleMod());
 		break;
 
 	case 6: // attacking drool
@@ -2721,7 +2724,7 @@ void Obj::createEffect(int effectID)
 		}
 
 		mEfxAttack->create(&fxArgYodare);
-		mEfxAttack->setGlobalScale(mScaleModifier);
+		mEfxAttack->setGlobalScale(getScaleMod());
 		break;
 
 	case 7: // death drool effects
@@ -2730,10 +2733,10 @@ void Obj::createEffect(int effectID)
 		}
 
 		mEfxDeadYodare->create(&fxArgYodare);
-		mEfxDeadYodare->setGlobalScale(mScaleModifier);
+		mEfxDeadYodare->setGlobalScale(getScaleMod());
 
 		mEfxDeadHana->create(&fxArg);
-		mEfxDeadHana->setGlobalScale(mScaleModifier);
+		mEfxDeadHana->setGlobalScale(getScaleMod());
 		break;
 
 	case 8: // hiding underwater eye ripples
@@ -2747,6 +2750,8 @@ void Obj::createEffect(int effectID)
 
 			mLeftEyePosition   = mModel->getJoint("eye3L")->getWorldMatrix()->getTranslation();
 			mLeftEyePosition.y = *mWaterBox->getSeaHeightPtr();
+			
+			efx::ArgEnemyType fxArgEnemy2(mLeftEyePosition, EnemyTypeID::EnemyID_Tadpole, 1.0f);
 
 			mLeftEyeRippleEfx->create(&fxArgEnemy);
 		}

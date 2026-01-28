@@ -8,6 +8,12 @@
 #include "efx/TMiuAttack.h"
 #include "types.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "miulin";
+}
+
 namespace Game {
 namespace Miulin {
 
@@ -104,7 +110,7 @@ void Obj::getShadowParam(ShadowParam& param)
 {
 	mKoshiJoint->getWorldMatrix()->getColumn(3, param.mPosition);
 	param.mPosition.y               = mPosition.y + 2.0f;
-	param.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	param.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 	param.mBoundingSphere.mRadius   = 20.0f;
 	param.mSize                     = 25.0f;
 }
@@ -706,7 +712,7 @@ void Obj::walkFunc()
 	f32 dashSpeedMultiplier = 1.0f;
 	f32 dashAnimScale       = 1.0f;
 
-	if (mTargetCreature && FABS(getAngDist(mTargetCreature)) < TORADIANS(C_PROPERPARMS.mDashableAngle.mValue)) {
+	if (mTargetCreature && absF(getAngDist(mTargetCreature)) < TORADIANS(C_PROPERPARMS.mDashableAngle.mValue)) {
 		dashSpeedMultiplier = C_PROPERPARMS.mDashSpeedMultiplier();
 		dashAnimScale       = C_PROPERPARMS.mDashAnimationScale();
 		setEmotionExcitement();
@@ -714,7 +720,7 @@ void Obj::walkFunc()
 		setEmotionCaution();
 	}
 
-	setTargetSpeed(dashSpeedMultiplier);
+	setTargetSpeed(dashSpeedMultiplier * C_GENERALPARMS.mMoveSpeed());
 
 	setAnimSpeed(EnemyAnimatorBase::defaultAnimSpeed * dashAnimScale);
 
@@ -912,7 +918,7 @@ f32 Obj::turnFunc(f32 factor)
 
 	f32 angleDist = turnToTarget(targetPos, factor * C_GENERALPARMS.mTurnSpeed(), factor * C_GENERALPARMS.mMaxTurnAngle());
 
-	return FABS(angleDist);
+	return absF(angleDist);
 }
 
 /**

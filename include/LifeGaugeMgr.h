@@ -28,6 +28,7 @@ struct LifeGauge {
 	void update(f32 healthRatio);
 
 	static void initLifeGaugeDraw();
+	static void initLifeGaugeFrameDraw();
 
 	f32 mTimer;             // _00
 	Color4 mLifeGaugeColor; // _04
@@ -80,6 +81,7 @@ struct LifeGaugeList : public JKRDisposer {
 	}
 
 	void draw(Graphics& gfx);
+	void setMatrix(Graphics& gfx);
 
 	LifeGaugeList* mPrev;        // _18
 	LifeGaugeList* mNext;        // _1C

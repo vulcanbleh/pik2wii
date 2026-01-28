@@ -5,6 +5,12 @@
 #include "RevoSDK/rand.h"
 #include "efx/TEnemyDead.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "shijimiChouState";
+}
+
 namespace Game {
 namespace ShijimiChou {
 
@@ -31,7 +37,7 @@ void FSM::init(EnemyBase* enemy)
 StateWait::StateWait(int stateID)
     : State(stateID)
 {
-	mName = "wait";
+	setName("wait");
 }
 
 /**
@@ -87,7 +93,7 @@ void StateWait::exec(EnemyBase* enemy)
 StateFly::StateFly(int stateID)
     : State(stateID)
 {
-	mName = "fly";
+	setName("fly");
 }
 
 /**
@@ -140,7 +146,7 @@ void StateFly::exec(EnemyBase* enemy)
 StateFall::StateFall(int stateID)
     : State(stateID)
 {
-	mName = "fall";
+	setName("fall");
 }
 
 /**
@@ -187,7 +193,7 @@ void StateFall::exec(EnemyBase* enemy)
 StateDead::StateDead(int stateID)
     : State(stateID)
 {
-	mName = "dead";
+	setName("dead");
 }
 
 /**
@@ -232,7 +238,7 @@ void StateDead::exec(EnemyBase* enemy)
 StateLeave::StateLeave(int stateID)
     : State(stateID)
 {
-	mName = "leave";
+	setName("leave");
 }
 
 /**
@@ -262,7 +268,7 @@ void StateLeave::exec(EnemyBase* enemy)
 StateRest::StateRest(int stateID)
     : State(stateID)
 {
-	mName = "rest";
+	setName("rest");
 }
 
 /**
@@ -348,7 +354,7 @@ void StateRest::exec(EnemyBase* enemy)
 
 	} else {
 		if (mRestTimer > mRestMaxTime) {
-			OBJ(enemy)->mGoalPosition = Vector3f(OBJ(enemy)->mSpawningEnemy->getPosition());
+			OBJ(enemy)->mGoalPosition.set(OBJ(enemy)->mSpawningEnemy->getPosition());
 		}
 
 		mRestWaitCounter++;

@@ -9,10 +9,14 @@
 #include "PSSystem/PSMainSide_ObjSound.h"
 #include "RevoSDK/rand.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "umiMushi";
+}
+
 namespace Game {
 namespace UmiMushi {
-
-static const char unusedString[] = "umiMushi";
 
 Obj* curU;
 
@@ -53,7 +57,7 @@ void Obj::setParameters()
 		scale = 0.5f;
 	}
 	mScaleModifier = scale;
-	mScale         = Vector3f(scale);
+	mScale.set(scale);
 	mCollTree->mPart->setScale(scale);
 	mCurLodSphere.mRadius = scale * C_GENERALPARMS.mOffCameraRadius.mValue;
 	if (mBloysterType == EnemyTypeID::EnemyID_UmiMushiBlind) {
@@ -137,22 +141,25 @@ void Obj::onInit(CreatureInitArg* initArg)
 	mActiveTailColor = mNormalColor1;
 
 	curU = nullptr;
+	
+	_2BC = nullptr;
+	_2C0 = nullptr;
 
 	mFsm->start(this, UMIMUSHI_Walk, nullptr);
 
-	P2ASSERTLINE(157, mMatAnim);
+	P2ASSERTLINE(159, mMatAnim);
 	mMatAnim->start(C_MGR->mTexAnimation);
 
-	P2ASSERTLINE(160, mShadowMgr);
+	P2ASSERTLINE(162, mShadowMgr);
 	mShadowMgr->init();
 
 	J3DModelData* modelData = mModel->mJ3dModel->mModelData;
-	P2ASSERTLINE(166, modelData);
+	P2ASSERTLINE(168, modelData);
 
 	u16 matIdx    = modelData->mMaterialTable.mMaterialNames->getIndex("cc_mat1_v");
 	mTailMaterial = modelData->mMaterialTable.mMaterials[matIdx];
 
-	P2ASSERTLINE(171, mTailMaterial);
+	P2ASSERTLINE(173, mTailMaterial);
 
 	if (mBloysterType == EnemyTypeID::EnemyID_UmiMushi) {
 		PSM::EnemyMidBoss* bossSoundObj = static_cast<PSM::EnemyMidBoss*>(mSoundObj);
@@ -165,7 +172,7 @@ void Obj::onInit(CreatureInitArg* initArg)
 		mHealth    = health;
 		mMaxHealth = health;
 		mEyeScale  = 0.45f;
-		P2ASSERTLINE(189, mModel);
+		P2ASSERTLINE(191, mModel);
 		J3DModelData* modelData                                 = mModel->mJ3dModel->mModelData;
 		mEyeJointIdx                                            = mModel->getJointIndex("eyes_joint1");
 		mWeakJointIdx                                           = mModel->getJointIndex("weak_joint2");
@@ -174,22 +181,22 @@ void Obj::onInit(CreatureInitArg* initArg)
 	}
 	mDropGroup     = EDG_None;
 	mHamonPosition = mPosition;
-	P2ASSERTLINE(212, mEfxHamon);
+	P2ASSERTLINE(214, mEfxHamon);
 	efx::Arg efxArg(mHamonPosition);
 	mEfxHamon->create(&efxArg);
 	mEfxHamon->setGlobalScale(mScaleModifier);
 
-	P2ASSERTLINE(218, mEfxWeakRed);
-	P2ASSERTLINE(219, mEfxWeakBlue);
+	P2ASSERTLINE(220, mEfxWeakRed);
+	P2ASSERTLINE(221, mEfxWeakBlue);
 	Matrixf* modelMtx = mModel->getJoint("weak_joint2")->getWorldMatrix();
 	mEfxWeakRed->setMtxptr(modelMtx->mMatrix.mtxView);
 	mEfxWeakBlue->setMtxptr(modelMtx->mMatrix.mtxView);
 
-	P2ASSERTLINE(225, mEfxEyeRed[0]);
-	P2ASSERTLINE(226, mEfxEyeRed[1]);
+	P2ASSERTLINE(227, mEfxEyeRed[0]);
+	P2ASSERTLINE(228, mEfxEyeRed[1]);
 
-	P2ASSERTLINE(228, mEfxEyeBlue[0]);
-	P2ASSERTLINE(229, mEfxEyeBlue[1]);
+	P2ASSERTLINE(230, mEfxEyeBlue[0]);
+	P2ASSERTLINE(231, mEfxEyeBlue[1]);
 
 	modelMtx = mModel->getJoint("ef_eye_r")->getWorldMatrix();
 	mEfxEyeRed[0]->setMtxptr(modelMtx->mMatrix.mtxView);
@@ -199,8 +206,8 @@ void Obj::onInit(CreatureInitArg* initArg)
 	mEfxEyeRed[1]->setMtxptr(modelMtx->mMatrix.mtxView);
 	mEfxEyeBlue[1]->setMtxptr(modelMtx->mMatrix.mtxView);
 
-	P2ASSERTLINE(239, mEfxEat);
-	P2ASSERTLINE(240, mEfxBubble);
+	P2ASSERTLINE(241, mEfxEat);
+	P2ASSERTLINE(242, mEfxBubble);
 
 	mEatJointMtx = mModel->getJoint("bero_joint1")->getWorldMatrix();
 
@@ -470,7 +477,7 @@ bool Obj::damageCallBack(Creature* creature, f32 strength, CollPart* part)
 		addDamage(strength, 1.0f);
 		return true;
 	}
-	P2ASSERTLINE(678, creature);
+	P2ASSERTLINE(680, creature);
 	creature->isPiki();
 	Piki* piki = static_cast<Piki*>(creature);
 	if (part) {
@@ -494,7 +501,7 @@ bool Obj::damageCallBack(Creature* creature, f32 strength, CollPart* part)
 bool Obj::pressCallBack(Creature* creature, f32 strength, CollPart* part)
 {
 
-	P2ASSERTLINE(714, creature);
+	P2ASSERTLINE(716, creature);
 	if (creature->isPiki()) {
 		Piki* piki = static_cast<Piki*>(creature);
 
@@ -511,7 +518,7 @@ bool Obj::pressCallBack(Creature* creature, f32 strength, CollPart* part)
  */
 bool Obj::hipdropCallBack(Creature* creature, f32 strength, CollPart* part)
 {
-	P2ASSERTLINE(733, creature);
+	P2ASSERTLINE(735, creature);
 	if (creature->isPiki()) {
 		Piki* piki = static_cast<Piki*>(creature);
 
@@ -528,7 +535,7 @@ bool Obj::hipdropCallBack(Creature* creature, f32 strength, CollPart* part)
  */
 bool Obj::earthquakeCallBack(Creature* creature, f32 damage)
 {
-	P2ASSERTLINE(752, creature);
+	P2ASSERTLINE(754, creature);
 	if (creature->isPiki() && (int)static_cast<Piki*>(creature)->mPikiKind == Purple) {
 		damage *= C_PROPERPARMS.mPurpleDamageRate.mValue;
 	}
@@ -667,7 +674,7 @@ void Obj::walkFunc()
 	mPrevFaceDir      = mFaceDir;
 	f32 faceDirOffset = roundAng(faceDirRads);
 	updateFaceDir(mFaceDir + faceDirOffset);
-	mTargetVelocity = Vector3f(x, y, speed * z); // sure
+	mTargetVelocity.set(x, y, speed * z); // sure
 
 	// check bloyster has moved far enough in the past 120 frames, or else make it forget what it was doing (why does morimura do this)
 	mMoveCheckIntervalTimer++;
@@ -721,6 +728,7 @@ void Obj::changeColor()
 			weight2      = absF(sinTheta);
 			weight1      = 1.0f - weight2;
 		} else if (mTargetNavi) {
+			f32 time = 48.0f;
 			if (frame < 10.0f) {
 				frame /= 10.0f;
 				mActiveTailColor.r = ((f32)mNormalColor1.r) * frame + ((f32)mPrevTailColor.r) * (1.0f - frame);
@@ -728,12 +736,16 @@ void Obj::changeColor()
 				mActiveTailColor.b = ((f32)mNormalColor1.b) * frame + ((f32)mPrevTailColor.b) * (1.0f - frame);
 			}
 
-			if (frame < 48.0f) {
+			if (frame < time) {
 				return;
 			}
+			
+			if (frame == time && _2BC == 0) {
+				_2BC = 1;
+			}
 
-			frame -= 48.0f;
-			frame /= (getMotionFrameMax() - 48.0f) - 1.0f;
+			frame -= time;
+			frame /= (getMotionFrameMax() - time) - 1.0f;
 			if (mCurAnim->mType == KEYEVENT_END) {
 				frame = 1.0f;
 			}
@@ -813,11 +825,18 @@ f32 Obj::turnFunc()
 	if (mTargetNavi) {
 		mGoalPosition = mTargetNavi->getPosition();
 	}
-
-	mSoundObj->startSound(PSSE_EN_UMI_ZURUZURU, 0);
+	
+	if (_2BC != 1) {
+		mSoundObj->startSound(PSSE_EN_UMI_ZURUZURU, 0);
+	}
 
 	Vector3f targetPos = mGoalPosition;
-	f32 factor         = 1.0f;
+	f32 factor;
+	if (_2BC == 1) {
+		factor = 0.0f;
+	} else {
+		factor = 1.0f;
+	}
 	if (mBloysterType == EnemyTypeID::EnemyID_UmiMushiBlind) {
 		factor = C_PARMS->mBlindTurnRateReduction;
 	}

@@ -5,6 +5,12 @@
 #include "Game/enemyInfo.h"
 #include "types.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "bomb";
+}
+
 namespace Game {
 namespace Bomb {
 /**
@@ -227,7 +233,7 @@ void Obj::doAnimationCullingOn()
 void Obj::doSimulation(f32 simSpeed)
 {
 	if (isStickTo()) {
-		Vector3f dir = Vector3f(sinf(mFaceDir), 0.0f, cosf(mFaceDir));
+		Vector3f dir = Vector3f(cosf(mFaceDir), 0.0f, sinf(mFaceDir));
 		updateStick(dir);
 		updateCell();
 	} else if (mCaptureMatrix) {
@@ -247,7 +253,7 @@ void Obj::getShadowParam(ShadowParam& param)
 	param.mPosition   = mPosition;
 	param.mPosition.y = mPosition.y + 2.0f;
 
-	param.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	param.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 	param.mBoundingSphere.mRadius   = 30.0f;
 	param.mSize                     = 10.0f;
 }

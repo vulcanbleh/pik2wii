@@ -8,6 +8,12 @@
 #include "PSSystem/PSMainSide_ObjSound.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "umiMushiState";
+}
+
 namespace Game {
 namespace UmiMushi {
 
@@ -38,7 +44,7 @@ void FSM::init(EnemyBase* enemy)
 StateWait::StateWait(int stateID)
     : State(stateID)
 {
-	mName = "wait";
+	setName("wait");
 }
 
 /**
@@ -65,7 +71,7 @@ void StateWait::exec(EnemyBase* enemy)
 		}
 	}
 
-	if (enemy->mHealth <= 0.0f) {
+	if (enemy->isDead()) {
 		enemy->finishMotion();
 		OBJ(enemy)->mNextState = UMIMUSHI_Dead;
 	}
@@ -107,7 +113,7 @@ void StateWait::exec(EnemyBase* enemy)
 StateWalk::StateWalk(int stateID)
     : State(stateID)
 {
-	mName = "walk";
+	setName("walk");
 }
 
 /**
@@ -138,7 +144,7 @@ void StateWalk::exec(EnemyBase* enemy)
 		}
 	}
 
-	if (enemy->mHealth <= 0.0f) {
+	if (enemy->isDead()) {
 		enemy->finishMotion();
 		enemy->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 		OBJ(enemy)->mNextState = UMIMUSHI_Dead;
@@ -205,7 +211,7 @@ void StateWalk::exec(EnemyBase* enemy)
 StateFind::StateFind(int stateID)
     : State(stateID)
 {
-	mName = "find";
+	setName("find");
 }
 
 /**
@@ -238,7 +244,7 @@ void StateFind::exec(EnemyBase* enemy)
 		if (enemy->mCurAnim->mType == KEYEVENT_END) {
 			OBJ(enemy)->createColorEffect();
 
-			if (enemy->mHealth <= 0.0f) {
+			if (enemy->isDead()) {
 				transit(enemy, UMIMUSHI_Dead, nullptr);
 
 			} else if (OBJ(enemy)->isNeedTurn()) {
@@ -261,7 +267,7 @@ void StateFind::exec(EnemyBase* enemy)
 StateSearch::StateSearch(int stateID)
     : State(stateID)
 {
-	mName = "search";
+	setName("search");
 }
 
 /**
@@ -280,7 +286,7 @@ void StateSearch::init(EnemyBase* enemy, StateArg* stateArg)
  */
 void StateSearch::exec(EnemyBase* enemy)
 {
-	if (enemy->mHealth <= 0.0f) {
+	if (enemy->isDead()) {
 		enemy->finishMotion();
 		enemy->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 		OBJ(enemy)->mNextState = UMIMUSHI_Dead;
@@ -293,7 +299,7 @@ void StateSearch::exec(EnemyBase* enemy)
 			f32 y        = enemy->getTargetVelocity().y;
 			f32 cosTheta = (f32)cos(enemy->getFaceDir());
 
-			enemy->setTargetVelocity(Vector3f(speed * sinTheta, y, speed * cosTheta));
+			enemy->mTargetVelocity.set(speed * sinTheta, y, speed * cosTheta);
 			enemy->mSoundObj->startSound(PSSE_EN_UMI_ZURUZURU, 0);
 
 		} else {
@@ -338,7 +344,7 @@ void StateSearch::exec(EnemyBase* enemy)
 StateTurn::StateTurn(int stateID)
     : State(stateID)
 {
-	mName = "turn";
+	setName("turn");
 }
 
 /**
@@ -357,7 +363,16 @@ void StateTurn::init(EnemyBase* enemy, StateArg* stateArg)
  */
 void StateTurn::exec(EnemyBase* enemy)
 {
-	if (enemy->mHealth <= 0.0f) {
+	int turn = OBJ(enemy)->_2BC;
+	if ((turn == 1) && (OBJ(enemy)->_2C0 < 60)) {
+		OBJ(enemy)->_2C0 += 1;
+	}
+	else if ((turn == 1) && (OBJ(enemy)->_2C0 == 60)) {
+		OBJ(enemy)->_2C0 = 0;
+		OBJ(enemy)->_2BC = OBJ(enemy)->_2BC ? false : true;
+	}
+  
+	if (enemy->isDead()) {
 		enemy->finishMotion();
 		OBJ(enemy)->mNextState = UMIMUSHI_Dead;
 
@@ -399,7 +414,7 @@ void StateTurn::exec(EnemyBase* enemy)
 
 	if (enemy->mCurAnim->mIsPlaying && enemy->mCurAnim->mType == KEYEVENT_END) {
 
-		JUT_ASSERTLINE(406, OBJ(enemy)->mNextState >= 0, nullptr); // really? no assert message?
+		JUT_ASSERTLINE(413, OBJ(enemy)->mNextState >= 0, nullptr); // really? no assert message?
 
 		transit(enemy, OBJ(enemy)->mNextState, nullptr);
 		if (OBJ(enemy)->mNextState == UMIMUSHI_Flick) {
@@ -415,7 +430,7 @@ void StateTurn::exec(EnemyBase* enemy)
 StateFlick::StateFlick(int stateID)
     : State(stateID)
 {
-	mName = "flick";
+	setName("flick");
 }
 
 /**
@@ -459,7 +474,7 @@ void StateFlick::exec(EnemyBase* enemy)
 			enemy->mFlickTimer = 0.0f;
 
 		} else if (enemy->mCurAnim->mType == KEYEVENT_END) {
-			if (enemy->mHealth <= 0.0f) {
+			if (enemy->isDead()) {
 				transit(enemy, UMIMUSHI_Dead, nullptr);
 
 			} else if (OBJ(enemy)->isChangeNavi()) {
@@ -479,7 +494,7 @@ void StateFlick::exec(EnemyBase* enemy)
 StateAttack::StateAttack(int stateID)
     : State(stateID)
 {
-	mName = "attack";
+	setName("attack");
 }
 
 /**
@@ -586,7 +601,7 @@ void StateAttack::exec(EnemyBase* enemy)
 StateEat::StateEat(int stateID)
     : State(stateID)
 {
-	mName = "eat";
+	setName("eat");
 }
 
 /**
@@ -608,7 +623,7 @@ void StateEat::exec(EnemyBase* enemy)
 	if (enemy->mCurAnim->mIsPlaying && enemy->mCurAnim->mType == KEYEVENT_END) {
 		EnemyFunc::swallowPikmin(enemy, 300.0f, nullptr);
 
-		if (enemy->mHealth <= 0.0f) {
+		if (enemy->isDead()) {
 			transit(enemy, UMIMUSHI_Dead, nullptr);
 
 		} else {
@@ -624,7 +639,7 @@ void StateEat::exec(EnemyBase* enemy)
 StateDead::StateDead(int stateID)
     : State(stateID)
 {
-	mName = "dead";
+	setName("dead");
 }
 
 /**
@@ -679,7 +694,7 @@ void StateDead::exec(EnemyBase* enemy)
 StateLost::StateLost(int stateID)
     : State(stateID)
 {
-	mName = "lost";
+	setName("lost");
 }
 
 /**
