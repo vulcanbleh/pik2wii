@@ -4871,8 +4871,8 @@ plugProjectNishimuraU/MiniHoudaiShotGun.cpp:
 	.ctors      start:0x80534ED8 end:0x80534EDC
 	.rodata     start:0x80550210 end:0x80550238
 	.data       start:0x805B4E40 end:0x805B4EA0
-	.bss        start:0x806391F8 end:0x80639208
-	.sbss       start:0x8066CD90 end:0x8066CDA0
+	.bss        start:0x806391F8 end:0x80639204
+	.sbss       start:0x8066CD90 end:0x8066CD9C
 	.sdata2     start:0x80672B68 end:0x80672BD0
 
 plugProjectNishimuraU/SokkuriState.cpp:
