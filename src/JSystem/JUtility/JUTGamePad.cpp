@@ -344,6 +344,7 @@ void JUTGamePad::update()
  * @note Address: 0x8002DD68
  * @note Size: 0x80
  */
+ /*
 void JUTGamePad::checkResetSwitch()
 {
 	if (C3ButtonReset::sResetOccurred) {
@@ -361,7 +362,7 @@ void JUTGamePad::checkResetSwitch()
 		}
 	}
 	C3ButtonReset::sResetSwitchPushing = false;
-}
+}*/
 
 /**
  * @note Address: 0x8002DDE8

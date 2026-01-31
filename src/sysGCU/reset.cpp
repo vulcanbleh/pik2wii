@@ -64,7 +64,6 @@ void ResetManager::update()
 				} else {
 					RENDER_INFO_STORE->mIdentifier = 'vald';
 					RENDER_INFO_STORE->mRenderMode = System::mRenderMode;
-					OSSetSaveRegion((void*)DOL_ADDR_LIMIT, (void*)(DOL_ADDR_LIMIT + 8));
 					OSResetSystem(false, 0, false);
 				}
 				break;
@@ -86,7 +85,7 @@ void ResetManager::update()
 				OSReport("\tGP処理終了待ち\n"); // GP processing end waiting
 			}
 
-			if (OSGetResetSwitchState()) {
+			if (OSGetResetButtonState()) {
 				OSReport("\tリセットボタンが押されている\n"); // Reset button pressed
 			}
 
@@ -101,7 +100,7 @@ void ResetManager::update()
 			input = JUTGamePad::C3ButtonReset::sResetOccurredPort;
 		}
 
-		if ((JUTGamePad::C3ButtonReset::sResetOccurred || isFlag(RESETFLAG_ResetInputEntered)) && !OSGetResetSwitchState()) {
+		if ((JUTGamePad::C3ButtonReset::sResetOccurred || isFlag(RESETFLAG_ResetInputEntered)) && !OSGetResetButtonState()) {
 			bool check2 = true;
 			if (!isFlag(RESETFLAG_ResetInputEntered)) {
 				int currInput = input;

@@ -84,66 +84,66 @@ typedef enum {
 typedef void (*NANDAsyncCallback)(s32 result, NANDCommandBlock* block);
 
 typedef struct NANDStatus {
-    u32 ownerId; // at 0x0
-    u16 groupId; // at 0x4
-    u8 attr;     // at 0x6
-    u8 perm;     // at 0x7
+    u32 ownerId; // _00
+    u16 groupId; // _04
+    u8 attr;     // _06
+    u8 perm;     // _07
 } NANDStatus;
 
 typedef struct NANDFileInfo {
-    s32 fd;                     // at 0x0
-    s32 tempFd;                 // at 0x4
-    char openPath[FS_MAX_PATH]; // at 0x8
-    char tempPath[FS_MAX_PATH]; // at 0x48
-    u8 access;                  // at 0x88
-    u8 stage;                   // at 0x89
-    u8 mark;                    // at 0x8A
+    s32 fd;                     // _00
+    s32 tempFd;                 // _04
+    char openPath[FS_MAX_PATH]; // _08
+    char tempPath[FS_MAX_PATH]; // _48
+    u8 access;                  // _88
+    u8 stage;                   // _89
+    u8 mark;                    // _8A
 } NANDFileInfo;
 
 typedef struct NANDCommandBlock {
-    void* userData;             // at 0x0
-    NANDAsyncCallback callback; // at 0x4
-    NANDFileInfo* info;         // at 0x8
-    void* bytes;                // at 0xC
-    void* inodes;               // at 0x10
-    NANDStatus* status;         // at 0x14
-    u32 ownerId;                // at 0x18
-    u16 groupId;                // at 0x1C
-    u8 nextStage;               // at 0x1E
-    u32 attr;                   // at 0x20
-    u32 ownerPerm;              // at 0x24
-    u32 groupPerm;              // at 0x28
-    u32 otherPerm;              // at 0x2C
-    u32 dirFileCount;           // at 0x30
-    char path[FS_MAX_PATH];     // at 0x34
-    u32* length;                // at 0x74
-    u32* position;              // at 0x78
-    s32 state;                  // at 0x7C
-    void* buffer;               // at 0x80
-    u32 bufferSize;             // at 0x84
-    u8* type;                   // at 0x88
-    u32 uniqueNo;               // at 0x8C
-    u32 reqBlocks;              // at 0x90
-    u32 reqInodes;              // at 0x94
-    u32* answer;                // at 0x98
-    u32 homeBlocks;             // at 0x9C
-    u32 homeInodes;             // at 0xA0
-    u32 userBlocks;             // at 0xA4
-    u32 userInodes;             // at 0xA8
-    u32 workBlocks;             // at 0xAC
-    u32 workInodes;             // at 0xB0
-    const char** dir;           // at 0xB4
+    void* userData;             // _00
+    NANDAsyncCallback callback; // _04
+    NANDFileInfo* info;         // _08
+    void* bytes;                // _0C
+    void* inodes;               // _10
+    NANDStatus* status;         // _14
+    u32 ownerId;                // _18
+    u16 groupId;                // _1C
+    u8 nextStage;               // _1E
+    u32 attr;                   // _20
+    u32 ownerPerm;              // _24
+    u32 groupPerm;              // _28
+    u32 otherPerm;              // _2C
+    u32 dirFileCount;           // _30
+    char path[FS_MAX_PATH];     // _34
+    u32* length;                // _74
+    u32* position;              // _78
+    s32 state;                  // _7C
+    void* buffer;               // _80
+    u32 bufferSize;             // _84
+    u8* type;                   // _88
+    u32 uniqueNo;               // _8C
+    u32 reqBlocks;              // _90
+    u32 reqInodes;              // _94
+    u32* answer;                // _98
+    u32 homeBlocks;             // _9C
+    u32 homeInodes;             // _A0
+    u32 userBlocks;             // _A4
+    u32 userInodes;             // _A8
+    u32 workBlocks;             // _AC
+    u32 workInodes;             // _B0
+    const char** dir;           // _B4
 } NANDCommandBlock;
 
 typedef struct NANDBanner {
-    u32 magic;                                          // at 0x0
-    u32 flags;                                          // at 0x4
-    u16 iconSpeed;                                      // at 0x8
-    u8 reserved[0x20 - 0xA];                            // at 0xA
-    wchar_t title[NAND_BANNER_TITLE_MAX];               // at 0x20
-    wchar_t subtitle[NAND_BANNER_TITLE_MAX];            // at 0x60
-    u8 bannerTexture[0x6000];                           // at 0xA0
-    u8 iconTexture[0x1200][NAND_BANNER_ICON_MAX_FRAME]; // at 0x60A0
+    u32 magic;                                          // _00
+    u32 flags;                                          // _04
+    u16 iconSpeed;                                      // _08
+    u8 reserved[0x20 - 0xA];                            // _0A
+    wchar_t title[NAND_BANNER_TITLE_MAX];               // _20
+    wchar_t subtitle[NAND_BANNER_TITLE_MAX];            // _60
+    u8 bannerTexture[0x6000];                           // _A0
+    u8 iconTexture[0x1200][NAND_BANNER_ICON_MAX_FRAME]; // _60A0
 } NANDBanner;
 
 typedef void (*NANDLoggingCallback)(BOOL);

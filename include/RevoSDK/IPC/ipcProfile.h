@@ -1,13 +1,15 @@
-#ifndef REVOSDK_IPC_MEMORY_H
-#define REVOSDK_IPC_MEMORY_H
+#ifndef REVOSDK_IPC_PROFILE_H
+#define REVOSDK_IPC_PROFILE_H
 #include <types.h>
+#include <RevoSDK/IPC/ipcclt.h>
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-s32 iosCreateHeap(void* base, u32 size);
-void* iosAllocAligned(s32 handle, u32 size, u32 align);
-s32 iosFree(s32 handle, void* block);
+void IPCiProfInit(void);
+void IPCiProfQueueReq(IPCRequestEx* req, s32 fd);
+void IPCiProfAck(void);
+void IPCiProfReply(IPCRequestEx* req, s32 fd);
 
 #ifdef __cplusplus
 }
