@@ -2,14 +2,14 @@
 #include "RevoSDK/os.h"
 #include "RevoSDK/si.h"
 
-const char* __PADVersion = "<< Dolphin SDK - PAD\trelease build: Aug  6 2003 04:30:02 (0x2301) >>";
+const char* __PADVersion = "<< RVL_SDK - PAD \trelease build: Oct  3 2007 01:00:54 (0x4199_60831) >>";
 
 // forward declarations of static functions.
 static void SPEC0_MakeStatus(s32 chan, PADStatus* status, u32 data[2]);
 static void SPEC1_MakeStatus(s32 chan, PADStatus* status, u32 data[2]);
 static void SPEC2_MakeStatus(s32 chan, PADStatus* status, u32 data[2]);
 static void PADTypeAndStatusCallback(s32 chan, u32 type);
-static BOOL OnReset(BOOL final);
+static BOOL OnShutdown(BOOL final, u32 event);
 
 // static symbols.
 static u32 Type[SI_MAX_CHAN];
@@ -25,7 +25,7 @@ static void (*MakeStatus)(s32, PADStatus*, u32[2]) = SPEC2_MakeStatus;
 static u32 CmdReadOrigin = 0x41 << 24;
 static u32 CmdCalibrate  = 0x42 << 24;
 
-static OSResetFunctionInfo ResetFunctionInfo = { OnReset, 127 };
+static OSShutdownFunctionInfo ShutdownFunctionInfo = { OnShutdown, 127 };
 
 static BOOL Initialized;
 
@@ -395,7 +395,7 @@ BOOL PADInit(void)
 	}
 
 	SIRefreshSamplingRate();
-	OSRegisterResetFunction(&ResetFunctionInfo);
+	OSRegisterShutdownFunction(&ShutdownFunctionInfo);
 	return PADReset(PAD_CHAN0_BIT | PAD_CHAN1_BIT | PAD_CHAN2_BIT | PAD_CHAN3_BIT);
 }
 
@@ -1161,7 +1161,7 @@ void PADSetAnalogMode(u32 mode)
  * @note Address: 0x800F4D10
  * @note Size: 0xBC
  */
-static BOOL OnReset(BOOL f)
+static BOOL OnShutdown(BOOL f, u32 event)
 {
 	static BOOL recalibrated = FALSE;
 	BOOL sync;

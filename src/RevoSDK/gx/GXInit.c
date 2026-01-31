@@ -6,7 +6,7 @@ static GXFifoObj FifoObj;
 static GXData gxData;
 GXData* const __GXData = &gxData;
 
-char* __GXVersion = "<< Dolphin SDK - GX\trelease build: Nov 26 2003 05:19:07 (0x2301) >>";
+char* __GXVersion = "<< RVL_SDK - GX \trelease build: Dec 11 2007 01:34:15 (0x4199_60831) >>";
 
 void* __piReg  = nullptr;
 void* __cpReg  = nullptr;
@@ -42,10 +42,10 @@ static u32 GXTexRegionAddrTable[] = {
 	0x40000, 0x90000, 0x60000, 0xB0000, 0x80000, 0x10000, 0xA0000, 0x30000, 0x80000, 0x50000, 0xA0000, 0x70000,
 };
 
-// forward declaring static reset function
-static BOOL __GXShutdown(BOOL);
+// forward declaring static shutdown function
+static BOOL __GXShutdown(BOOL, u32);
 
-static OSResetFunctionInfo GXResetFuncInfo = { __GXShutdown, OS_RESET_PRIO_GX };
+static OSShutdownFunctionInfo GXShutdownFuncInfo = { __GXShutdown, OS_RESET_PRIO_GX };
 
 /**
  * @note Address: N/A
@@ -138,7 +138,7 @@ static GXTlutRegion* __GXDefaultTlutRegionCallback(u32 tlut)
  * @note Address: 0x800E27A0
  * @note Size: 0x190
  */
-BOOL __GXShutdown(BOOL final)
+BOOL __GXShutdown(BOOL final, u32 event)
 {
 	static u32 peCount;
 	static OSTime time;
@@ -202,7 +202,7 @@ BOOL __GXShutdown(BOOL final)
  */
 GXFifoObj* GXInit(void* base, u32 size)
 {
-	static u32 resetFuncRegistered = 0;
+	static u32 shutdownFuncRegistered = 0;
 	u32 i;
 	u32 pad;  // for stack matching
 	u32 pad2; // for stack matching
@@ -228,10 +228,10 @@ GXFifoObj* GXInit(void* base, u32 size)
 	GXSetCPUFifo(&FifoObj);
 	GXSetGPFifo(&FifoObj);
 
-	if (!resetFuncRegistered) {
-		OSRegisterResetFunction(&GXResetFuncInfo);
-		resetFuncRegistered = 1;
-	}
+	if (!shutdownFuncRegistered) {
+        OSRegisterShutdownFunction(&GXShutdownFuncInfo);
+        shutdownFuncRegistered = 1;
+    }
 
 	__GXPEInit();
 	EnableWriteGatherPipe();
