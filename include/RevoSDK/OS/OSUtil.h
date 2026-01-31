@@ -39,6 +39,7 @@ u32 __OSBusClock AT_ADDRESS(OS_BASE_CACHED | 0x00F8);
 u32 __OSCoreClock AT_ADDRESS(OS_BASE_CACHED | 0x00FC);
 
 OSTime __OSGetSystemTime();
+OSTime __OSTimeToSystemTime(OSTime);
 
 #define OS_BUS_CLOCK   __OSBusClock
 #define OS_CORE_CLOCK  __OSCoreClock

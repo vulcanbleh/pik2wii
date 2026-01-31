@@ -2138,6 +2138,7 @@ RevoSDK/os/OS.c:
 
 RevoSDK/os/OSAlarm.c:
 	.text       start:0x8012C8BC end:0x8012D098
+	.data       start:0x805722C0 end:0x805722D0
 	.sbss       start:0x8066C300 end:0x8066C308
 
 RevoSDK/os/OSAlloc.c:
@@ -2184,6 +2185,7 @@ RevoSDK/os/OSMessage.c:
 
 RevoSDK/os/OSMemory.c:
 	.text       start:0x8013300C end:0x801338E8
+	.data       start:0x80573638 end:0x80573648
 
 RevoSDK/os/OSMutex.c:
 	.text       start:0x801338E8 end:0x80133CD0
@@ -2208,6 +2210,7 @@ RevoSDK/os/OSThread.c:
 
 RevoSDK/os/OSTime.c:
 	.text       start:0x8013668C end:0x80136AA0
+	.data       start:0x805738D0 end:0x80573930
 
 RevoSDK/os/OSUtf.c:
 	.text       start:0x80136AA0 end:0x80136CD8
@@ -2230,6 +2233,8 @@ RevoSDK/os/OSPlayRecord.c:
 
 RevoSDK/os/OSStateFlags.c:
 	.text       start:0x80137A70 end:0x80137C7C
+	.data       start:0x8057F880 end:0x8057F8A8
+	.bss        start:0x805F4300 end:0x805F4320
 
 RevoSDK/os/OSNet.c:
 	.text       start:0x80137C7C end:0x801381E0
@@ -2567,26 +2572,38 @@ RevoSDK/mem/mem_list.c:
 
 RevoSDK/nand/nand.c:
 	.text       start:0x8018F7EC end:0x801907B8
+	.sdata      start:0x8066AE20 end:0x8066AE28
 
 RevoSDK/nand/NANDOpenClose.c:
 	.text       start:0x801907B8 end:0x80190C9C
 
 RevoSDK/nand/NANDCore.c:
-	.text       start:0x80190C9C end:0x80191AAC
+	.text       start:0x80190C9C end:0x801919F4
+	.rodata     start:0x80546138 end:0x80546280
+	.data       start:0x80589660 end:0x805897B0
 	.bss        start:0x80630480 end:0x806304C0
+	.sdata      start:0x8066AE28 end:0x8066AE50
 	.sbss       start:0x8066C798 end:0x8066C7A0
+
+RevoSDK/nand/NANDSecret.c:
+	.text       start:0x801919F4 end:0x80191AAC
 
 RevoSDK/nand/NANDCheck.c:
 	.text       start:0x80191AAC end:0x80191C70
+	.data       start:0x805897B0 end:0x80589860
+	.sdata      start:0x8066AE50 end:0x8066AE60
 
 RevoSDK/nand/NANDLogging.c:
 	.text       start:0x80191C70 end:0x80192240
+	.data       start:0x80589860 end:0x805898A3
 	.bss        start:0x806304C0 end:0x806307C0
+	.sdata      start:0x8066AE60 end:0x8066AE64
 	.sbss       start:0x8066C7A0 end:0x8066C7A8
 
 RevoSDK/sc/scsystem.c:
 	.text       start:0x80192240 end:0x80193BA4
 	.rodata     start:0x80546280 end:0x805462D8
+	.data       start:0x805898A8 end:0x805898F0
 	.bss        start:0x806307C0 end:0x80638960
 	.sbss       start:0x8066C7A8 end:0x8066C7C0
 

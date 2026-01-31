@@ -1,5 +1,5 @@
-#ifndef _DOLPHIN_OS_OSRESET_H
-#define _DOLPHIN_OS_OSRESET_H
+#ifndef _REVOSDK_OS_OSRESET_H
+#define _REVOSDK_OS_OSRESET_H
 
 #include "RevoSDK/OS/OSContext.h"
 #include "types.h"
@@ -8,53 +8,49 @@
 extern "C" {
 #endif // ifdef __cplusplus
 
-/////////// RESET INFO ///////////
-typedef struct OSResetFunctionInfo OSResetFunctionInfo;
+typedef enum {
+    OS_SD_EVENT_FATAL,
+    OS_SD_EVENT_1,
+    OS_SD_EVENT_SHUTDOWN,
+    OS_SD_EVENT_3,
+    OS_SD_EVENT_RESTART,
+    OS_SD_EVENT_RETURN_TO_MENU,
+    OS_SD_EVENT_LAUNCH_APP,
+} OSShutdownEvent;
 
-// Reset function type.
-typedef BOOL (*OSResetFunction)(BOOL final);
+/////////// SHUTDOWN INFO ///////////
+typedef struct OSShutdownFunctionInfo OSShutdownFunctionInfo;
 
-// Reset callback type.
-typedef void (*OSResetCallback)(void);
+// Shutdown function type.
+typedef BOOL (*OSShutdownFunction)(BOOL final, u32 event);
 
-// Struct for storing reset function information.
-struct OSResetFunctionInfo {
-	OSResetFunction func;      // _00
+// Struct for storing shutdown function information.
+struct OSShutdownFunctionInfo {
+	OSShutdownFunction func;      // _00
 	u32 priority;              // _04
-	OSResetFunctionInfo* next; // _08
-	OSResetFunctionInfo* prev; // _0C
+	OSShutdownFunctionInfo* next; // _08
+	OSShutdownFunctionInfo* prev; // _0C
 };
 
-// Queue struct for ResetFunctionInfos.
-typedef struct OSResetQueue {
-	OSResetFunctionInfo* head;
-	OSResetFunctionInfo* tail;
-} OSResetQueue;
+// Queue struct for ShutdownFunctionInfos.
+typedef struct OSShutdownFunctionQueue {
+	OSShutdownFunctionInfo* head;
+	OSShutdownFunctionInfo* tail;
+} OSShutdownFunctionQueue;
 
 //////////////////////////////////
 
-//////// RESET FUNCTIONS /////////
-// Basic reset functions.
-void OSRegisterResetFunction(OSResetFunctionInfo* info);
+//////// SHUTDOWN FUNCTIONS /////////
+// Basic shutdown functions.
+void OSRegisterShutdownFunction(OSShutdownFunctionInfo* info);
+BOOL __OSCallShutdownFunctions(u32 pass, u32 event);
+void __OSShutdownDevices(u32 event);
+u8 __OSGetDiscState(u8);
+void OSShutdownSystem(void);
+void OSReturnToMenu(void);
+u32 OSGetResetCode(void);
 void OSResetSystem(int reset, u32 code, BOOL doForceMenu);
-u32 OSGetResetCode();
-void OSGetSaveRegion(void** start, void** end);
-void OSSetSaveRegion(void* start, void* end);
 
-// Reset switch functions.
-BOOL OSGetResetButtonState();
-BOOL OSGetResetSwitchState();
-
-// Reboot functions.
-void __OSReboot(u32 resetCode, u32 bootDol);
-void __OSDoHotReset(s32 code);
-void OSSetSaveRegion(void* start, void* end);
-void OSGetSaveRegion(void** start, void** end);
-void OSGetSavedRegion(void** start, void** end);
-
-// Unused/inlined in P2.
-void OSUnregisterResetFunction(OSResetFunctionInfo* info);
-OSResetCallback OSSetResetCallback(OSResetCallback callback);
 
 //////////////////////////////////
 

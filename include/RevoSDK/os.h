@@ -27,6 +27,7 @@ extern "C" {
 #include "RevoSDK/OS/OSMutex.h"
 #include "RevoSDK/OS/OSReset.h"
 #include "RevoSDK/OS/OSSerial.h"
+#include "RevoSDK/OS/OSStateFlags.h"
 #include "RevoSDK/OS/OSThread.h"
 #include "RevoSDK/OS/OSUtil.h"
 

@@ -6,9 +6,9 @@ BOOL __DVDTestAlarm(OSAlarm* alarm);
 static OSAlarmQueue AlarmQueue;
 
 static void DecrementerExceptionHandler(__OSException exception, OSContext* context);
-static BOOL OnReset(BOOL final);
+static BOOL OnReset(BOOL final, u32 event);
 
-static OSResetFunctionInfo ResetFunctionInfo = { OnReset, OS_RESET_PRIO_ALARM };
+static OSShutdownFunctionInfo ShutdownFunctionInfo = { OnReset, OS_RESET_PRIO_ALARM };
 
 /**
  * @note Address: N/A
@@ -32,12 +32,12 @@ static void SetTimer(OSAlarm* alarm)
  * @note Address: 0x800EBAB4
  * @note Size: 0x58
  */
-void OSInitAlarm()
+void __OSInitAlarm()
 {
 	if (__OSGetExceptionHandler(8) != DecrementerExceptionHandler) {
 		AlarmQueue.head = AlarmQueue.tail = nullptr;
 		__OSSetExceptionHandler(8, DecrementerExceptionHandler);
-		OSRegisterResetFunction(&ResetFunctionInfo);
+		OSRegisterShutdownFunction(&ShutdownFunctionInfo);
 	}
 }
 
@@ -112,6 +112,17 @@ void OSSetAlarm(OSAlarm* alarm, OSTime tick, OSAlarmHandler handler)
 	alarm->period = 0;
 	InsertAlarm(alarm, __OSGetSystemTime() + tick, handler);
 	OSRestoreInterrupts(enabled);
+}
+
+void OSSetPeriodicAlarm(OSAlarm* alarm, s64 tick, s64 period, OSAlarmHandler handler) 
+{
+    BOOL enabled = OSDisableInterrupts();
+
+    alarm->period = period;
+    alarm->start = __OSTimeToSystemTime(tick);
+    InsertAlarm(alarm, 0, handler);
+
+    OSRestoreInterrupts(enabled);
 }
 
 /**
@@ -218,7 +229,7 @@ ASM static void DecrementerExceptionHandler(register __OSException exception, re
  * @note Address: 0x800EC170
  * @note Size: 0xA0
  */
-static BOOL OnReset(BOOL final)
+static BOOL OnReset(BOOL final, u32 event)
 {
 	OSAlarm* alarm;
 	OSAlarm* next;
@@ -238,4 +249,12 @@ static BOOL OnReset(BOOL final)
 	}
 
 	return TRUE;
+}
+
+void OSSetAlarmUserData(OSAlarm* alarm, void* userData) {
+    alarm->userData = userData;
+}
+
+void* OSGetAlarmUserData(const OSAlarm* alarm) {
+    return alarm->userData;
 }
