@@ -226,7 +226,6 @@ struct TKchAttackYodare : public TKchYodareBaseChaseMtx {
 	TKchAttackYodare(Mtx mtx)
 	    : TKchYodareBaseChaseMtx(mtx, PID_KchYodareBase_1)
 	{
-		FORCE_DONT_INLINE;
 	}
 
 	virtual ~TKchAttackYodare() { } // _48 (weak)
@@ -239,7 +238,6 @@ struct TKchDeadYodare : public TKchYodareBaseChaseMtx {
 	TKchDeadYodare(Mtx mtx)
 	    : TKchYodareBaseChaseMtx(mtx, PID_KchYodareBase_Dead)
 	{
-		FORCE_DONT_INLINE;
 	}
 
 	virtual ~TKchDeadYodare() { } // _48 (weak)
@@ -252,7 +250,6 @@ struct TKchYodare : public TKchYodareBaseChaseMtx {
 	TKchYodare(Mtx mtx)
 	    : TKchYodareBaseChaseMtx(mtx, PID_KchYodareBase_2)
 	{
-		FORCE_DONT_INLINE;
 	}
 
 	virtual ~TKchYodare() { } // _48 (weak)

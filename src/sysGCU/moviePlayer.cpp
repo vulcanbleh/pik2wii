@@ -19,8 +19,11 @@
 #include "nans.h"
 #include "Sys/DrawBuffers.h"
 
-//static const u32 padding[]    = { 0, 0, 0 };
-static const char className[] = "moviePlayer";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "moviePlayer";
+}
 
 namespace Game {
 
@@ -321,6 +324,8 @@ bool MoviePlayer::playSuspended()
 		JUT_PANICLINE(792, " キューになにもないぞーー(T^T)\n"); // "There's nothing in the queue (T^T)\n"
 	}
 	return false;
+	
+	FORCE_DONT_INLINE
 }
 
 /**
@@ -581,6 +586,9 @@ bool MoviePlayer::update(Controller* input1, Controller* input2)
 		if (mFadeTimer < 1.1f && !mCanFinish) {
 			if (isFlag(MVP_IsFinished)) {
 				resetFrame();
+				if (!(mCurrentConfig->mPositionFlag & 1)) {
+					setTransform(mCameraPosition, mCameraAngle);
+				}
 				bool end = false;
 				while (end == false) {
 					end = !(mStudioControl->forward(1) != false); // dont even ask
@@ -865,12 +873,12 @@ void MoviePlayer::setTransform(Vector3f& pos, f32 angle)
 	mTransform                 = pos;
 	mTransformAngle            = angle * DEG2RAD * PI;
 	JStudio::TControl* control = mStudioControl;
-	control->mTransformOnGet   = true;
 	control->mTransformOnSet   = true;
+	control->mTransformOnGet   = true;
 	control                    = mStudioControl;
 
-	control->transformOnGet_setOrigin(*(Vec*)&pos, angle);
 	control->transformOnSet_setOrigin(*(Vec*)&pos, angle);
+	control->transformOnGet_setOrigin(*(Vec*)&pos, angle);
 }
 
 /**
@@ -911,8 +919,8 @@ void MoviePlayer::drawLoading(Graphics& gfx)
 		J2DOrthoGraph& graf = gfx.mOrthoGraph;
 		graf.setColor(c);
 		if (isLoadingBlack()) {
-			u32 y    = System::getRenderModeObj()->efbHeight;
-			u32 x    = System::getRenderModeObj()->fbWidth;
+			f32 y    = System::getRenderModeObj()->efbHeight;
+			f32 x    = System::getRenderModeObj()->fbWidth;
 			f32 zero = 0.0f;
 			JGeometry::TBox2f box(0.0f, 0.0f, zero + x, zero + y);
 			graf.fillBox(box);

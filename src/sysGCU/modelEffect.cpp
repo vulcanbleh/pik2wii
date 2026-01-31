@@ -2,6 +2,12 @@
 #include "ParticleMgr.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "modelEffect";
+}
+
 /**
  * @note Address: 0x8043D49C
  * @note Size: 0x6C

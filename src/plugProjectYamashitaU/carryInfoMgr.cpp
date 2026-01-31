@@ -5,6 +5,12 @@
 #include "Viewport.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "carryInfoMgr";
+}
+
 namespace {
 GXColor sColorTableNumerator[CINFOCOLOR_ColorCount] = {
 	{ 30, 30, 255, 255 },   // blue
@@ -68,11 +74,12 @@ void CarryInfo::disappear()
 void CarryInfo::update(const CarryInfoParam& param)
 {
 	if (mState != CINFO_Hidden) {
+		f32 multiplier = 0.04f;
 		switch (param.mUseType) {
 		case CINFOTYPE_Table: {
 			switch (mState) {
 			case CINFO_Appear: {
-				f32 temp = 0.04f * (param.mYOffsetMax - mYOffset);
+				f32 temp = multiplier * (param.mYOffsetMax - mYOffset);
 				mGrowRate += temp;
 				mYOffset += mGrowRate;
 				mScale = mYOffset / param.mYOffsetMax;
@@ -80,7 +87,7 @@ void CarryInfo::update(const CarryInfoParam& param)
 			}
 
 			case CINFO_Disappear: {
-				f32 temp = 0.04f * -mYOffset;
+				f32 temp = multiplier * -mYOffset;
 				mGrowRate += temp;
 				mYOffset += mGrowRate;
 
@@ -114,7 +121,7 @@ void CarryInfo::update(const CarryInfoParam& param)
 		case CINFOTYPE_Scale: {
 			mCounter++;
 			if (mYOffset < param.mYOffsetMax) {
-				f32 temp = (param.mYOffsetMax - mYOffset) * 0.04f;
+				f32 temp = (param.mYOffsetMax - mYOffset) * multiplier;
 				mGrowRate += temp;
 			}
 			mYOffset += mGrowRate;
@@ -155,6 +162,32 @@ void CarryInfo::update(const CarryInfoParam& param)
 		}
 		}
 	}
+}
+
+void CarryInfo::initDraw(Graphics& gfx)
+{
+	Graphics::clearInitGX();
+	GXSetNumChans(1);
+	GXSetTevDirect(GX_TEVSTAGE0);
+	GXSetNumTevStages(1);
+	GXSetTevOp(GX_TEVSTAGE0, GX_MODULATE);
+	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
+	GXClearVtxDesc();
+	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+	GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+	GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_POS_XYZ, GX_RGBA8, 0);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_POS_XYZ, GX_F32, 0);
+	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_SET);
+	GXSetZMode(GX_FALSE, GX_LESS, GX_FALSE);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXSetNumTexGens(1);
+	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3X4, GX_TG_TEXCOORD0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+	Matrixf mtx;
+	PSMTXIdentity(mtx.mMatrix.mtxView);
+	GXLoadTexMtxImm(mtx.mMatrix.mtxView, GX_TEXMTX0, GX_MTX2x4);
 }
 
 /**
@@ -278,14 +311,12 @@ f32 CarryInfo::drawNumber(Graphics& gfx, f32 x, f32 y, int dispNum, Color4& colo
 
 	// draw four digits
 	// need start and end digits equal from center, and middle two equal from center in between
-	f32 xOffsetEnd;
 	f32 xOffsetMiddle = 5.6f * scale;
-	xOffsetEnd        = 3.0f * xOffsetMiddle;
 
-	drawNumberPrim(gfx, x - xOffsetEnd, y, dispNum / 1000, color, scale);
+	drawNumberPrim(gfx, x - 3.0f * xOffsetMiddle, y, dispNum / 1000, color, scale);
 	drawNumberPrim(gfx, x - xOffsetMiddle, y, (dispNum / 100) % 10, color, scale);
 	drawNumberPrim(gfx, x + xOffsetMiddle, y, (dispNum / 10) % 10, color, scale);
-	drawNumberPrim(gfx, x + xOffsetEnd, y, dispNum % 10, color, scale);
+	drawNumberPrim(gfx, x + 3.0f * xOffsetMiddle, y, dispNum % 10, color, scale);
 
 	return 6.0f * xOffsetMiddle + 7.0f * scale;
 }
@@ -304,30 +335,28 @@ void CarryInfo::drawNumberPrim(Graphics& gfx, f32 x, f32 y, int digit, Color4& c
 	f32 yMax         = y + scaledOffset;
 	f32 digitStart   = factor * digit;
 	f32 digitEnd     = digitStart + factor;
-	f32 zero         = 0.0f;
-	f32 one          = 1.0f;
 
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
 
 	// bottom left
-	GXPosition3f32(xMin, yMin, zero);
+	GXPosition3f32(xMin, yMin, 0.0f);
 	GXColor4u8(color.r, color.g, color.b, color.a);
-	GXPosition2f32(digitStart, one);
+	GXPosition2f32(digitStart, 1.0f);
 
 	// bottom right
-	GXPosition3f32(xMax, yMin, zero);
+	GXPosition3f32(xMax, yMin, 0.0f);
 	GXColor4u8(color.r, color.g, color.b, color.a);
-	GXPosition2f32(digitEnd, one);
+	GXPosition2f32(digitEnd, 1.0f);
 
 	// top left
-	GXPosition3f32(xMin, yMax, zero);
+	GXPosition3f32(xMin, yMax, 0.0f);
 	GXColor4u8(color.r, color.g, color.b, color.a);
-	GXPosition2f32(digitStart, zero);
+	GXPosition2f32(digitStart, 0.0f);
 
 	// top right
-	GXPosition3f32(xMax, yMax, zero);
+	GXPosition3f32(xMax, yMax, 0.0f);
 	GXColor4u8(color.r, color.g, color.b, color.a);
-	GXPosition2f32(digitEnd, zero);
+	GXPosition2f32(digitEnd, 0.0f);
 }
 
 /**
@@ -466,7 +495,7 @@ CarryInfoList* CarryInfoMgr::appear(CarryInfoOwner* owner)
  */
 void CarryInfoMgr::loadResource()
 {
-	JKRArchive* arc = JKRMountArchive("/user/Yamashita/arc/gameTex.szs", JKRArchive::EMM_Mem, nullptr, JKRArchive::EMD_Head);
+	JKRArchive* arc = JKRMountArchive("user/Yamashita/arc/gameTex.szs", JKRArchive::EMM_Mem, nullptr, JKRArchive::EMD_Head);
 	ResTIMG* timg   = JKRGetImageResource("item_0_9.bti", arc);
 	JUTTexture* tex = new JUTTexture(timg);
 	mTexture        = tex;
@@ -479,28 +508,7 @@ void CarryInfoMgr::loadResource()
 void CarryInfoMgr::draw(Graphics& gfx)
 {
 	if (!Game::moviePlayer || !Game::moviePlayer->isFlag(Game::MVP_IsActive)) {
-		Graphics::clearInitGX();
-		GXSetNumChans(1);
-		GXSetTevDirect(GX_TEVSTAGE0);
-		GXSetNumTevStages(1);
-		GXSetTevOp(GX_TEVSTAGE0, GX_MODULATE);
-		GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
-		GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, GX_LIGHT_NULL, GX_DF_NONE, GX_AF_NONE);
-		GXClearVtxDesc();
-		GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-		GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
-		GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
-		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_POS_XYZ, GX_RGBA8, 0);
-		GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_POS_XYZ, GX_F32, 0);
-		GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_SET);
-		GXSetZMode(GX_FALSE, GX_LESS, GX_FALSE);
-		GXSetCurrentMtx(GX_PNMTX0);
-		GXSetNumTexGens(1);
-		GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3X4, GX_TG_TEXCOORD0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
-		Matrixf mtx;
-		PSMTXIdentity(mtx.mMatrix.mtxView);
-		GXLoadTexMtxImm(mtx.mMatrix.mtxView, GX_TEXMTX0, GX_MTX2x4);
+		CarryInfo::initDraw(gfx);
 		mTexture->load(GX_TEXMAP0);
 		InfoMgr<CarryInfoOwner, CarryInfoList>::draw(gfx);
 	}

@@ -1,5 +1,11 @@
 #include "Game/plantsMgr.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "plantsMgr";
+}
+
 namespace Game {
 /**
  * @note Address: 0x80353D4C

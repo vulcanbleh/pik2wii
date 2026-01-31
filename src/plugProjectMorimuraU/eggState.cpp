@@ -5,6 +5,12 @@
 #include "efx/TEnemyBomb.h"
 #include "PSM/EnemyBase.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "eggState";
+}
+
 namespace Game {
 namespace Egg {
 /**
@@ -24,7 +30,7 @@ void FSM::init(Game::EnemyBase* enemy)
 StateWait::StateWait(int stateID)
     : State(stateID)
 {
-	mName = "wait";
+	setName("wait");
 }
 
 /**
@@ -44,7 +50,7 @@ void StateWait::init(EnemyBase* enemy, StateArg* stateArg)
  */
 void StateWait::exec(EnemyBase* enemy)
 {
-	if (enemy->mHealth <= 0.0f) {
+	if (enemy->isDead()) {
 		OBJ(enemy)->genItem();
 
 		Vector3f fxPos;

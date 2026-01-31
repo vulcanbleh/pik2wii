@@ -5,6 +5,12 @@
 #include "efx/TEnemyBomb.h"
 #include "efx/TEnemyDead.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "tamagoMushiState";
+}
+
 namespace Game {
 namespace TamagoMushi {
 
@@ -30,7 +36,7 @@ void FSM::init(EnemyBase* enemy)
 StateWalk::StateWalk(int stateID)
     : State(stateID)
 {
-	mName = "walk";
+	setName("walk");
 }
 
 /**
@@ -89,7 +95,7 @@ void StateWalk::exec(EnemyBase* enemy)
 StateTurn::StateTurn(int stateID)
     : State(stateID)
 {
-	mName = "turn";
+	setName("turn");
 }
 
 /**
@@ -126,7 +132,7 @@ void StateTurn::exec(EnemyBase* enemy)
 StateAppear::StateAppear(int stateID)
     : State(stateID)
 {
-	mName = "appear";
+	setName("appear");
 }
 
 /**
@@ -211,7 +217,7 @@ void StateAppear::exec(EnemyBase* enemy)
 StateHide::StateHide(int stateID)
     : State(stateID)
 {
-	mName = "hide";
+	setName("hide");
 }
 
 /**
@@ -249,7 +255,7 @@ void StateHide::exec(EnemyBase* enemy)
 StateDead::StateDead(int stateID)
     : State(stateID)
 {
-	mName = "dead";
+	setName("dead");
 }
 
 /**
@@ -301,7 +307,7 @@ void StateDead::exec(EnemyBase* enemy)
 StateWait::StateWait(int stateID)
     : State(stateID)
 {
-	mName = "Wait";
+	setName("Wait");
 }
 
 /**

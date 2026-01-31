@@ -60,6 +60,16 @@ OSTime __OSGetSystemTime()
 	return result;
 }
 
+OSTime __OSTimeToSystemTime(OSTime time) {
+    BOOL enabled = OSDisableInterrupts();
+	OSTime* os_time = (OSTime*)(OSPhysicalToCached(0x30D8));
+    OSTime res;
+
+    res = *os_time + time;
+    OSRestoreInterrupts(enabled);
+    return res;
+}
+
 /**
  * @note Address: N/A
  * @note Size: 0x88

@@ -1,6 +1,12 @@
 #include "Game/EnemyAnimKeyEvent.h"
 #include "Game/Entities/Tyre.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "tyreState";
+}
+
 namespace Game {
 namespace Tyre {
 /**
@@ -23,7 +29,7 @@ void Tyre::FSM::init(EnemyBase* enemy)
 StateMove::StateMove(int stateID)
     : State(stateID)
 {
-	mName = "move";
+	setName("move");
 }
 
 /**
@@ -64,7 +70,7 @@ void Tyre::StateMove::exec(EnemyBase* enemy)
 		tyre->mAnimator->mSpeed = rotationSpeed;
 	}
 
-	if ((tyre->mHealth <= 0.0f) && tyre->isEvent(0, EB_Invulnerable)) {
+	if ((tyre->isDead()) && tyre->isEvent(0, EB_Invulnerable)) {
 		transit(tyre, TYRE_Dead, nullptr);
 	}
 }
@@ -85,7 +91,7 @@ void Tyre::StateMove::cleanup(EnemyBase* enemy)
 StateLand::StateLand(int stateID)
     : State(stateID)
 {
-	mName = "land";
+	setName("land");
 }
 
 /**
@@ -121,7 +127,7 @@ void Tyre::StateLand::exec(EnemyBase* enemy)
 StateFreeze::StateFreeze(int stateID)
     : State(stateID)
 {
-	mName = "freeze";
+	setName("freeze");
 }
 
 /**
@@ -149,7 +155,7 @@ void Tyre::StateFreeze::exec(EnemyBase* enemy)
 	tyre->mCurrentVelocity.set(0.0f, 0.0f, 0.0f);
 	tyre->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	mFrozenTimer++;
-	if ((tyre->mHealth <= 0.0f) && tyre->isEvent(0, EB_Invulnerable)) {
+	if ((tyre->isDead()) && tyre->isEvent(0, EB_Invulnerable)) {
 		transit(tyre, TYRE_Dead, nullptr);
 	}
 
@@ -170,7 +176,7 @@ void Tyre::StateFreeze::exec(EnemyBase* enemy)
 Tyre::StateDead::StateDead(int stateID)
     : State(stateID)
 {
-	mName = "dead";
+	setName("dead");
 }
 
 /**

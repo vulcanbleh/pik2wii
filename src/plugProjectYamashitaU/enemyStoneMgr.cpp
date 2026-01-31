@@ -39,7 +39,7 @@ void Mgr::loadResource()
 
 	mModelData = new J3DModelData*[ENEMY_STONE_MODEL_NUM];
 
-	LoadResource::ArgAramOnly argAram("/enemy/common/enemyCommon.szs");
+	LoadResource::ArgAramOnly argAram("enemy/common/enemyCommon.szs");
 
 	LoadResource::Node* resourceNode = gLoadResourceMgr->mountArchive(argAram);
 

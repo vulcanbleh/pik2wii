@@ -9,7 +9,7 @@ namespace Resource {
  * @note Size: 0xA0
  */
 // INLINE
-inline Mgr2D::Mgr2D(JKRHeap* heap)
+Mgr2D::Mgr2D(JKRHeap* heap)
     : Mgr(heap, 0xD4800)
 {
 	P2ASSERTLINE(34, heap);

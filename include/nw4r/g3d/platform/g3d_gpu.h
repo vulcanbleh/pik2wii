@@ -95,12 +95,12 @@ inline void GDSetChanCtrlLightOff(GXChannelID chan, u32 param, u32 lightMask)
 
 inline void GDSetChanAmbColor(GXChannelID chan, GXColor color)
 {
-	LoadXFCmd(GX_XF_REG_AMBIENT0 + chan, *reinterpret_cast<u32*>(&color));
+	LoadXFCmd(GX_XF_REG_AMBIENT0 + (chan & 1), *reinterpret_cast<u32*>(&color));
 }
 
 inline void GDSetChanMatColor(GXChannelID chan, GXColor color)
 {
-	LoadXFCmd(GX_XF_REG_MATERIAL0 + chan, *reinterpret_cast<u32*>(&color));
+	LoadXFCmd(GX_XF_REG_MATERIAL0 + (chan & 1), *reinterpret_cast<u32*>(&color));
 }
 
 ////////////////////////////////////////////////////////

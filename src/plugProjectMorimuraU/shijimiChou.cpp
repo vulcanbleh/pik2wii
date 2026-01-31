@@ -10,10 +10,14 @@
 #include "RevoSDK/rand.h"
 #include "efx/TChou.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "shijimiChou";
+}
+
 namespace Game {
 namespace ShijimiChou {
-
-static const char unusedName[] = "shijimiChou";
 
 static J2DGXColorS10 mMatColorY0;
 static J2DGXColorS10 mMatColorR0;
@@ -33,7 +37,7 @@ void Obj::setParameters()
 	f32 min        = C_PARMS->mMinScale;
 	f32 randScale  = (max - min) * randFloat() + min;
 	mScaleModifier = randScale;
-	mScale         = Vector3f(randScale);
+	setScale(randScale);
 	mCollTree->mPart->setScale(randScale);
 }
 
@@ -482,7 +486,7 @@ void Obj::getShadowParam(ShadowParam& param)
 	}
 
 	param.mPosition.y               = 2.0f + mMapMinY;
-	param.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	param.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 	param.mBoundingSphere.mRadius   = 20.0f;
 
 	// adjust shadow size based on how much above/below home position we are
@@ -613,7 +617,7 @@ void Obj::fly()
 		}
 		updateFaceDir(mFaceDir + roundAng(faceDirOffset));
 
-		mTargetVelocity = Vector3f(x, y, z);
+		mTargetVelocity.set(x, y, z);
 	}
 
 	mPosition.y += 0.01f * (mGoalPosition.y - mPosition.y);

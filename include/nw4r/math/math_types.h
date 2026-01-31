@@ -573,9 +573,10 @@ inline u32 MTX34Inv(MTX34* pOut, const MTX34* pIn)
 	return PSMTXInverse(*pIn, *pOut);
 }
 
-// inline u32 MTX34InvTranspose(MTX34* pOut, const MTX34* pIn) {
-//     return PSMTXInvXpose(*pIn, *pOut);
-// }
+inline u32 MTX34InvTranspose(MTX34* pOut, const MTX34* pIn) 
+{
+    return PSMTXInvXpose(*pIn, *pOut);
+}
 
 inline MTX34* MTX34LookAt(MTX34* pMtx, const VEC3* pPos, const VEC3* pUp, const VEC3* pTarget)
 {
@@ -589,11 +590,11 @@ inline MTX34* MTX34Mult(MTX34* pOut, const MTX34* pA, const MTX34* pB)
 	return pOut;
 }
 
-// inline MTX34* MTX34MultArray(MTX34* pOut, const MTX34* p1, const MTX34* pSrc,
-//                              u32 len) {
-//     PSMTXConcatArray(*p1, *pSrc, *pOut, len);
-//     return pOut;
-// }
+inline MTX34* MTX34MultArray(MTX34* pOut, const MTX34* p1, const MTX34* pSrc, u32 len) 
+{
+    PSMTXConcatArray(*p1, *pSrc, *pOut, len);
+    return pOut;
+}
 
 inline MTX34* MTX34RotAxisRad(MTX34* pOut, const VEC3* pAxis, f32 frad)
 {
@@ -616,11 +617,11 @@ inline MTX34* MTX34Scale(MTX34* pOut, const VEC3* pScale, const MTX34* pIn)
 	return pOut;
 }
 
-// inline QUAT* MTX34ToQUAT(QUAT* pQuat, const MTX34* pMtx)
-// {
-// 	C_QUATMtx(*pQuat, *pMtx);
-// 	return pQuat;
-// }
+inline QUAT* MTX34ToQUAT(QUAT* pQuat, const MTX34* pMtx)
+{
+ 	C_QUATMtx(*pQuat, *pMtx);
+ 	return pQuat;
+}
 
 inline MTX34* MTX34Trans(MTX34* pOut, const VEC3* pTrans, const MTX34* pIn)
 {
@@ -629,18 +630,18 @@ inline MTX34* MTX34Trans(MTX34* pOut, const VEC3* pTrans, const MTX34* pIn)
 }
 
 // QUAT
-// inline MTX34* QUATToMTX34(MTX34* pMtx, const QUAT* pQuat)
-// {
-// 	PSMTXQuat(*pMtx, *pQuat);
-// 	return pMtx;
-// }
+inline MTX34* QUATToMTX34(MTX34* pMtx, const QUAT* pQuat)
+{
+ 	//PSMTXQuat(*pMtx, *pQuat);
+ 	//return pMtx;
+}
 
 // @bug QUATSlerp macro changes this function name!
-// inline QUAT* C_QUATSlerp(QUAT* pOut, const QUAT* p1, const QUAT* p2, f32 t)
-// {
-// 	::C_QUATSlerp(*p1, *p2, *pOut, t);
-// 	return pOut;
-// }
+inline QUAT* C_QUATSlerp(QUAT* pOut, const QUAT* p1, const QUAT* p2, f32 t)
+{
+ 	::C_QUATSlerp(*p1, *p2, *pOut, t);
+ 	return pOut;
+}
 
 ////////////////////////////////////////////////////////
 

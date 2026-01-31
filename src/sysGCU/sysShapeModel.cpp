@@ -4,6 +4,12 @@
 #include "Viewport.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "sysShapeModel";
+}
+
 namespace SysShape {
 
 u8 Model::viewCalcMode = true;
@@ -38,7 +44,7 @@ void Model::enableMaterialAnim(J3DModelData* data, int type)
 		}
 		break;
 	case 1:
-		JUT_PANICLINE(79, "manda\n");
+		JUT_PANICLINE(83, "manda\n");
 	}
 }
 
@@ -58,7 +64,7 @@ void Model::enableMaterialAnim(int type)
 		}
 		break;
 	case 1:
-		JUT_PANICLINE(100, "manda\n");
+		JUT_PANICLINE(104, "manda\n");
 	}
 	mIsAnimating = true;
 }
@@ -379,8 +385,8 @@ void Model::initJoints()
  */
 Joint::Joint()
 {
-	mMin = SHORT_FLOAT_MAX;
-	mMax = -SHORT_FLOAT_MAX;
+	mMin.set(SHORT_FLOAT_MAX);
+	mMax.set(-SHORT_FLOAT_MAX);
 }
 
 /**

@@ -200,7 +200,7 @@ void AABBWaterBox::doEntry()
 				Mtx copyMatrix;
 				PSMTXIdentity(copyMatrix);
 				
-				mModel->mJ3dModel->mModelData->getMaterialNodePointer(0)->mTexGenBlock->getTexMtx(3)->getTexMtxInfo().setMtx(copyMatrix);
+				mModel->mJ3dModel->mModelData->getMaterialNodePointer(0)->mTexGenBlock->getTexMtx(3)->getTexMtxInfo().setEffectMtx(copyMatrix);
 
 				mFbTexture->changeImage(section->mMizuTexture->getTexInfo(), mFbTexIndex);
 				
@@ -232,7 +232,7 @@ void AABBWaterBox::doEntry()
 		mModel->mJ3dModel->calcMaterial();
 
 		if (mFbTexture) {
-			mModel->mJ3dModel->mModelData->getMaterialNodePointer(0)->mTexGenBlock->getTexMtx(3)->getTexMtxInfo().setMtx(copyMatrix);
+			mModel->mJ3dModel->mModelData->getMaterialNodePointer(0)->mTexGenBlock->getTexMtx(3)->getTexMtxInfo().setEffectMtx(copyMatrix);
 
 			mFbTexture->changeImage(gameSystem->getXfbTexture()->getTexInfo(), mFbTexIndex);
 		}

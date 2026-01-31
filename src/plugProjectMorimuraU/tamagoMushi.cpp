@@ -8,9 +8,14 @@
 #include "efx/TTamagoAp.h"
 #include "efx/TUjinko.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "tamagoMushi";
+}
+
 namespace Game {
 namespace TamagoMushi {
-static const char unusedName[] = "tamagoMushi";
 
 /**
  * @note Address: 0x8036EBA8
@@ -263,7 +268,7 @@ void Obj::bounceCallback(Sys::Triangle* tri)
 	if (mIsBallFallWait) {
 		f32 velY     = 0.7f + 0.3f * randFloat();
 		f32 speed    = C_PARMS->mBaseXZVelocityOnBounce;
-		Vector3f vel = Vector3f(sinf(mFaceDir) * speed, C_PARMS->mBaseYVelocityOnBounce * velY, cosf(mFaceDir) * speed);
+		Vector3f vel = Vector3f(cosf(mFaceDir) * speed, C_PARMS->mBaseYVelocityOnBounce * velY, sinf(mFaceDir) * speed);
 		setVelocity(vel);
 		mTargetVelocity = vel;
 		mPosition.y += 10.0f;
@@ -305,7 +310,7 @@ void Obj::getShadowParam(ShadowParam& shadowParam)
 	if (mPellet || getStateID() == TAMAGOMUSHI_Dead) {
 		shadowParam.mPosition.y = mPosition.y + 2.0f;
 	}
-	shadowParam.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	shadowParam.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 	shadowParam.mBoundingSphere.mRadius   = 15.0f;
 	shadowParam.mSize                     = 12.0f;
 }
@@ -316,7 +321,7 @@ void Obj::getShadowParam(ShadowParam& shadowParam)
  */
 bool Obj::needShadow()
 {
-	return EnemyBase::needShadow() > 0; // WHY MAN.
+	return EnemyBase::needShadow();
 }
 
 /**
@@ -409,7 +414,7 @@ void Obj::walkFunc()
 
 	updateFaceDir(mFaceDir + roundAng(newDir));
 
-	mTargetVelocity = Vector3f(x, y, z);
+	mTargetVelocity.set(x, y, z);
 }
 
 /**

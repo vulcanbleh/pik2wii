@@ -2,7 +2,7 @@
 #include "RevoSDK/hw_regs.h"
 #include "RevoSDK/os.h"
 
-char* __AIVersion = "<< Dolphin SDK - AI\trelease build: Apr 17 2003 12:33:54 (0x2301) >>";
+const char* __AIVersion = "<< RVL_SDK - AI \trelease build: Aug  8 2007 01:58:12 (0x4199_60831 >>";
 
 static AISCallback __AIS_Callback = NULL;
 static AIDCallback __AID_Callback = NULL;
@@ -49,9 +49,9 @@ void AIInitDMA(u32 address, u32 length)
 
 	previousInterruptState = OSDisableInterrupts();
 
-	__DSPRegs[DSP_DMA_START_HI]    = (u16)((__DSPRegs[DSP_DMA_START_HI] & ~0x3FF) | (address >> 16));
-	__DSPRegs[DSP_DMA_START_LO]    = (u16)((__DSPRegs[DSP_DMA_START_LO] & ~0xFFE0) | (address & 0xFFFF));
-	__DSPRegs[DSP_DMA_CONTROL_LEN] = (u16)((__DSPRegs[DSP_DMA_CONTROL_LEN] & ~0x7FFF) | ((length >> 5) & 0xFFFF));
+	__DSPRegs[DSP_DMA_START_HI]    = (__DSPRegs[DSP_DMA_START_HI] & ~0x1FFF) | (address >> 16);
+	__DSPRegs[DSP_DMA_START_LO]    = (__DSPRegs[DSP_DMA_START_LO] & ~0xFFE0) | (0xFFFF & address);
+	__DSPRegs[DSP_DMA_CONTROL_LEN] = (__DSPRegs[DSP_DMA_CONTROL_LEN] & ~0x7FFF) | ((length / 32) & 0xFFFF);
 
 	OSRestoreInterrupts(previousInterruptState);
 }
@@ -89,7 +89,7 @@ void AIStopDMA(void)
  */
 u32 AIGetDMABytesLeft(void)
 {
-	// UNUSED FUNCTION
+	return (__DSPRegs[29] & 0x7FFF) << 5;
 }
 
 /**
@@ -98,7 +98,7 @@ u32 AIGetDMABytesLeft(void)
  */
 u32 AIGetDMAStartAddr(void)
 {
-	const u32 startAddressHigh = (__DSPRegs[DSP_DMA_START_HI] & 0x03FF) << 16;
+	const u32 startAddressHigh = (__DSPRegs[DSP_DMA_START_HI] & 0x1FFF) << 16;
 	const u32 startAddressLow  = __DSPRegs[DSP_DMA_START_LO] & 0xFFE0;
 
 	return startAddressHigh | startAddressLow;
@@ -110,7 +110,7 @@ u32 AIGetDMAStartAddr(void)
  */
 u32 AIGetDMALength(void)
 {
-	// UNUSED FUNCTION
+	return (__DSPRegs[27] & 0x7FFF) << 5;
 }
 
 /**

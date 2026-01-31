@@ -5,6 +5,12 @@
 #include "Viewport.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "LifeGaugeMgr";
+}
+
 // i'd put this in Vector3f but i really dont wanna include all of GX in that - HP.
 inline void GXDrawVector3f(Vector3f& vec)
 {
@@ -84,7 +90,7 @@ void LifeGauge::draw(f32 radius, f32 centerX, f32 centerY)
 	Vector3f vertices[3];
 
 	// first vertex - we're in 2D drawing mode so z is always 0.0f
-	vertices[0] = Vector3f(centerX, centerY, 0.0f);
+	vertices[0].set(centerX, centerY, 0.0f);
 
 	// draw segments
 	for (int i = 0; i < this->mCurrentSegmentNum; i++) {
@@ -133,6 +139,31 @@ void LifeGauge::initLifeGaugeDraw()
 	GXLoadTexMtxImm(texMtx, GX_TEXMTX0, GX_MTX2x4);
 }
 
+void LifeGauge::initLifeGaugeFrameDraw()
+{
+	GXSetNumChans(1);
+	GXSetTevDirect(GX_TEVSTAGE0);
+	GXSetNumTevStages(1);
+	GXSetTevOp(GX_TEVSTAGE0, GX_MODULATE);
+	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
+	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
+	GXClearVtxDesc();
+	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
+	GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
+	GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_POS_XYZ, GX_RGBA8, 0);
+	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_POS_XYZ, GX_U8, 0);
+	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_SET);
+	GXSetZMode(GX_FALSE, GX_LESS, GX_FALSE);
+	GXSetCurrentMtx(GX_PNMTX0);
+	GXSetNumTexGens(1);
+	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3X4, GX_TG_TEXCOORD0, GX_IDENTITY, 0, GX_PTIDENTITY);
+	Mtx texMtx;
+	PSMTXIdentity(texMtx);
+	GXLoadTexMtxImm(texMtx, GX_TEXMTX0, GX_MTX2x4);
+}
+
 /**
  * Draws a single triangle using the given positions and color.
  *
@@ -155,21 +186,8 @@ void LifeGauge::drawOneTri(Vector3f* vertices, Color4& color)
 	GXEnd();
 }
 
-/**
- * @note Address: 0x8011A1CC
- * @note Size: 0x604
- */
-void LifeGaugeList::draw(Graphics& gfx)
+void LifeGaugeList::setMatrix(Graphics& gfx)
 {
-	// if gauge isn't visible, don't bother drawing it, duh
-	if (!mParam.mIsGaugeShown) {
-		return;
-	}
-
-	// half the width of the box the gauge is going to be drawn in - bit bigger than the gauge itself
-	// this is so the center of the box is at (0,0) which makes segment vertices easy
-	f32 halfWidth = (1.25f * mParam.mRadius);
-
 	Viewport* cVp = gfx.mCurrentViewport;
 
 	Matrixf* viewMtx = cVp->getMatrix(true);
@@ -192,49 +210,47 @@ void LifeGaugeList::draw(Graphics& gfx)
 	PSMTXConcat(cVp->getMatrix(true)->mMatrix.mtxView, transScaledMtx.mMatrix.mtxView, posMtx);
 
 	GXLoadPosMtxImm(posMtx, GX_MTX3x4);
-	GXSetNumChans(1);
-	GXSetTevDirect(GX_TEVSTAGE0);
-	GXSetNumTevStages(1);
-	GXSetTevOp(GX_TEVSTAGE0, GX_MODULATE);
-	GXSetTevOrder(GX_TEVSTAGE0, GX_TEXCOORD0, GX_TEXMAP0, GX_COLOR0A0);
-	GXSetChanCtrl(GX_COLOR0A0, GX_FALSE, GX_SRC_REG, GX_SRC_VTX, 0, GX_DF_NONE, GX_AF_NONE);
-	GXClearVtxDesc();
-	GXSetVtxDesc(GX_VA_POS, GX_DIRECT);
-	GXSetVtxDesc(GX_VA_CLR0, GX_DIRECT);
-	GXSetVtxDesc(GX_VA_TEX0, GX_DIRECT);
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_POS, GX_POS_XYZ, GX_F32, 0);
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_CLR0, GX_POS_XYZ, GX_RGBA8, 0);
-	GXSetVtxAttrFmt(GX_VTXFMT0, GX_VA_TEX0, GX_POS_XYZ, GX_U8, 0);
-	GXSetBlendMode(GX_BM_BLEND, GX_BL_SRCALPHA, GX_BL_INVSRCALPHA, GX_LO_SET);
-	GXSetZMode(GX_FALSE, GX_LESS, GX_FALSE);
-	GXSetCurrentMtx(GX_PNMTX0);
-	GXSetNumTexGens(1);
-	GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3X4, GX_TG_TEXCOORD0, GX_IDENTITY, 0, GX_PTIDENTITY);
-	Mtx texMtx;
-	PSMTXIdentity(texMtx);
-	GXLoadTexMtxImm(texMtx, GX_TEXMTX0, GX_MTX2x4);
+}
+
+/**
+ * @note Address: 0x8011A1CC
+ * @note Size: 0x604
+ */
+void LifeGaugeList::draw(Graphics& gfx)
+{
+	// if gauge isn't visible, don't bother drawing it, duh
+	if (!mParam.mIsGaugeShown) {
+		return;
+	}
+
+	// half the width of the box the gauge is going to be drawn in - bit bigger than the gauge itself
+	// this is so the center of the box is at (0,0) which makes segment vertices easy
+	f32 halfWidth = (1.25f * mParam.mRadius);
+
+	setMatrix(gfx);
+	LifeGauge::initLifeGaugeFrameDraw();
+	
 
 	// draw box for gauge
 	GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
-	f32 z = 0.0f;
 
 	// Draw Top Left
-	GXPosition3f32(-halfWidth, halfWidth, z);
+	GXPosition3f32(-halfWidth, halfWidth, 0.0f);
 	GXColor4u8(255, 255, 255, 255); // white
 	GXTexCoord2s8(0, 0);
 
 	// Draw Top Right
-	GXPosition3f32(halfWidth, halfWidth, z);
+	GXPosition3f32(halfWidth, halfWidth, 0.0f);
 	GXColor4u8(255, 255, 255, 255); // white
 	GXTexCoord2s8(1, 0);
 
 	// Draw Bottom Left
-	GXPosition3f32(-halfWidth, -halfWidth, z);
+	GXPosition3f32(-halfWidth, -halfWidth, 0.0f);
 	GXColor4u8(255, 255, 255, 255); // white
 	GXTexCoord2s8(0, 1);
 
 	// Draw Bottom Right
-	GXPosition3f32(halfWidth, -halfWidth, z);
+	GXPosition3f32(halfWidth, -halfWidth, 0.0f);
 	GXColor4u8(255, 255, 255, 255); // white
 	GXTexCoord2s8(1, 1);
 
@@ -379,7 +395,7 @@ void LifeGaugeMgr::draw(Graphics& gfx)
  */
 void LifeGaugeMgr::loadResource()
 {
-	JKRArchive* arc = JKRMountArchive("/user/Yamashita/arc/gameTex.szs", JKRArchive::EMM_Mem, nullptr, JKRArchive::EMD_Head);
+	JKRArchive* arc = JKRMountArchive("user/Yamashita/arc/gameTex.szs", JKRArchive::EMM_Mem, nullptr, JKRArchive::EMD_Head);
 	ResTIMG* timg   = JKRGetImageResource("lifeGauge.bti", arc);
 	mTexture        = new JUTTexture(timg);
 }

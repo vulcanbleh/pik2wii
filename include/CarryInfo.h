@@ -46,6 +46,7 @@ struct CarryInfo {
 	void update(const CarryInfoParam& param);
 
 	void appear();
+	static void initDraw(Graphics& gfx);
 
 	f32 mGrowRate; // _00
 	f32 mYOffset;  // _04

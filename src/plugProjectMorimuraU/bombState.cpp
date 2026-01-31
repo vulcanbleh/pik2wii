@@ -7,6 +7,12 @@
 #include "nans.h"
 #include "types.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "bombState";
+}
+
 namespace Game {
 namespace Bomb {
 /**
@@ -27,7 +33,7 @@ void FSM::init(EnemyBase*)
 StateWait::StateWait(int stateID)
     : State(stateID)
 {
-	mName = "wait";
+	setName("wait");
 }
 
 /**
@@ -87,7 +93,7 @@ void Bomb::StateWait::exec(EnemyBase* enemy)
 StateBomb::StateBomb(int stateID)
     : State(stateID)
 {
-	mName = "bomb";
+	setName("bomb");
 }
 
 /**
@@ -111,7 +117,7 @@ void StateBomb::exec(EnemyBase* enemy)
 	enemy->mSoundObj->startSound(PSSE_EN_BOMB_LOOP, 0);
 	enemy->addDamage(sys->getDeltaTime(), 1.0f);
 
-	if (enemy->mHealth <= 0.0f) {
+	if (enemy->isDead()) {
 		mExplodeDelayTimer++;
 		if (!(mExplodeDelayTimer < 10)) {
 			mExplodeDelayTimer = 0;
@@ -144,7 +150,7 @@ void StateBomb::exec(EnemyBase* enemy)
 			f32 min           = position.y - offset;
 
 			Sys::Sphere sphere;
-			sphere.mPosition = Vector3f(position);
+			sphere.mPosition.set(position);
 			sphere.mRadius   = parms->mGeneral.mAttackRadius.mValue;
 			CellIteratorArg iteratorArg(sphere);
 			iteratorArg.mUseCustomRadius = 1;
@@ -180,11 +186,10 @@ void StateBomb::exec(EnemyBase* enemy)
 								pikiWeight = 200.0f;
 							}
 
-							f32 force = CG_GENERALPARMS(enemy).mAttackDamage.mValue;
 							sep *= pikiWeight;
 							sep.y = pikiWeight;
 
-							InteractBomb interBomb(target, force, &sep);
+							InteractBomb interBomb(target, CG_GENERALPARMS(enemy).mAttackDamage.mValue, &sep);
 
 							creature->stimulate(interBomb);
 						}
