@@ -18,7 +18,7 @@ SaveBanner* SaveBanner::create(Heap* heap)
 }
 
 
-void SaveBanner::initBanner(TPLPalette* palette, unsigned long flag, const wchar_t* title, const wchar_t* comment) 
+void SaveBanner::initBanner(TPLPalette* palette, u32 flag, const wchar_t* title, const wchar_t* comment) 
 {
 
 	mFileNum -= 1;

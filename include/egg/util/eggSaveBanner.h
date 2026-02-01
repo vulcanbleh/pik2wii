@@ -19,8 +19,8 @@ class SaveBanner {
     virtual ~SaveBanner();
 	
 	SaveBanner* create(Heap *pHeap);
-	void initBanner(TPLPalette*, unsigned long, const wchar_t*, const wchar_t*);
-	s32 createBannerFile(unsigned char, unsigned char);
+	void initBanner(TPLPalette*, u32, const wchar_t*, const wchar_t*);
+	s32 createBannerFile(u8, u8);
 	void saveBannerFile();
 	void saveBannerFile(int);
 	
