@@ -54,8 +54,8 @@ void init()
 	JASAramStream::initSystem(JAIGlobalParameter::getParamStreamDecodedBufferBlocks(), sChannelMax);
 
 	streamSound = JAIBasic::getInterface()->makeStream();
+	JAIStream* stream = streamSound;
 	for (int i = 0; i < 1; i++) {        // this is really dumb
-		JAIStream* stream = streamSound; // someone please make this go into r25 not r31
 		stream->mStreamParameter.mPans
 		    = new (JAIBasic::getCurrentJAIHeap(), 0x20) MoveParaSet[JAIGlobalParameter::getParamStreamParameterLines()];
 		stream->mStreamParameter.mPitches
@@ -72,222 +72,11 @@ void init()
 	streamUpdate = new (JAIBasic::getCurrentJAIHeap(), 0x20) StreamUpdateData();
 	streamUpdate->reset();
 	if (externalAram == 0) {
-		getDecodedBufferSize(10);
-		aramBufferHeap->alloc(JASKernel::getAramHeap(), getDecodedBufferSize(10));
+		getDecodedBufferSize(14);
+		aramBufferHeap->alloc(JASKernel::getAramHeap(), getDecodedBufferSize(14));
 	} else if (externalAramCallback != nullptr) {
 		aramParentHeap = externalAramCallback();
 	}
-	/*
-	stwu     r1, -0x30(r1)
-	mflr     r0
-	stw      r0, 0x34(r1)
-	stmw     r24, 0x10(r1)
-	lbz      r3, flags__Q27JAInter9StreamMgr@sda21(r13)
-	rlwinm.  r0, r3, 0x1a, 0x1f, 0x1f
-	bne      lbl_800B7954
-	li       r5, 0
-	lwz      r4, msCurrentHeap__8JAIBasic@sda21(r13)
-	rlwimi   r3, r5, 7, 0x18, 0x18
-	stb      r3, flags__Q27JAInter9StreamMgr@sda21(r13)
-	clrlwi   r0, r3, 0x18
-	rlwimi   r0, r5, 6, 0x19, 0x19
-	li       r3, 0x2dc
-	stb      r0, flags__Q27JAInter9StreamMgr@sda21(r13)
-	clrlwi   r0, r0, 0x18
-	rlwimi   r0, r5, 5, 0x1a, 0x1a
-	li       r5, 0x20
-	stb      r0, flags__Q27JAInter9StreamMgr@sda21(r13)
-	bl       __nw__FUlP7JKRHeapi
-	or.      r0, r3, r3
-	beq      lbl_800B76AC
-	bl       __ct__13JASAramStreamFv
-	mr       r0, r3
-
-lbl_800B76AC:
-	stw      r0, streamSystem__Q27JAInter9StreamMgr@sda21(r13)
-	li       r3, 0x44
-	lwz      r4, msCurrentHeap__8JAIBasic@sda21(r13)
-	li       r5, 0x20
-	bl       __nw__FUlP7JKRHeapi
-	or.      r0, r3, r3
-	beq      lbl_800B76D4
-	li       r4, 0
-	bl       __ct__7JASHeapFP11JASDisposer
-	mr       r0, r3
-
-lbl_800B76D4:
-	stw      r0, aramBufferHeap__Q27JAInter9StreamMgr@sda21(r13)
-	bl       getParamStreamDecodedBufferBlocks__18JAIGlobalParameterFv
-	lwz      r4, sChannelMax__Q27JAInter9StreamMgr@sda21(r13)
-	bl       initSystem__13JASAramStreamFUlUl
-	lwz      r3, msBasic__8JAIBasic@sda21(r13)
-	lwz      r12, 0(r3)
-	lwz      r12, 0x10(r12)
-	mtctr    r12
-	bctrl
-	lis      r5, __defctor__Q27JAInter11MoveParaSetFv@ha
-	lis      r4, __ct__Q27JAInter19MoveParaSetInitZeroFv@ha
-	addi     r26, r5, __defctor__Q27JAInter11MoveParaSetFv@l
-	stw      r3, streamSound__Q27JAInter9StreamMgr@sda21(r13)
-	addi     r27, r4, __ct__Q27JAInter19MoveParaSetInitZeroFv@l
-	mr       r25, r3
-	mr       r28, r26
-	mr       r29, r26
-	mr       r30, r26
-	mr       r31, r26
-	bl       getParamStreamParameterLines__18JAIGlobalParameterFv
-	rlwinm   r6, r3, 4, 0x14, 0x1b
-	lwz      r4, msCurrentHeap__8JAIBasic@sda21(r13)
-	clrlwi   r24, r3, 0x18
-	li       r5, 0x20
-	addi     r3, r6, 0x10
-	bl       __nwa__FUlP7JKRHeapi
-	mr       r4, r26
-	mr       r7, r24
-	li       r5, 0
-	li       r6, 0x10
-	bl       __construct_new_array
-	stw      r3, 0x1a8(r25)
-	bl       getParamStreamParameterLines__18JAIGlobalParameterFv
-	rlwinm   r6, r3, 4, 0x14, 0x1b
-	lwz      r4, msCurrentHeap__8JAIBasic@sda21(r13)
-	clrlwi   r24, r3, 0x18
-	li       r5, 0x20
-	addi     r3, r6, 0x10
-	bl       __nwa__FUlP7JKRHeapi
-	mr       r4, r26
-	mr       r7, r24
-	li       r5, 0
-	li       r6, 0x10
-	bl       __construct_new_array
-	stw      r3, 0x1a4(r25)
-	bl       getParamStreamParameterLines__18JAIGlobalParameterFv
-	rlwinm   r6, r3, 4, 0x14, 0x1b
-	lwz      r4, msCurrentHeap__8JAIBasic@sda21(r13)
-	clrlwi   r24, r3, 0x18
-	li       r5, 0x20
-	addi     r3, r6, 0x10
-	bl       __nwa__FUlP7JKRHeapi
-	mr       r4, r27
-	mr       r7, r24
-	li       r5, 0
-	li       r6, 0x10
-	bl       __construct_new_array
-	stw      r3, 0x1ac(r25)
-	bl       getParamStreamParameterLines__18JAIGlobalParameterFv
-	rlwinm   r6, r3, 4, 0x14, 0x1b
-	lwz      r4, msCurrentHeap__8JAIBasic@sda21(r13)
-	clrlwi   r24, r3, 0x18
-	li       r5, 0x20
-	addi     r3, r6, 0x10
-	bl       __nwa__FUlP7JKRHeapi
-	mr       r4, r27
-	mr       r7, r24
-	li       r5, 0
-	li       r6, 0x10
-	bl       __construct_new_array
-	stw      r3, 0x1b0(r25)
-	li       r5, 0x20
-	lwz      r24, sChannelMax__Q27JAInter9StreamMgr@sda21(r13)
-	lwz      r4, msCurrentHeap__8JAIBasic@sda21(r13)
-	slwi     r3, r24, 4
-	addi     r3, r3, 0x10
-	bl       __nwa__FUlP7JKRHeapi
-	mr       r4, r28
-	mr       r7, r24
-	li       r5, 0
-	li       r6, 0x10
-	bl       __construct_new_array
-	stw      r3, 0x1c8(r25)
-	li       r5, 0x20
-	lwz      r24, sChannelMax__Q27JAInter9StreamMgr@sda21(r13)
-	lwz      r4, msCurrentHeap__8JAIBasic@sda21(r13)
-	slwi     r3, r24, 4
-	addi     r3, r3, 0x10
-	bl       __nwa__FUlP7JKRHeapi
-	mr       r4, r29
-	mr       r7, r24
-	li       r5, 0
-	li       r6, 0x10
-	bl       __construct_new_array
-	stw      r3, 0x1cc(r25)
-	li       r5, 0x20
-	lwz      r24, sChannelMax__Q27JAInter9StreamMgr@sda21(r13)
-	lwz      r4, msCurrentHeap__8JAIBasic@sda21(r13)
-	slwi     r3, r24, 4
-	addi     r3, r3, 0x10
-	bl       __nwa__FUlP7JKRHeapi
-	mr       r4, r30
-	mr       r7, r24
-	li       r5, 0
-	li       r6, 0x10
-	bl       __construct_new_array
-	stw      r3, 0x1d0(r25)
-	li       r5, 0x20
-	lwz      r24, sChannelMax__Q27JAInter9StreamMgr@sda21(r13)
-	lwz      r4, msCurrentHeap__8JAIBasic@sda21(r13)
-	slwi     r3, r24, 4
-	addi     r3, r3, 0x10
-	bl       __nwa__FUlP7JKRHeapi
-	mr       r4, r31
-	mr       r7, r24
-	li       r5, 0
-	li       r6, 0x10
-	bl       __construct_new_array
-	stw      r3, 0x1d4(r25)
-	li       r3, 0x20
-	li       r5, 0x20
-	lwz      r4, msCurrentHeap__8JAIBasic@sda21(r13)
-	bl       __nw__FUlP7JKRHeapi
-	cmplwi   r3, 0
-	beq      lbl_800B78D4
-	li       r0, 0
-	stw      r0, 0x18(r3)
-	stw      r0, 0x1c(r3)
-
-lbl_800B78D4:
-	stw      r3, streamUpdate__Q27JAInter9StreamMgr@sda21(r13)
-	li       r0, 0
-	lfs      f1, lbl_80517040@sda21(r2)
-	stb      r0, 0(r3)
-	lfs      f0, lbl_80517044@sda21(r2)
-	stb      r0, 1(r3)
-	stfs     f1, 4(r3)
-	stfs     f1, 8(r3)
-	stfs     f0, 0xc(r3)
-	stfs     f0, 0x10(r3)
-	stfs     f0, 0x14(r3)
-	stw      r0, 0x1c(r3)
-	lbz      r0, externalAram__Q27JAInter9StreamMgr@sda21(r13)
-	cmplwi   r0, 0
-	bne      lbl_800B793C
-	li       r3, 0xa
-	bl       getDecodedBufferSize__Q27JAInter9StreamMgrFUl
-	li       r3, 0xa
-	bl       getDecodedBufferSize__Q27JAInter9StreamMgrFUl
-	mr       r31, r3
-	bl       getAramHeap__9JASKernelFv
-	mr       r4, r3
-	lwz      r3, aramBufferHeap__Q27JAInter9StreamMgr@sda21(r13)
-	mr       r5, r31
-	bl       alloc__7JASHeapFP7JASHeapUl
-	b        lbl_800B7954
-
-lbl_800B793C:
-	lwz      r12, externalAramCallback__Q27JAInter9StreamMgr@sda21(r13)
-	cmplwi   r12, 0
-	beq      lbl_800B7954
-	mtctr    r12
-	bctrl
-	stw      r3, aramParentHeap__Q27JAInter9StreamMgr@sda21(r13)
-
-lbl_800B7954:
-	lmw      r24, 0x10(r1)
-	lwz      r0, 0x34(r1)
-	mtlr     r0
-	addi     r1, r1, 0x30
-	blr
-	*/
 }
 
 /**
@@ -762,13 +551,12 @@ void PlayingStream()
 	if (streamSound->mState == SOUNDSTATE_Fadeout) {
 		if (streamSound->getVolume(SOUNDPARAM_Fadeout) == 0.0f || streamSound->mFadeCounter == 0) {
 			if (streamSound->mFinishWaitTimer == 0) {
-				streamSystem->stop(0);
+				stopDirect();
 				streamSound->mState                                         = SOUNDSTATE_Inactive;
 				streamSound->mStreamParameter.mUpdateData->mStream          = nullptr;
 				streamSound->mStreamParameter.mUpdateData->mActiveTrackFlag = 0;
 				streamSound->clearMainSoundPPointer();
 				mgrCallback    = nullptr;
-				controlStatus  = 1;
 				dataFileNumber = 0;
 			}
 		}
@@ -1874,7 +1662,7 @@ void checkEntriedStream()
 	streamUpdate->mStream = streamSound;
 
 	char* fileName
-	    = (char*)((size_t)streamList + (streamList[JAIBasic::getInterface()->getSoundOffsetNumberFromID(streamSound->mSoundID) + 2]));
+	    = (char*)(streamList + (streamList[JAIBasic::getInterface()->getSoundOffsetNumberFromID(streamSound->mSoundID)]));
 	char filePath[PATH_MAX];
 	strcpy(filePath, JAIGlobalParameter::getParamStreamPath());
 	strcat(filePath, fileName);
@@ -1921,10 +1709,10 @@ void prepareSystem(s32 inode)
 		length          = info.mLength;
 	} else {
 		if (aramParentHeap != nullptr) {
-			aramBufferHeap->alloc(aramParentHeap, (sChannelMax * (JAIGlobalParameter::getParamStreamDecodedBufferBlocks() * 10)) >> 1);
+			aramBufferHeap->alloc(aramParentHeap, (sChannelMax * (JAIGlobalParameter::getParamStreamDecodedBufferBlocks() * 14)) >> 1);
 		}
 		start  = (u32)aramBufferHeap->mBase;
-		length = sChannelMax * (JAIGlobalParameter::getParamStreamDecodedBufferBlocks() * 10) >> 1;
+		length = sChannelMax * (JAIGlobalParameter::getParamStreamDecodedBufferBlocks() * 14) >> 1;
 	}
 	streamSystem->init(start, length, systemCallBack, nullptr);
 	streamSystem->prepare(inode, -1);
@@ -1952,20 +1740,7 @@ void playDirect(char* path)
 		if (controlStatus == 0) {
 			DVDConvertPathToEntrynum(path);
 			dataFileNumber = DVDConvertPathToEntrynum(path);
-			int entryNum   = dataFileNumber;
-			BufferInfo info;
-			if (allocCallback != nullptr) {
-				info = allocCallback(entryNum);
-			} else {
-				if (aramParentHeap != nullptr) {
-					aramBufferHeap->alloc(aramParentHeap,
-					                      (sChannelMax * (JAIGlobalParameter::getParamStreamDecodedBufferBlocks() * 10)) >> 1);
-				}
-				info.mStart  = aramBufferHeap->mBase;
-				info.mLength = sChannelMax * (JAIGlobalParameter::getParamStreamDecodedBufferBlocks() * 10) >> 1;
-			}
-			streamSystem->init(reinterpret_cast<u32>(info.mStart), info.mLength, systemCallBack, nullptr);
-			streamSystem->prepare(entryNum, -1);
+			prepareSystem(dataFileNumber);
 			controlStatus = 4;
 		} else {
 			dataFileNumber = DVDConvertPathToEntrynum(path);

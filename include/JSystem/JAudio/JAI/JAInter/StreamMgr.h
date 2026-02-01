@@ -58,7 +58,7 @@ void changeCallback();
 void processGFrameStream();
 void checkEntriedStream();
 void systemCallBack(u32, JASAramStream*, void*);
-void prepareSystem(s32);
+void prepareSystem(s32) DECOMP_DONT_INLINE;
 void playDirect(char* path);
 void stopDirect();
 void initChannel();

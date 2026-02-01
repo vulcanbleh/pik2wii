@@ -755,7 +755,7 @@ JSystem/JAudio/JAI/JAISystemInterface.cpp:
 JSystem/JAudio/JAI/JAIObject.cpp:
 	.text       start:0x8006A198 end:0x8006ADBC
 	.data       start:0x80567388 end:0x80567400
-	.sdata2     start:0x8066DC58 end:0x8066DC68
+	.sdata2     start:0x8066DC58 end:0x8066DC60
 
 JSystem/JAudio/JAD/JADHioNode.cpp:
 	.text       start:0x8006ADBC end:0x8006AE0C
@@ -764,7 +764,7 @@ JSystem/JAudio/JAD/JADHioNode.cpp:
 JSystem/JAudio/JAL/JALCalc.cpp:
 	.text       start:0x8006AE0C end:0x8006B130
 	.sbss       start:0x8066BC08 end:0x8066BC10
-	.sdata2     start:0x8066DC68 end:0x8066DC78
+	.sdata2     start:0x8066DC60 end:0x8066DC78
 
 JSystem/JAudio/JAU/JAUData.cpp:
 	.text       start:0x8006B130 end:0x8006B37C
@@ -836,11 +836,11 @@ JSystem/JStudio/jstudio-data.cpp:
 JSystem/JStudio/jstudio-object.cpp:
 	.text       start:0x800731C4 end:0x80075B04
 	.ctors      start:0x80534CDC end:0x80534CE0
-	.rodata     start:0x80539970 end:0x80539A98
+	.rodata     start:0x80539970 end:0x80539A8C
 	.data       start:0x805678E0 end:0x805682C8
 	.bss        start:0x805D4F38 end:0x805D50E8
 	.sbss       start:0x8066BC18 end:0x8066BC20
-	.sdata2     start:0x8066DD28 end:0x8066DD50
+	.sdata2     start:0x8066DD28 end:0x8066DD4C
 
 JSystem/JStudio/object-id.cpp:
 	.text       start:0x80075B04 end:0x80075BEC
