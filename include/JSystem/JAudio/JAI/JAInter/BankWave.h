@@ -67,8 +67,8 @@ extern union Flags {
 	u8 asByte;
 	u16 asShort;
 	struct {
-		bool _7 : 1;
-		bool _6 : 1;
+		u16 _7 : 1;
+		u16 _6 : 1;
 	} asStruct;
 } flags;
 extern int SceneSetFlag;

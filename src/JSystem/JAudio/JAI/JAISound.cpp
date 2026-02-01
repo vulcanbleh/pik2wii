@@ -236,8 +236,8 @@ f32 JAISound::setDistancePanCommon()
 {
 	if (JAIGlobalParameter::audioCameraMax == 1) {
 		JAISound_0x34* obj = mSoundObj;
-		f32 absX           = FABS(obj->mPosition.x);
-		f32 absZ           = FABS(obj->mPosition.z);
+		f32 absX           = fabsf(obj->mPosition.x);
+		f32 absZ           = fabsf(obj->mPosition.z);
 		if (absX < 1.0f && absZ < 1.0f) {
 			return 0.5f;
 		}
@@ -392,12 +392,12 @@ f32 JAISound::setPositionDopplarCommon(u32 p1)
 	f32 x                   = soundX - soundObj->_0C.x;
 	f32 y                   = soundY - soundObj->_0C.y;
 	f32 z                   = soundZ - soundObj->_0C.z;
-	f32 dist1               = dolsqrtfull(SQUARE(soundX) + SQUARE(soundY) + SQUARE(soundZ));
+	f32 dist1               = nonsqrtf(SQUARE(soundX) + SQUARE(soundY) + SQUARE(soundZ));
 	f32 x2                  = soundX + x;
 	f32 y2                  = soundY + y;
 	f32 z2                  = soundZ + z;
 
-	f32 dist2 = dolsqrtfull(SQUARE(x2) + SQUARE(y2) + SQUARE(z2));
+	f32 dist2 = nonsqrtf(SQUARE(x2) + SQUARE(y2) + SQUARE(z2));
 
 	f32 sqVal = SQUARE(p1 >> 8);
 

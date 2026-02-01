@@ -15,11 +15,11 @@ struct JKRHeap;
 
 struct JAIBasic {
 	struct Flags {
-		bool _00 : 1;
-		bool _01 : 1;
-		bool _02 : 1;
-		bool _03 : 1;
-		bool _04 : 1;
+		u16 _00 : 1;
+		u16 _01 : 1;
+		u16 _02 : 1;
+		u16 _03 : 1;
+		u16 _04 : 1;
 	};
 
 	JAIBasic();

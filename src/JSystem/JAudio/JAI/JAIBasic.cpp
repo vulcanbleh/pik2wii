@@ -401,7 +401,7 @@ void JAIBasic::startSoundBasic(u32 id, JAISe** handlePtr, JAInter::Actor* actor,
  */
 void JAIBasic::startSoundBasic(u32 id, JAIStream** handlePtr, JAInter::Actor* actor, u32 fadeTime, u8 camId, JAInter::SoundInfo* info)
 {
-	if (mFlags._02 != true && JAInter::StreamMgr::flags._01 == 0) {
+	if (mFlags._02 != 1 && JAInter::StreamMgr::flags._01 == 0) {
 		JAInter::StreamMgr::storeStreamBuffer(handlePtr, actor, id, fadeTime, camId, info);
 	}
 }
@@ -638,39 +638,11 @@ f32 JAIBasic::getMapInfoFxParameter(u32 p1)
  */
 u16 JAIBasic::getSoundOffsetNumberFromID(u32 id)
 {
-	// TODO: probably an inline here.
 	if (JAInter::SoundTable::getInfoFormat(id) & 1) {
 		return JAInter::SoundTable::getInfoPointer(id)->mOffsetNo;
 	}
 
 	return (id & 0x3FF);
-
-	/*
-	stwu     r1, -0x10(r1)
-	mflr     r0
-	stw      r0, 0x14(r1)
-	stw      r31, 0xc(r1)
-	mr       r31, r4
-	mr       r3, r31
-	bl       getInfoFormat__Q27JAInter10SoundTableFUl
-	clrlwi.  r0, r3, 0x1f
-	beq      lbl_800ACB00
-	mr       r3, r31
-	bl       getInfoPointer__Q27JAInter10SoundTableFUl
-	lhz      r3, 6(r3)
-	b        lbl_800ACB08
-
-lbl_800ACB00:
-	clrlwi   r0, r31, 0x16
-	mr       r3, r0
-
-lbl_800ACB08:
-	lwz      r0, 0x14(r1)
-	lwz      r31, 0xc(r1)
-	mtlr     r0
-	addi     r1, r1, 0x10
-	blr
-	*/
 }
 
 /**
@@ -896,7 +868,7 @@ void JAIBasic::setSeExtParameter(JAISound* handle)
 	if (handle == nullptr) {
 		return;
 	}
-	u8 format = JAInter::SoundTable::getInfoFormat(handle->mSoundID);
+	u32 format = JAInter::SoundTable::getInfoFormat(handle->mSoundID);
 	if ((format & 4) != 0) {
 		handle->setVolume(handle->mSoundInfo->mVolume / 127.0f, 0, SOUNDPARAM_Dopplar);
 	}
