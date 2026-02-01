@@ -173,7 +173,7 @@ struct FSM : public EnemyStateMachine {
 };
 
 struct State : public EnemyFSMState {
-	inline State(int stateID, char* name)
+	inline State(int stateID, const char* name)
 	    : EnemyFSMState(stateID)
 	{
 		mName = name;
@@ -183,51 +183,9 @@ struct State : public EnemyFSMState {
 	// _00-_10 	= EnemyFSMState
 };
 
-struct StateAttack : public State {
-	inline StateAttack()
-	    : State(KUMACHAPPY_Attack, "attack")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
 struct StateDead : public State {
-	inline StateDead()
-	    : State(KUMACHAPPY_Dead, "dead")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateFlick : public State {
-	inline StateFlick()
-	    : State(KUMACHAPPY_Flick, "flick")
-	{
-	}
-
-	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
-	virtual void exec(EnemyBase* enemy);                     // _0C
-	virtual void cleanup(EnemyBase* enemy);                  // _10
-
-	// _00		= VTBL
-	// _00-_10 	= EnemyFSMState
-};
-
-struct StateLost : public State {
-	inline StateLost()
-	    : State(KUMACHAPPY_Lost, "lost")
+	inline StateDead(const char* name)
+	    : State(KUMACHAPPY_Dead, name)
 	{
 	}
 
@@ -240,8 +198,50 @@ struct StateLost : public State {
 };
 
 struct StateRebirth : public State {
-	inline StateRebirth()
-	    : State(KUMACHAPPY_Rebirth, "rebirth")
+	inline StateRebirth(const char* name)
+	    : State(KUMACHAPPY_Rebirth, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateLost : public State {
+	inline StateLost(const char* name)
+	    : State(KUMACHAPPY_Lost, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateAttack : public State {
+	inline StateAttack(const char* name)
+	    : State(KUMACHAPPY_Attack, name)
+	{
+	}
+
+	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
+	virtual void exec(EnemyBase* enemy);                     // _0C
+	virtual void cleanup(EnemyBase* enemy);                  // _10
+
+	// _00		= VTBL
+	// _00-_10 	= EnemyFSMState
+};
+
+struct StateFlick : public State {
+	inline StateFlick(const char* name)
+	    : State(KUMACHAPPY_Flick, name)
 	{
 	}
 
@@ -254,8 +254,8 @@ struct StateRebirth : public State {
 };
 
 struct StateTurn : public State {
-	inline StateTurn()
-	    : State(KUMACHAPPY_Turn, "turn")
+	inline StateTurn(const char* name)
+	    : State(KUMACHAPPY_Turn, name)
 	{
 	}
 
@@ -268,8 +268,8 @@ struct StateTurn : public State {
 };
 
 struct StateTurnPath : public State {
-	inline StateTurnPath()
-	    : State(KUMACHAPPY_TurnPath, "turnpath")
+	inline StateTurnPath(const char* name)
+	    : State(KUMACHAPPY_TurnPath, name)
 	{
 	}
 
@@ -282,8 +282,8 @@ struct StateTurnPath : public State {
 };
 
 struct StateWalk : public State {
-	inline StateWalk()
-	    : State(KUMACHAPPY_Walk, "walk")
+	inline StateWalk(const char* name)
+	    : State(KUMACHAPPY_Walk, name)
 	{
 	}
 
@@ -296,8 +296,8 @@ struct StateWalk : public State {
 };
 
 struct StateWalkPath : public State {
-	inline StateWalkPath()
-	    : State(KUMACHAPPY_WalkPath, "walkpath")
+	inline StateWalkPath(const char* name)
+	    : State(KUMACHAPPY_WalkPath, name)
 	{
 	}
 

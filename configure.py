@@ -1842,7 +1842,7 @@ config.libs = [
             Object(Matching, "plugProjectNishimuraU/SnakeCrowAnimator.cpp"),
             Object(NonMatching, "plugProjectNishimuraU/SnakeCrowMgr.cpp"),
             Object(NonMatching, "plugProjectNishimuraU/SnakeCrow.cpp"),
-            Object(NonMatching, "plugProjectNishimuraU/KumaChappyState.cpp"),
+            Object(Matching, "plugProjectNishimuraU/KumaChappyState.cpp"),
             Object(Matching, "plugProjectNishimuraU/KumaChappyAnimator.cpp"),
             Object(NonMatching, "plugProjectNishimuraU/KumaChappyMgr.cpp"),
             Object(NonMatching, "plugProjectNishimuraU/KumaChappy.cpp"),
