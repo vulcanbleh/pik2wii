@@ -4438,7 +4438,7 @@ plugProjectNishimuraU/KumaChappyState.cpp:
 	.text       start:0x8031666C end:0x80319C54
 	.rodata     start:0x8054E678 end:0x8054E6C8
 	.data       start:0x805AB430 end:0x805AB598
-	.sdata2     start:0x80671CC0 end:0x80671CF0
+	.sdata2     start:0x80671CC0 end:0x80671CEC
 
 plugProjectNishimuraU/KumaChappyAnimator.cpp:
 	.text       start:0x80319C54 end:0x80319CAC
