@@ -236,6 +236,14 @@ cflags_revo = [
     "-ipa file",
 ]
 
+cflags_aralt = [
+    *cflags_base,
+    "-str reuse,readonly",
+    "-fp_contract off",
+    "-common off",
+    "-inline auto",
+]
+
 cflags_trk = [
     *cflags_base,
     "-str reuse,readonly",
@@ -621,7 +629,7 @@ config.libs = [
     },
     {
         "lib": "aralt",
-        "cflags": cflags_revo,
+        "cflags": cflags_aralt,
         "mw_version": "GC/3.0a3p1",
         "progress_category": "sdk",
         "objects": [

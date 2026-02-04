@@ -6,6 +6,7 @@
 #include "JSystem/JSupport/JSUList.h"
 #include "JSystem/JSupport/JSUStream.h"
 #include "RevoSDK/os.h"
+#include "RevoSDK/vi.h"
 #include "stl/limits.h"
 #include "stl/mem.h"
 #include "types.h"

@@ -1,6 +1,7 @@
 #include "PSSystem/PSScene.h"
 #include "PSSystem/WaveScene.h"
 #include "PSSystem/PSSystemIF.h"
+#include "RevoSDK/vi.h"
 
 namespace PSSystem {
 

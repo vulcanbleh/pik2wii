@@ -5,6 +5,10 @@
 #include "RevoSDK/vi/vitypes.h"
 #include "RevoSDK/gx/GXTypes.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif // ifdef __cplusplus
+
 ////////////////////////////////////
 
 ///// VIDEO INTERFACE FUNCTIONS ////
