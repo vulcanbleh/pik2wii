@@ -1,5 +1,6 @@
 #include <nw4r/db.h>
 #include <RevoSDK/os.h>
+#include <RevoSDK/vi.h>
 
 
 namespace nw4r {

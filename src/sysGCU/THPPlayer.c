@@ -3,6 +3,7 @@
 #include "JSystem/JUtility/JUTException.h"
 #include "PSM/THPDinamics.h"
 #include "RevoSDK/ai.h"
+#include "RevoSDK/vi.h"
 #include "THP/THPAudioDecode.h"
 #include "THP/THPDraw.h"
 #include "THP/THPRead.h"

@@ -1,5 +1,5 @@
-#ifndef _DOLPHIN_GXTYPES_H
-#define _DOLPHIN_GXTYPES_H
+#ifndef _REVOSDK_GXTYPES_H
+#define _REVOSDK_GXTYPES_H
 
 #include "types.h"
 
@@ -8,7 +8,7 @@ extern "C" {
 #endif // ifdef __cplusplus
 
 #include "RevoSDK/GX/GXEnum.h"
-#include "RevoSDK/vi.h"
+#include "RevoSDK/vi/vitypes.h"
 
 ///////////// USEFUL HELPERS ///////////////
 // Set bitfields manually.

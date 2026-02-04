@@ -1,5 +1,5 @@
-#ifndef _DOLPHIN_GX_H
-#define _DOLPHIN_GX_H
+#ifndef _REVOSDK_GX_H
+#define _REVOSDK_GX_H
 
 #include "types.h"
 
@@ -22,7 +22,7 @@ extern "C" {
 #include "RevoSDK/GX/GXTransform.h"
 #include "RevoSDK/GX/GXTypes.h"
 #include "RevoSDK/mtx.h"
-#include "RevoSDK/vi.h"
+#include "RevoSDK/VI/vitypes.h"
 
 #ifdef __cplusplus
 };
