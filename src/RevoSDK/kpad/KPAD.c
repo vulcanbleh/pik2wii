@@ -817,8 +817,6 @@ void calc_dpd_variable(KPADInsideStatus* kp, s8 valid_fg_next) {
         f1 = sqrt(vec.x * vec.x + vec.y * vec.y);
 
         if (kp->pos_play_mode == KPAD_PLAY_MODE_LOOSE) {
-            // looks like a change was made here
-            // todo -- find it
             if (f1 >= kp->pos_play_radius) {
                 f1 = 1.0f;
             } else {
@@ -1140,7 +1138,6 @@ void read_kpad_button(KPADInsideStatus* kp, u32 dev_type, u32 count, u32 core, u
 static void KPADiSamplingCallback(s32 chan);
 static void KPADiControlDpdCallback(s32 chan, s32 result);
 
-// https://decomp.me/scratch/UtYxQ
 s32 KPADRead(s32 chan, KPADStatus samplingBufs[], u32 length) {
     KPADTmpStatus* tp = (KPADTmpStatus*)samplingBufs;
     KPADUnifiedWpadStatus uwStatus;
@@ -1371,7 +1368,7 @@ void KPADInit(void) {
         idx = 0;
         do {
             kp->uniRingBuf[idx].u.core.err = WPAD_ERR_NO_CONTROLLER;
-        } while (++idx < 120);
+        } while (++idx < 16);
 
     } while (++i < WPAD_MAX_CONTROLLERS);
 
