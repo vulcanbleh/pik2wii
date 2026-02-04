@@ -233,6 +233,7 @@ cflags_revo = [
     "-fp_contract off",
     "-common off",
     "-inline auto",
+    "-ipa file",
 ]
 
 cflags_trk = [
@@ -1065,7 +1066,7 @@ config.libs = [
     },
     {
         "lib": "ax",
-        "cflags": [*cflags_revo, "-str noreadonly", "-ipa file"],  # unknown
+        "cflags": [*cflags_revo, "-str noreadonly"],  # unknown
         "mw_version": "GC/3.0a3p1",  # unknown
         "progress_category": "sdk",
         "objects": [
@@ -1203,7 +1204,7 @@ config.libs = [
     },
     {
         "lib": "os",
-        "cflags": [*cflags_revo, "-str noreadonly", "-ipa file"],
+        "cflags": [*cflags_revo, "-str noreadonly"],
         "mw_version": "GC/3.0a3p1",
         "progress_category": "sdk",
         "objects": [
@@ -1265,7 +1266,7 @@ config.libs = [
     {
         "lib": "vi",
         "cflags": [*cflags_revo, "-str noreadonly"],
-        "mw_version": "GC/2.6",  # should be 3.0a3p1 but vi.c yells about something
+        "mw_version": "GC/3.0a3p1",
         "progress_category": "sdk",
         "objects": [
             Object(NonMatching, "RevoSDK/vi/vi.c"),
@@ -1335,7 +1336,7 @@ config.libs = [
     },
     {
         "lib": "arc",
-        "cflags": [*cflags_revo, "-str noreadonly", "-ipa file"],  # unknown
+        "cflags": [*cflags_revo, "-str noreadonly"],  # unknown
         "mw_version": "GC/3.0a3p1",  # unknown
         "progress_category": "sdk",
         "objects": [
@@ -1479,7 +1480,7 @@ config.libs = [
     },
     {
         "lib": "nand",
-        "cflags": [*cflags_revo, "-str noreadonly", "-ipa file"],  # unknown
+        "cflags": [*cflags_revo, "-str noreadonly"],  # unknown
         "mw_version": "GC/3.0a3p1",  # unknown
         "progress_category": "sdk",
         "objects": [
