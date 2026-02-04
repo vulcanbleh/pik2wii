@@ -675,10 +675,10 @@ void PSMTXRotAxisRad(Mtx m, const Vec* axis, f32 rad)
 {
 	f32 sinT, cosT;
 
-	sinT = sinf(rad);
-	cosT = cosf(rad);
+	sinT = sin(rad);
+	cosT = cos(rad);
 
-	// __PSMTXRotAxisRadInternal(m, axis, sinT, cosT);
+	__PSMTXRotAxisRadInternal(m, axis, sinT, cosT);
 }
 
 /**
