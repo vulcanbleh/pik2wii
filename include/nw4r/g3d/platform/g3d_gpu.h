@@ -52,45 +52,45 @@ inline void GDSetGenMode2Ex_BP(u8 numTexGens, u8 numChans, u8 numTevs, u8 numInd
 
 	// clang-format off
     // @note NUMCOLORS is actually three bits
-    // LoadBPCmd(GX_BP_REG_SSMASK << GX_BP_OPCODE_SHIFT |
-    //     GX_BP_GENMODE_NUMTEX_MASK                    |
-    //     0b11 << GX_BP_GENMODE_NUMCOLORS_SHIFT        |
-    //     GX_BP_GENMODE_NUMTEVSTAGES_MASK              |
-    //     GX_BP_GENMODE_CULLMODE_MASK                  |
-    //     GX_BP_GENMODE_NUMINDSTAGES_MASK);
-	// clang-format on
+    LoadBPCmd(GX_BP_REG_SSMASK << GX_BP_OPCODE_SHIFT |
+        GX_BP_GENMODE_NUMTEX_MASK                    |
+        0b11 << GX_BP_GENMODE_NUMCOLORS_SHIFT        |
+        GX_BP_GENMODE_NUMTEVSTAGES_MASK              |
+        GX_BP_GENMODE_CULLMODE_MASK                  |
+        GX_BP_GENMODE_NUMINDSTAGES_MASK);
+    // clang-format on
 
 	// clang-format off
-    // LoadBPCmd(
-    //     numTexGens        << GX_BP_GENMODE_NUMTEX_SHIFT       |
-    //     numChans          << GX_BP_GENMODE_NUMCOLORS_SHIFT    |
-    //     numTevs - 1       << GX_BP_GENMODE_NUMTEVSTAGES_SHIFT |
-    //     cm2hw[cullMode]   << GX_BP_GENMODE_CULLMODE_SHIFT     |
-    //     numInds           << GX_BP_GENMODE_NUMINDSTAGES_SHIFT |
-    //     GX_BP_REG_GENMODE << GX_BP_OPCODE_SHIFT);
-	// clang-format on
+    LoadBPCmd(
+        numTexGens        << GX_BP_GENMODE_NUMTEX_SHIFT       |
+        numChans          << GX_BP_GENMODE_NUMCOLORS_SHIFT    |
+        numTevs - 1       << GX_BP_GENMODE_NUMTEVSTAGES_SHIFT |
+        cm2hw[cullMode]   << GX_BP_GENMODE_CULLMODE_SHIFT     |
+        numInds           << GX_BP_GENMODE_NUMINDSTAGES_SHIFT |
+        GX_BP_REG_GENMODE << GX_BP_OPCODE_SHIFT);
+    // clang-format on
 }
 
 inline void GDSetChanCtrl(GXChannelID chan, u32 param, u32 lightMask)
 {
 	// TODO: Convert these to use our GX format
 
-	// param &= ~(GX_XF_COLOR0CNTRL_LMASKLO_MASK | GX_XF_COLOR0CNTRL_LMASKHI_MASK);
+	param &= ~(GX_XF_COLOR0CNTRL_LMASKLO_MASK | GX_XF_COLOR0CNTRL_LMASKHI_MASK);
 
-	// param |= (lightMask & 0b1111) << GX_XF_COLOR0CNTRL_LMASKLO_SHIFT | ((lightMask >> 4) & 0b1111) << GX_XF_COLOR0CNTRL_LMASKHI_SHIFT;
+	param |= (lightMask & 0b1111) << GX_XF_COLOR0CNTRL_LMASKLO_SHIFT | ((lightMask >> 4) & 0b1111) << GX_XF_COLOR0CNTRL_LMASKHI_SHIFT;
 
-	// LoadXFCmd(GX_XF_REG_COLOR0CNTRL + (chan & 3), param);
+	LoadXFCmd(GX_XF_REG_COLOR0CNTRL + (chan & 3), param);
 }
 
 inline void GDSetChanCtrlLightOff(GXChannelID chan, u32 param, u32 lightMask)
 {
 	// TODO: Convert these to use our GX format
 
-	// param &= ~(GX_XF_COLOR0CNTRL_LMASKLO_MASK | GX_XF_COLOR0CNTRL_LMASKHI_MASK | GX_XF_COLOR0CNTRL_LIGHT_MASK);
+	param &= ~(GX_XF_COLOR0CNTRL_LMASKLO_MASK | GX_XF_COLOR0CNTRL_LMASKHI_MASK | GX_XF_COLOR0CNTRL_LIGHT_MASK);
 
-	// param |= (lightMask & 0b1111) << GX_XF_COLOR0CNTRL_LMASKLO_SHIFT | ((lightMask >> 4) & 0b1111) << GX_XF_COLOR0CNTRL_LMASKHI_SHIFT;
+	param |= (lightMask & 0b1111) << GX_XF_COLOR0CNTRL_LMASKLO_SHIFT | ((lightMask >> 4) & 0b1111) << GX_XF_COLOR0CNTRL_LMASKHI_SHIFT;
 
-	// LoadXFCmd(GX_XF_REG_COLOR0CNTRL + (chan & 3), param);
+	LoadXFCmd(GX_XF_REG_COLOR0CNTRL + (chan & 3), param);
 }
 
 inline void GDSetChanAmbColor(GXChannelID chan, GXColor color)
