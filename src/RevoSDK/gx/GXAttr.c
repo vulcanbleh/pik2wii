@@ -434,7 +434,7 @@ void GXGetVtxAttrFmtv(GXVtxFmt format, GXVtxAttrFmtList* list)
  * @note Address: 0x800E4C80
  * @note Size: 0x8C
  */
-void GXSetArray(GXAttr attr, void* basePtr, u8 stride)
+void GXSetArray(GXAttr attr, const void* basePtr, u8 stride)
 {
 	s32 idx;
 	s32 newAttr;
