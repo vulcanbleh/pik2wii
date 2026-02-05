@@ -24,6 +24,9 @@ void PSVECSubtract(const Vec*, const Vec*, Vec*);
 void PSVECNormalize(const Vec*, Vec*);
 f32 PSVECMag(const Vec*);
 void PSVECCrossProduct(const Vec*, const Vec*, Vec*);
+f32 PSVECDistance(const Vec* a, const Vec* b);
+f32 PSVECSquareDistance(const Vec* a, const Vec* b);
+void C_VECHalfAngle(const Vec* a, const Vec* b, Vec* half);
 
 #ifdef __cplusplus
 }

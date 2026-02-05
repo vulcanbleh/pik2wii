@@ -95,7 +95,7 @@ void ResMatPix::CallDisplayList(bool sync) const
 	if (sync) {
 		GXCallDisplayList(const_cast<ResPixDL*>(&r), sizeof(ResPixDL));
 	} else {
-		// GXFastCallDisplayList(const_cast<ResPixDL*>(&r), sizeof(ResPixDL));
+		GXFastCallDisplayList(const_cast<ResPixDL*>(&r), sizeof(ResPixDL));
 	}
 }
 
@@ -110,7 +110,7 @@ void ResMatTevColor::CallDisplayList(bool sync) const
 	if (sync) {
 		GXCallDisplayList(const_cast<ResTevColorDL*>(&r), sizeof(ResTevColorDL));
 	} else {
-		// GXFastCallDisplayList(const_cast<ResTevColorDL*>(&r), sizeof(ResTevColorDL));
+		GXFastCallDisplayList(const_cast<ResTevColorDL*>(&r), sizeof(ResTevColorDL));
 	}
 }
 
@@ -622,9 +622,33 @@ ResMatMisc ResMatMisc::CopyTo(void* pDst) const
 	ResMatMiscData* pData   = static_cast<ResMatMiscData*>(pDst);
 	const ResMatMiscData& r = ref();
 
-	// @bug Only copies the first field???
-	pData->zCompLoc = r.zCompLoc;
+	*pData = r;
 	return ResMatMisc(pData);
+}
+
+////////////////////////////////////////////////////////
+//////////////////// FUR SETTINGS //////////////////////
+////////////////////////////////////////////////////////
+
+f32 ResMatFur::GetLyrRate(u32 idx) const {
+    0.0f; // For Float Ordering
+    1.0f; // For Float Ordering
+
+    if (IsValid()) {
+        u32 layerSize = ref().lyrSize;
+        switch (ref().lyrInterval) {
+            case ResMatFurData::UNIFORM: {
+                return f32(idx + 1) / layerSize;
+            } break;
+            case ResMatFurData::TIP: {
+                return pow(f32(idx + 1) / layerSize, 0.6f);
+            } break;
+            default: {
+                return 0.0f;
+            } break;
+        }
+    }
+    return 0.0f;
 }
 
 ////////////////////////////////////////////////////////
@@ -862,10 +886,10 @@ bool ResMatTevColor::GXGetTevColor(GXTevRegID id, GXColor* pColor) const
 	u32 regBG;
 	detail::ResReadBPCmd(&pCmd[GX_BP_CMD_SZ * 1], &regBG);
 
-	// *pColor = detail::GetRGBA(
-	//     regRA >> GX_BP_TEVREGLO_RED_SHIFT & GX_BP_TEVREGLO_RED_LMASK, regBG >> GX_BP_TEVREGLO_ALPHA_SHIFT & GX_BP_TEVREGLO_ALPHA_LMASK,
-	//     regBG >> GX_BP_TEVREGHI_BLUE_SHIFT & GX_BP_TEVREGHI_BLUE_LMASK, regRA >> GX_BP_TEVREGHI_GREEN_SHIFT &
-	//     GX_BP_TEVREGHI_GREEN_LMASK);
+	*pColor = detail::GetRGBA(
+	    regRA >> GX_BP_TEVREGLO_RED_SHIFT & GX_BP_TEVREGLO_RED_LMASK, regBG >> GX_BP_TEVREGLO_ALPHA_SHIFT & GX_BP_TEVREGLO_ALPHA_LMASK,
+	    regBG >> GX_BP_TEVREGHI_BLUE_SHIFT & GX_BP_TEVREGHI_BLUE_LMASK, regRA >> GX_BP_TEVREGHI_GREEN_SHIFT &
+	    GX_BP_TEVREGHI_GREEN_LMASK);
 
 	return true;
 }
@@ -878,18 +902,18 @@ void ResMatTevColor::GXSetTevColor(GXTevRegID id, GXColor color)
 {
 	u8* pCmd = ref().dl.tevColor[id - 1];
 
-	// u32 regRA = color.r << GX_BP_TEVREGLO_RED_SHIFT | color.a << GX_BP_TEVREGLO_ALPHA_SHIFT | GX_TEVREG_COLOR <<
-	// GX_BP_TEVREGLO_TYPE_SHIFT
-	//           | (id * 2 + GX_BP_REG_TEVREG0LO) << GX_BP_OPCODE_SHIFT;
+	u32 regRA = color.r << GX_BP_TEVREGLO_RED_SHIFT | color.a << GX_BP_TEVREGLO_ALPHA_SHIFT | GX_TEVREG_COLOR <<
+	GX_BP_TEVREGLO_TYPE_SHIFT
+	          | (id * 2 + GX_BP_REG_TEVREG0LO) << GX_BP_OPCODE_SHIFT;
 
-	// u32 regBG = color.b << GX_BP_TEVREGHI_BLUE_SHIFT | color.g << GX_BP_TEVREGHI_GREEN_SHIFT | GX_TEVREG_COLOR <<
-	// GX_BP_TEVREGHI_TYPE_SHIFT
-	//           | (id * 2 + GX_BP_REG_TEVREG0HI) << GX_BP_OPCODE_SHIFT;
+	u32 regBG = color.b << GX_BP_TEVREGHI_BLUE_SHIFT | color.g << GX_BP_TEVREGHI_GREEN_SHIFT | GX_TEVREG_COLOR <<
+	GX_BP_TEVREGHI_TYPE_SHIFT
+	          | (id * 2 + GX_BP_REG_TEVREG0HI) << GX_BP_OPCODE_SHIFT;
 
-	// detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 0], regRA);
-	// detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 1], regBG);
-	// detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 2], regBG);
-	// detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 3], regBG);
+	detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 0], regRA);
+	detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 1], regBG);
+	detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 2], regBG);
+	detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 3], regBG);
 }
 
 /**
@@ -909,18 +933,18 @@ bool ResMatTevColor::GXGetTevColorS10(GXTevRegID id, GXColorS10* pColor) const
 	u32 regBG;
 	detail::ResReadBPCmd(&pCmd[GX_BP_CMD_SZ * 1], &regBG);
 
-	// s16 r = regRA >> GX_BP_TEVREGLO_RED_SHIFT & GX_BP_TEVREGLO_RED_LMASK;
-	// s16 g = regBG >> GX_BP_TEVREGHI_GREEN_SHIFT & GX_BP_TEVREGHI_GREEN_LMASK;
-	// s16 b = regBG >> GX_BP_TEVREGHI_BLUE_SHIFT & GX_BP_TEVREGHI_BLUE_LMASK;
-	// s16 a = regRA >> GX_BP_TEVREGLO_ALPHA_SHIFT & GX_BP_TEVREGLO_ALPHA_LMASK;
+	s16 r = regRA >> GX_BP_TEVREGLO_RED_SHIFT & GX_BP_TEVREGLO_RED_LMASK;
+    s16 g = regBG >> GX_BP_TEVREGHI_GREEN_SHIFT & GX_BP_TEVREGHI_GREEN_LMASK;
+    s16 b = regBG >> GX_BP_TEVREGHI_BLUE_SHIFT & GX_BP_TEVREGHI_BLUE_LMASK;
+    s16 a = regRA >> GX_BP_TEVREGLO_ALPHA_SHIFT & GX_BP_TEVREGLO_ALPHA_LMASK;
 
-	// clang-format off
-    // *pColor = detail::GetRGBAS10(
-    //     (r << (32 - GX_BP_TEVREGLO_RED_SZ)) >> (32 - GX_BP_TEVREGLO_RED_SZ),
-    //     (g << (32 - GX_BP_TEVREGHI_GREEN_SZ)) >> (32 - GX_BP_TEVREGHI_GREEN_SZ),
-    //     (b << (32 - GX_BP_TEVREGHI_BLUE_SZ)) >> (32 - GX_BP_TEVREGHI_BLUE_SZ),
-    //     (a << (32 - GX_BP_TEVREGLO_ALPHA_SZ)) >> (32 - GX_BP_TEVREGLO_ALPHA_SZ));
-	// clang-format on
+    // clang-format off
+    *pColor = detail::GetRGBAS10(
+        (r << (32 - GX_BP_TEVREGLO_RED_SZ)) >> (32 - GX_BP_TEVREGLO_RED_SZ),
+        (g << (32 - GX_BP_TEVREGHI_GREEN_SZ)) >> (32 - GX_BP_TEVREGHI_GREEN_SZ),
+        (b << (32 - GX_BP_TEVREGHI_BLUE_SZ)) >> (32 - GX_BP_TEVREGHI_BLUE_SZ),
+        (a << (32 - GX_BP_TEVREGLO_ALPHA_SZ)) >> (32 - GX_BP_TEVREGLO_ALPHA_SZ));
+    // clang-format on
 
 	return true;
 }
@@ -933,18 +957,18 @@ void ResMatTevColor::GXSetTevColorS10(GXTevRegID id, GXColorS10 color)
 {
 	u8* pCmd = ref().dl.tevColor[id - 1];
 
-	// u32 mask = GX_BP_TEVREGLO_RED_LMASK;
+	u32 mask = GX_BP_TEVREGLO_RED_LMASK;
 
-	// u32 regRA = (color.r & mask) << GX_BP_TEVREGLO_RED_SHIFT | (color.a & mask) << GX_BP_TEVREGLO_ALPHA_SHIFT
-	//           | (id * 2 + GX_BP_REG_TEVREG0LO) << GX_BP_OPCODE_SHIFT | GX_TEVREG_COLOR << GX_BP_TEVREGLO_TYPE_SHIFT;
+	u32 regRA = (color.r & mask) << GX_BP_TEVREGLO_RED_SHIFT | (color.a & mask) << GX_BP_TEVREGLO_ALPHA_SHIFT
+	          | (id * 2 + GX_BP_REG_TEVREG0LO) << GX_BP_OPCODE_SHIFT | GX_TEVREG_COLOR << GX_BP_TEVREGLO_TYPE_SHIFT;
 
-	// u32 regBG = (color.b & mask) << GX_BP_TEVREGHI_BLUE_SHIFT | (color.g & mask) << GX_BP_TEVREGHI_GREEN_SHIFT
-	//           | (id * 2 + GX_BP_REG_TEVREG0HI) << GX_BP_OPCODE_SHIFT | GX_TEVREG_COLOR << GX_BP_TEVREGHI_TYPE_SHIFT;
+	u32 regBG = (color.b & mask) << GX_BP_TEVREGHI_BLUE_SHIFT | (color.g & mask) << GX_BP_TEVREGHI_GREEN_SHIFT
+	          | (id * 2 + GX_BP_REG_TEVREG0HI) << GX_BP_OPCODE_SHIFT | GX_TEVREG_COLOR << GX_BP_TEVREGHI_TYPE_SHIFT;
 
-	// detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 0], regRA);
-	// detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 1], regBG);
-	// detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 2], regBG);
-	// detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 3], regBG);
+	detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 0], regRA);
+	detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 1], regBG);
+	detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 2], regBG);
+	detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 3], regBG);
 }
 
 /**
@@ -964,10 +988,10 @@ bool ResMatTevColor::GXGetTevKColor(GXTevKColorID id, GXColor* pColor) const
 	u32 regBG;
 	detail::ResReadBPCmd(&pCmd[GX_BP_CMD_SZ * 1], &regBG);
 
-	// *pColor = detail::GetRGBA(
-	//     regRA >> GX_BP_TEVREGLO_RED_SHIFT & GX_BP_TEVREGLO_RED_LMASK, regBG >> GX_BP_TEVREGLO_ALPHA_SHIFT & GX_BP_TEVREGLO_ALPHA_LMASK,
-	//     regBG >> GX_BP_TEVREGHI_BLUE_SHIFT & GX_BP_TEVREGHI_BLUE_LMASK, regRA >> GX_BP_TEVREGHI_GREEN_SHIFT &
-	//     GX_BP_TEVREGHI_GREEN_LMASK);
+	*pColor = detail::GetRGBA(
+	    regRA >> GX_BP_TEVREGLO_RED_SHIFT & GX_BP_TEVREGLO_RED_LMASK, regBG >> GX_BP_TEVREGLO_ALPHA_SHIFT & GX_BP_TEVREGLO_ALPHA_LMASK,
+	    regBG >> GX_BP_TEVREGHI_BLUE_SHIFT & GX_BP_TEVREGHI_BLUE_LMASK, regRA >> GX_BP_TEVREGHI_GREEN_SHIFT &
+	    GX_BP_TEVREGHI_GREEN_LMASK);
 
 	return true;
 }
@@ -980,16 +1004,16 @@ void ResMatTevColor::GXSetTevKColor(GXTevKColorID id, GXColor color)
 {
 	u8* pCmd = ref().dl.tevKColor[id];
 
-	// u32 regRA = color.r << GX_BP_TEVREGLO_RED_SHIFT | color.a << GX_BP_TEVREGLO_ALPHA_SHIFT | GX_TEVREG_KONST <<
-	// GX_BP_TEVREGLO_TYPE_SHIFT
-	//           | (id * 2 + GX_BP_REG_TEVREG0LO) << GX_BP_OPCODE_SHIFT;
+	u32 regRA = color.r << GX_BP_TEVREGLO_RED_SHIFT | color.a << GX_BP_TEVREGLO_ALPHA_SHIFT | GX_TEVREG_KONST <<
+	GX_BP_TEVREGLO_TYPE_SHIFT
+	           | (id * 2 + GX_BP_REG_TEVREG0LO) << GX_BP_OPCODE_SHIFT;
 
-	// u32 regBG = color.b << GX_BP_TEVREGHI_BLUE_SHIFT | color.g << GX_BP_TEVREGHI_GREEN_SHIFT | GX_TEVREG_KONST <<
-	// GX_BP_TEVREGHI_TYPE_SHIFT
-	//           | (id * 2 + GX_BP_REG_TEVREG0HI) << GX_BP_OPCODE_SHIFT;
+	u32 regBG = color.b << GX_BP_TEVREGHI_BLUE_SHIFT | color.g << GX_BP_TEVREGHI_GREEN_SHIFT | GX_TEVREG_KONST <<
+	GX_BP_TEVREGHI_TYPE_SHIFT
+	           | (id * 2 + GX_BP_REG_TEVREG0HI) << GX_BP_OPCODE_SHIFT;
 
-	// detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 0], regRA);
-	// detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 1], regBG);
+	detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 0], regRA);
+	detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 1], regBG);
 }
 
 ////////////////////////////////////////////////////////
@@ -1011,7 +1035,7 @@ void ResMatIndMtxAndScale::CallDisplayList(u8 indNum, bool sync) const
 	if (sync) {
 		GXCallDisplayList(const_cast<ResIndMtxAndScaleDL*>(&r), sizeof(ResIndMtxAndScaleDL));
 	} else {
-		// GXFastCallDisplayList(const_cast<ResIndMtxAndScaleDL*>(&r), sizeof(ResIndMtxAndScaleDL));
+		GXFastCallDisplayList(const_cast<ResIndMtxAndScaleDL*>(&r), sizeof(ResIndMtxAndScaleDL));
 	}
 }
 
@@ -1059,12 +1083,12 @@ bool ResMatIndMtxAndScale::GXGetIndTexMtx(GXIndTexMtxID id, math::MTX34* pMtx) c
 	u32 regC;
 	detail::ResReadBPCmd(&pCmd[GX_BP_CMD_SZ * 2], &regC);
 
-	// u32 scaleExpReg = (regA >> GX_BP_INDMTXA_EXP_SHIFT & GX_BP_INDMTXA_EXP_LMASK) << 0
-	//                 | (regB >> GX_BP_INDMTXB_EXP_SHIFT & GX_BP_INDMTXB_EXP_LMASK) << 2
-	//                 | (regC >> GX_BP_INDMTXC_EXP_SHIFT & GX_BP_INDMTXC_EXP_LMASK) << 4;
+	u32 scaleExpReg = (regA >> GX_BP_INDMTXA_EXP_SHIFT & GX_BP_INDMTXA_EXP_LMASK) << 0
+	                | (regB >> GX_BP_INDMTXB_EXP_SHIFT & GX_BP_INDMTXB_EXP_LMASK) << 2
+	                | (regC >> GX_BP_INDMTXC_EXP_SHIFT & GX_BP_INDMTXC_EXP_LMASK) << 4;
 
 	// Hardware stores as -17
-	// scaleExp = static_cast<s8>(scaleExpReg - 17);
+	scaleExp = static_cast<s8>(scaleExpReg - 17);
 
 	// Exponent to value
 	f32 scale = 1.0f;
@@ -1082,24 +1106,88 @@ bool ResMatIndMtxAndScale::GXGetIndTexMtx(GXIndTexMtxID id, math::MTX34* pMtx) c
 
 	if (pMtx != nullptr) {
 		// clang-format off
-        // pMtx->_00 = scale * static_cast<f32>(static_cast<int>((regA >> GX_BP_INDMTXA_M00_SHIFT & GX_BP_INDMTXA_M00_LMASK) << (32 - GX_BP_INDMTXA_M00_SZ)) >> (32 - GX_BP_INDMTXA_M00_SZ)) * (1.0f / 1024.0f);
-        // pMtx->_01 = scale * static_cast<f32>(static_cast<int>((regB >> GX_BP_INDMTXB_M01_SHIFT & GX_BP_INDMTXB_M01_LMASK) << (32 - GX_BP_INDMTXB_M01_SZ)) >> (32 - GX_BP_INDMTXB_M01_SZ)) * (1.0f / 1024.0f);
-        // pMtx->_02 = scale * static_cast<f32>(static_cast<int>((regC >> GX_BP_INDMTXC_M02_SHIFT & GX_BP_INDMTXC_M02_LMASK) << (32 - GX_BP_INDMTXC_M02_SZ)) >> (32 - GX_BP_INDMTXC_M02_SZ)) * (1.0f / 1024.0f);
+        pMtx->_00 = scale * static_cast<f32>(static_cast<int>((regA >> GX_BP_INDMTXA_M00_SHIFT & GX_BP_INDMTXA_M00_LMASK) << (32 - GX_BP_INDMTXA_M00_SZ)) >> (32 - GX_BP_INDMTXA_M00_SZ)) * (1.0f / 1024.0f);
+        pMtx->_01 = scale * static_cast<f32>(static_cast<int>((regB >> GX_BP_INDMTXB_M01_SHIFT & GX_BP_INDMTXB_M01_LMASK) << (32 - GX_BP_INDMTXB_M01_SZ)) >> (32 - GX_BP_INDMTXB_M01_SZ)) * (1.0f / 1024.0f);
+        pMtx->_02 = scale * static_cast<f32>(static_cast<int>((regC >> GX_BP_INDMTXC_M02_SHIFT & GX_BP_INDMTXC_M02_LMASK) << (32 - GX_BP_INDMTXC_M02_SZ)) >> (32 - GX_BP_INDMTXC_M02_SZ)) * (1.0f / 1024.0f);
         pMtx->_03 = 0.0f;
 
-        // pMtx->_10 = scale * static_cast<f32>(static_cast<int>((regA >> GX_BP_INDMTXA_M10_SHIFT & GX_BP_INDMTXA_M10_LMASK) << (32 - GX_BP_INDMTXA_M10_SZ)) >> (32 - GX_BP_INDMTXA_M00_SZ)) * (1.0f / 1024.0f);
-        // pMtx->_11 = scale * static_cast<f32>(static_cast<int>((regB >> GX_BP_INDMTXB_M11_SHIFT & GX_BP_INDMTXB_M11_LMASK) << (32 - GX_BP_INDMTXB_M11_SZ)) >> (32 - GX_BP_INDMTXB_M11_SZ)) * (1.0f / 1024.0f);
-        // pMtx->_12 = scale * static_cast<f32>(static_cast<int>((regC >> GX_BP_INDMTXC_M12_SHIFT & GX_BP_INDMTXC_M12_LMASK) << (32 - GX_BP_INDMTXC_M12_SZ)) >> (32 - GX_BP_INDMTXC_M12_SZ)) * (1.0f / 1024.0f);
+        pMtx->_10 = scale * static_cast<f32>(static_cast<int>((regA >> GX_BP_INDMTXA_M10_SHIFT & GX_BP_INDMTXA_M10_LMASK) << (32 - GX_BP_INDMTXA_M10_SZ)) >> (32 - GX_BP_INDMTXA_M00_SZ)) * (1.0f / 1024.0f);
+        pMtx->_11 = scale * static_cast<f32>(static_cast<int>((regB >> GX_BP_INDMTXB_M11_SHIFT & GX_BP_INDMTXB_M11_LMASK) << (32 - GX_BP_INDMTXB_M11_SZ)) >> (32 - GX_BP_INDMTXB_M11_SZ)) * (1.0f / 1024.0f);
+        pMtx->_12 = scale * static_cast<f32>(static_cast<int>((regC >> GX_BP_INDMTXC_M12_SHIFT & GX_BP_INDMTXC_M12_LMASK) << (32 - GX_BP_INDMTXC_M12_SZ)) >> (32 - GX_BP_INDMTXC_M12_SZ)) * (1.0f / 1024.0f);
         pMtx->_13 = 0.0f;
 
         pMtx->_20 = 0.0f;
         pMtx->_21 = 0.0f;
         pMtx->_22 = 1.0f;
         pMtx->_23 = 0.0f;
-		// clang-format on
-	}
+        // clang-format on
+    }
 
 	return true;
+}
+
+bool ResMatIndMtxAndScale::GXGetIndTexMtx(GXIndTexMtxID id, math::MTX34 *pMtx, s8 *pScaleExp) const {
+    s8 scaleExp;
+    const u8 *pCmd;
+    const ResIndMtxAndScaleDL &r = ref();
+
+    switch (id) {
+        case GX_ITM_0: {
+            pCmd = r.dl.indTexMtx0;
+        } break;
+        case GX_ITM_1: {
+            pCmd = r.dl.indTexMtx1;
+        } break;
+        case GX_ITM_2: {
+            pCmd = r.dl.indTexMtx2;
+        } break;
+        default: {
+            return false;
+        }
+    }
+
+    if (pCmd[0] == 0) {
+        return false;
+    }
+
+    u32 regA;
+    detail::ResReadBPCmd(&pCmd[GX_BP_CMD_SZ * 0], &regA);
+
+    u32 regB;
+    detail::ResReadBPCmd(&pCmd[GX_BP_CMD_SZ * 1], &regB);
+
+    u32 regC;
+    detail::ResReadBPCmd(&pCmd[GX_BP_CMD_SZ * 2], &regC);
+
+    u32 scaleExpReg = (regA >> GX_BP_INDMTXA_EXP_SHIFT & GX_BP_INDMTXA_EXP_LMASK) << 0 |
+                      (regB >> GX_BP_INDMTXB_EXP_SHIFT & GX_BP_INDMTXB_EXP_LMASK) << 2 |
+                      (regC >> GX_BP_INDMTXC_EXP_SHIFT & GX_BP_INDMTXC_EXP_LMASK) << 4;
+
+    // Hardware stores as -17
+    if (pScaleExp) {
+        *pScaleExp = static_cast<s8>(scaleExpReg - 17);
+    }
+
+    if (pMtx != NULL) {
+        // clang-format off
+        pMtx->_00 =  static_cast<f32>(static_cast<int>((regA >> GX_BP_INDMTXA_M00_SHIFT & GX_BP_INDMTXA_M00_LMASK) << (32 - GX_BP_INDMTXA_M00_SZ)) >> (32 - GX_BP_INDMTXA_M00_SZ)) * (1.0f / 1024.0f);
+        pMtx->_01 =  static_cast<f32>(static_cast<int>((regB >> GX_BP_INDMTXB_M01_SHIFT & GX_BP_INDMTXB_M01_LMASK) << (32 - GX_BP_INDMTXB_M01_SZ)) >> (32 - GX_BP_INDMTXB_M01_SZ)) * (1.0f / 1024.0f);
+        pMtx->_02 =  static_cast<f32>(static_cast<int>((regC >> GX_BP_INDMTXC_M02_SHIFT & GX_BP_INDMTXC_M02_LMASK) << (32 - GX_BP_INDMTXC_M02_SZ)) >> (32 - GX_BP_INDMTXC_M02_SZ)) * (1.0f / 1024.0f);
+        pMtx->_03 = 0.0f;
+
+        pMtx->_10 =  static_cast<f32>(static_cast<int>((regA >> GX_BP_INDMTXA_M10_SHIFT & GX_BP_INDMTXA_M10_LMASK) << (32 - GX_BP_INDMTXA_M10_SZ)) >> (32 - GX_BP_INDMTXA_M00_SZ)) * (1.0f / 1024.0f);
+        pMtx->_11 =  static_cast<f32>(static_cast<int>((regB >> GX_BP_INDMTXB_M11_SHIFT & GX_BP_INDMTXB_M11_LMASK) << (32 - GX_BP_INDMTXB_M11_SZ)) >> (32 - GX_BP_INDMTXB_M11_SZ)) * (1.0f / 1024.0f);
+        pMtx->_12 =  static_cast<f32>(static_cast<int>((regC >> GX_BP_INDMTXC_M12_SHIFT & GX_BP_INDMTXC_M12_LMASK) << (32 - GX_BP_INDMTXC_M12_SZ)) >> (32 - GX_BP_INDMTXC_M12_SZ)) * (1.0f / 1024.0f);
+        pMtx->_13 = 0.0f;
+
+        pMtx->_20 = 0.0f;
+        pMtx->_21 = 0.0f;
+        pMtx->_22 = 1.0f;
+        pMtx->_23 = 0.0f;
+        // clang-format on
+    }
+
+    return true;
 }
 
 /**
@@ -1140,24 +1228,24 @@ void ResMatIndMtxAndScale::GXSetIndTexMtx(GXIndTexMtxID id, const math::MTX34& r
 	scaleExp += static_cast<s8>(17);
 
 	// clang-format off
-    // detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 0],
-    //     static_cast<u32>((static_cast<int>(1024.0f * rMtx._00) & GX_BP_INDMTXA_M00_LMASK) << GX_BP_INDMTXA_M00_SHIFT) |
-    //     static_cast<u32>((static_cast<int>(1024.0f * rMtx._10) & GX_BP_INDMTXA_M10_LMASK) << GX_BP_INDMTXA_M10_SHIFT) |
-    //     static_cast<u32>((scaleExp >> 0 & GX_BP_INDMTXA_EXP_LMASK) << GX_BP_INDMTXA_EXP_SHIFT) |
-    //     static_cast<u32>((offset + GX_BP_REG_INDMTX0A) << GX_BP_OPCODE_SHIFT));
+    detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 0],
+        static_cast<u32>((static_cast<int>(1024.0f * rMtx._00) & GX_BP_INDMTXA_M00_LMASK) << GX_BP_INDMTXA_M00_SHIFT) |
+        static_cast<u32>((static_cast<int>(1024.0f * rMtx._10) & GX_BP_INDMTXA_M10_LMASK) << GX_BP_INDMTXA_M10_SHIFT) |
+        static_cast<u32>((scaleExp >> 0 & GX_BP_INDMTXA_EXP_LMASK) << GX_BP_INDMTXA_EXP_SHIFT) |
+        static_cast<u32>((offset + GX_BP_REG_INDMTX0A) << GX_BP_OPCODE_SHIFT));
 
-    // detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 1],
-    //     static_cast<u32>((static_cast<int>(1024.0f * rMtx._01) & GX_BP_INDMTXB_M01_LMASK) << GX_BP_INDMTXB_M01_SHIFT) |
-    //     static_cast<u32>((static_cast<int>(1024.0f * rMtx._11) & GX_BP_INDMTXB_M11_LMASK) << GX_BP_INDMTXB_M11_SHIFT) |
-    //     static_cast<u32>((scaleExp >> 2 & GX_BP_INDMTXB_EXP_LMASK) << GX_BP_INDMTXB_EXP_SHIFT) |
-    //     static_cast<u32>((offset + GX_BP_REG_INDMTX0B) << GX_BP_OPCODE_SHIFT));
+    detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 1],
+        static_cast<u32>((static_cast<int>(1024.0f * rMtx._01) & GX_BP_INDMTXB_M01_LMASK) << GX_BP_INDMTXB_M01_SHIFT) |
+        static_cast<u32>((static_cast<int>(1024.0f * rMtx._11) & GX_BP_INDMTXB_M11_LMASK) << GX_BP_INDMTXB_M11_SHIFT) |
+        static_cast<u32>((scaleExp >> 2 & GX_BP_INDMTXB_EXP_LMASK) << GX_BP_INDMTXB_EXP_SHIFT) |
+        static_cast<u32>((offset + GX_BP_REG_INDMTX0B) << GX_BP_OPCODE_SHIFT));
 
-    // detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 2],
-    //     static_cast<u32>((static_cast<int>(1024.0f * rMtx._02) & GX_BP_INDMTXC_M02_LMASK) << GX_BP_INDMTXC_M02_SHIFT) |
-    //     static_cast<u32>((static_cast<int>(1024.0f * rMtx._12) & GX_BP_INDMTXC_M12_LMASK) << GX_BP_INDMTXC_M12_SHIFT) |
-    //     static_cast<u32>((scaleExp >> 4 & GX_BP_INDMTXC_EXP_LMASK) << GX_BP_INDMTXC_EXP_SHIFT) |
-    //     static_cast<u32>((offset + GX_BP_REG_INDMTX0C) << GX_BP_OPCODE_SHIFT));
-	// clang-format on
+    detail::ResWriteBPCmd(&pCmd[GX_BP_CMD_SZ * 2],
+        static_cast<u32>((static_cast<int>(1024.0f * rMtx._02) & GX_BP_INDMTXC_M02_LMASK) << GX_BP_INDMTXC_M02_SHIFT) |
+        static_cast<u32>((static_cast<int>(1024.0f * rMtx._12) & GX_BP_INDMTXC_M12_LMASK) << GX_BP_INDMTXC_M12_SHIFT) |
+        static_cast<u32>((scaleExp >> 4 & GX_BP_INDMTXC_EXP_LMASK) << GX_BP_INDMTXC_EXP_SHIFT) |
+        static_cast<u32>((offset + GX_BP_REG_INDMTX0C) << GX_BP_OPCODE_SHIFT));
+    // clang-format on
 }
 
 ////////////////////////////////////////////////////////
@@ -1277,40 +1365,38 @@ bool ResMatChan::GXGetChanCtrl(GXChannelID id, GXBool* pEnable, GXColorSrc* pAmb
 	}
 
 	if (pEnable != nullptr) {
-		// *pEnable = ctrl >> GX_XF_COLOR0CNTRL_LIGHT_SHIFT & GX_XF_COLOR0CNTRL_LIGHT_LMASK;
+		*pEnable = ctrl >> GX_XF_COLOR0CNTRL_LIGHT_SHIFT & GX_XF_COLOR0CNTRL_LIGHT_LMASK;
 	}
 
 	if (pAmbSrc != nullptr) {
-		// *pAmbSrc = static_cast<GXColorSrc>(ctrl >> GX_XF_COLOR0CNTRL_AMBSRC_SHIFT & GX_XF_COLOR0CNTRL_AMBSRC_LMASK);
+		*pAmbSrc = static_cast<GXColorSrc>(ctrl >> GX_XF_COLOR0CNTRL_AMBSRC_SHIFT & GX_XF_COLOR0CNTRL_AMBSRC_LMASK);
 	}
 
 	if (pMatSrc != nullptr) {
-		// *pMatSrc = static_cast<GXColorSrc>(ctrl >> GX_XF_COLOR0CNTRL_MATSRC_SHIFT & GX_XF_COLOR0CNTRL_MATSRC_LMASK);
+		*pMatSrc = static_cast<GXColorSrc>(ctrl >> GX_XF_COLOR0CNTRL_MATSRC_SHIFT & GX_XF_COLOR0CNTRL_MATSRC_LMASK);
 	}
 
-	// u32 lightMaskLo = ctrl >> GX_XF_COLOR0CNTRL_LMASKLO_SHIFT & GX_XF_COLOR0CNTRL_LMASKLO_LMASK;
+	u32 lightMaskLo = ctrl >> GX_XF_COLOR0CNTRL_LMASKLO_SHIFT & GX_XF_COLOR0CNTRL_LMASKLO_LMASK;
 
-	// u32 lightMaskHi = ctrl >> GX_XF_COLOR0CNTRL_LMASKHI_SHIFT & GX_XF_COLOR0CNTRL_LMASKHI_LMASK;
+	u32 lightMaskHi = ctrl >> GX_XF_COLOR0CNTRL_LMASKHI_SHIFT & GX_XF_COLOR0CNTRL_LMASKHI_LMASK;
 
 	if (pLightMask != nullptr) {
-		// *pLightMask = static_cast<GXLightID>(lightMaskLo | lightMaskHi << 4);
+		*pLightMask = static_cast<GXLightID>(lightMaskLo | lightMaskHi << 4);
 	}
 
 	GXDiffuseFn diff;
 	GXAttnFn attn;
 
-	// if (!(ctrl >> GX_XF_COLOR0CNTRL_ATTNSELECT_SHIFT & GX_XF_COLOR0CNTRL_ATTNSELECT_LMASK)) {
-	// 	attn = GX_AF_SPEC;
-	// 	diff = GX_DF_NONE;
-
-	// } else if (!(ctrl >> GX_XF_COLOR0CNTRL_ATTNENABLE_SHIFT & GX_XF_COLOR0CNTRL_ATTNENABLE_LMASK)) {
-	// 	attn = GX_AF_NONE;
-	// 	diff = static_cast<GXDiffuseFn>(ctrl >> GX_XF_COLOR0CNTRL_DIFFUSEATTN_SHIFT & GX_XF_COLOR0CNTRL_DIFFUSEATTN_LMASK);
-
-	// } else {
-	// 	attn = GX_AF_SPOT;
-	// 	diff = static_cast<GXDiffuseFn>(ctrl >> GX_XF_COLOR0CNTRL_DIFFUSEATTN_SHIFT & GX_XF_COLOR0CNTRL_DIFFUSEATTN_LMASK);
-	// }
+	if (!(ctrl >> GX_XF_COLOR0CNTRL_ATTNSELECT_SHIFT & GX_XF_COLOR0CNTRL_ATTNSELECT_LMASK)) {
+	 	attn = GX_AF_SPEC;
+	 	diff = GX_DF_NONE;
+	} else if (!(ctrl >> GX_XF_COLOR0CNTRL_ATTNENABLE_SHIFT & GX_XF_COLOR0CNTRL_ATTNENABLE_LMASK)) {
+	 	attn = GX_AF_NONE;
+	 	diff = static_cast<GXDiffuseFn>(ctrl >> GX_XF_COLOR0CNTRL_DIFFUSEATTN_SHIFT & GX_XF_COLOR0CNTRL_DIFFUSEATTN_LMASK);
+	} else {
+	 	attn = GX_AF_SPOT;
+	 	diff = static_cast<GXDiffuseFn>(ctrl >> GX_XF_COLOR0CNTRL_DIFFUSEATTN_SHIFT & GX_XF_COLOR0CNTRL_DIFFUSEATTN_LMASK);
+	}
 
 	if (pDiffuseFn != nullptr) {
 		*pDiffuseFn = diff;
@@ -1363,13 +1449,13 @@ void ResMatTexCoordGen::CallDisplayList(u8 numGens, bool sync) const
 		}
 	} else {
 		if (numGens < 2) {
-			// GXFastCallDisplayList(const_cast<ResTexCoordGenDL*>(&r), 32);
+			GXFastCallDisplayList(const_cast<ResTexCoordGenDL*>(&r), 32);
 		} else if (numGens < 4) {
-			// GXFastCallDisplayList(const_cast<ResTexCoordGenDL*>(&r), 64);
+			GXFastCallDisplayList(const_cast<ResTexCoordGenDL*>(&r), 64);
 		} else if (numGens < 8) {
-			// GXFastCallDisplayList(const_cast<ResTexCoordGenDL*>(&r), 128);
+			GXFastCallDisplayList(const_cast<ResTexCoordGenDL*>(&r), 128);
 		} else {
-			// GXFastCallDisplayList(const_cast<ResTexCoordGenDL*>(&r), sizeof(ResTexCoordGenDL));
+			GXFastCallDisplayList(const_cast<ResTexCoordGenDL*>(&r), sizeof(ResTexCoordGenDL));
 		}
 	}
 }
@@ -1662,18 +1748,18 @@ void ResMatTexCoordGen::GXSetTexCoordGen2(GXTexCoordID id, GXTexGenType func, GX
 	}
 
 	// clang-format off
-    // detail::ResWriteXFCmd(&pCmd[GX_XF_CMD_SZ * 0], id + GX_XF_REG_TEX0,
-    //     proj      << GX_XF_TEX_PROJTYPE_SHIFT   |
-    //     form      << GX_XF_TEX_INPUTFORM_SHIFT  |
-    //     tgType    << GX_XF_TEX_TEXGENTYPE_SHIFT |
-    //     row       << GX_XF_TEX_SRCROW_SHIFT     |
-    //     embossRow << GX_XF_TEX_BUMPSRCTEX_SHIFT |
-    //     embossLit << GX_XF_TEX_BUMPSRCLIGHT_SHIFT);
+    detail::ResWriteXFCmd(&pCmd[GX_XF_CMD_SZ * 0], id + GX_XF_REG_TEX0,
+        proj      << GX_XF_TEX_PROJTYPE_SHIFT   |
+        form      << GX_XF_TEX_INPUTFORM_SHIFT  |
+        tgType    << GX_XF_TEX_TEXGENTYPE_SHIFT |
+        row       << GX_XF_TEX_SRCROW_SHIFT     |
+        embossRow << GX_XF_TEX_BUMPSRCTEX_SHIFT |
+        embossLit << GX_XF_TEX_BUMPSRCLIGHT_SHIFT);
 
-    // detail::ResWriteXFCmd(&pCmd[GX_XF_CMD_SZ * 1], id + GX_XF_REG_DUALTEX0,
-    //     (postMtx - GX_PTTEXMTX0) << GX_XF_DUALTEX_BASEROW_SHIFT |
-    //     normalize                << GX_XF_DUALTEX_NORMALIZE_SHIFT);
-	// clang-format on
+    detail::ResWriteXFCmd(&pCmd[GX_XF_CMD_SZ * 1], id + GX_XF_REG_DUALTEX0,
+        postMtx - GX_PTTEXMTX0 << GX_XF_DUALTEX_BASEROW_SHIFT |
+        normalize             << GX_XF_DUALTEX_NORMALIZE_SHIFT);
+    // clang-format on
 }
 
 ////////////////////////////////////////////////////////
@@ -1740,6 +1826,10 @@ ResTev ResMat::GetResTev() const
 	return ofs_to_obj<ResTev>(ref().toResTevData);
 }
 
+ResMatFur ResMat::GetResMatFur() {
+    return ofs_to_obj<ResMatFur>(ref().toResMatFurData);
+}
+
 ////////////////////////////////////////////////////////
 /////////////////// TEXTURE PALETTES ///////////////////
 ////////////////////////////////////////////////////////
@@ -1764,7 +1854,7 @@ void ResTexPlttInfo::BindTex_(const ResTex tex, ResTexObj texObj)
 		GXCITexFmt fmtCi;
 		tex.GetTexObjCIParam(&pTexData, &width, &height, &fmtCi, &minLod, &maxLod, &mipmap);
 
-		// GXInitTexObjCI(pGXObj, pTexData, width, height, static_cast<GXTexFmt>(fmtCi), r.wrap_s, r.wrap_t, mipmap, r.tlutID);
+		GXInitTexObjCI(pGXObj, pTexData, width, height, fmtCi, r.wrap_s, r.wrap_t, mipmap, r.tlutID);
 	} else {
 		GXTexFmt fmt;
 		tex.GetTexObjParam(&pTexData, &width, &height, &fmt, &minLod, &maxLod, &mipmap);

@@ -302,9 +302,30 @@ void C_VECSquareDistance(void)
  * @note Address: N/A
  * @note Size: 0x28
  */
-void PSVECSquareDistance(void)
-{
-	// UNUSED FUNCTION
+f32 PSVECSquareDistance(register const Vec* a, register const Vec* b) {
+    register f32 ayz, byz;
+    register f32 axy, bxy;
+    register f32 dxy, dyz;
+    register f32 dist;
+
+    ASM (
+        // Load vector components
+        psq_l axy, Vec.x(a), 0, 0
+        psq_l ayz, Vec.y(a), 0, 0 
+        psq_l bxy, Vec.x(b), 0, 0
+        psq_l byz, Vec.y(b), 0, 0
+
+        // Compute differences
+        ps_sub dxy, axy, bxy
+        ps_sub dyz, ayz, byz
+
+        // Compute distance
+        ps_mul  dyz,  dyz,  dyz
+        ps_madd dist, dxy,  dxy, dyz
+        ps_sum0 dist, dist, dyz, dyz
+    )
+
+    return dist;
 }
 
 /**

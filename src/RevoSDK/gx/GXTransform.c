@@ -198,7 +198,7 @@ void WriteMTXPS4x2(register volatile void* dst, register const Mtx src)
  * @note Address: 0x800E9578
  * @note Size: 0x50
  */
-void GXLoadPosMtxImm(Mtx mtx, u32 id)
+void GXLoadPosMtxImm(const Mtx mtx, u32 id)
 {
 	GX_XF_LOAD_REGS(4 * 3 - 1, id * 4 + GX_XF_MEM_POSMTX);
 	// WriteMTXPS4x3(&GXWGFifo, mtx);
@@ -217,7 +217,7 @@ void GXLoadPosMtxIndx(u16 index, u32 id)
  * @note Address: 0x800E95C8
  * @note Size: 0x50
  */
-void GXLoadNrmMtxImm(Mtx mtx, u32 id)
+void GXLoadNrmMtxImm(const Mtx mtx, u32 id)
 {
 	GX_XF_LOAD_REGS(3 * 3 - 1, id * 3 + GX_XF_MEM_NRMMTX);
 	// WriteMTXPS3x3(&GXWGFifo, mtx);

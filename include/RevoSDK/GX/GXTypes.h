@@ -38,10 +38,7 @@ typedef struct _GXColorS10 {
 // NB: these are all generic structs. Members aren't
 // referenced directly, they only exist for size.
 
-// Generic struct for texture objects.
-typedef struct _GXTexObj {
-	u8 pad[0x20]; // _00
-} GXTexObj;       // size 0x20
+
 
 // Internal struct for texture objects.
 typedef struct _GXTexObjPriv {
@@ -57,10 +54,11 @@ typedef struct _GXTexObjPriv {
 	u8 flags;        // _1F
 } GXTexObjPriv;
 
-// Generic struct for texture memory storage.
-typedef struct _GXTexRegion {
-	u8 padding[0x10]; // _00
-} GXTexRegion;
+// Generic struct for texture objects.
+typedef struct _GXTexObj {
+	u32 pad[((32) - sizeof(GXTexObjPriv) + sizeof(GXTexObjPriv)) /
+                  sizeof(u32)]; // _00
+} GXTexObj;       // size 0x20
 
 typedef struct _GXTexRegionPriv {
 	u32 unk0;      // _00
@@ -71,10 +69,13 @@ typedef struct _GXTexRegionPriv {
 	u8 padding[2]; // _0E
 } GXTexRegionPriv;
 
-// Generic struct for texture look-up table objects.
-typedef struct _GXTlutObj {
-	u8 padding[0xc]; // _00
-} GXTlutObj;
+// Generic struct for texture memory storage.
+typedef struct _GXTexRegion {
+	u32 padding[((16) - sizeof(GXTexRegionPriv) + sizeof(GXTexRegionPriv)) /
+                  sizeof(u32)]; // _00
+} GXTexRegion;
+
+
 
 typedef struct _GXTlutObjPriv {
 	u32 unk0;        // _00
@@ -83,15 +84,22 @@ typedef struct _GXTlutObjPriv {
 	u8 padding[0x2]; // _0A
 } GXTlutObjPriv;
 
-// Generic struct for texture look-up table memory storage.
-typedef struct _GXTlutRegion {
-	u8 padding[0x10]; // _00
-} GXTlutRegion;
+// Generic struct for texture look-up table objects.
+typedef struct _GXTlutObj {
+	u32 padding[((0x0C) - sizeof(GXTlutObjPriv) + sizeof(GXTlutObjPriv)) /
+                  sizeof(u32)]; // _00
+} GXTlutObj;
 
 typedef struct _GXTlutRegionPriv {
 	u32 unk0;              // _00
 	GXTlutObjPriv tlutObj; // _04
 } GXTlutRegionPriv;
+
+// Generic struct for texture look-up table memory storage.
+typedef struct _GXTlutRegion {
+	u8 padding[((16) - sizeof(GXTlutRegionPriv) + sizeof(GXTlutRegionPriv)) /
+                  sizeof(u32)]; // _00
+} GXTlutRegion;
 
 // Generic struct for light information.
 typedef struct _GXLightObj {
