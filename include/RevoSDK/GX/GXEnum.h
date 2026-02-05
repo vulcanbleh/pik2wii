@@ -799,6 +799,11 @@ typedef enum _GXTevRegID {
 	GX_MAX_TEVREG, // Max num TEV registers (4).
 } GXTevRegID;
 
+typedef enum {
+    GX_TEVREG_COLOR,
+    GX_TEVREG_KONST,
+} GXTevRegType;
+
 // TEV operations.
 typedef enum _GXTevOp {
 	GX_TEV_ADD = 0,

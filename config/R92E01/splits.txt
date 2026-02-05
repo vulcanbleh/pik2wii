@@ -7293,6 +7293,7 @@ nw4r/g3d/g3d_anmobj.cpp:
 
 nw4r/g3d/g3d_gpu.cpp:
 	.text       start:0x805144A0 end:0x805149B0
+	.sdata2     start:0x806760A0 end:0x806760B8
 
 nw4r/g3d/g3d_cpu.cpp:
 	.text       start:0x805149B0 end:0x80514B54

@@ -76,6 +76,7 @@ extern "C" {
  */
 #define GX_BP_SET_OPCODE(cmd, opcode) (cmd) = GX_BITFIELD_SET(cmd, 0, 8, (opcode))
 
+#define GX_BP_OPCODE_SHIFT 24
 /**
  * Size of BP command
  */
