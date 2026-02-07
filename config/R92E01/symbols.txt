@@ -30458,7 +30458,6 @@ lbl_8055FF44 = .data:0x8055FF44; // type:object size:0xA data:string
 lbl_8055FF50 = .data:0x8055FF50; // type:object size:0xC data:string
 lbl_8055FF5C = .data:0x8055FF5C; // type:object size:0xA data:string
 @2323 = .data:0x8055FF68; // type:object size:0xC scope:local align:4 data:string
-lbl_8055FF74 = .data:0x8055FF74; // type:object size:0x28
 lbl_8055FF9C = .data:0x8055FF9C; // type:object size:0xA data:string
 lbl_8055FFA8 = .data:0x8055FFA8; // type:object size:0x10
 lbl_8055FFB8 = .data:0x8055FFB8; // type:object size:0x10 data:string
