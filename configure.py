@@ -1288,7 +1288,7 @@ config.libs = [
         "mw_version": "GC/3.0a3p1",
         "progress_category": "sdk",
         "objects": [
-            Object(Matching, "RevoSDK/thp/THPDec.c"),
+            Object(NonMatching, "RevoSDK/thp/THPDec.c"),
             Object(Matching, "RevoSDK/thp/THPAudio.c"),
         ],
     },
