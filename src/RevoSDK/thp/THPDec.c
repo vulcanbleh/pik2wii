@@ -1,7 +1,7 @@
 #include "THP/THPVideoDecode.h"
 #include "THP/THP.h"
 
-char* __THPVersion = "<< Dolphin SDK - THP\trelease build: Jan  9 2004 13:06:55 (0x2301) >>";
+const char* __THPVersion = "<< RVL_SDK - THP \trelease build: Aug  8 2007 01:31:54 (0x4199_60831) >>";
 
 static THPHuffmanTab* Ydchuff ATTRIBUTE_ALIGN(32);
 static THPHuffmanTab* Udchuff ATTRIBUTE_ALIGN(32);
@@ -26,6 +26,8 @@ static THPFileInfo* __THPInfo;
 static BOOL __THPInitFlag = FALSE;
 
 #define THPROUNDUP(a, b) ((((s32)(a)) + ((s32)(b)-1L)) / ((s32)(b)))
+
+void __THPInverseDCTY8(register THPCoeff *, register u32);
 
 /**
  * Decodes a THP video file.
@@ -589,7 +591,69 @@ static void __THPDecompressYUV(void* tileY, void* tileU, void* tileV)
 	__THPGQRRestore();
 }
 
-inline void __THPInverseDCTNoYPos(register THPCoeff* in, register u32 xPos)
+static void __THPDecompressiMCURow512x448(void)
+{
+	u8 cl_num;
+	u32 x_pos;
+	THPComponent* comp;
+
+	LCQueueWait(3);
+
+	for (cl_num = 0; cl_num < __THPInfo->MCUsPerRow; cl_num++) {
+		__THPHuffDecodeDCTCompY(__THPInfo, __THPMCUBuffer[0]);
+		__THPHuffDecodeDCTCompY(__THPInfo, __THPMCUBuffer[1]);
+		__THPHuffDecodeDCTCompY(__THPInfo, __THPMCUBuffer[2]);
+		__THPHuffDecodeDCTCompY(__THPInfo, __THPMCUBuffer[3]);
+		__THPHuffDecodeDCTCompU(__THPInfo, __THPMCUBuffer[4]);
+		__THPHuffDecodeDCTCompV(__THPInfo, __THPMCUBuffer[5]);
+
+		comp  = &__THPInfo->components[0];
+		Gbase = __THPLCWork512[0];
+		Gwid  = 512;
+		Gq    = __THPInfo->quantTabs[comp->quantizationTableSelector];
+		x_pos = (u32)(cl_num * 16);
+		__THPInverseDCTNoYPos(__THPMCUBuffer[0], x_pos);
+		__THPInverseDCTNoYPos(__THPMCUBuffer[1], x_pos + 8);
+		__THPInverseDCTY8(__THPMCUBuffer[2], x_pos);
+		__THPInverseDCTY8(__THPMCUBuffer[3], x_pos + 8);
+
+		comp  = &__THPInfo->components[1];
+		Gbase = __THPLCWork512[1];
+		Gwid  = 256;
+		Gq    = __THPInfo->quantTabs[comp->quantizationTableSelector];
+		x_pos /= 2;
+		__THPInverseDCTNoYPos(__THPMCUBuffer[4], x_pos);
+		comp  = &__THPInfo->components[2];
+		Gbase = __THPLCWork512[2];
+		Gq    = __THPInfo->quantTabs[comp->quantizationTableSelector];
+		__THPInverseDCTNoYPos(__THPMCUBuffer[5], x_pos);
+
+		if (__THPInfo->RST != 0) {
+			if ((--__THPInfo->currMCU) == 0) {
+				__THPInfo->currMCU = __THPInfo->nMCU;
+				__THPInfo->cnt     = 1 + ((__THPInfo->cnt + 6) & 0xFFFFFFF8);
+
+				if (__THPInfo->cnt > 33) {
+					__THPInfo->cnt = 33;
+				}
+
+				__THPInfo->components[0].predDC = 0;
+				__THPInfo->components[1].predDC = 0;
+				__THPInfo->components[2].predDC = 0;
+			}
+		}
+	}
+
+	LCStoreData(__THPInfo->dLC[0], __THPLCWork512[0], 0x2000);
+	LCStoreData(__THPInfo->dLC[1], __THPLCWork512[1], 0x800);
+	LCStoreData(__THPInfo->dLC[2], __THPLCWork512[2], 0x800);
+
+	__THPInfo->dLC[0] += 0x2000;
+	__THPInfo->dLC[1] += 0x800;
+	__THPInfo->dLC[2] += 0x800;
+}
+
+void __THPInverseDCTNoYPos(register THPCoeff* in, register u32 xPos)
 {
 	register f32 *q, *ws;
 	register f32 tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
@@ -895,7 +959,7 @@ inline void __THPInverseDCTNoYPos(register THPCoeff* in, register u32 xPos)
 	}
 }
 
-inline void __THPInverseDCTY8(register THPCoeff* in, register u32 xPos)
+void __THPInverseDCTY8(register THPCoeff* in, register u32 xPos)
 {
 	register f32 *q, *ws;
 	register f32 tmp0, tmp1, tmp2, tmp3, tmp4, tmp5, tmp6, tmp7, tmp8, tmp9;
@@ -1203,72 +1267,6 @@ inline void __THPInverseDCTY8(register THPCoeff* in, register u32 xPos)
 		}
 #endif // clang-format on
 	}
-}
-
-/**
- * @note Address: 0x800F8284
- * @note Size: 0x1A88
- */
-static void __THPDecompressiMCURow512x448(void)
-{
-	u8 cl_num;
-	u32 x_pos;
-	THPComponent* comp;
-
-	LCQueueWait(3);
-
-	for (cl_num = 0; cl_num < __THPInfo->MCUsPerRow; cl_num++) {
-		__THPHuffDecodeDCTCompY(__THPInfo, __THPMCUBuffer[0]);
-		__THPHuffDecodeDCTCompY(__THPInfo, __THPMCUBuffer[1]);
-		__THPHuffDecodeDCTCompY(__THPInfo, __THPMCUBuffer[2]);
-		__THPHuffDecodeDCTCompY(__THPInfo, __THPMCUBuffer[3]);
-		__THPHuffDecodeDCTCompU(__THPInfo, __THPMCUBuffer[4]);
-		__THPHuffDecodeDCTCompV(__THPInfo, __THPMCUBuffer[5]);
-
-		comp  = &__THPInfo->components[0];
-		Gbase = __THPLCWork512[0];
-		Gwid  = 512;
-		Gq    = __THPInfo->quantTabs[comp->quantizationTableSelector];
-		x_pos = (u32)(cl_num * 16);
-		__THPInverseDCTNoYPos(__THPMCUBuffer[0], x_pos);
-		__THPInverseDCTNoYPos(__THPMCUBuffer[1], x_pos + 8);
-		__THPInverseDCTY8(__THPMCUBuffer[2], x_pos);
-		__THPInverseDCTY8(__THPMCUBuffer[3], x_pos + 8);
-
-		comp  = &__THPInfo->components[1];
-		Gbase = __THPLCWork512[1];
-		Gwid  = 256;
-		Gq    = __THPInfo->quantTabs[comp->quantizationTableSelector];
-		x_pos /= 2;
-		__THPInverseDCTNoYPos(__THPMCUBuffer[4], x_pos);
-		comp  = &__THPInfo->components[2];
-		Gbase = __THPLCWork512[2];
-		Gq    = __THPInfo->quantTabs[comp->quantizationTableSelector];
-		__THPInverseDCTNoYPos(__THPMCUBuffer[5], x_pos);
-
-		if (__THPInfo->RST != 0) {
-			if ((--__THPInfo->currMCU) == 0) {
-				__THPInfo->currMCU = __THPInfo->nMCU;
-				__THPInfo->cnt     = 1 + ((__THPInfo->cnt + 6) & 0xFFFFFFF8);
-
-				if (__THPInfo->cnt > 33) {
-					__THPInfo->cnt = 33;
-				}
-
-				__THPInfo->components[0].predDC = 0;
-				__THPInfo->components[1].predDC = 0;
-				__THPInfo->components[2].predDC = 0;
-			}
-		}
-	}
-
-	LCStoreData(__THPInfo->dLC[0], __THPLCWork512[0], 0x2000);
-	LCStoreData(__THPInfo->dLC[1], __THPLCWork512[1], 0x800);
-	LCStoreData(__THPInfo->dLC[2], __THPLCWork512[2], 0x800);
-
-	__THPInfo->dLC[0] += 0x2000;
-	__THPInfo->dLC[1] += 0x800;
-	__THPInfo->dLC[2] += 0x800;
 }
 
 inline s32 __THPHuffDecodeTab(register THPFileInfo* info, register THPHuffmanTab* h)

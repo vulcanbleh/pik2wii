@@ -1,4 +1,5 @@
 #include "RevoSDK/arc.h"
+#include "RevoSDK/os.h"
 #include "ctype.h"
 
 typedef struct FSTEntry FSTEntry;

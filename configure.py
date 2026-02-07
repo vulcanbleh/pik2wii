@@ -1289,7 +1289,7 @@ config.libs = [
         "progress_category": "sdk",
         "objects": [
             Object(NonMatching, "RevoSDK/thp/THPDec.c"),
-            Object(NonMatching, "RevoSDK/thp/THPAudio.c"),
+            Object(Matching, "RevoSDK/thp/THPAudio.c"),
         ],
     },
     {
@@ -1298,7 +1298,7 @@ config.libs = [
         "mw_version": "GC/3.0a3p1",  # unknown
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "RevoSDK/tpl/TPL.c"),
+            Object(Matching, "RevoSDK/tpl/TPL.c"),
         ],
     },
     {
@@ -1348,7 +1348,7 @@ config.libs = [
         "mw_version": "GC/3.0a3p1",  # unknown
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "RevoSDK/arc/arc.c"),
+            Object(Matching, "RevoSDK/arc/arc.c"),
         ],
     },
     {
