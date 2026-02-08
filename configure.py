@@ -1288,7 +1288,7 @@ config.libs = [
         "mw_version": "GC/3.0a3p1",
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "RevoSDK/thp/THPDec.c"),
+            Object(Matching, "RevoSDK/thp/THPDec.c"),
             Object(Matching, "RevoSDK/thp/THPAudio.c"),
         ],
     },
@@ -1322,11 +1322,12 @@ config.libs = [
     {
         "lib": "wpad",
         "cflags": [*cflags_revo, "-str noreadonly"],  # unknown
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "mw_version": "GC/3.0a5.2",  # unknown
         "progress_category": "sdk",
         "objects": [
             Object(NonMatching, "RevoSDK/wpad/WPAD.c"),
             Object(NonMatching, "RevoSDK/wpad/WPADHIDParser.c"),
+            Object(NonMatching, "RevoSDK/wpad/WPADMem.c"),
             Object(NonMatching, "RevoSDK/wpad/WPADEncrypt.c"),
             Object(NonMatching, "RevoSDK/wpad/debug_msg.c"),
         ],

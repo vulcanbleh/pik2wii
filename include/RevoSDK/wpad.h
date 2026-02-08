@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "RevoSDK/os.h"
+#include "RevoSDK/sc.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -15,10 +16,10 @@ typedef void (*WPADExtensionCallback)(WPADChannel chan, s32 result);
 typedef void (*WPADConnectCallback)(WPADChannel chan, s32 reason);
 typedef void (*WPADCallback)(WPADChannel chan, s32 result);
 typedef void* (*WPADAlloc)(u32 size);
-typedef u8 (*WPADFree)(void* ptr);
+typedef BOOL (*WPADFree)(void* ptr);
 typedef void (*WPADSyncDeviceCallback)(s32 result, s32 num);
 typedef void (*WPADSamplingCallback)(s32 chan);
-typedef void (*WPADFlushCallback)(u32 result);
+typedef void (*WPADFlushCallback)(SCStatus result);
 
 
 
