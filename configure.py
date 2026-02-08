@@ -1507,8 +1507,8 @@ config.libs = [
         "progress_category": "sdk",
         "objects": [
             Object(NonMatching, "RevoSDK/sc/scsystem.c"),
-            Object(NonMatching, "RevoSDK/sc/scapi.c"),
-            Object(NonMatching, "RevoSDK/sc/scapi_prdinfo.c"),
+            Object(Matching, "RevoSDK/sc/scapi.c"),
+            Object(Matching, "RevoSDK/sc/scapi_prdinfo.c"),
         ],
     },
     {
