@@ -2307,22 +2307,37 @@ RevoSDK/wenc/wenc.c:
 
 RevoSDK/wpad/WPAD.c:
 	.text       start:0x801465E8 end:0x8014DE14
-	.bss        start:0x805F4A10 end:0x805F8D78
-	.sdata      start:0x8066ACC0 end:0x8066ACD0
-	.sbss       start:0x8066C660 end:0x8066C690
+	.rodata     start:0x80540388 end:0x805403C8
+	.data       start:0x80580FB0 end:0x805812E8
+	.bss        start:0x805F49E0 end:0x805F8108
+	.sdata      start:0x8066ACC0 end:0x8066ACD4
+	.sbss       start:0x8066C658 end:0x8066C690
+	.sdata2     start:0x8066EC68 end:0x8066EC70
 
 RevoSDK/wpad/WPADHIDParser.c:
 	.text       start:0x8014DE14 end:0x801532B4
+	.data       start:0x805812E8 end:0x80581888
+	.bss        start:0x805F8108 end:0x805F8170
 	.sbss       start:0x8066C690 end:0x8066C6A8
+	.sdata2     start:0x8066EC70 end:0x8066ECD0
+
+RevoSDK/wpad/WPADMem.c:
+	.bss        start:0x805F8170 end:0x805F81C0
 
 RevoSDK/wpad/WPADEncrypt.c:
 	.text       start:0x801532B4 end:0x8015435C
+	.data       start:0x80581888 end:0x80582BB0
+	.sbss       start:0x8066C6A8 end:0x8066C6AC
 
 RevoSDK/wpad/debug_msg.c:
 	.text       start:0x8015435C end:0x801543AC
 
 RevoSDK/wud/WUD.c:
 	.text       start:0x801543AC end:0x80158D64
+	.data       start:0x80582BB0 end:0x80583A94
+	.bss        start:0x805F81C0 end:0x805FA168
+	.sbss       start:0x8066C6B0 end:0x8066C6D8
+	.sdata2     start:0x8066ECD0 end:0x8066ECD8
 
 RevoSDK/wud/WUDHidHost.c:
 	.text       start:0x80158D64 end:0x80159360
