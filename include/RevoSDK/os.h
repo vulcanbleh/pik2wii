@@ -93,6 +93,10 @@ void OSRegisterVersion(const char*);
 
 u32 OSGetConsoleType();
 
+const char* OSGetAppGamename(void);
+u8 OSGetAppType(void);
+
+
 #define OS_SOUND_MODE_MONO   0u
 #define OS_SOUND_MODE_STEREO 1u
 

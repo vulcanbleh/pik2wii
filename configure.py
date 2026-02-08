@@ -1507,7 +1507,7 @@ config.libs = [
         "mw_version": "GC/3.0a3p1",  # unknown
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "RevoSDK/sc/scsystem.c"),
+            Object(Matching, "RevoSDK/sc/scsystem.c"),
             Object(Matching, "RevoSDK/sc/scapi.c"),
             Object(Matching, "RevoSDK/sc/scapi_prdinfo.c"),
         ],
