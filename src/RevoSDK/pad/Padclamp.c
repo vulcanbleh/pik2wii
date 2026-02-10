@@ -124,7 +124,7 @@ void ClampCircle(s8* px, s8* py, s8 radius, s8 min)
 
 	squared = x * x + y * y;
 	if (radius * radius < squared) {
-		length = dolsqrtf(squared);
+		length = nonsqrtf(squared);
 		x      = (x * radius) / length;
 		y      = (y * radius) / length;
 	}

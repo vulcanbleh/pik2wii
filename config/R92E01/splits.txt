@@ -2164,7 +2164,7 @@ RevoSDK/os/OSContext.c:
 
 RevoSDK/os/OSError.c:
 	.text       start:0x8012E8CC end:0x8012EF74
-	.sdata      start:0x8066ABD8 end:0x8066AC60
+	.sdata      start:0x8066ABD8 end:0x8066ABE0
 
 RevoSDK/os/OSExec.c:
 	.text       start:0x8012EF74 end:0x801305E4
@@ -2252,7 +2252,7 @@ RevoSDK/os/OSPlayTime.c:
 
 RevoSDK/os/OSLaunch.c:
 	.text       start:0x80138C80 end:0x80139A40
-	.sbss       start:0x8066C400 end:0x8066C410
+	.sbss       start:0x8066C400 end:0x8066C408
 
 RevoSDK/os/init/__ppc_eabi_init.cpp:
 	.init       start:0x800063C8 end:0x80006420
@@ -2260,13 +2260,18 @@ RevoSDK/os/init/__ppc_eabi_init.cpp:
 
 RevoSDK/pad/Padclamp.c:
 	.text       start:0x80139AF4 end:0x80139CF8
+	.sdata2     start:0x8066EC30 end:0x8066EC38
 
 RevoSDK/pad/Pad.c:
 	.text       start:0x80139CF8 end:0x8013B610
-	.sbss       start:0x8066C410 end:0x8066C448
+	.data       start:0x8057FC60 end:0x8057FCB8
+	.bss        start:0x805F4410 end:0x805F4490
+	.sdata      start:0x8066AC38 end:0x8066AC58
+	.sbss       start:0x8066C408 end:0x8066C434
 
 RevoSDK/si/SIBios.c:
 	.text       start:0x8013B610 end:0x8013CB80
+	.sbss       start:0x8066C438 end:0x8066C448
 
 RevoSDK/si/SISamplingRate.c:
 	.text       start:0x8013CB80 end:0x8013CC60

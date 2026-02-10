@@ -1254,7 +1254,7 @@ config.libs = [
     {
         "lib": "pad",
         "cflags": [*cflags_revo, "-fp_contract off", "-str noreadonly"],
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
         "objects": [
             Object(NonMatching, "RevoSDK/pad/Padclamp.c"),
@@ -2583,7 +2583,7 @@ config.libs = [
     {
         "lib": "nw4r_lyt",
         "cflags": cflags_nw4r,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "nw4r",
         "objects": [
             Object(Matching, "nw4r/lyt/lyt_pane.cpp"),
