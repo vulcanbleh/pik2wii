@@ -2484,7 +2484,7 @@ config.libs = [
     {
         "lib": "nw4r_ut",
         "cflags": cflags_nw4r,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "nw4r",
         "objects": [
             Object(Matching, "nw4r/ut/ut_list.cpp"),
@@ -2504,7 +2504,7 @@ config.libs = [
     {
         "lib": "nw4r_math",
         "cflags": cflags_nw4r,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "nw4r",
         "objects": [
             Object(Matching, "nw4r/math/math_arithmetic.cpp"),
@@ -2516,7 +2516,7 @@ config.libs = [
     {
         "lib": "nw4r_db",
         "cflags": cflags_nw4r,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "nw4r",
         "objects": [
             Object(Matching, "nw4r/db/db_directPrint.cpp"),
@@ -2527,7 +2527,7 @@ config.libs = [
     {
         "lib": "nw4r_g3d",
         "cflags": cflags_nw4r,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "nw4r",
         "objects": [
             Object(Matching, "nw4r/g3d/g3d_rescommon.cpp"),
@@ -2536,7 +2536,7 @@ config.libs = [
             Object(Matching, "nw4r/g3d/g3d_resmdl.cpp"),
             Object(Matching, "nw4r/g3d/g3d_resshp.cpp"),
             Object(Matching, "nw4r/g3d/g3d_restev.cpp"),
-            Object(NonMatching, "nw4r/g3d/g3d_resmat.cpp"),
+            Object(Matching, "nw4r/g3d/g3d_resmat.cpp"),
             Object(Matching, "nw4r/g3d/g3d_resvtx.cpp"),
             Object(Matching, "nw4r/g3d/g3d_restex.cpp"),
             Object(Matching, "nw4r/g3d/g3d_resnode.cpp"),
@@ -2555,13 +2555,13 @@ config.libs = [
             Object(Matching, "nw4r/g3d/g3d_anmscn.cpp"),
             Object(Matching, "nw4r/g3d/g3d_obj.cpp"),
             Object(Matching, "nw4r/g3d/g3d_anmobj.cpp"),
-            Object(NonMatching, "nw4r/g3d/g3d_gpu.cpp"),
+            Object(Matching, "nw4r/g3d/g3d_gpu.cpp"),
             Object(Matching, "nw4r/g3d/g3d_cpu.cpp"),
             Object(NonMatching, "nw4r/g3d/g3d_state.cpp"),
             Object(Matching, "nw4r/g3d/g3d_draw1mat1shp.cpp"),
             Object(Matching, "nw4r/g3d/g3d_calcview.cpp"),
             Object(Matching, "nw4r/g3d/g3d_dcc.cpp"),
-            Object(NonMatching, "nw4r/g3d/g3d_workmem.cpp"),
+            Object(Matching, "nw4r/g3d/g3d_workmem.cpp"),
             Object(Matching, "nw4r/g3d/g3d_calcworld.cpp"),
             Object(Matching, "nw4r/g3d/g3d_draw.cpp"),
             Object(Matching, "nw4r/g3d/g3d_camera.cpp"),
@@ -2570,7 +2570,7 @@ config.libs = [
             Object(Matching, "nw4r/g3d/g3d_xsi.cpp"),
             Object(Matching, "nw4r/g3d/g3d_3dsmax.cpp"),
             Object(Matching, "nw4r/g3d/g3d_scnobj.cpp"),
-            Object(NonMatching, "nw4r/g3d/g3d_scnroot.cpp"),
+            Object(Matching, "nw4r/g3d/g3d_scnroot.cpp"),
             Object(Matching, "nw4r/g3d/g3d_scnmdlsmpl.cpp"),
             Object(Matching, "nw4r/g3d/g3d_scnmdl.cpp"),
             Object(Matching, "nw4r/g3d/g3d_calcmaterial.cpp"),
