@@ -1982,12 +1982,16 @@ RevoSDK/ax/AXProf.c:
 
 RevoSDK/axfx/AXFXReverbHi.c:
 	.text       start:0x80114CEC end:0x80114D78
+	.sdata2     start:0x8066EA20 end:0x8066EA28
 
 RevoSDK/axfx/AXFXReverbHiExp.c:
 	.text       start:0x80114D78 end:0x80115B54
+	.data       start:0x8056F6C0 end:0x8056F860
+	.sdata2     start:0x8066EA28 end:0x8066EA68
 
 RevoSDK/axfx/AXFXHooks.c:
 	.text       start:0x80115B54 end:0x80115B8C
+	.sdata      start:0x8066AAD0 end:0x8066AAD8
 
 RevoSDK/base/PPCArch.c:
 	.text       start:0x80115B8C end:0x80115CF0
@@ -5540,13 +5544,16 @@ plugProjectMorimuraU/dayEndCount.cpp:
 plugProjectMorimuraU/hurryUp2D.cpp:
 	.text       start:0x803C448C end:0x803C63DC
 	.ctors      start:0x80534F58 end:0x80534F5C
+	.rodata     start:0x80552D90 end:0x80552DE0
 	.data       start:0x805BB758 end:0x805BB920
 	.bss        start:0x806392E8 end:0x806392F8
-	.sdata      start:0x8066B4C0 end:0x8066B4E8
+	.sdata      start:0x8066B4C0 end:0x8066B4D8
 	.sbss       start:0x8066CEB8 end:0x8066CEC0
+	.sdata2     start:0x80673A40 end:0x80673AB4
 
 plugProjectMorimuraU/gameOver2D.cpp:
 	.text       start:0x803C63DC end:0x803C73B4
+	.rodata     start:0x80552DE0 end:0x80552E28
 	.data       start:0x805BB920 end:0x805BBD58
 
 plugProjectMorimuraU/testBase.cpp:
