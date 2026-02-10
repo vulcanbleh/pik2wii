@@ -1257,8 +1257,8 @@ config.libs = [
         "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "RevoSDK/pad/Padclamp.c"),
-            Object(NonMatching, "RevoSDK/pad/Pad.c"),
+            Object(Matching, "RevoSDK/pad/Padclamp.c"),
+            Object(Matching, "RevoSDK/pad/Pad.c"),
         ],
     },
     {
