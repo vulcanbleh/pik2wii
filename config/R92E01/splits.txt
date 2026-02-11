@@ -260,18 +260,18 @@ homebuttonLib/HBMController.cpp:
 
 homebuttonLib/HBMRemoteSpk.cpp:
 	.text       start:0x8002C750 end:0x8002D01C
-	.data       start:0x80560458 end:0x80560768
+	.data       start:0x80560458 end:0x80560488
 	.bss        start:0x805D1E78 end:0x805D1E80
 
 homebuttonLib/HBMAxSound.cpp:
 	.text       start:0x8002D01C end:0x8002DB30
 	.rodata     start:0x805384E8 end:0x80538528
-	.data       start:0x80560768 end:0x80560820
+	.data       start:0x80560488 end:0x805607D8
 	.bss        start:0x805D1E80 end:0x805D1E88
 
 homebuttonLib/HBMCommon.c:
 	.text       start:0x8002DB30 end:0x8002DE70
-	.data       start:0x80560820 end:0x80560868
+	.data       start:0x805607D8 end:0x80560868
 	.bss        start:0x805D1E88 end:0x805D1E98
 
 homebuttonLib/HBMBase.cpp:
@@ -283,11 +283,11 @@ homebuttonLib/HBMBase.cpp:
 homebuttonLib/lyt_animation.cpp:
 	.text       start:0x80036198 end:0x80036D34
 	.rodata     start:0x80538888 end:0x805388A8
-	.data       start:0x80561508 end:0x80561590
+	.data       start:0x80561508 end:0x80561588
 
 homebuttonLib/lyt_arcResourceAccessor.cpp:
 	.text       start:0x80036D34 end:0x800370C0
-	.data       start:0x80561590 end:0x80561608
+	.data       start:0x80561588 end:0x80561608
 
 homebuttonLib/lyt_bounding.cpp:
 	.text       start:0x800370C0 end:0x80037224
@@ -330,7 +330,7 @@ homebuttonLib/lyt_pane.cpp:
 homebuttonLib/lyt_picture.cpp:
 	.text       start:0x8003D474 end:0x8003D9AC
 	.ctors      start:0x80534CB0 end:0x80534CB4
-	.rodata     start:0x80538918 end:0x80538920
+	.rodata     start:0x80538918 end:0x8053891C
 	.data       start:0x80561888 end:0x80561928
 	.bss        start:0x805D1EF8 end:0x805D1F00
 
@@ -341,21 +341,21 @@ homebuttonLib/lyt_resourceAccessor.cpp:
 homebuttonLib/lyt_textBox.cpp:
 	.text       start:0x8003DA04 end:0x8003F098
 	.ctors      start:0x80534CB4 end:0x80534CB8
-	.rodata     start:0x80538920 end:0x80538940
+	.rodata     start:0x80538920 end:0x80538938
 	.data       start:0x80561940 end:0x805619F0
 	.bss        start:0x805D1F00 end:0x805D1F08
 
 homebuttonLib/lyt_window.cpp:
 	.text       start:0x8003F098 end:0x80041548
 	.ctors      start:0x80534CB8 end:0x80534CBC
-	.rodata     start:0x80538940 end:0x80538950
+	.rodata     start:0x80538938 end:0x80538950
 	.data       start:0x805619F0 end:0x80561AD8
 	.bss        start:0x805D1F08 end:0x805D1F10
 
 homebuttonLib/math_triangular.cpp:
 	.text       start:0x80041548 end:0x800417CC
 	.rodata     start:0x80538950 end:0x80538978
-	.data       start:0x80561AD8 end:0x80562C20
+	.data       start:0x80561AD8 end:0x80562BF0
 
 homebuttonLib/ut_binaryFileFormat.cpp:
 	.text       start:0x800417CC end:0x80041840
@@ -366,10 +366,11 @@ homebuttonLib/ut_CharStrmReader.cpp:
 homebuttonLib/ut_CharWriter.cpp:
 	.text       start:0x80041950 end:0x80043440
 	.rodata     start:0x80538978 end:0x80538998
-	.bss        start:0x805D1F10 end:0x805D1F50
+	.bss        start:0x805D1F10 end:0x805D1F38
 
 homebuttonLib/ut_Font.cpp:
 	.text       start:0x80043440 end:0x800434E8
+	.data       start:0x80562BF0 end:0x80562C20
 
 homebuttonLib/ut_LinkList.cpp:
 	.text       start:0x800434E8 end:0x800435E0
@@ -379,11 +380,11 @@ homebuttonLib/ut_list.cpp:
 
 homebuttonLib/ut_ResFont.cpp:
 	.text       start:0x80043740 end:0x80043A44
-	.data       start:0x80562C20 end:0x80562D10
+	.data       start:0x80562C20 end:0x80562D00
 
 homebuttonLib/ut_ResFontBase.cpp:
 	.text       start:0x80043A44 end:0x80044014
-	.data       start:0x80562D10 end:0x80562DC0
+	.data       start:0x80562D00 end:0x80562DC0
 
 homebuttonLib/ut_TagProcessorBase.cpp:
 	.text       start:0x80044014 end:0x800447E4
@@ -394,7 +395,7 @@ homebuttonLib/ut_TextWriterBase.cpp:
 	.text       start:0x800447E4 end:0x80046274
 	.ctors      start:0x80534CBC end:0x80534CC0
 	.rodata     start:0x805389A0 end:0x805389B8
-	.bss        start:0x805D1F50 end:0x805D1F60
+	.bss        start:0x805D1F38 end:0x805D1F60
 
 homebuttonLib/mix.c:
 	.text       start:0x80046274 end:0x80047B94
