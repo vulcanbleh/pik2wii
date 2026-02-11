@@ -380,22 +380,14 @@ void GXInitTexObjMaxAniso(void)
 	// UNUSED FUNCTION
 }
 
-/**
- * @note Address: N/A
- * @note Size: 0x8
- */
-void GXInitTexObjUserData(void)
-{
-	// UNUSED FUNCTION
+void GXInitTexObjUserData(GXTexObj* obj, void* user_data) {
+    GXTexObjPriv* t = (GXTexObjPriv*)obj;
+    t->userData = user_data;
 }
 
-/**
- * @note Address: N/A
- * @note Size: 0x8
- */
-void GXGetTexObjUserData(void)
-{
-	// UNUSED FUNCTION
+void* GXGetTexObjUserData(const GXTexObj* obj) {
+    const GXTexObjPriv* t = (const GXTexObjPriv*)obj;
+    return t->userData;
 }
 
 /**

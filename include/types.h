@@ -47,6 +47,13 @@ typedef u32 uintptr_t;
 typedef u16 wchar_t;
 #endif
 
+typedef unsigned char			byte1_t;
+typedef unsigned short int		byte2_t;
+typedef unsigned long int		byte4_t;
+typedef unsigned long long int	byte8_t;
+
+typedef byte1_t					byte_t;
+
 #define SHORT_FLOAT_MAX (32768.0f)
 #define SHORT_FLOAT_MIN (-32768.0f)
 
@@ -72,6 +79,18 @@ typedef u16 wchar_t;
 #define ROUND_UP(x, align)     (((x) + (align) - 1) & (-(align)))
 #define ROUND_UP_PTR(x, align) ((void*)((((u32)(x)) + (align) - 1) & (~((align) - 1))))
 #define ROUND_DOWN_PTR(x, align) ((void*)(((u32)(x)) & (~((align) - 1))))
+
+#define POINTER_ADD_TYPE(type_, ptr_, offset_)		((type_)((unsigned long)(ptr_) + (unsigned long)(offset_)))
+#define POINTER_ADD(ptr_, offset_)					POINTER_ADD_TYPE(__typeof__(ptr_), ptr_, offset_)
+
+#define BOOLIFY_TERNARY_TRUE_TYPE(type_, expr_)		((expr_) ? ((type_)(1)) : ((type_)(0)))
+#define BOOLIFY_TERNARY_TRUE(expr_)					BOOLIFY_TERNARY_TRUE_TYPE(int, expr_)
+
+#define BOOLIFY_TERNARY_FALSE_TYPE(type_, expr_)	((expr_) ? ((type_)(0)) : ((type_)(1)))
+#define BOOLIFY_TERNARY_FALSE(expr_)				BOOLIFY_TERNARY_FALSE_TYPE(int, expr_)
+
+#define BOOLIFY_TERNARY_TYPE						BOOLIFY_TERNARY_TRUE_TYPE
+#define BOOLIFY_TERNARY								BOOLIFY_TERNARY_TRUE
 
 #define ASSERT_HANG(cond) \
 	if (!(cond)) {        \
