@@ -18,7 +18,7 @@ int vprintf(const char*, va_list);
 // vfprintf
 // vfprintf_s
 int vsnprintf(char*, size_t, const char*, va_list);
-// int vswprintf(wchar_t*, size_t, const wchar_t*, va_list);
+int vswprintf(wchar_t*, size_t, const wchar_t*, va_list);
 // vsnprintf_s
 int vsprintf(char*, const char*, va_list);
 // vsprintf_s
