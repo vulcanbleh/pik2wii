@@ -13,6 +13,8 @@ namespace detail {
 }
 
 // TODO: do these macros belong here?
+
+#ifdef NW4R_LOG
 #define NW4R_WARNING(line, ...) nw4r::db::Warning(__FILE__, line, __VA_ARGS__)
 #define NW4R_PANIC(line, ...) nw4r::db::Panic(__FILE__, line, __VA_ARGS__)
 #define NW4R_DB_ASSERT(exp, line, ...) \
@@ -21,6 +23,12 @@ namespace detail {
 
 #define NW4R_ASSERT_MSG(x, line, ...)                                                \
     ((x) && 1 || (nw4r::db::Panic(__FILE__, line, __VA_ARGS__), 0))
+#else
+#define NW4R_WARNING(line, ...) (void)(0)
+#define NW4R_PANIC(line, ...) (void)(0)
+#define NW4R_DB_ASSERT(exp, line, ...) (void)(0)
+#define NW4R_ASSERT_MSG(x, line, ...) (void)(0)
+#endif
 
 #define NW4R_ASSERT(x, line)                                                    \
     NW4R_ASSERT_MSG((x), line, "NW4R:Failed assertion " #x)
