@@ -290,7 +290,7 @@ config.warn_missing_source = False
 config.libs = [
     {
         "lib": "System12",
-        "cflags": cflags_pikmin,
+        "cflags": [*cflags_pikmin, "-DNW4R_LOG", "-DEGG_LOG"],
         "mw_version": "GC/3.0a3p1",
         "progress_category": "sys12",
         "objects": [
@@ -349,7 +349,7 @@ config.libs = [
             Object(NonMatching, "homebuttonLib/HBMController.cpp"),
             Object(NonMatching, "homebuttonLib/HBMRemoteSpk.cpp"),
             Object(NonMatching, "homebuttonLib/HBMAxSound.cpp"),
-            Object(NonMatching, "homebuttonLib/HBMCommon.c"),
+            Object(NonMatching, "homebuttonLib/HBMCommon.cpp"),
             Object(NonMatching, "homebuttonLib/HBMBase.cpp"),
             Object(Matching, "homebuttonLib/lyt_animation.cpp"),
             Object(Matching, "homebuttonLib/lyt_arcResourceAccessor.cpp"),

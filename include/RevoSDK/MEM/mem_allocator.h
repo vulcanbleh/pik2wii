@@ -50,15 +50,6 @@ void MEMFreeToAllocator(MEMAllocator* allocator, void* block);
 void MEMInitAllocatorForExpHeap(MEMAllocator* allocator, MEMiHeapHead* heap, s32 align);
 void MEMInitAllocatorForFrmHeap(MEMAllocator* allocator, MEMiHeapHead* heap, s32 align);
 
-MEMiHeapHead* MEMCreateExpHeapEx(void* start, s32 size);
-void MEMDestroyExpHeap(MEMiHeapHead*);
-void* MEMAllocFromExpHeapEx(MEMiHeapHead*, u32, s32);
-void MEMFreeToExpHeap(MEMiHeapHead*, void*);
-u32 MEMResizeForMBlockExpHeap(MEMiHeapHead*, void*, u32);
-u32 MEMGetTotalFreeSizeForExpHeap(MEMiHeapHead*);
-u32 MEMGetAllocatableSizeForExpHeapEx(MEMiHeapHead*, s32);
-u32 MEMAdjustExpHeap(MEMiHeapHead*);
-
 ////////////////////////////////////////////////////////
 
 #ifdef __cplusplus

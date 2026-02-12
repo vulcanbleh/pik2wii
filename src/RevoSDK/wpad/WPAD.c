@@ -924,7 +924,7 @@ BOOL WPADStopSimpleSync() {
     return WUDStopSyncSimple();
 }
 
-WPADSyncDeviceCallback WPADSetSimpleSyncCallback(WPADSyncDeviceCallback callback) {
+WPADSimpleSyncCallback WPADSetSimpleSyncCallback(WPADSimpleSyncCallback callback) {
     return WUDSetSyncSimpleCallback(callback);
 }
 
