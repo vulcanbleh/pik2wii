@@ -20,6 +20,7 @@ typedef BOOL (*WPADFree)(void* ptr);
 typedef void (*WPADSyncDeviceCallback)(s32 result, s32 num);
 typedef void (*WPADSamplingCallback)(s32 chan);
 typedef void (*WPADFlushCallback)(SCStatus result);
+typedef void (*WPADSimpleSyncCallback)(s32 result, s32 num);
 
 
 
@@ -156,6 +157,20 @@ typedef void (*WPADFlushCallback)(SCStatus result);
 #define SPK_RESET 0x80
 #define SPK_CTRL_REG 0x04a20008
 #define SPK_CTRL_PLAY 1
+
+typedef u32 WPADSpeakerCommand;
+enum WPADSpeakerCommand_et
+{
+	WPAD_SPEAKER_DISABLE	= 0,
+	WPAD_SPEAKER_ENABLE		= 1,	// might be ON? see HBMRemoteSpk.cpp
+	WPAD_SPEAKER_MUTE		= 2,
+	WPAD_SPEAKER_UNMUTE		= 3,
+	WPAD_SPEAKER_PLAY		= 4,	// figured out from HBM usage
+
+	// does the same thing as ENABLE? unless i'm missing something
+	// not used so i don't know the context
+	WPAD_SPEAKER_CMD_05		= 5,
+};
 
 typedef struct DPDObject {
     s16 x;
@@ -410,6 +425,10 @@ s32 WPADSendStreamData(s32, void*, u16);
 BOOL WPADCanSendStreamData(s32);
 void WPADGetAccGravityUnit(s32 chan, u32 type, WPADAcc* acc);
 void WPADControlMotor(s32, u32);
+BOOL WPADStartSyncDevice(void);
+BOOL WPADStartFastSyncDevice(void);
+BOOL WPADStartSimpleSync(void);
+BOOL WPADStartFastSimpleSync(void);
 BOOL WPADStopSimpleSync(void);
 
 BOOL WPADIsDpdEnabled(s32 chan);
@@ -429,6 +448,9 @@ WPADExtensionCallback WPADSetExtensionCallback(s32, WPADExtensionCallback);
 WPADConnectCallback WPADSetConnectCallback(s32, WPADConnectCallback callback);
 WPADSamplingCallback WPADSetSamplingCallback(s32 chan, WPADSamplingCallback callback);
 
+WPADSyncDeviceCallback WPADSetSyncDeviceCallback(WPADSyncDeviceCallback cb);
+WPADSimpleSyncCallback WPADSetSimpleSyncCallback(WPADSimpleSyncCallback cb);
+
 void WPADiCreateKey(s32);
 void WPADiCreateKeyFor3rd(s32);
 void WPADiDecode(s32, void*, u16, u16);
@@ -444,6 +466,11 @@ void WPADiCopyOut(s32);
 void WPADiExcludeButton(s32);
 s32 WPADiGetStatus(s32);
 
+u8 WPADGetRadioSensitivity(s32);
+
+u8 WPADGetSpeakerVolume(void);
+void WPADSetSpeakerVolume(u8 volume);
+
 void __WPADShutdown(void);
 void __WPADReconnect(BOOL);
 
@@ -453,7 +480,11 @@ BOOL WPADCancelSyncDevice();
 void WPADiShutdown(BOOL);
 void WPADiDisconnect(s32, BOOL);
 
+void WPADEnableMotor(BOOL enabled);
+BOOL WPADIsMotorEnabled(void);
+
 s32 WPADControlLed(s32, u8, WPADCallback);
+BOOL WPADSaveConfig(WPADFlushCallback callback);
 void WPADGetAddress(s32, u8*);
 
 BOOL WPADiSendSetPort(WPADCmdQueue*, u8, WPADCallback);

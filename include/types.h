@@ -97,6 +97,8 @@ typedef byte1_t					byte_t;
 		while (true) { }  \
 	}
 
+#define offsetof(type, memb) ((u32) & ((type*)0)->memb)
+
 #define __CONCAT(x, y) x##y
 #define CONCAT(x, y)   __CONCAT(x, y)
 
@@ -113,6 +115,7 @@ typedef byte1_t					byte_t;
 #define CLAMP_VALUE_ABOVE(val, limit)              ((val) > (limit)) ? (limit) : (val)
 #define MAX(a, b)                                  (((a) > (b)) ? (a) : (b))
 #define MIN(a, b)                                  (((a) < (b)) ? (a) : (b))
+#define MIN_EQ(a, b)								((a) <= (b) ? (a) : (b))
 #define ROUND_F32_TO_U8(a)                         a >= 0.0f ? a + 0.5f : a - 0.5f
 #define INTERPOLATE_BETWEEN(src, dest, proportion) (proportion) * ((f32)(dest) - (f32)(src)) + (f32)(src)
 

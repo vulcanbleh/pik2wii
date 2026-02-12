@@ -83,6 +83,10 @@ extern AXFXFreeHook __AXFXFree;
 void AXFXSetHooks(AXFXAllocHook alloc, AXFXFreeHook free);
 void AXFXGetHooks(AXFXAllocHook* alloc, AXFXFreeHook* free);
 
+BOOL AXFXReverbHiInit(AXFX_REVERBHI *reverbHi);
+BOOL AXFXReverbHiShutdown(AXFX_REVERBHI *reverbHi);
+void AXFXReverbHiCallback(void *data, void *context);
+
 BOOL AXFXReverbHiExpInit(AXFX_REVERBHI_EXP* fx);
 void AXFXReverbHiExpShutdown(AXFX_REVERBHI_EXP* fx);
 void AXFXReverbHiExpCallback(AXFX_BUFFERUPDATE* update, AXFX_REVERBHI_EXP* fx);

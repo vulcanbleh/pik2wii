@@ -24,7 +24,7 @@ ExpHeap* ExpHeap::create(void* pHeapStart, u32 size, u16 opt)
 	}
 
 	MEMiHeapHead* heapHandle = MEMCreateExpHeapEx(addOffset(pHeapStart, 0x38),
-	                                              nw4r::ut::GetOffsetFromPtr(pHeapStart, pHeapEnd) - 0x38);
+	                                              nw4r::ut::GetOffsetFromPtr(pHeapStart, pHeapEnd) - 0x38, opt);
 	if (heapHandle) {
 		Heap* r31 = Heap::findContainHeap(pHeapStart);
 

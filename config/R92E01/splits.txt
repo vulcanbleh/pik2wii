@@ -131,13 +131,14 @@ System12/system12WPMessage.cpp:
 	.rodata     start:0x80536CB0 end:0x80536F40
 	.data       start:0x8055F580 end:0x8055F608
 	.sbss       start:0x8066B920 end:0x8066B928
+	.sdata2     start:0x8066D6A8 end:0x8066D6B0
 
 System12/system12WPTagProcessor.cpp:
 	.text       start:0x80018DB8 end:0x8001AB7C
 	.ctors      start:0x80534C90 end:0x80534C94
 	.rodata     start:0x80536F40 end:0x80537030
 	.data       start:0x8055F608 end:0x8055F890
-	.sdata2     start:0x8066D6A8 end:0x8066D6D0
+	.sdata2     start:0x8066D6B0 end:0x8066D6D0
 
 System12/system12WPWideTextWriter.cpp:
 	.text       start:0x8001AB7C end:0x8001B598
@@ -265,19 +266,19 @@ homebuttonLib/HBMRemoteSpk.cpp:
 
 homebuttonLib/HBMAxSound.cpp:
 	.text       start:0x8002D01C end:0x8002DB30
-	.rodata     start:0x805384E8 end:0x80538528
+	.rodata     start:0x805384E8 end:0x8053851C
 	.data       start:0x80560488 end:0x805607D8
 	.bss        start:0x805D1E80 end:0x805D1E88
 
-homebuttonLib/HBMCommon.c:
+homebuttonLib/HBMCommon.cpp:
 	.text       start:0x8002DB30 end:0x8002DE70
-	.data       start:0x805607D8 end:0x80560868
+	.data       start:0x805607D8 end:0x80560828
 	.bss        start:0x805D1E88 end:0x805D1E98
 
 homebuttonLib/HBMBase.cpp:
 	.text       start:0x8002DE70 end:0x80036198
-	.rodata     start:0x80538528 end:0x80538888
-	.data       start:0x80560868 end:0x80561508
+	.rodata     start:0x80538520 end:0x80538888
+	.data       start:0x80560828 end:0x80561508
 	.bss        start:0x805D1E98 end:0x805D1EB8
 
 homebuttonLib/lyt_animation.cpp:
@@ -354,7 +355,7 @@ homebuttonLib/lyt_window.cpp:
 
 homebuttonLib/math_triangular.cpp:
 	.text       start:0x80041548 end:0x800417CC
-	.rodata     start:0x80538950 end:0x80538978
+	.rodata     start:0x80538950 end:0x80538974
 	.data       start:0x80561AD8 end:0x80562BF0
 
 homebuttonLib/ut_binaryFileFormat.cpp:

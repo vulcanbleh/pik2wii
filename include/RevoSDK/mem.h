@@ -6,7 +6,7 @@ extern "C" {
 #endif
 
 #include <RevoSDK/MEM/mem_allocator.h>
-// #include <RevoSDK/MEM/mem_expHeap.h>
+#include <RevoSDK/MEM/mem_expHeap.h>
 // #include <RevoSDK/MEM/mem_frameHeap.h>
 #include <RevoSDK/MEM/mem_heapCommon.h>
 #include <RevoSDK/MEM/mem_list.h>
