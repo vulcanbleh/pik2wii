@@ -3029,7 +3029,7 @@ plugProjectKandoU/piki.cpp:
 	.text       start:0x801DB870 end:0x801DE9D4
 	.ctors      start:0x80534D6C end:0x80534D70
 	.rodata     start:0x80547B18 end:0x80547BB8
-	.data       start:0x80590520 end:0x80590820
+	.data       start:0x80590520 end:0x805907E0
 	.bss        start:0x80638A30 end:0x80638A40
 	.sdata      start:0x8066B098 end:0x8066B0A0
 	.sbss       start:0x8066C8A0 end:0x8066C8A8
@@ -3039,7 +3039,7 @@ plugProjectKandoU/baseGameSection.cpp:
 	.text       start:0x801DE9D4 end:0x801E53A8
 	.ctors      start:0x80534D70 end:0x80534D74
 	.rodata     start:0x80547BB8 end:0x80547FA0
-	.data       start:0x80590820 end:0x80590C20
+	.data       start:0x805907E0 end:0x80590C20
 	.bss        start:0x80638A40 end:0x80638A50
 	.sdata      start:0x8066B0A0 end:0x8066B0B0
 	.sbss       start:0x8066C8A8 end:0x8066C8C8
@@ -3132,13 +3132,13 @@ plugProjectKandoU/onyonMgr.cpp:
 plugProjectKandoU/objectTypes.cpp:
 	.text       start:0x8020CC64 end:0x8020CCB4
 	.rodata     start:0x80548CC8 end:0x80548D60
-	.data       start:0x80593300 end:0x805933F8
+	.data       start:0x80593300 end:0x805933B8
 
 plugProjectKandoU/naviState.cpp:
 	.text       start:0x8020CCB4 end:0x80218D30
 	.ctors      start:0x80534D8C end:0x80534D90
 	.rodata     start:0x80548D60 end:0x80548E20
-	.data       start:0x805933F8 end:0x80593F48
+	.data       start:0x805933B8 end:0x80593F48
 	.bss        start:0x80638AB0 end:0x80638AC0
 	.sbss       start:0x8066C940 end:0x8066C948
 	.sdata2     start:0x8066FAB8 end:0x8066FBD0
@@ -3562,25 +3562,28 @@ plugProjectKandoU/efxModelObjects.cpp:
 plugProjectKandoU/itemUjamushi.cpp:
 	.text       start:0x80288A90 end:0x8028FE78
 	.ctors      start:0x80534DFC end:0x80534E00
-	.data       start:0x8059E4E0 end:0x8059F710
+	.data       start:0x8059E4E0 end:0x8059EEB0
 	.bss        start:0x80638C60 end:0x80638C70
 	.sbss       start:0x8066CB40 end:0x8066CB50
 
 plugProjectKandoU/aiWeed.cpp:
 	.text       start:0x8028FE78 end:0x80291118
 	.ctors      start:0x80534E00 end:0x80534E04
+	.data       start:0x8059EEB0 end:0x8059EF70
 	.bss        start:0x80638C70 end:0x80638C80
 	.sbss       start:0x8066CB50 end:0x8066CB58
 
 plugProjectKandoU/flockMgr.cpp:
 	.text       start:0x80291118 end:0x80291938
 	.ctors      start:0x80534E04 end:0x80534E08
+	.data       start:0x8059EF70 end:0x8059EFB8
 	.bss        start:0x80638C80 end:0x80638C90
 	.sbss       start:0x8066CB58 end:0x8066CB60
 
 plugProjectKandoU/itemWeed.cpp:
 	.text       start:0x80291938 end:0x802935D0
 	.ctors      start:0x80534E08 end:0x80534E0C
+	.data       start:0x8059EFB8 end:0x8059F710
 	.bss        start:0x80638C90 end:0x80638CA0
 	.sdata      start:0x8066B360 end:0x8066B368
 	.sbss       start:0x8066CB60 end:0x8066CB70
@@ -3591,26 +3594,26 @@ plugProjectKandoU/aiBridge.cpp:
 
 plugProjectKandoU/aiTeki.cpp:
 	.text       start:0x80293C74 end:0x80294904
-	.data       start:0x8059F760 end:0x8059F7F8
+	.data       start:0x8059F760 end:0x8059F7B0
 
 plugProjectKandoU/singleGS_MainGame.cpp:
 	.text       start:0x80294904 end:0x80299054
 	.ctors      start:0x80534E0C end:0x80534E10
-	.data       start:0x8059F7F8 end:0x8059F8B8
+	.data       start:0x8059F7B0 end:0x8059F8B8
 	.bss        start:0x80638CA0 end:0x80638CB0
 	.sbss       start:0x8066CB70 end:0x8066CB78
 
 plugProjectKandoU/singleGS_CaveGame.cpp:
 	.text       start:0x80299054 end:0x8029BB34
 	.ctors      start:0x80534E10 end:0x80534E14
-	.data       start:0x8059F8B8 end:0x8059F918
+	.data       start:0x8059F8B8 end:0x8059F900
 	.bss        start:0x80638CB0 end:0x80638CC0
 	.sbss       start:0x8066CB78 end:0x8066CB80
 
 plugProjectKandoU/singleGS_MainResult.cpp:
 	.text       start:0x8029BB34 end:0x8029C7E8
 	.ctors      start:0x80534E14 end:0x80534E18
-	.data       start:0x8059F918 end:0x8059F9A0
+	.data       start:0x8059F900 end:0x8059F9A0
 	.bss        start:0x80638CC0 end:0x80638CD0
 	.sbss       start:0x8066CB80 end:0x8066CB90
 
@@ -3643,27 +3646,27 @@ plugProjectKandoU/gamePlayDataMemCard.cpp:
 
 plugProjectKandoU/radarInfo.cpp:
 	.text       start:0x8029FEA4 end:0x802A0A50
-	.data       start:0x8059FAD0 end:0x8059FB30
+	.data       start:0x8059FAD0 end:0x8059FAF0
 	.sbss       start:0x8066CBB8 end:0x8066CBC0
 
 plugProjectKandoU/singleGS_Movie.cpp:
 	.text       start:0x802A0A50 end:0x802A0EF0
 	.ctors      start:0x80534E24 end:0x80534E28
-	.data       start:0x8059FB30 end:0x8059FCB0
+	.data       start:0x8059FAF0 end:0x8059FCB0
 	.bss        start:0x80638D00 end:0x80638D18
 	.sbss       start:0x8066CBC0 end:0x8066CBC8
 
 plugProjectKandoU/navi_demoCheck.cpp:
 	.text       start:0x802A0EF0 end:0x802A3D04
 	.ctors      start:0x80534E28 end:0x80534E2C
-	.data       start:0x8059FCB0 end:0x8059FD08
+	.data       start:0x8059FCB0 end:0x8059FCC8
 	.bss        start:0x80638D18 end:0x80638D28
 	.sbss       start:0x8066CBC8 end:0x8066CBD0
 
 plugProjectKandoU/singleGS_Zukan.cpp:
 	.text       start:0x802A3D04 end:0x802AA948
 	.ctors      start:0x80534E2C end:0x80534E30
-	.data       start:0x8059FD08 end:0x805A00C8
+	.data       start:0x8059FCC8 end:0x805A00C8
 	.bss        start:0x80638D28 end:0x80638D38
 	.sdata      start:0x8066B370 end:0x8066B380
 	.sbss       start:0x8066CBD0 end:0x8066CBE0
@@ -3755,12 +3758,12 @@ plugProjectKandoU/aiBore.cpp:
 
 plugProjectKandoU/mapPartsView.cpp:
 	.text       start:0x802B6328 end:0x802B66CC
-	.data       start:0x805A05B8 end:0x805A0630
+	.data       start:0x805A05B8 end:0x805A05F8
 
 plugProjectKandoU/singleGS_Ending.cpp:
 	.text       start:0x802B66CC end:0x802B752C
 	.ctors      start:0x80534E4C end:0x80534E50
-	.data       start:0x805A0630 end:0x805A06A8
+	.data       start:0x805A05F8 end:0x805A06A8
 	.bss        start:0x80638D98 end:0x80638DA8
 	.sbss       start:0x8066CC28 end:0x8066CC30
 
@@ -3801,11 +3804,12 @@ plugProjectKandoU/vsCardMgr.cpp:
 
 plugProjectKandoU/aiRescue.cpp:
 	.text       start:0x802BD34C end:0x802BDD74
-	.data       start:0x805A0790 end:0x805A0800
+	.data       start:0x805A0790 end:0x805A07E8
 
 plugProjectKandoU/baseGameSectionDraw.cpp:
 	.text       start:0x802BDD74 end:0x802BE834
 	.ctors      start:0x80534E54 end:0x80534E58
+	.data       start:0x805A07E8 end:0x805A0800
 	.bss        start:0x80638DB8 end:0x80638DC8
 	.sbss       start:0x8066CC38 end:0x8066CC40
 
@@ -3854,7 +3858,7 @@ plugProjectKandoU/pelletBirthBuffer.cpp:
 
 plugProjectKandoU/vsFifo.cpp:
 	.text       start:0x802C23EC end:0x802C2548
-	.data       start:0x805A0968 end:0x805A09C0
+	.data       start:0x805A0968 end:0x805A0980
 	.sbss       start:0x8066CC68 end:0x8066CC70
 
 plugProjectKandoU/naviTest.cpp:
@@ -3866,6 +3870,7 @@ plugProjectKandoU/naviTest.cpp:
 plugProjectKandoU/testChallengeSection.cpp:
 	.text       start:0x802C25A8 end:0x802C2670
 	.ctors      start:0x80534E6C end:0x80534E70
+	.data       start:0x805A0980 end:0x805A09C0
 	.bss        start:0x80638E08 end:0x80638E18
 	.sbss       start:0x8066CC78 end:0x8066CC88
 
@@ -3940,12 +3945,11 @@ plugProjectNishimuraU/RandEnemyUnit.cpp:
 
 plugProjectNishimuraU/DoorNode.cpp:
 	.text       start:0x802D0670 end:0x802D0898
-	.data       start:0x805A0CE8 end:0x805A0CF8
+	.data       start:0x805A0CE8 end:0x805A0D08
 
 plugProjectNishimuraU/MapUnitGenerator.cpp:
 	.text       start:0x802D0898 end:0x802D1390
 	.ctors      start:0x80534E7C end:0x80534E80
-	.data       start:0x805A0CF8 end:0x805A0D08
 	.bss        start:0x80639088 end:0x80639098
 	.sbss       start:0x8066CCB0 end:0x8066CCB8
 	.sdata2     start:0x80670F40 end:0x80670F58
@@ -4421,24 +4425,31 @@ plugProjectNishimuraU/Queen.cpp:
 
 plugProjectNishimuraU/BabyState.cpp:
 	.text       start:0x8030D8D8 end:0x8030E384
+	.data       start:0x805A9D90 end:0x805A9E80
 
 plugProjectNishimuraU/BabyAnimator.cpp:
 	.text       start:0x8030E384 end:0x8030E3DC
+	.data       start:0x805A9E80 end:0x805A9EA8
 
 plugProjectNishimuraU/BabyMgr.cpp:
 	.text       start:0x8030E3DC end:0x8030E728
+	.data       start:0x805A9EA8 end:0x805A9FC0
 
 plugProjectNishimuraU/Baby.cpp:
 	.text       start:0x8030E728 end:0x8030F1A4
+	.data       start:0x805A9FC0 end:0x805AA340
 
 plugProjectNishimuraU/DemonMgr.cpp:
 	.text       start:0x8030F1A4 end:0x8030F458
+	.data       start:0x805AA340 end:0x805AA420
 
 plugProjectNishimuraU/Demon.cpp:
 	.text       start:0x8030F458 end:0x8030FC14
+	.data       start:0x805AA420 end:0x805AA760
 
 plugProjectNishimuraU/QueenShadow.cpp:
 	.text       start:0x8030FC14 end:0x803102F8
+	.data       start:0x805AA760 end:0x805AA770
 
 plugProjectNishimuraU/FireChappyMgr.cpp:
 	.text       start:0x803102F8 end:0x80310758
@@ -4706,9 +4717,11 @@ plugProjectNishimuraU/HoudaiShadow.cpp:
 plugProjectNishimuraU/Houdai.cpp:
 	.text       start:0x8033DE30 end:0x80341268
 	.ctors      start:0x80534EB4 end:0x80534EB8
+	.rodata     start:0x8054F420 end:0x8054F508
 	.data       start:0x805B0BB8 end:0x805B11C8
 	.bss        start:0x80639168 end:0x80639178
 	.sbss       start:0x8066CD38 end:0x8066CD40
+	.sdata2     start:0x806723B8 end:0x80672440
 
 plugProjectNishimuraU/HoudaiShotGun.cpp:
 	.text       start:0x80341268 end:0x8034333C
