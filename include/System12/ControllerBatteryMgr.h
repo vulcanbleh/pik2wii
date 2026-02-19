@@ -7,9 +7,8 @@
 namespace System12 {
 
 class ControllerBatteryMgr {
-public:
 	EGG_SINGLETON_DECL(ControllerBatteryMgr);
-	
+public:	
 	ControllerBatteryMgr();
 	
 	void start_get_info(int);

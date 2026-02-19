@@ -15,6 +15,12 @@
 #include "nans.h"
 #include "utilityU.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "SingleGS_Game";
+}
+
 static JKRHeap* theTekiHeap;
 
 namespace Game {
@@ -92,7 +98,6 @@ void MainResultState::loadResource()
  */
 unknown MainResultState::open2D(SingleGameSection* game)
 {
-	mStatus = Result_ScreenActive;
 	playData->clearCurrentCave();
 	playData->setSaveFlag(STORYSAVE_WorldMap, mBeforeSaveDelegate);
 	int pokos = playData->mPokoCount;
@@ -142,6 +147,7 @@ void MainResultState::exec(SingleGameSection* game)
 		break;
 	case Result_OpenWait:
 		if (++mCounter >= 199 || mControl->getButtonDown() & Controller::PRESS_A) {
+			mStatus = Result_ScreenActive;
 			open2D(game);
 		}
 		break;

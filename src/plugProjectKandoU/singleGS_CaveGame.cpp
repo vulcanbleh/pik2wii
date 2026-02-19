@@ -28,8 +28,11 @@
 #include "og/Screen/DispMember.h"
 #include "utilityU.h"
 
-static const u32 padding[]    = { 0, 0, 0 };
-static const char className[] = "SingleGS_Game";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "SingleGS_Game";
+}
 
 namespace Game {
 namespace SingleGame {
@@ -82,7 +85,6 @@ void CaveState::init(SingleGameSection* game, StateArg* arg)
 	if (ItemOnyon::mgr->mPod) {
 		moviearg.mAngle = ItemOnyon::mgr->mPod->getFaceDir();
 	}
-	mapMgr->getMinY(pos);
 	moviearg.mOrigin.y = mapMgr->getMinY(pos);
 	moviePlayer->play(moviearg);
 
@@ -142,7 +144,7 @@ void CaveState::exec(SingleGameSection* game)
 	if (mDrawSave) {
 		particle2dMgr->update();
 		Screen::gGame2DMgr->update();
-		if ((u8)Screen::gGame2DMgr->check_Save()) {
+		if (Screen::gGame2DMgr->check_Save()) {
 			// MapEnter type isnt used when loading into caves
 			LoadArg arg(MapEnter_CaveGeyser, false, false, game->mInCave);
 			transit(game, SGS_Load, &arg);
@@ -170,7 +172,7 @@ void CaveState::exec(SingleGameSection* game)
 
 	// check pikmin extinction cutscene
 	if (!(moviePlayer->isFlag(MVP_IsActive))) {
-		if (GameStat::getMapPikmins(AllPikminCalcs) == 0) {
+		if (GameStat::getMapPikmins(AllPikminCalcs) == 0 && !gameSystem->mIsMoviePause) {
 			gameSystem->resetFlag(GAMESYS_IsGameWorldActive);
 			MoviePlayArg moviearg("s05_pikminzero", nullptr, game->mMovieFinishCallback, 0);
 			Navi* navi = naviMgr->getActiveNavi();
@@ -308,6 +310,7 @@ void CaveState::cleanup(SingleGameSection* game)
  */
 void CaveState::onOrimaDown(SingleGameSection* game, int naviID)
 {
+	OSReport("s03_orimadown ------ play !!\n");
 	MoviePlayArg arg("s03_orimadown", nullptr, game->mMovieFinishCallback, naviID);
 	arg.mDelegateStart = game->mMovieStartCallback;
 
@@ -432,9 +435,7 @@ void CaveState::onMovieCommand(SingleGameSection* game, int command)
 			for (int i = 0; i < counter.getNumKinds(); i++) {
 				int j = 0;
 				for (int k = 0; k < counter(i); k++) {
-					pelmgr->getPelletConfig(i);
 					if (randFloat() <= calc / (f32)lost) {
-						pelmgr->getPelletConfig(i);
 						playData->losePellet(pelmgr, i);
 						(game->mOtakaraCounter(i)) += 1;
 						j++;
@@ -450,9 +451,7 @@ void CaveState::onMovieCommand(SingleGameSection* game, int command)
 			for (int i = 0; i < counter3.getNumKinds(); i++) {
 				int j = 0;
 				for (int k = 0; k < counter3(i); k++) {
-					pelmgr->getPelletConfig(i);
 					if (randFloat() <= calc / (f32)lost) {
-						pelmgr->getPelletConfig(i);
 						(game->mItemCounter(i)) += 1;
 						playData->losePellet(pelmgr, i);
 						j++;

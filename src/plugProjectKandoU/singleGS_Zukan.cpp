@@ -27,10 +27,13 @@
 #include "TParticle2dMgr.h"
 #include "nans.h"
 
-int sParentHeapFreeSize;
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "SingleGS_Zukan";
+}
 
-static const int unusedArray[] = { 0, 0, 0 };
-static const char name[]       = "SingleGS_Zukan";
+int sParentHeapFreeSize;
 
 static int unusedArray2[] = { 1, 2, 3, 0 };
 
@@ -74,9 +77,9 @@ EnemyTexMgr::EnemyTexMgr()
 void EnemyTexMgr::create()
 {
 	IconTexture::Mgr::create(EnemyTypeID::EnemyID_COUNT);
-	mLoader.loadResource("/user/Yamashita/enemyTex/arc.szs");
+	mLoader.loadResource("user/Yamashita/enemyTex/arc.szs");
 	ResTIMG* backup = mLoader.getResTIMG("ZZDummy/texture.bti");
-	P2ASSERTLINE(466, backup);
+	P2ASSERTLINE(469, backup);
 	for (int i = 0; i < EnemyTypeID::EnemyID_COUNT; i++) {
 		char* name = EnemyInfoFunc::getEnemyName(i, 0xffff);
 		if (name) {
@@ -229,8 +232,8 @@ void Camera::resetControl()
 	mCurrentVerticalInput    = 0.0f;
 	mVerticalInputDampened   = 0.0f;
 
-	mBasePhysicalPosition = Vector3f(mCameraLastMoveDest.x + mObjectRadius * sinf(mHorizontalAngle), mCameraLastMoveDest.y,
-	                                 mCameraLastMoveDest.z + mObjectRadius * cosf(mHorizontalAngle));
+	mBasePhysicalPosition.set(mCameraLastMoveDest.x + mObjectRadius * cosf(mHorizontalAngle), mCameraLastMoveDest.y,
+	                                 mCameraLastMoveDest.z + mObjectRadius * sinf(mHorizontalAngle));
 
 	if (mapMgr) {
 		mBasePhysicalPosition.y = mapMgr->getMinY(mBasePhysicalPosition) + mCurrentHeight;
@@ -1235,24 +1238,49 @@ void ZukanState::init(SingleGameSection* game, StateArg* arg)
 static const char* modeNames[9]
     = { "StartTeki", "StartPellet", "ModeChangeToTeki", "Teki", "ChangeTeki", "ModeChangeToPellet", "Pellet", "ChangePellet", "None" };
 // supposed to be pointers to the above strings, but I cant get that to work, this fixes the size of rodata for now
-static const u32 dumb[9] = { 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 /**
  * @note Address: N/A
  * @note Size: 0xE4
  */
-void ZukanState::startTekiMode(bool)
+bool ZukanState::startTekiMode(bool p1)
 {
-	// UNUSED FUNCTION
+	bool test = false;
+	if (p1 || Screen::gGame2DMgr->isZukanItem()) {
+		setMode(ModeChangeToTeki);
+		Morimura::DispMemberZukanEnemy disp;
+		disp.mDebugExpHeap  = mExtraHeapFor2D;
+		disp.mTexture       = mTexture2;
+		disp.mEnemyTexMgr   = mEnemyTexMgr;
+		disp.mResultTexMgr  = mResultTexture;
+		disp.mPrevSelection = &_110;
+		Screen::gGame2DMgr->open_ZukanEnemy(disp);
+		startWipe(0.0f);
+		test = true;
+	}
+	return test;
 }
 
 /**
  * @note Address: N/A
  * @note Size: 0xE4
  */
-void ZukanState::startPelletMode(bool)
+bool ZukanState::startPelletMode(bool p1)
 {
-	// UNUSED FUNCTION
+	bool test = false;
+	if (p1 || Screen::gGame2DMgr->isZukanEnemy()) {
+		setMode(ModeChangeToPellet);
+		Morimura::DispMemberZukanItem disp;
+		disp.mDebugExpHeap  = mExtraHeapFor2D;
+		disp.mTexture       = mTexture2;
+		disp.mEnemyTexMgr   = mEnemyTexMgr;
+		disp.mResultTexMgr  = mResultTexture;
+		disp.mPrevSelection = &_114;
+		Screen::gGame2DMgr->open_ZukanItem(disp);
+		startWipe(0.0f);
+		test = true;
+	}
+	return test;
 }
 
 /**
@@ -1307,19 +1335,7 @@ void ZukanState::exec(SingleGameSection* game)
 		switch (mCurrMode) {
 		case ModeTeki:
 		case ModeChangeTeki:
-			bool test = false;
-			if (Screen::gGame2DMgr->isZukanEnemy()) {
-				setMode(ModeChangeToPellet);
-				Morimura::DispMemberZukanItem disp;
-				disp.mDebugExpHeap  = mExtraHeapFor2D;
-				disp.mTexture       = mTexture2;
-				disp.mEnemyTexMgr   = mEnemyTexMgr;
-				disp.mResultTexMgr  = mResultTexture;
-				disp.mPrevSelection = &_114;
-				Screen::gGame2DMgr->open_ZukanItem(disp);
-				startWipe(0.0f);
-				test = true;
-			}
+			bool test = startPelletMode(false);
 			if (test) {
 				PSSystem::spSysIF->playSystemSe(PSSE_SY_PLAYER_CHANGE, 0);
 			} else {
@@ -1329,19 +1345,7 @@ void ZukanState::exec(SingleGameSection* game)
 
 		case ModePellet:
 		case ModeChangePellet:
-			test = false;
-			if (Screen::gGame2DMgr->isZukanItem()) {
-				setMode(ModeChangeToTeki);
-				Morimura::DispMemberZukanEnemy disp;
-				disp.mDebugExpHeap  = mExtraHeapFor2D;
-				disp.mTexture       = mTexture2;
-				disp.mEnemyTexMgr   = mEnemyTexMgr;
-				disp.mResultTexMgr  = mResultTexture;
-				disp.mPrevSelection = &_110;
-				Screen::gGame2DMgr->open_ZukanEnemy(disp);
-				startWipe(0.0f);
-				test = true;
-			}
+			test = startTekiMode(false);
 			if (test) {
 				PSSystem::spSysIF->playSystemSe(PSSE_SY_PLAYER_CHANGE, 0);
 			} else {
@@ -1365,28 +1369,12 @@ void ZukanState::exec(SingleGameSection* game)
 
 			// start teki
 			if (mCurrMode == ModeStartTeki) {
-				setMode(ModeChangeToTeki);
-				Morimura::DispMemberZukanEnemy disp;
-				disp.mDebugExpHeap  = mExtraHeapFor2D;
-				disp.mTexture       = mTexture2;
-				disp.mEnemyTexMgr   = mEnemyTexMgr;
-				disp.mResultTexMgr  = mResultTexture;
-				disp.mPrevSelection = &_110;
-				Screen::gGame2DMgr->open_ZukanEnemy(disp);
-				startWipe(0.0f);
+				startTekiMode(true);
 				return;
 			}
 
 			// start pellet
-			setMode(ModeChangeToPellet);
-			Morimura::DispMemberZukanItem disp;
-			disp.mDebugExpHeap  = mExtraHeapFor2D;
-			disp.mTexture       = mTexture2;
-			disp.mEnemyTexMgr   = mEnemyTexMgr;
-			disp.mResultTexMgr  = mResultTexture;
-			disp.mPrevSelection = &_114;
-			Screen::gGame2DMgr->open_ZukanItem(disp);
-			startWipe(0.0f);
+			startPelletMode(true);
 			return;
 		}
 
@@ -1432,7 +1420,7 @@ void ZukanState::exec(SingleGameSection* game)
 		execChangePellet(game);
 		break;
 	default:
-		JUT_PANICLINE(1401, "Unknown mode : %d \n", mCurrMode);
+		JUT_PANICLINE(1431, "Unknown mode : %d \n", mCurrMode);
 	}
 
 	mParms->mColorSetting.update();
@@ -2871,6 +2859,9 @@ lbl_80223D64:
 void ZukanState::drawGradationEffect(SingleGameSection*, Graphics& gfx)
 {
 	f32 focus = mCamera->getFocus();
+	if (focus > 0.89999998f) {
+		focus = 0.89999998f;
+	}
 	if (focus > 1.0f) {
 		focus = 1.0f;
 	}
@@ -2881,7 +2872,7 @@ void ZukanState::drawGradationEffect(SingleGameSection*, Graphics& gfx)
 	tex->capture(0, 0, GX_TF_RGB565, true, GX_FALSE);
 
 	f32 min = 3.0f;
-	f32 max = -min;
+	f32 max = min;
 	for (int i = 0; i < 4; i++) {
 		J2DPicture pic(tex);
 		JUtility::TColor color(255, 255, 255, 127);
@@ -3335,10 +3326,12 @@ void ZukanState::drawLightEffect(SingleGameSection* game, Graphics& gfx)
 		GXSetCurrentMtx(0);
 		GXSetNumTexGens(1);
 		GXSetTexCoordGen2(GX_TEXCOORD0, GX_TG_MTX3X4, GX_TG_TEXCOORD0, GX_IDENTITY, GX_FALSE, GX_PTIDENTITY);
+		
+		int bloom = 4;
 
-		for (int i = 0; i < 4; i++) {
-			f32 thisFactor = (f32)i / 4;
-			f32 nextFactor = (f32)(i + 1) / 4;
+		for (int i = 0; i < bloom; i++) {
+			f32 thisFactor = (f32)i / bloom;
+			f32 nextFactor = (f32)(i + 1) / bloom;
 			f32 factor     = (_108 - thisFactor) / (nextFactor); // f2
 			if (factor > 1.0f) {
 				factor = 1.0f;
@@ -3351,74 +3344,72 @@ void ZukanState::drawLightEffect(SingleGameSection* game, Graphics& gfx)
 
 				f32 u    = 0.005f * (f32)(i + 1); // f22
 				f32 v    = -u;                    // f24
-				f32 zero = 0.0f;
-				f32 one  = 1.0f;
 
 				GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
-				GXPosition3f32(zero, zero, zero);
+				GXPosition3f32(0.0f, 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
 				GXPosition2f32(u, v);
 
-				GXPosition3f32(x + zero, zero, zero);
+				GXPosition3f32(x + 0.0f, 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
-				GXPosition2f32(one + u, v);
+				GXPosition2f32(1.0f + u, v);
 
-				GXPosition3f32(zero, y + zero, zero);
+				GXPosition3f32(0.0f, y + 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
-				GXPosition2f32(u, one + v);
+				GXPosition2f32(u, 1.0f + v);
 
-				GXPosition3f32(x + zero, y + zero, zero);
+				GXPosition3f32(x + 0.0f, y + 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
-				GXPosition2f32(one + u, one + v);
+				GXPosition2f32(1.0f + u, 1.0f + v);
 
 				GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
-				GXPosition3f32(zero, zero, zero);
+				GXPosition3f32(0.0f, 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
 				GXPosition2f32(v, v);
 
-				GXPosition3f32(x + zero, zero, zero);
+				GXPosition3f32(x + 0.0f, 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
-				GXPosition2f32(one + v, v);
+				GXPosition2f32(1.0f + v, v);
 
-				GXPosition3f32(zero, y + zero, zero);
+				GXPosition3f32(0.0f, y + 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
-				GXPosition2f32(v, one + v);
+				GXPosition2f32(v, 1.0f + v);
 
-				GXPosition3f32(x + zero, y + zero, zero);
+				GXPosition3f32(x + 0.0f, y + 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
-				GXPosition2f32(one + v, one + v);
+				GXPosition2f32(1.0f + v, 1.0f + v);
 
 				GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
-				GXPosition3f32(zero, zero, zero);
+				GXPosition3f32(0.0f, 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
 				GXPosition2f32(u, u);
 
-				GXPosition3f32(x + zero, zero, zero);
+				GXPosition3f32(x + 0.0f, 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
-				GXPosition2f32(one + u, u);
+				GXPosition2f32(1.0f + u, u);
 
-				GXPosition3f32(zero, y + zero, zero);
+				GXPosition3f32(0.0f, y + 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
-				GXPosition2f32(u, one + u);
+				GXPosition2f32(u, 1.0f + u);
 
-				GXPosition3f32(x + zero, y + zero, zero);
+				GXPosition3f32(x + 0.0f, y + 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
-				GXPosition2f32(one + u, one + u);
+				GXPosition2f32(1.0f + u, 1.0f + u);
 
 				GXBegin(GX_TRIANGLESTRIP, GX_VTXFMT0, 4);
-				GXPosition3f32(zero, zero, zero);
+				GXPosition3f32(0.0f, 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
 				GXPosition2f32(v, u);
 
-				GXPosition3f32(x + zero, zero, zero);
+				GXPosition3f32(x + 0.0f, 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
 				GXPosition2f32(1.0f + v, u);
 
-				GXPosition3f32(zero, y + zero, zero);
+				GXPosition3f32(0.0f, y + 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
 				GXPosition2f32(v, 1.0f + u);
 
-				GXPosition3f32(x + zero, y + zero, zero);
+				GXPosition3f32(x + 0.0f, y + 0.0f, 0.0f);
 				GXColor4u8(255, 255, 255, 255);
 				GXPosition2f32(1.0f + v, 1.0f + u);
 			}
@@ -3971,15 +3962,13 @@ void ZukanState::dvdloadA()
 	char path[PATH_MAX]; // 0x160
 	sprintf(path, "user/Yamashita/zukan/%s/%s/arc.szs", "us", sDirName[mMapIndex]);
 	JKRArchive* arc = JKRMountArchive(path, JKRArchive::EMM_Mem, nullptr, JKRArchive::EMD_Tail);
-	P2ASSERTLINE(2457, arc);
+	P2ASSERTLINE(2486, arc);
 	mParms = new IllustratedBook::Parms;
 	mParms->loadFile(arc);
 	mGameSect->addGenNode(mParms);
 	PSSystem::SingletonBase<PSM::ObjMgr>::newInstance();
-	u16 width     = sys->getRenderModeObj()->fbWidth;
-	u16 height    = sys->getRenderModeObj()->efbHeight;
-	int newWidth  = (int)((f32)width * 0.6f * 0.75f * 0.25f + 0.5f) * 4;
-	int newHeight = (int)((f32)height * 0.75f * 0.25f + 0.5f) * 4;
+	int newWidth  = (int)(sys->getRenderModeObj()->fbWidth * 0.6f * 0.75f * 0.25f + 0.5f) * 4;
+	int newHeight = (int)(sys->getRenderModeObj()->efbHeight * 0.75f * 0.25f + 0.5f) * 4;
 	Rectf bounds(0.0f, 0.0f, newWidth, newHeight);
 	mWindowBounds = bounds;
 	mCameraAspect = 0.0f;
@@ -4053,7 +4042,7 @@ void ZukanState::dvdloadA()
 	mgr->mScenes->mChild->startMainSeq();
 
 	void* file = arc->getResource("course.txt");
-	P2ASSERTLINE(2603, file);
+	P2ASSERTLINE(2632, file);
 	RamStream stream(file, -1);
 	stream.setMode(STREAM_MODE_TEXT, 1);
 	mCourseInfo = new CourseInfo;
@@ -4823,11 +4812,11 @@ void ZukanState::dvdloadB_teki()
 		PelletNumber::mgr->setupResources();
 		OSReport("だした free:%d \n", JKRGetCurrentHeap()->getFreeSize()); // "started"
 	}
-	P2ASSERTLINE(2747, !generalEnemyMgr);
+	P2ASSERTLINE(2776, !generalEnemyMgr);
 	generalEnemyMgr = new GeneralEnemyMgr;
 	gameSystem->addObjectMgr(generalEnemyMgr);
 	if (mCurrentEnemyIndex != -1) {
-		P2ASSERTBOUNDSLINE(2753, 0, mCurrentEnemyIndex, EnemyTypeID::EnemyID_COUNT);
+		P2ASSERTBOUNDSLINE(2782, 0, mCurrentEnemyIndex, EnemyTypeID::EnemyID_COUNT);
 
 		IllustratedBook::EnemyParms* parms = &mParms->mEnemyParms.mEnemyParms[mCurrentEnemyIndex];
 		int id                             = 0;
@@ -4849,7 +4838,7 @@ void ZukanState::dvdloadB_teki()
 			makeSpectralids = true;
 		}
 
-		if (makeSpectralids) {
+		/*if (makeSpectralids) {
 			switch (mCurrentEnemyIndex) {
 			case EnemyTypeID::EnemyID_Chappy:
 			case EnemyTypeID::EnemyID_BlueChappy:
@@ -4857,7 +4846,7 @@ void ZukanState::dvdloadB_teki()
 				generalEnemyMgr->addEnemyNum(EnemyTypeID::EnemyID_ShijimiChou, 5, nullptr);
 				break;
 			}
-		}
+		}*/
 
 		generalEnemyMgr->addEnemyNum(mCurrentEnemyIndex, count, nullptr);
 		generalEnemyMgr->allocateEnemys(1, ENEMY_HEAP_SIZE_ZUKAN);
@@ -4880,7 +4869,7 @@ void ZukanState::dvdloadB_teki()
 			f32 randAngle = TAU * randFloat(); // f26
 			f32 radius    = range * randFloat();
 
-			spawnPositions[i] = Vector3f(radius * sinf(randAngle), 0.0f, radius * cosf(randAngle));
+			spawnPositions[i].set(radius * cosf(randAngle), 0.0f, radius * sinf(randAngle));
 		}
 
 		// jitter positions (5 iterations)
@@ -4932,7 +4921,7 @@ void ZukanState::dvdloadB_teki()
 
 			EnemyBase* enemy = generalEnemyMgr->birth(mCurrentEnemyIndex, arg);
 			if (!enemy) {
-				JUT_PANICLINE(2879, "** BIRTH FAILED !! ID:%d \n", mCurrentEnemyIndex);
+				JUT_PANICLINE(2912, "** BIRTH FAILED !! ID:%d \n", mCurrentEnemyIndex);
 			} else {
 				enemy->init(nullptr);
 				if (i == 0) { // make first enemy "current" enemy
@@ -5004,7 +4993,7 @@ void ZukanState::dvdloadB_teki()
 				f32 randAngle = TAU * randFloat();
 				f32 randDist  = 100.0f * randFloat();
 
-				Vector3f direction = Vector3f(randDist * sinf(randAngle), 0.0f, randDist * cosf(randAngle));
+				Vector3f direction = Vector3f(randDist * cosf(randAngle), 0.0f, randDist * sinf(randAngle));
 				Vector3f position  = (lookAtPos + direction);
 				position.y += 200.0f;
 
@@ -6084,7 +6073,7 @@ void ZukanState::clearHeapB_teki()
 			if (i < 200) {
 				buffer[i++] = pelt;
 			} else {
-				JUT_PANICLINE(3164, "too many pellet\n");
+				JUT_PANICLINE(3197, "too many pellet\n");
 			}
 		}
 		for (int j = 0; j < i; j++) {
@@ -6136,7 +6125,7 @@ void ZukanState::clearHeapB_pellet()
 				if (i < 200) {
 					buffer[i++] = pelt;
 				} else {
-					JUT_PANICLINE(3221, "too many pellet\n");
+					JUT_PANICLINE(3254, "too many pellet\n");
 				}
 			}
 			for (int j = 0; j < i; j++) {
@@ -6219,7 +6208,7 @@ void ZukanState::cleanup(SingleGameSection* game)
 	gameSystem->mMode                  = GSM_STORY_MODE;
 	gameSystem->mTimeMgr->mSpeedFactor = 1.0f;
 	mBackupHeap->becomeCurrentHeap();
-	JUT_ASSERTLINE(3346, (int)mBackupHeap->getFreeSize() == sParentHeapFreeSize, "damek\n");
+	JUT_ASSERTLINE(3379, (int)mBackupHeap->getFreeSize() == sParentHeapFreeSize, "damek\n");
 }
 
 } // namespace SingleGame
