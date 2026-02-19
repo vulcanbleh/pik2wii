@@ -12,8 +12,11 @@
 #include "JSystem/J2D/J2DPrint.h"
 #include "nans.h"
 
-static const u32 padding[]    = { 0, 0, 0 };
-static const char className[] = "SingleGS_Game";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "SingleGS_Game";
+}
 
 static int sParentHeapFreeSize;
 static int sParentHeapFreeSize_Last;
@@ -46,8 +49,6 @@ void SelectState::init(SingleGameSection*, StateArg*)
 	Screen::gGame2DMgr->mScreenMgr->reset();
 	sParentHeapFreeSize_Last = sParentHeapFreeSize;
 	sParentHeapFreeSize      = JKRHeap::sCurrentHeap->getFreeSize();
-	JKRHeap::sCurrentHeap->getFreeSize();
-	JKRHeap::sCurrentHeap->getTotalFreeSize();
 	playData->mDeadNaviID = 0;
 	naviMgr->clearDeadCount();
 	mNewLevelOpen = false;
@@ -65,8 +66,6 @@ void SelectState::initNext(SingleGameSection* section)
 	mParentHeap = JKRHeap::sCurrentHeap;
 	mParentHeap->getFreeSize();
 	sParentHeapFreeSize = mParentHeap->getFreeSize();
-	mParentHeap->getFreeSize();
-	mParentHeap->getTotalFreeSize();
 	mWMapHeap = JKRExpHeap::create(mParentHeap->getFreeSize(), mParentHeap, true);
 	mWMapHeap->becomeCurrentHeap();
 
@@ -110,7 +109,6 @@ void SelectState::initNext(SingleGameSection* section)
 	section->mWipeInFader->start(1.0f);
 
 	section->refreshHIO();
-	mController->setButtonRepeat((Controller::ANALOG_LEFT | Controller::ANALOG_RIGHT), 30, 1);
 	sys->dvdLoadUseCallBack(&section->mDvdThread, mDvdLoadCallback);
 }
 
@@ -128,33 +126,33 @@ void SelectState::dvdload()
 	}
 	info.mCameras = 0;
 
-	JUT_ASSERTLINE(394, PSSystem::getSceneMgr(), "PSGetSceneMgr null\n");
+	JUT_ASSERTLINE(403, PSSystem::getSceneMgr(), "PSGetSceneMgr null\n");
 
 	static_cast<PSGame::PikSceneMgr*>(PSSystem::getSceneMgr())->newAndSetCurrentScene(info);
 	static_cast<PSGame::PikSceneMgr*>(PSSystem::getSceneMgr())->doFirstLoad();
 	static_cast<PSGame::PikSceneMgr*>(PSSystem::getSceneMgr())->doStartMainSeq();
 
 	if (JKRGetCurrentHeap() != mWMapHeap) {
-		JUT_PANICLINE(401, "MOC = Mouse on Cars!\n");
+		JUT_PANICLINE(410, "MOC = Mouse on Cars!\n");
 	}
 
 	void* handle = JKRDvdRipper::loadToMainRAM("user/Ebisawa/effect/eff2d_world_map.jpc", nullptr, Switch_0, 0, 0,
 	                                           JKRDvdRipper::ALLOC_DIR_TOP, 0, nullptr, nullptr);
-	JUT_ASSERTLINE(410, handle, "WORLD_MAP_JPC");
+	JUT_ASSERTLINE(419, handle, "WORLD_MAP_JPC");
 	JPAResourceManager* jpamgr = new JPAResourceManager(handle, JKRGetCurrentHeap());
 	JPAEmitterManager* jpaemit = new JPAEmitterManager(1000, 256, JKRGetCurrentHeap(), 8, 8);
-	JUT_ASSERTLINE(416, particle2dMgr, "particle2dMgr null\n");
+	JUT_ASSERTLINE(425, particle2dMgr, "particle2dMgr null\n");
 	particle2dMgr->setSceneEmitterAndResourceManager(jpaemit, jpamgr);
 
 	if (JKRGetCurrentHeap() != mWMapHeap) {
-		JUT_PANICLINE(420, "MOC = Mouse on Cars!\n");
+		JUT_PANICLINE(429, "MOC = Mouse on Cars!\n");
 	}
 
-	JUT_ASSERTLINE(423, mWorldMap, "mWorldMap null\n");
+	JUT_ASSERTLINE(432, mWorldMap, "mWorldMap null\n");
 	static_cast<Game::WorldMap::Base*>(mWorldMap)->loadResource();
 
 	if (JKRGetCurrentHeap() != mWMapHeap) {
-		JUT_PANICLINE(427, "MOC = Mouse on Cars!\n");
+		JUT_PANICLINE(436, "MOC = Mouse on Cars!\n");
 	}
 }
 
@@ -216,7 +214,7 @@ void SelectState::exec(SingleGameSection* game)
 				sarg.mCourseID  = kh::Screen::WorldMap::COURSE_Tutorial;
 				if (arg.mCourseInfo) {
 					sarg.mCourseID    = arg.mCourseInfo->mCourseIndex;
-					mPreviousCourseID = sarg.mCourseID;
+					mPreviousCourseID = arg.mCourseInfo->mCourseIndex;
 				} else {
 					sarg.mCourseID = kh::Screen::WorldMap::COURSE_Yakushima;
 				}
@@ -240,7 +238,7 @@ void SelectState::exec(SingleGameSection* game)
 				sarg2.mCourseID  = kh::Screen::WorldMap::COURSE_Tutorial;
 				if (arg.mCourseInfo) {
 					sarg2.mCourseID   = arg.mCourseInfo->mCourseIndex;
-					mPreviousCourseID = sarg2.mCourseID;
+					mPreviousCourseID = arg.mCourseInfo->mCourseIndex;
 				} else {
 					sarg2.mCourseID = kh::Screen::WorldMap::COURSE_Yakushima;
 				}
@@ -322,7 +320,7 @@ void SelectState::cleanup(SingleGameSection* game)
 	mWMapHeap = nullptr;
 	mParentHeap->becomeCurrentHeap();
 	sys->setFrameRate(2);
-	JUT_ASSERTLINE(732, sParentHeapFreeSize == (int)mParentHeap->getFreeSize(), "damek\n");
+	JUT_ASSERTLINE(759, sParentHeapFreeSize == (int)mParentHeap->getFreeSize(), "damek\n");
 }
 
 } // namespace SingleGame

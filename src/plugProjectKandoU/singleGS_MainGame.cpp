@@ -33,8 +33,12 @@
 #define LOUIE_START_Z   (4350.0f)
 #define LOUIE_START_DIR (7.6969025f) // in radians (even though this is above tau lol). it's like 81 degrees.
 
-static const u32 padding[]    = { 0, 0, 0 };
-static const char className[] = "SingleGS_Game";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "SingleGS_Game";
+}
+
 
 namespace Game {
 namespace SingleGame {
@@ -417,7 +421,7 @@ void GameState::exec(SingleGameSection* game)
 	if (mInSaveScreen) {
 		particle2dMgr->update();
 		Screen::gGame2DMgr->update();
-		if ((u8)Screen::gGame2DMgr->check_Save()) {
+		if (Screen::gGame2DMgr->check_Save()) {
 			// MapEnter type isnt used when loading into caves, someone put 100 here for the funny
 			LoadArg arg(100, true, false, false);
 			transit(game, SGS_Load, &arg);
@@ -656,8 +660,6 @@ void GameState::onMovieDone(SingleGameSection* game, MovieConfig* config, u32, u
 
 	// Check first treasure collected day end
 	if (config->is("s10_suck_treasure")) {
-		playData->getGroundOtakaraNum(0);
-
 		// Check valley of repose treasures collected, if 1 now, and 0 at day start, play day end cutscene
 		if (playData->getGroundOtakaraNum(0) == 1 && playData->getGroundOtakaraNum_Old(0) == 0) {
 			char* name = const_cast<char*>(game->mCurrentCourseInfo->mName);
@@ -822,6 +824,8 @@ void GameState::onMovieDone(SingleGameSection* game, MovieConfig* config, u32, u
 			Piki* piki   = *iterator;
 			Vector3f pos = piki->getPosition();
 			pos.y        = mapMgr->getMinY(pos);
+			f32 collradius = piki->getMapCollisionRadius();
+			pos.y += collradius + 10.0f;
 			piki->setPosition(pos, false);
 		}
 
@@ -946,7 +950,7 @@ void GameState::startRepayDemo()
 GameState::RepayDemoState GameState::updateRepayDemo()
 {
 	if (mCheckRepay) {
-		if ((u8)Screen::gGame2DMgr->check_PayDept()) {
+		if (Screen::gGame2DMgr->check_PayDept()) {
 			gameSystem->setMoviePause(false, "check-repay");
 			mCheckRepay = false;
 			if (playData->isCompletePelletTrigger()) {

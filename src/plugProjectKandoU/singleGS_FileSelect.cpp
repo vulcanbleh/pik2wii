@@ -10,8 +10,11 @@
 #include "TParticle2dMgr.h"
 #include "Game/GameSystem.h"
 
-static const u32 unused[3] = { 0, 0, 0 };
-static const char name[]   = "SingleGS_Game";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "SingleGS_Game";
+}
 
 namespace Game {
 namespace SingleGame {
@@ -57,7 +60,6 @@ void FileState::dvdload()
 
 	static_cast<PSGame::PikSceneMgr*>(PSSystem::getSceneMgr())->newAndSetCurrentScene(info);
 	PSSystem::getSceneMgr()->doFirstLoad();
-	PSSystem::getSceneMgr()->doStartMainSeq();
 
 	mFSMgr = ebi::FileSelect::TMgr::createInstance();
 	mFSMgr->doLoadMenuResource();

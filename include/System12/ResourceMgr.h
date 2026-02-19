@@ -7,8 +7,8 @@
 namespace System12 {
 
 class SystemResourceMgr {
-public:
 	EGG_SINGLETON_DECL(SystemResourceMgr);
+public:
 	
 	SystemResourceMgr();
 	
