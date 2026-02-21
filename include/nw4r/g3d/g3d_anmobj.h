@@ -4,6 +4,7 @@
 
 #include <nw4r/g3d/g3d_obj.h>
 #include <nw4r/g3d/res/g3d_resanm.h>
+#include <nw4r/db.h>
 
 namespace nw4r {
 namespace g3d {
@@ -101,6 +102,7 @@ public:
     }
 
     void SetPlayPolicy(PlayPolicyFunc func) {
+		NW4R_ASSERT_PTR(func, 95);
         mpPlayPolicy = func;
     }
 
