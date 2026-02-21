@@ -4,7 +4,6 @@
 #include <egg/core/eggSingleton.h>
 #include <egg/math/eggMatrix.h>
 #include <egg/prim/eggBuffer.h>
-#include <egg/prim/eggList.h>
 #include <System12/FrameCounter.h>
 #include <nw4r/g3d.h>
 
