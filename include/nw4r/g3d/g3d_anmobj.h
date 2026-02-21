@@ -101,6 +101,7 @@ public:
     }
 
     void SetPlayPolicy(PlayPolicyFunc func) {
+		NW4R_ASSERT_PTR(func, 95);
         mpPlayPolicy = func;
     }
 
