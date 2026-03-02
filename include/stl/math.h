@@ -61,6 +61,9 @@ f64 ldexp(f64, int);
 f64 sqrt(f64);
 
 f64 pow(f64, f64);
+inline f32 powf(f32 x1, f32 x2) {
+    return pow(x1, x2);
+}
 f64 log(f64);
 f64 log10(f64);
 inline f32 log10f(f32 x) {
