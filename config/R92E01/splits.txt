@@ -398,41 +398,41 @@ homebuttonLib/ut_TextWriterBase.cpp:
 	.rodata     start:0x805389A0 end:0x805389B8
 	.bss        start:0x805D1F38 end:0x805D1F60
 
-homebuttonLib/mix.c:
+homebuttonLib/mix.cpp:
 	.text       start:0x80046274 end:0x80047B94
 	.data       start:0x80562E48 end:0x805639D8
-	.bss        start:0x805D1F60 end:0x805D2620
+	.bss        start:0x805D1F60 end:0x805D261C
 
-homebuttonLib/syn.c:
+homebuttonLib/syn.cpp:
 	.text       start:0x80047B94 end:0x80048008
-	.bss        start:0x805D2620 end:0x805D2AF0
+	.bss        start:0x805D2620 end:0x805D2AEC
 
-homebuttonLib/synctrl.c:
+homebuttonLib/synctrl.cpp:
 	.text       start:0x80048008 end:0x800484A0
 	.data       start:0x805639D8 end:0x80563BD8
 
-homebuttonLib/synenv.c:
+homebuttonLib/synenv.cpp:
 	.text       start:0x800484A0 end:0x80048884
 	.rodata     start:0x805389B8 end:0x805389D8
 
-homebuttonLib/synmix.c:
+homebuttonLib/synmix.cpp:
 	.text       start:0x80048884 end:0x8004899C
 	.data       start:0x80563BD8 end:0x80563F68
 
-homebuttonLib/synpitch.c:
+homebuttonLib/synpitch.cpp:
 	.text       start:0x8004899C end:0x80048C0C
-	.rodata     start:0x805389D8 end:0x805389F0
+	.rodata     start:0x805389D8 end:0x805389EC
 	.data       start:0x80563F68 end:0x80564358
 
-homebuttonLib/synsample.c:
+homebuttonLib/synsample.cpp:
 	.text       start:0x80048C0C end:0x8004907C
 
-homebuttonLib/synvoice.c:
+homebuttonLib/synvoice.cpp:
 	.text       start:0x8004907C end:0x8004921C
 
-homebuttonLib/seq.c:
+homebuttonLib/seq.cpp:
 	.text       start:0x8004921C end:0x80049ADC
-	.rodata     start:0x805389F0 end:0x80538A18
+	.rodata     start:0x805389F0 end:0x80538A14
 	.data       start:0x80564358 end:0x805643D8
 	.bss        start:0x805D2AF0 end:0x805D2AF8
 
@@ -3666,13 +3666,12 @@ plugProjectKandoU/navi_demoCheck.cpp:
 plugProjectKandoU/singleGS_Zukan.cpp:
 	.text       start:0x802A3D04 end:0x802AA948
 	.ctors      start:0x80534E2C end:0x80534E30
+	.rodata     start:0x8054C2F8 end:0x8054C590
 	.data       start:0x8059FCC8 end:0x805A00C8
 	.bss        start:0x80638D28 end:0x80638D38
-	.sdata      start:0x8066B370 end:0x8066B380
+	.sdata      start:0x8066B370 end:0x8066B378
 	.sbss       start:0x8066CBD0 end:0x8066CBE0
-
-plugProjectKandoU/baseHIOparms.cpp:
-	.sdata      start:0x8066B380 end:0x8066B388
+	.sdata2     start:0x80670990 end:0x80670A80
 
 plugProjectKandoU/gameResultTexMgr.cpp:
 	.text       start:0x802AA948 end:0x802AB54C
@@ -3800,7 +3799,11 @@ plugProjectKandoU/vsCardMgr.cpp:
 	.ctors      start:0x80534E50 end:0x80534E54
 	.data       start:0x805A06F0 end:0x805A0790
 	.bss        start:0x80638DA8 end:0x80638DB8
+	.sdata      start:0x8066B378 end:0x8066B380
 	.sbss       start:0x8066CC30 end:0x8066CC38
+
+plugProjectKandoU/baseHIOparms.cpp:
+	.sdata      start:0x8066B380 end:0x8066B388
 
 plugProjectKandoU/aiRescue.cpp:
 	.text       start:0x802BD34C end:0x802BDD74

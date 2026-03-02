@@ -113,21 +113,21 @@ typedef enum {
 
     AX_MIXER_CTRL_AL = (1 << 16),
     AX_MIXER_CTRL_AR = (1 << 17),
-    AX_MIXER_CTRL_DELTA_A = (1 << 18),
+    AX_MIXER_CTRL_ADELTA = (1 << 18),
     AX_MIXER_CTRL_AS = (1 << 19),
-    AX_MIXER_CTRL_DELTA_AS = (1 << 20),
+    AX_MIXER_CTRL_ADELTA_S = (1 << 20),
 
     AX_MIXER_CTRL_BL = (1 << 21),
     AX_MIXER_CTRL_BR = (1 << 22),
-    AX_MIXER_CTRL_DELTA_B = (1 << 23),
+    AX_MIXER_CTRL_BDELTA = (1 << 23),
     AX_MIXER_CTRL_BS = (1 << 24),
-    AX_MIXER_CTRL_DELTA_BS = (1 << 25),
+    AX_MIXER_CTRL_BDELTA_S = (1 << 25),
 
     AX_MIXER_CTRL_CL = (1 << 26),
     AX_MIXER_CTRL_CR = (1 << 27),
-    AX_MIXER_CTRL_DELTA_C = (1 << 28),
+    AX_MIXER_CTRL_CDELTA = (1 << 28),
     AX_MIXER_CTRL_CS = (1 << 29),
-    AX_MIXER_CTRL_DELTA_CS = (1 << 30)
+    AX_MIXER_CTRL_CDELTA_S = (1 << 30)
 };
 
 typedef enum {
@@ -440,6 +440,7 @@ typedef enum {
     AX_PBSYNC_ALL = (1 << 31),
 };
 
+//typedef void (*AXCallback)();
 typedef void (*AXVoiceCallback)(void* vpb);
 
 typedef struct _AXVPB {
@@ -468,6 +469,7 @@ extern u16 axDspSlaveLength;
 
 
 void AXInit(void);
+BOOL AXIsInit(void);
 void AXInitEx(u32 mode);
 
 void __AXAuxInit(void);

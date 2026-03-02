@@ -128,6 +128,7 @@ enum OS_THREAD_STATE {
 };
 
 // Thread attributes.
+#define OS_THREAD_ATTR_NO_FLAGS 0
 #define OS_THREAD_ATTR_DETACH 0x1U
 
 // Thread priority.

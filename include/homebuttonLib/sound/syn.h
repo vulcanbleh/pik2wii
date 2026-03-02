@@ -3,6 +3,8 @@
 
 #include <types.h>
 
+#include <RevoSDK/ax.h>
+
 #define HBMSYN_NUM_MIDI_CHANNELS	16
 #define HBMSYN_NUM_MIDI_NOTES		128
 
@@ -102,6 +104,48 @@ struct HBMSYNSYNTH
 	HBMSYNVOICE	*voice[HBMSYN_NUM_MIDI_CHANNELS][HBMSYN_NUM_MIDI_NOTES];	// _408
 };
 
+struct HBMSYNVOICE
+{
+	void *next;				// _00
+	AXVPB *axvpb;			// _04
+	HBMSYNSYNTH	*synth;		// _08
+	u8 midiChannel;			// _0C
+	u8 keyNum;				// _0D
+	u8 keyVel;				// _0E
+	u8 pan;					// _0F
+	WTREGION *region;		// _10
+	WTART *art;				// _14
+	WTSAMPLE *sample;		// _18
+	WTADPCM *adpcm;			// _1C
+	u32 type;				// _20
+	f32 srcRatio;			// _24
+	s32 cents;				// _28
+	s32 attn;				// _2C
+	u32 veState;			// _30
+	s32 veAttn;				// _34
+	s32 veAttack;			// _38
+	s32 veAttackDelta;		// _3C
+	s32 veDecay;			// _40
+	s32 veSustain;			// _44
+	s32 veRelease;			// _48
+};
+
+enum VolumeEnvelopeStages
+{
+	VolEnvState_Attack,
+	VolEnvState_Decay,
+	VolEnvState_Sustain,
+	VolEnvState_Release,
+
+	VolEnvState_End
+};
+
+extern f32 __HBMSYNn128[];
+extern s32 __HBMSYNVolumeAttenuation[];
+extern s32 __HBMSYNAttackAttnTable[];
+extern HBMSYNVOICE *__HBMSYNVoice;
+
+
 void HBMSYNInit(void);
 void HBMSYNQuit(void);
 
@@ -116,6 +160,33 @@ void HBMSYNMidiInput(HBMSYNSYNTH *synth, u8 *input);
 void HBMSYNSetMasterVolume(HBMSYNSYNTH *synth, s32 dB);
 s32 HBMSYNGetMasterVolume(HBMSYNSYNTH *synth);
 
+void __HBMSYNSetController(HBMSYNSYNTH *synth, u8 midiChannel, u8 function,
+                           u8 value);
+void __HBMSYNResetAllControllers(HBMSYNSYNTH *synth);
+void __HBMSYNRunInputBufferEvents(HBMSYNSYNTH *synth);
+BOOL __HBMSYNGetWavetableData(HBMSYNVOICE *voice);
+
+
+s32 __HBMSYNGetEnvelopeTime(s32 scale, s32 mod, u8 key);
+void __HBMSYNSetupVolumeEnvelope(HBMSYNVOICE *voice);
+void __HBMSYNRunVolumeEnvelope(HBMSYNVOICE *voice);
+
+void __HBMSYNSetupVolume(HBMSYNVOICE *voice);
+void __HBMSYNSetupPan(HBMSYNVOICE *voice);
+s32 __HBMSYNGetVoiceInput(HBMSYNVOICE *voice);
+s32 __HBMSYNGetVoiceFader(HBMSYNVOICE *voice);
+void __HBMSYNUpdateMix(HBMSYNVOICE *voice);
+
+f32 __HBMSYNGetRelativePitch(HBMSYNVOICE *voice);
+void __HBMSYNSetupPitch(HBMSYNVOICE *voice);
+void __HBMSYNSetupSrc(HBMSYNVOICE *voice);
+void __HBMSYNUpdateSrc(HBMSYNVOICE *voice);
+
+void __HBMSYNSetupSample(HBMSYNVOICE *voice);
+
+void __HBMSYNClearVoiceReferences(void *p);
+void __HBMSYNSetVoiceToRelease(HBMSYNVOICE *voice);
+void __HBMSYNServiceVoice(int i);
 #ifdef __cplusplus
 	}
 #endif
