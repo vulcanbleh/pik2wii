@@ -121,6 +121,43 @@ SeqPlayerList *GetUsePlayerListFromSeqNum(int num)
 	}
 }
 
+void StopSeq(SeqPlayer *player)
+{
+	SeqPlayerList *list = GetUsePlayerListFromSeqNum(player->seqNum);
+
+	HBMSEQSetState(&player->seq, HBM_SEQ_STATE_0);
+	HBMSEQRemoveSequence(&player->seq);
+
+	player->activeFlag = false;
+
+	if (!player->prev)
+		list->head = player->next;
+	else
+		player->prev->next = player->next;
+
+	if (!player->next)
+		list->tail = player->prev;
+	else
+		player->next->prev = player->prev;
+
+	player->next = nullptr;
+	player->prev = nullptr;
+}
+
+void UpdateSeqPlayerList(SeqPlayerList *list)
+{
+	SeqPlayer *current = list->head;
+	for (SeqPlayer *next; current; current = next)
+	{
+		next = current->next;
+
+		if (current->activeFlag && HBMSEQGetState(&current->seq) == HBM_SEQ_STATE_0)
+		{
+			StopSeq(current);
+		}
+	}
+}
+
 SeqPlayer *GetFreePlayer(int num)
 {
 	SeqPlayer *playersArray;
@@ -203,43 +240,6 @@ void *AudioSoundThreadProc(void *)
 	}
 
 	return nullptr;
-}
-
-void StopSeq(SeqPlayer *player)
-{
-	SeqPlayerList *list = GetUsePlayerListFromSeqNum(player->seqNum);
-
-	HBMSEQSetState(&player->seq, HBM_SEQ_STATE_0);
-	HBMSEQRemoveSequence(&player->seq);
-
-	player->activeFlag = false;
-
-	if (!player->prev)
-		list->head = player->next;
-	else
-		player->prev->next = player->next;
-
-	if (!player->next)
-		list->tail = player->prev;
-	else
-		player->next->prev = player->prev;
-
-	player->next = nullptr;
-	player->prev = nullptr;
-}
-
-void UpdateSeqPlayerList(SeqPlayerList *list)
-{
-	SeqPlayer *current = list->head;
-	for (SeqPlayer *next; current; current = next)
-	{
-		next = current->next;
-
-		if (current->activeFlag && HBMSEQGetState(&current->seq) == HBM_SEQ_STATE_0)
-		{
-			StopSeq(current);
-		}
-	}
 }
 
 } // namespace
