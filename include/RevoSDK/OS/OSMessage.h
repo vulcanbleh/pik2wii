@@ -30,6 +30,7 @@ struct OSMessageQueue {
 #define OS_MESSAGE_BLOCK   (1)
 
 typedef enum {
+	OS_MSG_NO_FLAGS = 0,
 	OS_MSG_PERSISTENT = (1 << 0),
 } OSMessageFlags;
 
@@ -43,6 +44,12 @@ BOOL OSJamMessage(OSMessageQueue* queue, OSMessage msg, s32 flags);
 BOOL OSReceiveMessage(OSMessageQueue* queue, OSMessage* msgPtr, s32 flags);
 
 //////////////////////////////////
+
+#define OSSendMessageAny(msgQueue_, msg_, flags_) OSSendMessage(msgQueue_, (OSMessage)(msg_), flags_)
+
+#define OSReceiveMessageAny(msgQueue_, msgOut_, flags_) OSReceiveMessage(msgQueue_, (OSMessage*)(msgOut_), flags_)
+
+#define OSJamMessageAny(msgQueue_, msg_, flags_) OSJamMessage(msgQueue_, (OSMessage)(msg_), flags_)
 
 #ifdef __cplusplus
 };

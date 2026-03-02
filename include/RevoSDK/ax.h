@@ -440,14 +440,13 @@ typedef enum {
     AX_PBSYNC_ALL = (1 << 31),
 };
 
-//typedef void (*AXCallback)();
 typedef void (*AXVoiceCallback)(void* vpb);
 
 typedef struct _AXVPB {
-    void* next;               // _0
-    void* prev;               // _4
-    void* next1;              // _8
-    u32 priority;             // _C
+    void* next;               // _00
+    void* prev;               // _04
+    void* next1;              // _08
+    u32 priority;             // _0C
     AXVoiceCallback callback; // _10
     u32 userContext;          // _14
     u32 index;                // _18

@@ -1,38 +1,18 @@
 #include "homebuttonLib/HBMAxSound.h"
 
-/*******************************************************************************
- * headers
- */
-
-#include <math.h>
-
-//#include <macros.h>
-
-#include <types.h>
-
-#include <RevoSDK/hbm.h>
-
-
 #include "homebuttonLib/sound/mix.h"
 #include "homebuttonLib/sound/seq.h"
 #include "homebuttonLib/sound/syn.h"
-
 #include <RevoSDK/ai.h>
 #include <RevoSDK/arc.h>
 #include <RevoSDK/ax.h>
 #include <RevoSDK/os.h>
-#include <RevoSDK/os/OSInterrupt.h>
-#include <RevoSDK/os/OSMessage.h>
+#include <RevoSDK/hbm.h>
+#include <math.h>
+#include <types.h>
 
-/*******************************************************************************
- * macros
- */
 
 #define HBM_MEM_SIZE_SOUND	0x18700	/* name known from asserts */
-
-/*******************************************************************************
- * types
- */
 
 namespace
 {
@@ -43,78 +23,47 @@ namespace
 		AudioThreadMsg_Exit				= 1 << 3
 	};
 
-	// [SC5PGN]/build/libs/Debug/slamWiiD.a:HBMAxSound.o(1)::.debug_info::0x351 [original object]
 	struct SeqPlayer
 	{
-		HBMSEQSEQUENCE	seq;		// size 0x2e1c, offset 0x0000
-		bool			activeFlag;	// size 0x0001, offset 0x2e1c
-		/* 3 bytes padding */
-		SeqPlayer		*next;		// size 0x0004, offset 0x2e20
-		SeqPlayer		*prev;		// size 0x0004, offset 0x2e24
-		int				seqNum;		// size 0x0004, offset 0x2e28
-	}; // size 0x2e2c
+		HBMSEQSEQUENCE seq;		// _00
+		bool activeFlag;		// _2E1C
+		SeqPlayer *next;		// _2E20
+		SeqPlayer *prev;		// _2E24
+		int seqNum;				// _2e28
+	};
 
-	// [SC5PGN]/build/libs/Debug/slamWiiD.a:HBMAxSound.o(1)::.debug_info::0x1950 [original object]
 	struct SeqPlayerList
 	{
-		SeqPlayer	*head;	// size 0x04, offset 0x00
-		SeqPlayer	*tail;	// size 0x04, offset 0x04
-	}; // size 0x08
-} // unnamed namespace
+		SeqPlayer *head;	// _00
+		SeqPlayer *tail;	// _04
+	};
+} // namespace
 
-// [SC5PGN]/build/libs/Debug/slamWiiD.a:HBMAxSound.o(1)::.debug_info::0x1e8 [original object]
 struct HMBAxSoundWork // NOTE the misspelled tag name
 {
-	SeqPlayer			playersDefault[4];		// size 0x0b8b0, offset 0x00000
-	SeqPlayer			playersFocus[3];		// size 0x08a84, offset 0x0b8b0
-	SeqPlayerList		playerListDefault;		// size 0x00008, offset 0x14334
-	SeqPlayerList		playerListFocus;		// size 0x00008, offset 0x1433c
-	HBMSoundCallback	*userSoundCallback;		// size 0x00004, offset 0x14344
-	AXOutCallback		oldAxRegisterCallback;	// size 0x00004, offset 0x14348
-	ARCHandle			soundArcHandle;			// size 0x0001c, offset 0x1434c
-	OSThread			mThread;				// size 0x00318, offset 0x14368
-	OSMessageQueue		mMsgQueue;				// size 0x00020, offset 0x14680
-	OSMessage			mMessageArray[4];		// size 0x00010, offset 0x146a0
-	byte8_t				*mpThreadStack;			// size 0x00004, offset 0x146b0
-	void				*wt;					// size 0x00004, offset 0x146b4
-	void				*pcm;					// size 0x00004, offset 0x146b8
-	/* 4 bytes padding */
-}; // size 0x146c0
-
-/*******************************************************************************
- * local function declarations
- */
-
-namespace
-{
-	void *GetMidiDataFromArc(int num);
-	SeqPlayerList *GetUsePlayerListFromSeqNum(int num);
-	SeqPlayer *GetFreePlayer(int num);
-	void AudioFrameCallback();
-	void *AudioSoundThreadProc(void *arg);
-	void StopSeq(SeqPlayer *player);
-	void UpdateSeqPlayerList(SeqPlayerList *list);
-} // unnamed namespace
-
-/*******************************************************************************
- * variables
- */
-
-namespace
-{
-	// .rodata
-	static const char WT_FILENAME[] = "wt\\HomeButtonSe.wt";
-	static const char PCM_FILENAME[] = "wt\\HomeButtonSe.pcm";
-
-	// .bss
-	HMBAxSoundWork *sWork;
-} // unnamed namespace
-
-/*******************************************************************************
- * functions
- */
+	SeqPlayer playersDefault[4];				// _00
+	SeqPlayer playersFocus[3];					// _B8B0
+	SeqPlayerList playerListDefault;			// _14334
+	SeqPlayerList playerListFocus;				// _1433C
+	HBMSoundCallback *userSoundCallback;		// _14344
+	AXOutCallback oldAxRegisterCallback;		// _14348
+	ARCHandle soundArcHandle;					// _1434C
+	OSThread mThread;							// _14368
+	OSMessageQueue mMsgQueue;					// _14680
+	OSMessage mMessageArray[4];					// _146A0
+	byte8_t *mpThreadStack;						// _146B0
+	void *wt;									// _146B4
+	void *pcm;									// _146B8
+}; 
 
 namespace {
+
+
+static const char WT_FILENAME[] = "wt\\HomeButtonSe.wt";
+static const char PCM_FILENAME[] = "wt\\HomeButtonSe.pcm";
+
+HMBAxSoundWork *sWork;
+
 
 void *GetMidiDataFromArc(int num)
 {
@@ -293,7 +242,7 @@ void UpdateSeqPlayerList(SeqPlayerList *list)
 	}
 }
 
-} // unnamed namespace
+} // namespace
 
 namespace homebutton {
 
@@ -392,9 +341,6 @@ void InitAxSound(void const *soundData, void *mem, u32 memSize)
 	OSInitMessageQueue(&work->mMsgQueue, work->mMessageArray,
 	                   ARRAY_SIZE(work->mMessageArray));
 
-	/* would rather the math be (void *)((u32)p + (x + y)) to be able to use the
-	 * POINTER_ADD_TYPE macro, but that messes up release. so oh well
-	 */
 	result = OSCreateThread(&work->mThread, AudioSoundThreadProc, nullptr,
 	                        reinterpret_cast<byte_t *>(work->mpThreadStack)
 	                            + memSize - (HBM_MEM_SIZE_SOUND - 0x4000),
