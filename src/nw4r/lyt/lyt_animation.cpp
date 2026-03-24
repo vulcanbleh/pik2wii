@@ -22,30 +22,30 @@ struct AnimationTarget {
         ANIMCURVE_MAX
     };
 
-    u8 id;                     // at 0x0
-    u8 target;                 // at 0x1
-    u8 curveType;              // at 0x2
-    u8 PADDING_0x3;            // at 0x3
-    u16 keyNum;                // at 0x4
-    u8 PADDING_0x6[0x8 - 0x6]; // at 0x6
-    u32 keysOffset;            // at 0x8
+    u8 id;                     // _00
+    u8 target;                 // _01
+    u8 curveType;              // _02
+    u8 PADDING_0x3;            // _03
+    u16 keyNum;                // _04
+    u8 PADDING_0x6[0x8 - 0x6]; // _06
+    u32 keysOffset;            // _08
 };
 
 /******************************************************************************
  * StepKey
  ******************************************************************************/
 struct StepKey {
-    f32 frame;       // at 0x0
-    u16 value;       // at 0x4
-    u16 PADDING_0x6; // at 0x6
+    f32 frame;       // _00
+    u16 value;       // _04
+    u16 PADDING_0x6; // _06
 };
 /******************************************************************************
  * HermiteKey
  ******************************************************************************/
 struct HermiteKey {
-    f32 frame; // at 0x0
-    f32 value; // at 0x4
-    f32 slope; // at 0x8
+    f32 frame; // _00
+    f32 value; // _04
+    f32 slope; // _08
 };
 
 } // namespace res
@@ -704,13 +704,12 @@ AnimTransform *AnimPaneTree::Bind(Layout *pLayout, Pane *pTargetPane, ResourceAc
         pCrAnimLink = pAnimTrans->Bind(pTargetPane, nullptr, mAnimPaneIdx, true);
     }
 
-    u8 animMatMax = ut::Min<u8>(mAnimMatCnt, pTargetPane->GetMaterialNum());
-    for (u8 i = 0; i < animMatMax; i++) {
+    for (u8 i = 0; i < mAnimMatCnt; i++) {
         if (mAnimMatIdxs[i] != 0xFFFF) {
-            Material *pMaterial = pTargetPane->GetMaterial(i);
+            Material *pMaterial = pTargetPane->GetMaterial();
             pCrAnimLink = pAnimTrans->Bind(pMaterial, pCrAnimLink, mAnimMatIdxs[i], true);
         }
-    }
+	}
 
     return pAnimTrans;
 }
