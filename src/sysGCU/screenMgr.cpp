@@ -6,7 +6,10 @@
 #include "TParticle2dMgr.h"
 #include "nans.h"
 
-static const u32 padding[3] = { 0, 0, 0 };
+static void __Print(const char** fmt, ...)
+{
+	*fmt = __FILE__;
+}
 
 namespace Screen {
 
@@ -179,7 +182,12 @@ void MgrCommand::setTypeEndScene(SceneArgBase* arg)
  * @note Address: N/A
  * @note Size: 0x8C
  */
-void MgrCommand::setTypeInvalid() { setTypeEndScene(nullptr); }
+void MgrCommand::setTypeInvalid()
+{
+	OSLockMutex(&mMutex);
+	mName    = "Invalid";
+	OSUnlockMutex(&mMutex);
+}
 
 /**
  * @note Address: 0x80452354
@@ -230,8 +238,6 @@ bool Mgr::reset()
 		ScreenMemberID member = mBackupScene->getMemberID();
 		char buf2[12];
 		og::Screen::TagToName(member, buf2);
-		// This is the "lockout skip crash" that can happen randomly when you lockout skip
-		JUT_PANICLINE(427, "can\'t reset. owner[%s]  member[%s]\n", buf, buf2);
 	} else {
 		gResMgr2D->destroyAll();
 		mFlags.clear();
@@ -387,12 +393,6 @@ void Mgr::updateCurrentScene()
 void Mgr::update()
 {
 	MgrCommand* cmd = static_cast<MgrCommand*>(mAvailableCommands.mChild);
-	if (mController && mController->isButtonDown(Controller::PRESS_START)) {
-		MgrCommand* tmp = cmd;
-		while (tmp) {
-			tmp = static_cast<MgrCommand*>(tmp->mNext);
-		}
-	}
 	if (cmd) {
 		OSLockMutex(&cmd->mMutex);
 		SceneBase* scene = mBackupScene;
@@ -407,11 +407,11 @@ void Mgr::update()
 		} break;
 
 		case MgrCommand::CommandType_Start: {
-			P2ASSERTLINE(726, scene);
+			P2ASSERTLINE(727, scene);
 			SetSceneArg* arg = static_cast<SetSceneArg*>(cmd->mScreenArgBufferPtr);
 			if (arg) {
 				if (mBackupScene->getSceneType() != arg->getSceneType()) {
-					JUT_PANICLINE(734, "Mismatch arg. current scene:%d arg:%d\n", mBackupScene->getSceneType(),
+					JUT_PANICLINE(735, "Mismatch arg. current scene:%d arg:%d\n", mBackupScene->getSceneType(),
 					              static_cast<SetSceneArg*>(cmd->mScreenArgBufferPtr)->getSceneType());
 				}
 			}
@@ -423,11 +423,11 @@ void Mgr::update()
 		} break;
 
 		case MgrCommand::CommandType_End: {
-			P2ASSERTLINE(755, scene);
+			P2ASSERTLINE(756, scene);
 			SetSceneArg* arg = static_cast<SetSceneArg*>(cmd->mScreenArgBufferPtr);
 			if (arg) {
 				if (mBackupScene->getSceneType() != arg->getSceneType()) {
-					P2ASSERTLINE(759, false);
+					P2ASSERTLINE(760, false);
 				}
 			}
 			if (mBackupScene->end(static_cast<EndSceneArg*>(cmd->mScreenArgBufferPtr))) {
@@ -436,7 +436,7 @@ void Mgr::update()
 		} break;
 
 		default:
-			P2ASSERTLINE(781, false);
+			P2ASSERTLINE(782, false);
 			break;
 
 		case MgrCommand::CommandType_NULL:
@@ -489,7 +489,7 @@ SceneBase* Mgr::getSceneBase(s32 type)
 	mCurrHeap->becomeCurrentHeap();
 	SceneBase* scene = doGetSceneBase(type);
 	backupheap->becomeCurrentHeap();
-	JUT_ASSERTLINE(843, scene, "シーンの生成に失敗");
+	JUT_ASSERTLINE(844, scene, "シーンの生成に失敗");
 	scene->mController = mController;
 	return scene;
 }
@@ -534,10 +534,10 @@ void Mgr::changeScene(SetSceneArg& arg, u8* dispBuf)
 	SceneBase* scene = mBackupScene;
 	if (scene) {
 		if (arg.mDoCreateBackup) {
-			P2ASSERTLINE(855, scene);
+			P2ASSERTLINE(856, scene);
 			SceneInfoList* info = getFirstList();
 			if (!info) {
-				JUT_PANICLINE(872, "can\'t create New SceneInfoList.\n");
+				JUT_PANICLINE(873, "can\'t create New SceneInfoList.\n");
 			} else {
 				info->del();
 				og::Screen::DispMemberBase* disp = scene->mDispMember;
@@ -595,7 +595,7 @@ bool Mgr::setScene(SetSceneArg& arg)
 				MgrCommand* newCommand = getNewCommand();
 				if (newCommand) {
 
-					command->setTypeInvalid();
+					command->setTypeEndScene(nullptr);
 					newCommand->setTypeSetScene(arg);
 				} else {
 					releaseCommand(command);
@@ -654,7 +654,7 @@ void Mgr::copyDispMember(u8* destAddress, u8* sourceAddress)
 	og::Screen::TagToName((u32)backupOwnerID, ownerStr);
 	og::Screen::TagToName(backupMemberID, memberStr);
 
-	JUT_PANICLINE(1098, "to   [%s] [%s]\nfrom [%s] [%s]\n", ownerStr, memberStr, srcOwnerStr, srcMemberStr);
+	JUT_PANICLINE(1099, "to   [%s] [%s]\nfrom [%s] [%s]\n", ownerStr, memberStr, srcOwnerStr, srcMemberStr);
 }
 
 /**
