@@ -12,6 +12,11 @@
 #include "System.h"
 #include "stl/mem.h"
 
+static void __Print(const char** fmt, ...)
+{
+	*fmt = __FILE__;
+}
+
 namespace Screen {
 
 /**
@@ -91,7 +96,6 @@ void SceneBase::update()
 				mCommand.releaseCurrentHeap();
 			}
 			mStateID = SB_Unknown2;
-			sys->getTime();
 		}
 		break;
 	case SB_Unknown2:
