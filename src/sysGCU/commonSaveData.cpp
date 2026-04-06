@@ -15,7 +15,6 @@ namespace CommonSaveData {
  */
 Mgr::Mgr()
 {
-	setDefault();
 }
 
 /**
@@ -30,7 +29,7 @@ void Mgr::setDefault()
 	mSoundMode     = 0;
 	mMusicVol      = 0xFF;
 	mSeVol         = -1;
-	mIsRumble      = true;
+	mIsRumble      = WPADIsMotorEnabled();
 	mIsRubyFont    = true;
 	mUseDeflicker  = true;
 	mRegion        = (u8)sys->mRegion;
@@ -95,6 +94,7 @@ void Mgr::read(Stream& input)
 	mIsRubyFont   = input.readByte();
 	mUseDeflicker = input.readByte();
 	mRegion       = input.readByte();
+	mIsRumble     = WPADIsMotorEnabled();
 	PlayCommonData::read(input);
 }
 
@@ -104,29 +104,25 @@ void Mgr::read(Stream& input)
  */
 void Mgr::setup()
 {
-	BOOL soundModeCheck = OSGetSoundMode();
-	switch (soundModeCheck) {
-	case false:
+	switch (SCGetSoundMode()) {
+	case SC_SND_MONO:
 		setSoundModeMono();
 		break;
-	case true:
-		switch (mSoundMode) {
-		case SM_Mono:
-		case SM_Stereo:
-			setSoundModeStereo();
-			break;
-		case SM_SurroundSound:
-			setSoundModeSurround();
-			break;
-		default:
-#if BUILDTARGET == USADEMO1
-			JUT_PANICLINE(271, "Unknown sound mode:%d \n", mSoundMode);
-#else
-			JUT_PANICLINE(268, "Unknown sound mode:%d \n", mSoundMode);
-#endif
-			break;
-		}
+	case SC_SND_STEREO:
+		setSoundModeStereo();
 		break;
+	case SC_SND_SURROUND:
+		setSoundModeSurround();
+		break;
+	default:
+		JUT_PANICLINE(274, "Unknown sound mode:%d \n", mSoundMode);
+		break;
+	}
+	bool rumble = WPADIsMotorEnabled();
+	mIsRumble = rumble;
+	if (WPADIsMotorEnabled()) {
+		WPADControlMotor(WPAD_CHAN0, WPAD_MOTOR_STOP);
+		WPADControlMotor(WPAD_CHAN1, WPAD_MOTOR_STOP);
 	}
 	setBgmVolume(mMusicVol / 255.0f);
 	setSeVolume(mSeVol / 255.0f);
@@ -162,7 +158,7 @@ void Mgr::setDeflicker(bool deflicker)
 	_GXRenderModeObj* obj = System::getRenderModeObj();
 	mUseDeflicker         = deflicker;
 
-	if (OSGetProgressiveMode() == OS_PROGRESSIVE_MODE_ON) {
+	if (SCGetProgressiveMode() == SC_PROGRESSIVE) {
 		obj->vfilter[0] = 0;
 		obj->vfilter[1] = 0;
 		obj->vfilter[2] = 21;
@@ -199,7 +195,6 @@ void Mgr::setSoundModeMono()
 {
 	mSoundMode = SM_Mono;
 	JAIGlobalParameter::setParamSoundOutputMode(SM_Mono);
-	OSSetSoundMode(OS_SOUND_MODE_MONO);
 }
 
 /**
@@ -210,7 +205,6 @@ void Mgr::setSoundModeStereo()
 {
 	mSoundMode = SM_Stereo;
 	JAIGlobalParameter::setParamSoundOutputMode(SM_Stereo);
-	OSSetSoundMode(OS_SOUND_MODE_STEREO);
 }
 
 /**
@@ -221,7 +215,6 @@ void Mgr::setSoundModeSurround()
 {
 	mSoundMode = SM_SurroundSound;
 	JAIGlobalParameter::setParamSoundOutputMode(SM_SurroundSound);
-	OSSetSoundMode(OS_SOUND_MODE_STEREO);
 }
 
 /**
@@ -233,11 +226,7 @@ void Mgr::setBgmVolume(f32 volume)
 	bool temp = OSDisableInterrupts();
 	OSDisableScheduler();
 
-#if BUILDTARGET == USADEMO1
-	P2ASSERTBOOLLINE(392, volume >= 0.0f && volume <= 1.0f);
-#else
-	P2ASSERTBOOLLINE(389, volume >= 0.0f && volume <= 1.0f);
-#endif
+	P2ASSERTBOOLLINE(435, volume >= 0.0f && volume <= 1.0f);
 
 	if (PSSystem::spSysIF) {
 		mMusicVol = ROUND_F32_TO_U8(volume * 255.0f);
@@ -256,11 +245,7 @@ void Mgr::setSeVolume(f32 volume)
 	bool temp = OSDisableInterrupts();
 	OSDisableScheduler();
 
-#if BUILDTARGET == USADEMO1
-	P2ASSERTBOOLLINE(410, volume >= 0.0f && volume <= 1.0f);
-#else
-	P2ASSERTBOOLLINE(407, volume >= 0.0f && volume <= 1.0f);
-#endif
+	P2ASSERTBOOLLINE(453, volume >= 0.0f && volume <= 1.0f);
 
 	if (PSSystem::spSysIF) {
 		mSeVol = ROUND_F32_TO_U8(volume * 255.0f);

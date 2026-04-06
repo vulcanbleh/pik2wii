@@ -105,8 +105,8 @@ void WipeInFader::do_draw(f32 rate)
 	JUtility::TColor color(mColor.r, mColor.g, mColor.b, 255 - alpha);
 	graf->setColor(color);
 
-	u32 y    = System::getRenderModeObj()->efbHeight;
-	u32 x    = System::getRenderModeObj()->fbWidth;
+	f32 y    = System::getRenderModeObj()->efbHeight;
+	f32 x    = System::getRenderModeObj()->fbWidth;
 	f32 zero = 0.0f;
 	JGeometry::TBox2f box(0.0f, 0.0f, zero + x, zero + y);
 	graf->fillBox(box);
@@ -172,8 +172,8 @@ void WipeOutFader::do_draw(f32 rate)
 	JUtility::TColor color(mColor.r, mColor.g, mColor.b, alpha - 0); // yes the - 0 is needed
 	graf->setColor(color);
 
-	u32 y    = System::getRenderModeObj()->efbHeight;
-	u32 x    = System::getRenderModeObj()->fbWidth;
+	f32 y    = System::getRenderModeObj()->efbHeight;
+	f32 x    = System::getRenderModeObj()->fbWidth;
 	f32 zero = 0.0f;
 	JGeometry::TBox2f box(0.0f, 0.0f, zero + x, zero + y);
 	graf->fillBox(box);
@@ -282,8 +282,8 @@ void BlackFader::do_draw(f32 rate)
 	}
 	graf->setColor(color);
 
-	u32 y    = System::getRenderModeObj()->efbHeight;
-	u32 x    = System::getRenderModeObj()->fbWidth;
+	f32 y    = System::getRenderModeObj()->efbHeight;
+	f32 x    = System::getRenderModeObj()->fbWidth;
 	f32 zero = 0.0f;
 	JGeometry::TBox2f box(0.0f, 0.0f, zero + x, zero + y);
 	graf->fillBox(box);

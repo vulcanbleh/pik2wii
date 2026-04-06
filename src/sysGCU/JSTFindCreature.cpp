@@ -6,8 +6,10 @@
 #include "Game/Entities/ItemOnyon.h"
 #include "P2Macros.h"
 
-static const u32 filler[] = { 0, 0, 0 };
-const char filename[]     = "JSTFindCreature";
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "JSTFindCreature";
+}
 
 namespace Game {
 namespace P2JST {
