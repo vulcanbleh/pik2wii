@@ -6,6 +6,12 @@
 #include "og/Screen/callbackNodes.h"
 #include "Vector3.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "ebi2DGraph";
+}
+
 // necessary for weak function generation unfortunately
 inline u64 J2DPane::getTagName() const { return mTag; }
 

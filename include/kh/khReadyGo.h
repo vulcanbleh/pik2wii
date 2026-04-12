@@ -37,21 +37,7 @@ struct DispReadyGo : public og::Screen::DispMemberBase {
 };
 
 struct ObjReadyGo : public ::Screen::ObjBase {
-	ObjReadyGo()
-	{
-		for (int i = 0; i < 2; i++) {
-			mScreen[i]    = nullptr;
-			mAnim1[i]     = nullptr;
-			mAnim2[i]     = nullptr;
-			mAnimTime2[i] = 0.0f;
-			mAnimTime1[i] = 0.0f;
-			mYOffset[i]   = 0.0f;
-			mMakeEfx[i]   = false;
-		}
-		mScreenNum      = 1;
-		mIsAnimComplete = false;
-		mIsOver         = false;
-	}
+	ObjReadyGo();
 
 	virtual ~ObjReadyGo() { }           // _08 (weak)
 	virtual void doCreate(JKRArchive*); // _4C

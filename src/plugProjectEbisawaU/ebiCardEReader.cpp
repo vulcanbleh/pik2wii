@@ -4,7 +4,11 @@
 #include "RevoSDK/gba.h"
 #include "ebi/CardEReader.h"
 
-static const char name[] = "ebiCardEReader";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "ebiCardEReader";
+}
 
 namespace ebi {
 CardEReader::TMgr* gCardEMgr;
@@ -18,7 +22,7 @@ static u8 cInitialCode[4] = { 'P', 'S', 'A', 'J' };
  */
 void gCardEMgr_ThreadFunc(void* data)
 {
-	P2ASSERTLINE(16, gCardEMgr);
+	P2ASSERTLINE(17, gCardEMgr);
 	gCardEMgr->threadProc(data);
 }
 
@@ -174,7 +178,7 @@ void CardEReader::TMgr::loadResource()
 		file.open(path);
 		mGameDatas[i]
 		    = JKRDvdRipper::loadToMainRAM(&file, nullptr, Switch_0, 0, nullptr, JKRDvdRipper::ALLOC_DIR_BOTTOM, 0, nullptr, nullptr);
-		P2ASSERTLINE(462, mGameDatas[i]);
+		P2ASSERTLINE(471, mGameDatas[i]);
 		mSizes[i] = file.mDvdPlayer.length;
 		file.close();
 		mSizes[i] = (mSizes[i] + 3) & ~3;
@@ -187,7 +191,6 @@ void CardEReader::TMgr::loadResource()
  */
 void CardEReader::TMgr::init()
 {
-	GBAInit();
 	OSInitMutex(&mMutex);
 	OSInitCond(&mCond);
 }
@@ -226,15 +229,7 @@ void CardEReader::TMgr::update()
 		break;
 	case 1: {
 		int stat;
-		if (SIProbe(1) == 0x40000) {
-			stat = 1;
-		} else if (SIProbe(2) == 0x40000) {
-			stat = 2;
-		} else if (SIProbe(3) == 0x40000) {
-			stat = 3;
-		} else {
-			stat = -1;
-		}
+		stat = -1;
 		mGbaPort = stat;
 		mCounter++;
 		if (mGbaPort != -1) {
@@ -284,11 +279,7 @@ void CardEReader::TMgr::threadProc(void* data)
 	while (true) {
 		OSLockMutex(&mMutex);
 		OSWaitCond(&mCond, &mMutex);
-		if (CardE_uploadToGBA(mGbaPort, (u8*)mGameDatas[mGameID], mSizes[mGameID])) {
-			goEnd_(Error_Success);
-		} else {
-			goEnd_(Error_TransferFailed);
-		}
+		goEnd_(Error_TransferFailed);
 		OSUnlockMutex(&mMutex);
 	}
 }

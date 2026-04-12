@@ -1,5 +1,11 @@
 #include "ebi/E3DGraph.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "ebi3DGraph";
+}
+
 namespace ebi {
 
 /**
