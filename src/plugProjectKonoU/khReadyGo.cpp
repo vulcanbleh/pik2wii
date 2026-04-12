@@ -10,12 +10,26 @@
 #include "JSystem/J2D/J2DAnmLoader.h"
 #include "Screen/Game2DMgr.h"
 
-static const u32 padding[] = { 0, 0, 0 };
 static void _Print(char* format, ...) { OSReport(format, __FILE__); }
 
 namespace kh {
 namespace Screen {
 
+ObjReadyGo::ObjReadyGo()
+{
+	for (int i = 0; i < 2; i++) {
+		mScreen[i]    = nullptr;
+		mAnim1[i]     = nullptr;
+		mAnim2[i]     = nullptr;
+		mAnimTime2[i] = 0.0f;
+		mAnimTime1[i] = 0.0f;
+		mYOffset[i]   = 0.0f;
+		mMakeEfx[i]   = false;
+	}
+	mScreenNum      = 1;
+	mIsAnimComplete = false;
+	mIsOver         = false;
+}
 /**
  * @note Address: 0x80401268
  * @note Size: 0xA4

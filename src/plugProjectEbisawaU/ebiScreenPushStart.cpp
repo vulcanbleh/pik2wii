@@ -9,7 +9,11 @@
 #include "ebi/Screen/TPressStart.h"
 #include "ebi/Utility.h"
 
-static const char name[] = "ebiScreenPushStart";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "ebiScreenPushStart";
+}
 
 namespace ebi {
 namespace Screen {
