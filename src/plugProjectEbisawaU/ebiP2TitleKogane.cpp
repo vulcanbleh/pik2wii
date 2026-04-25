@@ -234,7 +234,7 @@ void TUnit::update()
 		return;
 
 	if ((mStateID != KSTATE_Inactive) && (mStateID != KSTATE_GoHome) && (mStateID != KSTATE_ZigZagWalk)) {
-		if (mControl && mControl->mSStick.mStickMag > 0.7f) {
+		if (mControl && mControl->mCont->down(EGG::cCORE_BUTTON_UP | EGG::cCORE_BUTTON_DOWN | EGG::cCORE_BUTTON_LEFT | EGG::cCORE_BUTTON_RIGHT)) {
 			startState(KSTATE_Controlled);
 		}
 	}
