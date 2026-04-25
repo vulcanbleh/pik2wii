@@ -28,7 +28,7 @@ BaseHIOSection::BaseHIOSection(JKRHeap* heap)
 	u32 totalFreeSize = JKRHeap::sCurrentHeap->getTotalFreeSize();
 
 	JUT_ASSERTLINE(314, freeSize == totalFreeSize, "fragmentation occurred : after sound\n");
-	mDebugController = new Controller(Controller::PORT_3);
+	mDebugController = new Controller(3);
 }
 
 /**
