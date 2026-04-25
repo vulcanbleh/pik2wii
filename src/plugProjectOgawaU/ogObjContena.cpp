@@ -558,8 +558,8 @@ void ObjContena::commonUpdate()
 	}
 
 	if (msVal._40) {
-		f32 input1 = mController->mSStick.mXPos;
-		f32 input2 = mController->mSStick.mYPos;
+		f32 input1 = mController->getSubStickX();
+		f32 input2 = mController->getSubStickY();
 		if (input1 > 0.4f || input1 < -0.4f) {
 			mMenuMoveAngle += input1 * 100.0f;
 		}

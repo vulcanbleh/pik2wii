@@ -305,9 +305,9 @@ void Chappy::TUnit::update()
 		Controller* control = mController;
 		bool check          = false;
 		if (control) {
-			if (control->mSStick.mStickMag > 0.7f) {
+			if (control->mCont->down(EGG::cCORE_BUTTON_UP | EGG::cCORE_BUTTON_DOWN | EGG::cCORE_BUTTON_LEFT | EGG::cCORE_BUTTON_RIGHT)){
 				check = true;
-			} else if (control->getButtonDown() & Controller::PRESS_Z) {
+			} else if (mController->mCont->downTrigger(0x2000)) {
 				check = true;
 			}
 		}
@@ -328,9 +328,16 @@ void Chappy::TUnit::update()
 	case CHAPPYAI_Controlled: {
 		Controller* control = mController;
 		if (control) {
-			stickX       = control->mSStick.mXPos;
-			stickY       = control->mSStick.mYPos;
-			isButtonDown = (control->getButtonDown() & Controller::PRESS_Z) == Controller::PRESS_Z;
+			if (mController->mCont->down(EGG::cCORE_BUTTON_RIGHT)){
+				stickX = 1.0f;
+			} 
+			if (mController->mCont->down(EGG::cCORE_BUTTON_LEFT)){
+				stickX = -1.0f;
+			}
+			if (mController->mCont->down(EGG::cCORE_BUTTON_UP)){
+				stickY = 1.0f;
+			}
+			isButtonDown = mController->mCont->downTrigger(0x2000);
 		}
 
 		if (mCounter == 0) {

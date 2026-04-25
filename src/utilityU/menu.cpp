@@ -8,10 +8,9 @@
  * @note Address: 0x80456184
  * @note Size: 0x12C
  */
-Menu::Menu(JUTGamePad* control, JUTFont* font, bool flag)
+Menu::Menu(Controller* control, JUTFont* font, bool flag)
 {
 	mControl = control;
-	mControl->setButtonRepeat(0xc000000, 15, 3);
 	mFont         = font;
 	mFlag         = flag;
 	mPreviousMenu = nullptr;
@@ -145,7 +144,7 @@ Menu* Menu::doUpdate(bool flag)
 			mIsUpdated = true;
 		}
 
-		u32 input = mControl->mButton.mRepeat; // WHY
+		u32 input = mControl->getButtonDown();
 		if (input & Controller::PRESS_DOWN) {
 			mCurrentItem->checkEvents(this, KeyEvent::U2);
 			mCurrentItem = mCurrentItem->getNext();

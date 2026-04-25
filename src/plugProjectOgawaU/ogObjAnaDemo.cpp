@@ -570,7 +570,7 @@ bool ObjAnaDemo::doUpdate()
 
 	case ANADEMOSTATE_ErrorWait:
 		bool anyButtonDown = false;
-		u32 input          = pad->mButton.mButtonDown; // getButtonDown doesnt cooperate here
+		u32 input          = pad->getButtonDown(); // getButtonDown doesnt cooperate here
 		if (input & Controller::PRESS_A || input & Controller::PRESS_B || input & Controller::PRESS_X || input & Controller::PRESS_Y
 		    || input & Controller::PRESS_START) {
 			anyButtonDown = true;
@@ -586,7 +586,7 @@ bool ObjAnaDemo::doUpdate()
 	case ANADEMOSTATE_ErrorTimed:
 		if (mTimer3 >= 1.0f) {
 			bool anyButtonDown = false;
-			u32 input          = pad->mButton.mButtonDown;
+			u32 input          = pad->getButtonDown();
 			if (input & Controller::PRESS_A || input & Controller::PRESS_B || input & Controller::PRESS_X || input & Controller::PRESS_Y
 			    || input & Controller::PRESS_START) {
 				anyButtonDown = true;

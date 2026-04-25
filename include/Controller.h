@@ -5,6 +5,14 @@
 
 struct Controller {
 	Controller(int);
+
+	enum EPadPort {
+		PORT_INVALID = -1,
+		PORT_0       = 0,
+		PORT_1       = 1,
+		PORT_2       = 2,
+		PORT_3       = 3,
+	};
 	
 	enum EButton {
 		False = 0x0,
@@ -49,6 +57,11 @@ struct Controller {
 	bool isButtonDown(u32 buttons);
 	bool isButtonHeld(u32 buttons);
 	bool getButtonUp(u32 buttons);
+	
+	bool isMoveLeft();
+	bool isMoveRight();
+	bool isMoveUp();
+	bool isMoveDown();
 	
 	u32 getButton() const;
 	u32 getButtonDown() const;

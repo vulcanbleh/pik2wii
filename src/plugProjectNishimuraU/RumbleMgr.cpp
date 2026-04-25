@@ -5,9 +5,13 @@
 #include "JSystem/JKernel/JKRDvdRipper.h"
 #include "System.h"
 
-namespace Game {
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-RumbleMgr";
+}
 
-static const char unusedRumbleName[] = "246-RumbleMgr";
+namespace Game {
 
 RumbleMgr* rumbleMgr;
 
@@ -28,12 +32,12 @@ RumbleMgr::RumbleMgr()
 void RumbleMgr::loadResource()
 {
 	mParms = new Parms();
-	readRumbleParms("/user/Nishimura/Rumble/rumbleParms.txt");
+	readRumbleParms("user/Nishimura/Rumble/rumbleParms.txt");
 
 	mDataMgr = new RumbleDataMgr();
-	readRumbleData("/user/Nishimura/Rumble/rumbleData.txt");
+	readRumbleData("user/Nishimura/Rumble/rumbleData.txt");
 
-	mIsRumbleActive = true;
+	mIsRumbleActive = false;
 
 	mContRumble    = new ContRumble*[2];
 	mNavis         = new Navi*[2];
@@ -53,9 +57,10 @@ void RumbleMgr::loadResource()
 void RumbleMgr::init()
 {
 	if (sys->mPlayData) {
-		mIsRumbleActive = (sys->mPlayData->mIsRumble != 0);
+		mIsRumbleActive = WPADIsMotorEnabled();
 	} else {
-		mIsRumbleActive = true;
+		bool rumble = WPADIsMotorEnabled();
+		mIsRumbleActive = rumble;
 	}
 
 	mController    = nullptr;
@@ -84,7 +89,7 @@ void RumbleMgr::update()
 		if (gameSystem && !gameSystem->isMultiplayerMode()) {
 			if (mController) {
 				mContRumble[0]->setController(true);
-				mContRumble[0]->mPadChannel = mController->mPortNum;
+				mContRumble[0]->mPadChannel = mController->mContNum;
 				mContRumble[0]->update();
 
 			} else {
@@ -93,7 +98,7 @@ void RumbleMgr::update()
 					Navi* navi = mNavis[i];
 					if (navi && navi->mController1 && navi == activeNavi) {
 						mContRumble[i]->setController(true);
-						mContRumble[i]->mPadChannel = mNavis[i]->mController1->mPortNum;
+						mContRumble[i]->mPadChannel = mNavis[i]->mController1->mContNum;
 					} else {
 						mContRumble[i]->setController(false);
 					}
@@ -106,7 +111,7 @@ void RumbleMgr::update()
 			for (int i = 0; i < 2; i++) {
 				if (mNavis[i] && mNavis[i]->mController1) {
 					mContRumble[i]->setController(true);
-					mContRumble[i]->mPadChannel = mNavis[i]->mController1->mPortNum;
+					mContRumble[i]->mPadChannel = mNavis[i]->mController1->mContNum;
 				} else {
 					mContRumble[i]->setController(false);
 				}
@@ -227,7 +232,7 @@ void RumbleMgr::setZukanRumble(Controller* controller, Vector3f* zukanPos)
 		mController    = controller;
 		mZukanPosition = zukanPos;
 	} else {
-		JUT_PANICLINE(350, "not zukan mode\n");
+		JUT_PANICLINE(353, "not zukan mode\n");
 	}
 }
 
@@ -272,7 +277,7 @@ void RumbleMgr::readRumbleParms(char* fileName)
 		mParms->read(stream);
 		delete[] handle;
 	} else {
-		JUT_PANICLINE(409, "rumble parameter none\n");
+		JUT_PANICLINE(412, "rumble parameter none\n");
 	}
 }
 
@@ -289,7 +294,7 @@ void RumbleMgr::readRumbleData(char* fileName)
 		mDataMgr->read(stream);
 		delete[] handle;
 	} else {
-		JUT_PANICLINE(440, "rumble data none\n");
+		JUT_PANICLINE(443, "rumble data none\n");
 	}
 }
 } // namespace Game

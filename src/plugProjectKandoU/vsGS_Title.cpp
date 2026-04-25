@@ -293,9 +293,8 @@ void TitleState::execVs(VsGameSection* section)
 		return;
 
 	case VSTITLE_Display:
-		JUTGamePad::CStick* stick = &mPlayer1Controller->mSStick;
-		f32 y                     = stick->mYPos;
-		f32 x                     = stick->mXPos;
+		f32 y                     = mPlayer1Controller->getMainStickY();
+		f32 x                     = mPlayer1Controller->getMainStickX();
 		Vector3f stickPos         = Vector3f(x, 0.0f, y);
 
 		Vector3f directions[4];

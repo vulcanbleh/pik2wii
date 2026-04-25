@@ -204,7 +204,7 @@ void BaseGameSection::ZoomCamera::doUpdate()
 	bool xPassThreshold = false; // r4
 	bool yPassThreshold = false; // r5
 
-	f32 x   = mController->mMStick.mXPos;
+	f32 x   = mController->getMainStickX();
 	f32 val = x; // f3
 
 	f64 absX = fabs(x);
@@ -223,7 +223,7 @@ void BaseGameSection::ZoomCamera::doUpdate()
 		mAngleX += TAU;
 	}
 
-	f32 y    = mController->mMStick.mYPos;
+	f32 y    = mController->getMainStickY();
 	f32 val2 = y; // f3
 
 	f64 absY = fabs(y);

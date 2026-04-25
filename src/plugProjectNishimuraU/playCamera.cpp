@@ -404,7 +404,7 @@ u32 PlayCamera::updateCameraMode()
 			if (pad->getButtonDown() & Controller::PRESS_L) {
 				flags |= CAMFLAGS_CenterBehind;
 			} else {
-				if (pad->mButton.mAnalogL > 0.1f) {
+				if (pad->isButtonHeld(Controller::PRESS_L)) {
 					flags |= CAMFLAGS_SmoothFollow;
 				}
 			}
@@ -560,7 +560,7 @@ void PlayCamera::setSmoothThetaSpeed()
 	Controller* pad = mTargetObj->mController1;
 	if (pad) {
 		f32 maxSpeed = mCameraParms->mMaxRotSpeed.mValue * sys->getDeltaTime();
-		mSmoothMoveSpeed += pad->mMStick.mXPos * mCameraParms->mRotAccel.mValue;
+		mSmoothMoveSpeed += pad->getMainStickX() * mCameraParms->mRotAccel.mValue;
 		mSmoothMoveSpeed = boundAboveBelow(mSmoothMoveSpeed, maxSpeed);
 	}
 }
