@@ -7,7 +7,7 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+/*
 inline f32 acosf(f32 x)
 {
 	return acos(x);
@@ -19,11 +19,11 @@ inline f32 asinf(f32 x)
 inline f32 atan2f(f32 x, f32 y)
 {
 	return atan2(x, y);
-}
+}*/
 inline f32 ceilf(f32 x)
 {
 	return ceil(x);
-}
+}/*
 inline f32 cosf(f32 x)
 {
 	return cos(x);
@@ -39,7 +39,7 @@ inline f32 sqrtf(f32 x)
 inline f32 tanf(f32 x)
 {
 	return tan(x);
-}
+}*/
 inline f32 floorf(f32 x)
 {
 	return floor(x);

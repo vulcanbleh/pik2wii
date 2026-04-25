@@ -34,9 +34,9 @@ namespace VsGame {
 TitleState::TitleState()
     : State(VGS_Title)
 {
-	mPlayer1Controller = new Controller(JUTGamePad::PORT_0);
+	mPlayer1Controller = new Controller(0);
 	mDelegate          = new Delegate<Game::VsGame::TitleState>(this, &dvdload);
-	mPlayer2Controller = new Controller(JUTGamePad::PORT_1);
+	mPlayer2Controller = new Controller(1);
 }
 
 /**

@@ -2128,8 +2128,8 @@ void BaseGameSection::setupFloatMemory()
 	Navi* p1 = naviMgr->getAt(NAVIID_Olimar);
 	Navi* p2 = naviMgr->getAt(NAVIID_Louie);
 
-	mControllerP1 = new Controller(JUTGamePad::PORT_0);
-	mControllerP2 = new Controller(JUTGamePad::PORT_1);
+	mControllerP1 = new Controller(0);
+	mControllerP2 = new Controller(1);
 	mOlimarCamera = new PlayCamera(p1);
 	mLouieCamera  = new PlayCamera(p2);
 	cameraMgr     = new CameraMgr;

@@ -3,7 +3,7 @@
 
 #include <RevoSDK/wpad.h>
 #include <egg/core/eggSingleton.h>
-#include <egg/core/eggBitFlag.h>
+#include <egg/prim/eggBitFlag.h>
 
 
 namespace System12 {

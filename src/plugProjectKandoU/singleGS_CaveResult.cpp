@@ -31,7 +31,7 @@ static const char className[] = "SingleGS_CaveResult";
 CaveResultState::CaveResultState()
     : State(SGS_CaveResult)
 {
-	mController   = new Controller(JUTGamePad::PORT_0);
+	mController   = new Controller(0);
 	mLoadCallback = new Delegate<CaveResultState>(this, &loadResource);
 	mBackupHeap   = nullptr;
 	mMainHeap     = nullptr;

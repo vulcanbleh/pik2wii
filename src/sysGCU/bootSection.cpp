@@ -450,8 +450,8 @@ BootSection::BootSection(JKRHeap* heap)
 	JUTProcBar::sManager->setVisible(false);
 	JUTProcBar::sManager->setVisibleHeapBar(false);
 
-	mController = new Controller(JUTGamePad::PORT_0);
-	/*mController2 =*/new Controller(JUTGamePad::PORT_1);
+	mController = new Controller(0);
+	/*mController2 =*/new Controller(1);
 
 	sys->createRomFont(JKRGetCurrentHeap());
 	gPikmin2AramMgr->setLoadPermission(true);

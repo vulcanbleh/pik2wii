@@ -36,7 +36,7 @@ static const char vsGSGameName[]        = "vsGS_Game";
 GameState::GameState()
     : State(VGS_Game)
 {
-	mController = new Controller(JUTGamePad::PORT_0);
+	mController = new Controller(0);
 }
 
 /**

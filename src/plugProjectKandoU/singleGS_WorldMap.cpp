@@ -31,7 +31,7 @@ namespace SingleGame {
 SelectState::SelectState()
     : State(SGS_Select)
 {
-	mController       = new Controller(JUTGamePad::PORT_0);
+	mController       = new Controller(0);
 	mDvdLoadCallback  = new Delegate<SelectState>(this, &dvdload);
 	mPreviousCourseID = -1;
 }

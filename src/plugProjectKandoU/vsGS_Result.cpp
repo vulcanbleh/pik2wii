@@ -29,8 +29,8 @@ ResultState::ResultState()
     : State(VGS_Result)
 {
 	mEndFlags.clear();
-	mPlayer1Controller = new Controller(JUTGamePad::PORT_0);
-	mPlayer2Controller = new Controller(JUTGamePad::PORT_1);
+	mPlayer1Controller = new Controller(0);
+	mPlayer2Controller = new Controller(1);
 	mDelegate          = new Delegate<ResultState>(this, &dvdload);
 }
 

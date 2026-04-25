@@ -1,12 +1,13 @@
 #ifndef _CONTROLLER_H
 #define _CONTROLLER_H
 
-#include "JSystem/JUtility/JUTGamePad.h"
+#include "egg/core/eggController.h"
 
-struct Controller : public JUTGamePad {
-	Controller(JUTGamePad::EPadPort);
+struct Controller {
+	Controller(int);
 
-	virtual ~Controller() { } // _08 (weak)
+	int mContNum;
+	EGG::CoreController* mCont;
 };
 
 #endif
