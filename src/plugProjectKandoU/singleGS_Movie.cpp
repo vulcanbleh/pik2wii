@@ -61,7 +61,7 @@ namespace SingleGame {
 MovieState::MovieState()
     : State(SGS_Movie)
 {
-	mController = new Controller(JUTGamePad::PORT_0);
+	mController = new Controller(0);
 	mMovieHeap  = nullptr;
 	mBackupHeap = nullptr;
 }

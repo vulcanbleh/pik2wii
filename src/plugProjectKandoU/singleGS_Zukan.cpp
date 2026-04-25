@@ -1173,7 +1173,7 @@ ZukanState::ZukanState()
 	mCurrMode         = ModeNone;
 	mDebugParms       = nullptr;
 	mMapIndex         = 0;
-	mController       = new Controller(JUTGamePad::PORT_0);
+	mController       = new Controller(0);
 	mParentHeap       = nullptr;
 	mMainHeap         = nullptr;
 	mCurrObjHeap      = nullptr;

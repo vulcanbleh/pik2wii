@@ -118,8 +118,8 @@ void Section::init()
 	setDisplay(JFWDisplay::createManager(nullptr, mDisplayHeap, JUTXfb::DoubleBuffer, false), 1);
 	sys->heapStatusEnd("frameBuffer");
 
-	mController1 = new Controller(JUTGamePad::PORT_0);
-	mController2 = new Controller(JUTGamePad::PORT_1);
+	mController1 = new Controller(0);
+	mController2 = new Controller(1);
 
 	sys->setFrameRate(1); // 60fps title screen
 

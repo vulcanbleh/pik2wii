@@ -795,7 +795,7 @@ void TVsSelect::setDebugHeapParent(JKRHeap*)
  */
 void TVsSelect::doCreate(JKRArchive* arc)
 {
-	mController2 = new Controller(JUTGamePad::PORT_1);
+	mController2 = new Controller(1);
 	P2ASSERTLINE(783, mController2);
 	mArchive = arc;
 

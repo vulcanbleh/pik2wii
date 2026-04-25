@@ -34,9 +34,9 @@ namespace VsGame {
 TitleState::TitleState()
     : State(VGS_Title)
 {
-	mPlayer1Controller = new Controller(JUTGamePad::PORT_0);
+	mPlayer1Controller = new Controller(0);
 	mDelegate          = new Delegate<Game::VsGame::TitleState>(this, &dvdload);
-	mPlayer2Controller = new Controller(JUTGamePad::PORT_1);
+	mPlayer2Controller = new Controller(1);
 }
 
 /**
@@ -293,9 +293,8 @@ void TitleState::execVs(VsGameSection* section)
 		return;
 
 	case VSTITLE_Display:
-		JUTGamePad::CStick* stick = &mPlayer1Controller->mSStick;
-		f32 y                     = stick->mYPos;
-		f32 x                     = stick->mXPos;
+		f32 y                     = mPlayer1Controller->getMainStickY();
+		f32 x                     = mPlayer1Controller->getMainStickX();
 		Vector3f stickPos         = Vector3f(x, 0.0f, y);
 
 		Vector3f directions[4];

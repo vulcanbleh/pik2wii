@@ -563,9 +563,9 @@ bool TZukanBase::doUpdate()
 				bool check = mWindow->checkState(TZukanWindow::STATE_Inactive);
 				if (!check) {
 					// scroll through message box with analog stick
-					f32 z = pad->mMStick.mYPos;
-					if (pad->mMStick.mYPos >= 0.5f || pad->mMStick.mYPos <= -0.5f) {
-						if (pad->mMStick.mYPos <= -0.5f) {
+					f32 z = pad->getMainStickY();
+					if (pad->getMainStickY() >= 0.5f || pad->getMainStickY() <= -0.5f) {
+						if (pad->getMainStickY() <= -0.5f) {
 							z = -1.0f;
 						}
 						if (z >= 0.5f) {
@@ -2933,9 +2933,9 @@ bool TItemZukan::doUpdate()
 			}
 
 			// scroll through message box with analog stick
-			f32 z = mController->mMStick.mYPos;
-			if (mController->mMStick.mYPos >= 0.5f || mController->mMStick.mYPos <= -0.5f) {
-				if (mController->mMStick.mYPos <= -0.5f) {
+			f32 z = mController->getMainStickY();
+			if (mController->getMainStickY() >= 0.5f || mController->getMainStickY() <= -0.5f) {
+				if (mController->getMainStickY() <= -0.5f) {
 					z = -1.0f;
 				}
 				if (z >= 0.5f) {

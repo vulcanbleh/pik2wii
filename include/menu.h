@@ -4,7 +4,7 @@
 #include "IDelegate.h"
 #include "JSystem/JSupport/JSUList.h"
 #include "JSystem/JUtility/JUTFont.h"
-#include "JSystem/JUtility/JUTGamePad.h"
+#include "Controller.h"
 #include "types.h"
 
 struct Menu {
@@ -103,11 +103,11 @@ struct Menu {
 
 	/**
 	 * @brief Constructs a Menu object.
-	 * @param control A pointer to the JUTGamePad object.
+	 * @param control A pointer to the Controller object.
 	 * @param font A pointer to the JUTFont object.
 	 * @param flag A boolean indicating the flag of the menu.
 	 */
-	Menu(JUTGamePad* control, JUTFont* font, bool flag);
+	Menu(Controller* control, JUTFont* font, bool flag);
 
 	/**
 	 * @brief Adds a key event to the menu.
@@ -147,7 +147,7 @@ struct Menu {
 	void open();
 	void close();
 
-	JUTGamePad* mControl;                     // _00
+	Controller* mControl;                     // _00
 	JUTFont* mFont;                           // _04
 	bool mFlag;                               // _08
 	Menu* mPreviousMenu;                      // _0C

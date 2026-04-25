@@ -26,8 +26,8 @@ namespace SingleGame {
 FileState::FileState()
     : State(SGS_File)
 {
-	mMainController  = new Controller(JUTGamePad::PORT_0);
-	mDebugController = new Controller(JUTGamePad::PORT_2);
+	mMainController  = new Controller(0);
+	mDebugController = new Controller(2);
 	mBackupHeap      = nullptr;
 	mMainHeap        = nullptr;
 }

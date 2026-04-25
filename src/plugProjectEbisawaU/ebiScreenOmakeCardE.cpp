@@ -138,7 +138,7 @@ bool TOmakeCardE::doUpdateStateWait()
 			PSSystem::spSysIF->playSystemSe(PSSE_SY_MESSAGE_EXIT, 0);
 			mState = EnteringZoomed;
 		}
-		mMesgScroll->scroll(mInput->mMStick.mYPos);
+		mMesgScroll->scroll(mInput->getMainStickY());
 		f32 scroll            = mMesgScroll->getPosRate();
 		const int changeAlpha = sys->getDeltaTime() * 2550.0f;
 		int alphaArrowUp      = mPaneArrowUp->getAlpha();

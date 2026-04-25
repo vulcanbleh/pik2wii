@@ -234,7 +234,7 @@ void TUnit::update()
 		return;
 
 	if ((mStateID != KSTATE_Inactive) && (mStateID != KSTATE_GoHome) && (mStateID != KSTATE_ZigZagWalk)) {
-		if (mControl && mControl->mSStick.mStickMag > 0.7f) {
+		if (mControl && mControl->mCont->down(EGG::cCORE_BUTTON_UP | EGG::cCORE_BUTTON_DOWN | EGG::cCORE_BUTTON_LEFT | EGG::cCORE_BUTTON_RIGHT)) {
 			startState(KSTATE_Controlled);
 		}
 	}
@@ -247,7 +247,13 @@ void TUnit::update()
 		}
 		mActionID = KOGANEACT_0;
 		if (mControl != nullptr) {
-			f32 stickX = mControl->mSStick.mXPos;
+			f32 stickX;
+			if (mControl->mCont->down(EGG::cCORE_BUTTON_RIGHT)){
+				stickX = 1.0f;
+			} 
+			if (mControl->mCont->down(EGG::cCORE_BUTTON_LEFT)){
+				stickX = -1.0f;
+			}
 			if (FABS(stickX) > 0.7f) {
 				Vector2f newAng(mAngle.y, -mAngle.x);
 				mAngle = mAngle + newAng * (stickX * mManager->mParams.mTurnRate.mValue);
@@ -255,8 +261,12 @@ void TUnit::update()
 				mAngle.normalise();
 				mActionID = KOGANEACT_1;
 			}
+			
+			f32 stickY;
+			if (mControl->mCont->down(EGG::cCORE_BUTTON_UP)){
+				stickY = 1.0f;
+			} 
 
-			f32 stickY = mControl->mSStick.mYPos;
 			if (stickY > 0.7f) {
 				f32 paramProd = stickY * mParms[0];
 				mPosition     = mPosition + mAngle * paramProd;

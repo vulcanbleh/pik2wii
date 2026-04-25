@@ -23,7 +23,7 @@ LoadState::LoadState()
     , mGameStartType(0)
     , mNeedClearHeap(0)
 {
-	mController = new Controller(JUTGamePad::PORT_0);
+	mController = new Controller(0);
 	mDelegate   = new Delegate<Game::VsGame::LoadState>(this, &dvdLoad);
 }
 

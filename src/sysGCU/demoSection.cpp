@@ -70,7 +70,7 @@ void Section::init()
 	setDisplay(JFWDisplay::createManager(nullptr, mDisplayHeap, JUTXfb::DoubleBuffer, false), 1);
 	sys->heapStatusEnd("frameBuffer");
 
-	mController = new Controller(JUTGamePad::PORT_0);
+	mController = new Controller(0);
 
 	sys->setFrameRate(2);
 	mMoviePlayer.init(mDisplayHeap);

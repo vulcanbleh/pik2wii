@@ -3532,7 +3532,7 @@ void NaviClimbState::prepare(Navi* navi)
  */
 void NaviClimbState::exec(Navi* navi)
 {
-	navi->mVelocity = mClimbAxis * 100.0f * navi->mController1->mMStick.mYPos;
+	navi->mVelocity = mClimbAxis * 100.0f * navi->mController1->getMainStickY();
 	navi->move(sys->getDeltaTime());
 	if (navi->mController1->getButton() & Controller::PRESS_B) {
 		transit(navi, NSID_Walk, nullptr);
