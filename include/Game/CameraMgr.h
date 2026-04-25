@@ -130,7 +130,7 @@ struct CameraData {
  */
 struct CameraParms : public Parameters {
 	CameraParms()
-	    : Parameters(nullptr, "CameraParms")
+	    : Parameters("CameraParms")
 	    , mNearLowDist(this, 'cnld', "Near(Low)距離", 600.0f, 10.0f, 5000.0f)          // 'near(low) distance'
 	    , mNearLowAngle(this, 'cnla', "Near(Low)アングル", 20.0f, 0.0f, 90.0f)         // 'near(low) angle'
 	    , mNearLowFOV(this, 'cnlf', "Near(Low)ＦＯＶ", 10.0f, 1.0f, 60.0f)             // 'near(low) fov'
@@ -263,7 +263,7 @@ struct CameraParms : public Parameters {
  */
 struct VibrationParms : public Parameters {
 	VibrationParms()
-	    : Parameters(nullptr, "VibrationParms")
+	    : Parameters("VibrationParms")
 	    , mElevationLightVib(this, 'celv', "ELEVATION_LIGHT(vib)", 1.0f, 0.0f, 10.0f)
 	    , mElevationMiddleVib(this, 'cemv', "ELEVATION_MIDDLE(vib)", 3.0f, 0.0f, 10.0f)
 	    , mElevationHardVib(this, 'cehv', "ELEVATION_HARD(vib)", 5.0f, 0.0f, 10.0f)

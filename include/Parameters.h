@@ -17,6 +17,12 @@ struct Parameters : virtual IParameters {
 	    , mName(name)
 	{
 	}
+	
+	Parameters(char* name)
+	    : mName(name)
+		, mParmsHead(nullptr)
+	{
+	}
 	void write(Stream&);
 	void read(Stream&);
 	BaseParm* findParm(u32);
