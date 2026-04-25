@@ -51,7 +51,7 @@ struct CreatureParms {
 struct EnemyParmsBase : public CreatureParms {
 	struct Parms : public Parameters {
 		Parms()
-		    : Parameters(nullptr, "EnemyParmsBase")
+		    : Parameters("EnemyParmsBase")
 		    , mHealth(this, 'fp00', "ライフ", 100.0f, 0.0f, 99999.0f)                     // life
 		    , mLifeMeterHeight(this, 'fp27', "ライフの高さ", 50.0f, 0.0f, 1000.0f)        // height of life
 		    , mRegenerationRate(this, 'fp31', "ライフ回復率", 0.01f, 0.0f, 1.0f)          // life recovery rate
