@@ -54,6 +54,13 @@ typedef unsigned long long int	byte8_t;
 
 typedef byte1_t					byte_t;
 
+#define unk1_t char
+#define unk2_t short
+#define unk4_t int
+#define unk8_t long long
+
+#define unk_t unk4_t
+
 #define SHORT_FLOAT_MAX (32768.0f)
 #define SHORT_FLOAT_MIN (-32768.0f)
 
@@ -115,7 +122,7 @@ typedef byte1_t					byte_t;
 #define CLAMP_VALUE_ABOVE(val, limit)              ((val) > (limit)) ? (limit) : (val)
 #define MAX(a, b)                                  (((a) > (b)) ? (a) : (b))
 #define MIN(a, b)                                  (((a) < (b)) ? (a) : (b))
-#define MIN_EQ(a, b)								((a) <= (b) ? (a) : (b))
+#define MIN_EQ(a, b)							   (((a) <= (b)) ? (a) : (b))
 #define ROUND_F32_TO_U8(a)                         a >= 0.0f ? a + 0.5f : a - 0.5f
 #define INTERPOLATE_BETWEEN(src, dest, proportion) (proportion) * ((f32)(dest) - (f32)(src)) + (f32)(src)
 
