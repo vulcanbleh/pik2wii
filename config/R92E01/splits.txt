@@ -134,14 +134,14 @@ System12/system12WPMessage.cpp:
 	.sdata2     start:0x8066D6A8 end:0x8066D6B0
 
 System12/system12WPTagProcessor.cpp:
-	.text       start:0x80018DB8 end:0x8001AB7C
+	.text       start:0x80018DB8 end:0x8001ACC4
 	.ctors      start:0x80534C90 end:0x80534C94
 	.rodata     start:0x80536F40 end:0x80537030
 	.data       start:0x8055F608 end:0x8055F890
 	.sdata2     start:0x8066D6B0 end:0x8066D6D0
 
 System12/system12WPWideTextWriter.cpp:
-	.text       start:0x8001AB7C end:0x8001B598
+	.text       start:0x8001ACC4 end:0x8001B598
 	.ctors      start:0x80534C94 end:0x80534C98
 	.rodata     start:0x80537030 end:0x80537090
 	.data       start:0x8055F890 end:0x8055F8B0

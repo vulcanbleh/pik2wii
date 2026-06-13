@@ -6,6 +6,8 @@
 #include <nw4r/ut/ut_CharWriter.h>
 #include <nw4r/ut/ut_TagProcessorBase.h>
 
+#include <nw4r/db.h>
+
 #include <PowerPC_EABI_Support/MSL_C/MSL_Common/printf.h>
 
 namespace nw4r {
@@ -59,20 +61,41 @@ public:
 	void SetWidthLimit(f32 limit) { mWidthLimit = limit; }
 	void ResetWidthLimit() { mWidthLimit = NW4R_MATH_FLT_MAX; }
 
-	f32 GetCharSpace() const { return mCharSpace; }
-	void SetCharSpace(f32 space) { mCharSpace = space; }
+	f32 GetCharSpace() const
+	{
+		NW4R_ASSERT_PTR(this, 108);
+		return mCharSpace;
+	}
+	void SetCharSpace(f32 space)
+	{
+		NW4R_ASSERT_PTR(this, 98);
+		mCharSpace = space;
+	}
 
 	f32 GetLineSpace() const { return mLineSpace; }
-	void SetLineSpace(f32 space) { mLineSpace = space; }
+	void SetLineSpace(f32 space)
+	{
+		NW4R_ASSERT_PTR(this, 93);
+		mLineSpace = space;
+	}
 
 	int GetTabWidth() const { return mTabWidth; }
 	void SetTabWidth(int width) { mTabWidth = width; }
 
 	u32 GetDrawFlag() const { return mDrawFlag; }
-	void SetDrawFlag(u32 flag) { mDrawFlag = flag; }
+	void SetDrawFlag(u32 flag)
+	{
+		NW4R_ASSERT_PTR(this, 139);
+		mDrawFlag = flag;
+	}
 
 	TagProcessorBase<T>* GetTagProcessor() const { return mTagProcessor; }
-	void SetTagProcessor(TagProcessorBase<T>* pProcessor) { mTagProcessor = pProcessor; }
+	void SetTagProcessor(TagProcessorBase<T>* pProcessor)
+	{
+		NW4R_ASSERT_PTR(this, 151);
+		NW4R_ASSERT_PTR(&pProcessor, 152);
+		mTagProcessor = pProcessor;
+	}
 	void ResetTagProcessor() { mTagProcessor = &mDefaultTagProcessor; }
 
 	f32 GetLineHeight() const;
@@ -92,6 +115,7 @@ public:
 	static T* GetBuffer() { return mFormatBuffer; }
 	static T* SetBuffer(T* pBuffer, u32 size)
 	{
+		NW4R_ASSERT_PTR(pBuffer, 288);
 		T* pOldBuffer     = mFormatBuffer;
 		mFormatBuffer     = pBuffer;
 		mFormatBufferSize = size;
