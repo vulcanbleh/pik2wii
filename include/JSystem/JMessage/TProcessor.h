@@ -4,6 +4,7 @@
 #include "types.h"
 #include "JSystem/JMessage/TResource.h"
 #include "JSystem/JMessage/TReference.h"
+#include <PowerPC_EABI_Support/MSL_C++/MSL_Common/Include/algorithm.h>
 
 namespace JMessage {
 
@@ -35,20 +36,15 @@ struct TProcessor {
 
 		inline void pop() { mSize--; }
 
-		inline void operator=(const TStack& other)
+		TStack& operator=(const TStack& other)
 		{
 			mSize = other.mSize;
-
 			// pointers to copy from/to
-			const char** dst = mStack;
-			const char** src = (const char**)other.mStack;
-
-			// this is a wild way to do this but sure.
+            char** start = (char**)other.mStack;
+            char** end = (char**)(other.mStack + other.mSize);
 			// copy from src to dst until src addr hits the actual end of the struct
-			const char** endOfStruct = (const char**)&other.mStack[other.mSize];
-			for (int i = 0; src < endOfStruct; i++) {
-				*dst++ = *src++;
-			}
+            std::copy(start, end, mStack);
+            return *this;
 		}
 
 		u32 mSize;             // _00
@@ -104,8 +100,8 @@ struct TProcessor {
 	}
 	const TResource* getResource_groupID(u16) const;
 	u32 toMessageCode_messageID(u32, u32, bool*) const;
-	const char* on_message_limited(u16) const;         // weak
-	const char* on_message(u32) const;                 // weak
+	const char* on_message_limited(u16 messageIndex) const { return mResourceCache->getMessageText_messageIndex(messageIndex); }         // weak
+	const char* on_message(u32 code) const { return getMessageText_messageCode(code); }                 // weak
 	const char* getMessageText_messageCode(u32) const; // weak
 	static bool process_onCharacterEnd_normal_(TProcessor*);
 	static bool process_onCharacterEnd_select_(TProcessor*);
@@ -151,6 +147,16 @@ struct TProcessor {
 		return res->getMessageEntry_messageIndex(messageIndex);
 	}
 
+	void stack_pushCurrent_(const char* pszText) {
+        mStack.push(getCurrent());
+        mCurrent = pszText;
+    }
+
+    void stack_popCurrent_() {
+        mCurrent = mStack.getTop();
+        mStack.pop();
+    }
+
 	const TResource* getResource_groupID_uncached(u16 groupID) const { return mReference->getResource_groupID(groupID); }
 
 	bool isResourceCache_groupID(u16 groupID) const { return mResourceCache != nullptr && groupID == mResourceCache->getGroupID(); }
@@ -185,13 +191,16 @@ struct TProcessor {
 		}
 	}
 
-	// Unused/inlined:
-	void pushCurrent(const char*);
-	const char* popCurrent();
-	unknown on_select_begin(ProcessOnSelectCallBack p1, const char* p2, const void* p3, const char* p4, u32 p5);
-	unknown on_select_end();
-	unknown on_select_separate();
+	
+	void on_select_end();
+	void on_select_separate();
 	void on_tag_();
+	void on_select_begin(ProcessOnSelectCallBack p1, const void* pOffset,
+                                        const char* pcBase, u32 uNumber) DECOMP_DONT_INLINE;
+	// Unused/inlined:
+	//unknown on_select_begin(ProcessOnSelectCallBack p1, const char* p2, const void* p3, const char* p4, u32 p5);
+	void stack_pushCurrent(const char*);
+    void stack_popCurrent();
 	bool process_character_();
 
 	// _00 = VTBL
