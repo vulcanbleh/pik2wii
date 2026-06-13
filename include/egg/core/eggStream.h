@@ -67,6 +67,9 @@ public:
     bool isCRLF(char ch);
     bool isUpperSJIS(char ch);
 
+    bool isBeginGroup();
+    bool isEndGroup();
+
     void setTextMode() {
         mFlags.setBit(BIT_TEXT_MODE);
     }

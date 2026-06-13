@@ -3,6 +3,8 @@
 
 #include <nw4r/types_nw4r.h>
 
+#include <nw4r/db/db_assert.h>
+
 namespace nw4r {
 namespace ut {
 
@@ -35,7 +37,15 @@ public:
 
 	const void* GetCurrentPos() const { return mCharStrm; }
 
-	void Set(const char* pStrm) { mCharStrm = pStrm; }
+	void Set(const char* pStrm)
+	{
+		NW4R_ASSERT_PTR(this, 50);
+		NW4R_ASSERT_PTR(pStrm, 51);
+
+		NW4R_ASSERT(mReadFunc == ReadNextCharUTF8 || mReadFunc == ReadNextCharCP1252 || mReadFunc == ReadNextCharSJIS, 54);
+
+		mCharStrm = pStrm;
+	}
 	void Set(const wchar_t* pStrm) { mCharStrm = pStrm; }
 
 private:

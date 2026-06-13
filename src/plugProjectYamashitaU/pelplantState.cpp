@@ -245,7 +245,7 @@ void StateWait::exec(EnemyBase* enemy)
 	} else {
 		OBJ(enemy)->changePelletColor();
 		if (enemy->injure()) {
-			if (enemy->mHealth <= 0.0f) {
+			if (enemy->isDead()) {
 				switch (mPelSize) {
 				case PELPLANTSIZE_Full:
 					transit(enemy, PELPLANT_Dead, nullptr);
