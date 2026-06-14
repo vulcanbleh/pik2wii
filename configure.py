@@ -2409,7 +2409,7 @@ config.libs = [
     {
         "lib": "egg_gfx",
         "cflags": [*cflags_egg, "-Cpp_exceptions on"],
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "egg",
         "objects": [
             Object(
@@ -2431,7 +2431,7 @@ config.libs = [
     {
         "lib": "egg_prim",
         "cflags": [*cflags_egg, "-Cpp_exceptions on"],
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "egg",
         "objects": [
             Object(NonMatching, "egg/prim/eggAssert.cpp"),
@@ -2441,7 +2441,7 @@ config.libs = [
     {
         "lib": "egg_math",
         "cflags": [*cflags_egg, "-Cpp_exceptions on"],
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "egg",
         "objects": [
             Object(NonMatching, "egg/math/eggMath.cpp"),
@@ -2453,7 +2453,7 @@ config.libs = [
     {
         "lib": "egg_core",
         "cflags": cflags_egg,
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "egg",
         "objects": [
             Object(Matching, "egg/core/eggExpHeap.cpp"),
@@ -2474,7 +2474,7 @@ config.libs = [
     {
         "lib": "egg_util",
         "cflags": cflags_egg,
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "egg",
         "objects": [
             Object(NonMatching, "egg/util/eggSaveBanner.cpp"),
