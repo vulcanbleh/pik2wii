@@ -1,6 +1,7 @@
 #include "types.h"
 #include <egg/core/eggAllocator.h>
 #include <egg/core/eggExpHeap.h>
+#include <stl/new.h>
 
 namespace EGG {
 

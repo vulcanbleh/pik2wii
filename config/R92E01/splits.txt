@@ -183,17 +183,17 @@ System12/system12ResourceMgr.cpp:
 	.sbss       start:0x8066B958 end:0x8066B960
 
 System12/sys12DpdState.cpp:
-	.text       start:0x800249F8 end:0x80026248
+	.text       start:0x800249F8 end:0x80026314
 	.ctors      start:0x80534C9C end:0x80534CA0
 	.rodata     start:0x805380D8 end:0x80538140
-	.data       start:0x8055FEC8 end:0x8055FF78
+	.data       start:0x8055FEC8 end:0x8055FFA8
 	.sbss       start:0x8066B968 end:0x8066B970
 	.sdata2     start:0x8066D840 end:0x8066D8B8
 
 System12/eggSafeString.cpp:
-	.text       start:0x80026248 end:0x80026778
+	.text       start:0x80026314 end:0x80026778
 	.ctors      start:0x80534CA0 end:0x80534CA4
-	.data       start:0x8055FF78 end:0x805600D0
+	.data       start:0x8055FFA8 end:0x805600D0
 
 System12/PSSpkSystem.cpp:
 	.text       start:0x80026778 end:0x800270F4
@@ -964,11 +964,11 @@ JSystem/JKernel/JKRAramStream.cpp:
 
 JSystem/JKernel/JKRArchivePri.cpp:
 	.text       start:0x8007EEA0 end:0x8007FB6C
-	.data       start:0x80568918 end:0x80568968
 	.sbss       start:0x8066BC70 end:0x8066BC78
 
 JSystem/JKernel/JKRArchivePub.cpp:
 	.text       start:0x8007FB6C end:0x800805B0
+	.data       start:0x80568918 end:0x80568968
 
 JSystem/JKernel/JKRCompArchive.cpp:
 	.text       start:0x800805B0 end:0x800812F8
