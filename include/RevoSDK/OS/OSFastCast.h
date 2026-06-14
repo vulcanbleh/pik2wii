@@ -49,7 +49,7 @@ static inline void OSInitFastCast()
 #endif // clang-format on
 }
 
-static void OSSetGQR6(register u32 type, register u32 scale)
+static inline void OSSetGQR6(register u32 type, register u32 scale)
 {
 	register u32 val = ((scale << 8 | type) << 16) | ((scale << 8) | type);
 
@@ -60,7 +60,7 @@ static void OSSetGQR6(register u32 type, register u32 scale)
 #endif // clang-format on
 }
 
-static void OSSetGQR7(register u32 type, register u32 scale)
+static inline void OSSetGQR7(register u32 type, register u32 scale)
 {
 	register u32 val = ((scale << 8 | type) << 16) | ((scale << 8) | type);
 
@@ -196,7 +196,7 @@ static inline void OSu16tof32(u16* in, volatile f32* out)
 /// TODO
 
 /// s16 to f32
-static f32 __OSs16tof32(register s16* arg)
+static inline f32 __OSs16tof32(register s16* arg)
 {
 	register f32 ret;
 #ifdef __MWERKS__ // clang-format off
@@ -207,7 +207,7 @@ static f32 __OSs16tof32(register s16* arg)
 
 	return ret;
 }
-static void OSs16tof32(s16* in, volatile f32* out)
+static inline void OSs16tof32(s16* in, volatile f32* out)
 {
 	*out = __OSs16tof32(in);
 }
