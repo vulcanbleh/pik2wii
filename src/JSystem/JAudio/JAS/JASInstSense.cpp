@@ -6,6 +6,8 @@
  */
 f32 JASInstSense::getY(int p1, int p2) const
 {
+	f32 one = 1.0f;
+
 	int val = 0;
 	switch (mRegister) {
 	case 1:
@@ -20,9 +22,9 @@ f32 JASInstSense::getY(int p1, int p2) const
 	if (mKey == 127 || mKey == 0) {
 		y = mFloor + (val * (mCeiling - mFloor)) / 127.0f;
 	} else if (val < mKey) {
-		y = (1.0f - mFloor) * ((f32)val / (f32)mKey) + mFloor;
+		y = (one - mFloor) * ((f32)val / (f32)mKey) + mFloor;
 	} else {
-		y = (mCeiling - 1.0f) * ((f32)(val - mKey) / (f32)(127 - mKey)) + 1.0f;
+		y = (mCeiling - one) * ((f32)(val - mKey) / (f32)(127 - mKey)) + one;
 	}
 
 	return y;

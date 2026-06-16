@@ -63,7 +63,7 @@ struct JASSeqParser {
 	int cmdPrintf(JASTrack*, u32*);
 	int cmdSetParam(JASTrack*, u8);
 	int cmdWait(JASTrack*, u8);
-	int cmdNoteOff(JASTrack*, u8);
+	int cmdNoteOff(JASTrack*, u8) DECOMP_DONT_INLINE;
 	int cmdNoteOn(JASTrack*, u8);
 
 	bool conditionCheck(JASTrack*, u8);

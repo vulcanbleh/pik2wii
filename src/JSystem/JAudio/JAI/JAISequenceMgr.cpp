@@ -1,16 +1,16 @@
-#include "string.h"
 #include "JSystem/JAudio/JAI/JAIBasic.h"
 #include "JSystem/JAudio/JAI/JAIGlobalParameter.h"
 #include "JSystem/JAudio/JAI/JAISequence.h"
 #include "JSystem/JAudio/JAI/JAInter.h"
-#include "JSystem/JAudio/JAI/JAInter/MoveParaSet.h"
 #include "JSystem/JAudio/JAI/JAInter/BankWave.h"
 #include "JSystem/JAudio/JAI/JAInter/HeapMgr.h"
+#include "JSystem/JAudio/JAI/JAInter/MoveParaSet.h"
 #include "JSystem/JAudio/JAS/JASPortCmd.h"
 #include "JSystem/JAudio/JAS/JASResArcLoader.h"
 #include "JSystem/JKernel/JKRArchive.h"
 #include "JSystem/JKernel/JKRHeap.h"
 #include "stl/math.h"
+#include "string.h"
 #include "types.h"
 
 namespace JAInter {
@@ -108,19 +108,28 @@ void getArchiveName(char* path)
  * @note Address: 0x800B1094
  * @note Size: 0x8
  */
-void setArchivePointer(JKRArchive* archive) { arcPointer = archive; }
+void setArchivePointer(JKRArchive* archive)
+{
+	arcPointer = archive;
+}
 
 /**
  * @note Address: 0x800B109C
  * @note Size: 0x8
  */
-JKRArchive* getArchivePointer() { return arcPointer; }
+JKRArchive* getArchivePointer()
+{
+	return arcPointer;
+}
 
 /**
  * @note Address: 0x800B10A4
  * @note Size: 0x8
  */
-void setCustomHeapCallback(CustomHeapCallback callback) { customHeapCallback = callback; }
+void setCustomHeapCallback(CustomHeapCallback callback)
+{
+	customHeapCallback = callback;
+}
 
 /**
  * @note Address: 0x800B10AC
@@ -513,12 +522,11 @@ void checkPlayingSeqUpdateTrack(u32 playTrackNo, u32 trackType, JAInter::MovePar
 				if (set->move() == FALSE) {
 					*paramFlags ^= (1 << i);
 				}
-			}
-
-			if (mixPtr[i] != set->mCurrentValue) {
-				mixPtr[i] = set->mCurrentValue;
-				SystemInterface::setSeqPortargsF32(&seqTrackInfo[playTrackNo], i, portargType, set->mCurrentValue);
-				seqTrackInfo[playTrackNo]._44[i] |= (1 << (portargType - 3));
+				if (mixPtr[i] != set->mCurrentValue) {
+					mixPtr[i] = set->mCurrentValue;
+					SystemInterface::setSeqPortargsF32(&seqTrackInfo[playTrackNo], i, portargType, set->mCurrentValue);
+					seqTrackInfo[playTrackNo]._44[i] |= (1 << (portargType - 3));
+				}
 			}
 		}
 
@@ -578,8 +586,7 @@ void checkPlayingSeqTrack(u32 playTrackNo)
 			soundObj->_0C           = soundObj->mPosition;
 
 			PSMTXMultVec(*JAIBasic::getInterface()->mCameras[i].mMtx, data->mSequence->mPosition, &soundObj->mPosition);
-			soundObj->mDistance
-			    = dolsqrtfull(SQUARE(soundObj->mPosition.x) + SQUARE(soundObj->mPosition.y) + SQUARE(soundObj->mPosition.z));
+			soundObj->mDistance = sqrt(SQUARE(soundObj->mPosition.x) + SQUARE(soundObj->mPosition.y) + SQUARE(soundObj->mPosition.z));
 
 			f32 vol = data->mSequence->setDistanceVolumeCommon(JAIGlobalParameter::getParamDistanceMax(), 0);
 			data->mSequence->setVolume(u8(127.0f * vol), JAIGlobalParameter::getParamDistanceParameterMoveTime(), SOUNDPARAM_Distance);
@@ -1976,13 +1983,19 @@ lbl_800B2B5C:
  * @note Address: 0x800B2B90
  * @note Size: 0x2C
  */
-void JAISequence::setPitch(f32 value, u32 moveTime, u8 type) { setSeqInterPitch(type, value, moveTime); }
+void JAISequence::setPitch(f32 value, u32 moveTime, u8 type)
+{
+	setSeqInterPitch(type, value, moveTime);
+}
 
 /**
  * @note Address: 0x800B2BBC
  * @note Size: 0x2C
  */
-void JAISequence::setPan(f32 value, u32 moveTime, u8 type) { setSeqInterPan(type, value, moveTime); }
+void JAISequence::setPan(f32 value, u32 moveTime, u8 type)
+{
+	setSeqInterPan(type, value, moveTime);
+}
 
 /**
  * @note Address: 0x800B2BE8
@@ -2563,7 +2576,10 @@ void checkPlayingSoundTrack(u32)
  * @note Address: 0x800B3828
  * @note Size: 0x10
  */
-JAInter::SeqUpdateData* getPlayTrackInfo(u32 index) { return &seqTrackInfo[index]; }
+JAInter::SeqUpdateData* getPlayTrackInfo(u32 index)
+{
+	return &seqTrackInfo[index];
+}
 
 /**
  * @note Address: N/A

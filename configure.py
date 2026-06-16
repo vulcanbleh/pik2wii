@@ -389,7 +389,7 @@ config.libs = [
     {
         "lib": "JStudio_JAudio",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(NonMatching, "JSystem/JStudio_JAudio/object-sound.cpp"),
@@ -399,7 +399,7 @@ config.libs = [
     {
         "lib": "JAudio_JAS",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(NonMatching, "JSystem/JAudio/JAS/JASWSParser.cpp"),
@@ -410,8 +410,8 @@ config.libs = [
             Object(NonMatching, "JSystem/JAudio/JAS/JASBNKParser.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAS/JASDrumSet.cpp"),
             Object(Matching, "JSystem/JAudio/JAS/JASInstEffect.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAS/JASInstRand.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAS/JASInstSense.cpp"),
+            Object(Matching, "JSystem/JAudio/JAS/JASInstRand.cpp"),
+            Object(Matching, "JSystem/JAudio/JAS/JASInstSense.cpp"),
             Object(Matching, "JSystem/JAudio/JAS/JASSimpleWaveBank.cpp"),
             Object(Matching, "JSystem/JAudio/JAS/JASWaveArcLoader.cpp"),
             Object(Matching, "JSystem/JAudio/JAS/JASWaveBank.cpp"),
@@ -428,14 +428,14 @@ config.libs = [
             Object(NonMatching, "JSystem/JAudio/JAS/JASOscillator.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAS/JASChannel.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAS/JASDriverIF.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAS/JASDSPChannel.cpp"),
+            Object(Matching, "JSystem/JAudio/JAS/JASDSPChannel.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAS/JASDSPInterface.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAS/JASAudioThread.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAS/JASCalc.cpp"),
             Object(Matching, "JSystem/JAudio/JAS/JASCallback.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAS/JASCmdStack.cpp"),
             Object(Matching, "JSystem/JAudio/JAS/JASDvdThread.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAS/JASHeapCtrl.cpp"),
+            Object(Matching, "JSystem/JAudio/JAS/JASHeapCtrl.cpp"),
             Object(Matching, "JSystem/JAudio/JAS/JASProbe.cpp"),
             Object(Matching, "JSystem/JAudio/JAS/JASResArcLoader.cpp"),
             Object(Matching, "JSystem/JAudio/JAS/JASReport.cpp"),
@@ -456,7 +456,7 @@ config.libs = [
             "-use_lmw_stmw off",
             "-O4,s",
         ],
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(NonMatching, "JSystem/JAudio/dsp/dspproc.c"),
@@ -468,17 +468,17 @@ config.libs = [
     {
         "lib": "JAudio_JAI",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(NonMatching, "JSystem/JAudio/JAI/JAIAnimation.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAI/JAIBankWave.cpp"),
+            Object(Matching, "JSystem/JAudio/JAI/JAIBankWave.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAI/JAIBasic.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAI/JAIConst.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAI/JAIDummyObject.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAI/JAIFx.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAI/JAIGlobalParameter.cpp"),
-            Object(NonMatching, "JSystem/JAudio/JAI/JAIInitData.cpp"),
+            Object(Matching, "JSystem/JAudio/JAI/JAIFx.cpp"),
+            Object(Matching, "JSystem/JAudio/JAI/JAIGlobalParameter.cpp"),
+            Object(Matching, "JSystem/JAudio/JAI/JAIInitData.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAI/JAISeMgr.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAI/JAISequenceHeap.cpp"),
             Object(NonMatching, "JSystem/JAudio/JAI/JAISequenceMgr.cpp"),
@@ -492,7 +492,7 @@ config.libs = [
     {
         "lib": "JAudio_JAD",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [Object(Matching, "JSystem/JAudio/JAD/JADHioNode.cpp")],
     },
@@ -506,7 +506,7 @@ config.libs = [
     {
         "lib": "JAudio_JAU",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(Matching, "JSystem/JAudio/JAU/JAUData.cpp"),
@@ -516,7 +516,7 @@ config.libs = [
     {
         "lib": "JStudio_JParticle",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(NonMatching, "JSystem/JStudio_JParticle/object-particle.cpp"),
@@ -526,7 +526,7 @@ config.libs = [
     {
         "lib": "JMessage",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(Matching, "JSystem/JMessage/data.cpp"),
@@ -539,7 +539,7 @@ config.libs = [
     {
         "lib": "JStudio",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(Matching, "JSystem/JStudio/stb-data-parse.cpp"),
@@ -561,7 +561,7 @@ config.libs = [
     {
         "lib": "JStudio_JStage",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(NonMatching, "JSystem/JStudio_JStage/object-light.cpp"),
@@ -576,7 +576,7 @@ config.libs = [
     {
         "lib": "JStudio_JMessage",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(NonMatching, "JSystem/JStudio_JMessage/object-message.cpp"),
@@ -586,7 +586,7 @@ config.libs = [
     {
         "lib": "J3DU",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(Matching, "JSystem/J3DU/J3DUDL.cpp"),
@@ -598,7 +598,7 @@ config.libs = [
     {
         "lib": "JKernel",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(NonMatching, "JSystem/JKernel/JKRAram.cpp"),
@@ -630,7 +630,7 @@ config.libs = [
     {
         "lib": "aralt",
         "cflags": cflags_aralt,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
         "objects": [
             Object(Matching, "RevoSDK/aralt/aralt.c"),
@@ -639,7 +639,7 @@ config.libs = [
     {
         "lib": "JSupport",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(NonMatching, "JSystem/JSupport/JSUOutputStream.cpp"),
@@ -652,7 +652,7 @@ config.libs = [
     {
         "lib": "JGadget",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(Matching, "JSystem/JGadget/binary.cpp"),
@@ -664,7 +664,7 @@ config.libs = [
     {
         "lib": "JUtility",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(Matching, "JSystem/JUtility/JUTAssert.cpp"),
@@ -692,7 +692,7 @@ config.libs = [
     {
         "lib": "JMath",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(Matching, "JSystem/JMath/JMath.cpp"),
@@ -703,7 +703,7 @@ config.libs = [
     {
         "lib": "J2D",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(NonMatching, "JSystem/J2D/J2DOrthoGraph.cpp"),
@@ -731,7 +731,7 @@ config.libs = [
     {
         "lib": "J3D",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(NonMatching, "JSystem/J3D/J3DSys.cpp"),
@@ -772,7 +772,7 @@ config.libs = [
     {
         "lib": "JFramework",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(NonMatching, "JSystem/JFramework/JFWSystem.cpp"),
@@ -782,7 +782,7 @@ config.libs = [
     {
         "lib": "JParticle",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(NonMatching, "JSystem/JParticle/JPABaseShape.cpp"),
@@ -805,7 +805,7 @@ config.libs = [
     {
         "lib": "JStage",
         "cflags": cflags_pikmin,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "jsystem",
         "objects": [
             Object(Matching, "JSystem/JStage/JSGSystem.cpp"),

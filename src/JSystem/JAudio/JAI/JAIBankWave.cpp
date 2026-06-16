@@ -6,13 +6,13 @@
 #include "types.h"
 #include "JSystem/JAudio/JAI/JAInter/BankWave.h"
 
+JAInter::BankWave::Flags JAInter::BankWave::flags                     = { 0 };
 JAInter::BankWave::TCodeBnk* JAInter::BankWave::initOnCodeBnk;
 JAInter::BankWave::TCodeWS* JAInter::BankWave::initOnCodeWs;
 s32* JAInter::BankWave::wsGroupNumber;
 s32* JAInter::BankWave::wsLoadStatus;
 int JAInter::BankWave::wsMax;
 
-JAInter::BankWave::Flags JAInter::BankWave::flags                     = { 0 };
 int JAInter::BankWave::SceneSetFlag                                   = -1;
 JAInter::BankWave::InitCallback JAInter::BankWave::initCallback       = init;
 JAInter::BankWave::LoadCallback JAInter::BankWave::firstLoadCallback  = loadFirstStayWave;

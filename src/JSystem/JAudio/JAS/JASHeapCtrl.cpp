@@ -158,7 +158,7 @@ void* JASHeap::allocAll(JASHeap*)
 	// UNUSED FUNCTION
 }
 
-#pragma dont_inline on
+
 /**
  * @note Address: 0x800A6DC8
  * @note Size: 0x124
@@ -196,7 +196,7 @@ bool JASHeap::free()
 	}
 	return true;
 }
-#pragma dont_inline reset
+
 
 /**
  * @note Address: N/A

@@ -168,7 +168,7 @@ void checkNextFrameSe()
 					PSMTXMultVec(*JAIBasic::getInterface()->mCameras[camID].mMtx, sound->mPosition, &soundObj->mPosition);
 
 					soundObj->mDistance
-					    = dolsqrtfull(SQUARE(soundObj->mPosition.x) + SQUARE(soundObj->mPosition.y) + SQUARE(soundObj->mPosition.z));
+					    = sqrt(SQUARE(soundObj->mPosition.x) + SQUARE(soundObj->mPosition.y) + SQUARE(soundObj->mPosition.z));
 				}
 
 				s16 prio = sound->getInfoPriority();
