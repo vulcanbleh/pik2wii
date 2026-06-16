@@ -262,7 +262,7 @@ f32 JASOscillator::calc(const s16* envelopes)
 
 			f32 fIdx;
 
-			if (val31 < 0.0f) {
+			if (mPhaseChangeRate < 0.0f) {
 				fIdx = 16.0f * (1.0f - (mReleaseRate / mInitialReleaseRate));
 			} else {
 				fIdx = 16.0f * (mReleaseRate / mInitialReleaseRate);

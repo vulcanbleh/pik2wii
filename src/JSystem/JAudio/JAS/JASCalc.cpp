@@ -24,6 +24,7 @@ void imixcopy(const s16* s1, const s16* s2, s16* dst, u32 n)
 	}
 }
 
+#pragma dont_inline on
 /**
  * @note Address: N/A
  * @note Size: 0xE0
@@ -47,7 +48,7 @@ void bcopyfast(const void* src, void* dest, u32 size)
 		*udest++ = copy4;
 	}
 }
-
+#pragma dont_inline reset
 /**
  * @note Address: 0x800A5F90
  * @note Size: 0x2D4

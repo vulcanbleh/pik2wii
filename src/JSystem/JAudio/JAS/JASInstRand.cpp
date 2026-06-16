@@ -10,8 +10,8 @@
 f32 JASInstRand::getY(int, int) const
 {
 	static JMath::TRandom_fast_ oRandom(0);
-	f32 y = (FLT_EPSILON); // has to be declared here to prevent regswaps
-	y     = calcY(1.0f - y, oRandom.nextFloat_0_1() * 2.0f, 1.0f);
+	f32 y     = calcY(0.9999999f, oRandom.nextFloat_0_1() * 2.0f, 1.0f);
+	
 	y *= mCeiling;
 	y += mFloor;
 

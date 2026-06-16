@@ -372,7 +372,7 @@ void JAIBasic::startSoundBasic(u32 id, JAISound** handlePtr, JAInter::Actor* act
  */
 void JAIBasic::startSoundBasic(u32 id, JAISequence** handlePtr, JAInter::Actor* actor, u32 fadeTime, u8 camId, JAInter::SoundInfo* info)
 {
-	if (mFlags._01 != true && (!JAInter::SeMgr::seHandle || (JAInter::SeMgr::seHandle->mSoundID & 0x3FF) != (id & 0x3FF))) {
+	if (mFlags._01 != 1 && (!JAInter::SeMgr::seHandle || (JAInter::SeMgr::seHandle->mSoundID & 0x3FF) != (id & 0x3FF))) {
 		if (!handlePtr) {
 			handlePtr = &JAInter::SequenceMgr::FixSeqBufPointer[info->_05];
 		}

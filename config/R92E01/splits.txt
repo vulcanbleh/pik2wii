@@ -579,7 +579,7 @@ JSystem/JAudio/JAS/JASDSPInterface.cpp:
 	.text       start:0x80056034 end:0x800567C0
 	.rodata     start:0x80538FE0 end:0x80539538
 	.data       start:0x80564EB0 end:0x80564EC8
-	.sdata      start:0x8066A898 end:0x8066A8A8
+	.sdata      start:0x8066A890 end:0x8066A8A8
 	.sbss       start:0x8066BA08 end:0x8066BA14
 
 JSystem/JAudio/JAS/JASAudioThread.cpp:
