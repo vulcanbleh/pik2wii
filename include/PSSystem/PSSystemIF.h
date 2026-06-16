@@ -182,23 +182,23 @@ struct SysIF : public JAIBasic {
 
 template <typename T>
 struct ArcMgr : public JKRDisposer {
-	ArcMgr()
+	ArcMgr(const char* name)
 	{
 		mArchive = nullptr;
-		mArchive = JKRMountArchive("/AudioRes/Key.arc", JKRArchive::EMM_Mem, JKRGetCurrentHeap(), JKRArchive::EMD_Head);
-		P2ASSERTLINE(92, mArchive);
+		mArchive = JKRMountArchive(name, JKRArchive::EMM_Mem, JKRGetCurrentHeap(), JKRArchive::EMD_Head);
+		P2ASSERTLINE(100, mArchive);
 	}
 
-	static void createInstance()
+	static void createInstance(const char* name)
 	{
-		P2ASSERTLINE(71, !sInstance);
-		sInstance = new ArcMgr<T>;
-		P2ASSERTLINE(74, sInstance);
+		P2ASSERTLINE(79, !sInstance);
+		sInstance = new ArcMgr<T>(name);
+		P2ASSERTLINE(82, sInstance);
 	}
 
 	virtual ~ArcMgr() // _08
 	{
-		P2ASSERTLINE(77, false); // lol
+		P2ASSERTLINE(85, false); // lol
 	}
 
 	static ArcMgr* sInstance;

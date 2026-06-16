@@ -2233,9 +2233,14 @@ void JAISound::onRelease() { }
  * @note Address: N/A
  * @note Size: 0x1C
  */
-void JAInter::LinkSound::getFreeStartFirstObject()
+JAISound* JAInter::LinkSound::getFreeStartFirstObject()
 {
-	// UNUSED FUNCTION
+	JSULink<JAISound>* link = mUsedList->getFirst();
+	JAISound* sound         = nullptr;
+	if (link) {
+		sound = link->getObject();
+	}
+	return sound;
 }
 
 /**

@@ -82,7 +82,7 @@ struct LinkSound {
 	void releaseSound(JAISound*);
 
 	// unused/inlined:
-	void getFreeStartFirstObject();
+	JAISound* getFreeStartFirstObject();
 	void getUsedEndFirstObject();
 
 	JSUList<JAISound>* mFreeList; // _00

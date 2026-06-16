@@ -93,7 +93,7 @@ void DirectorBase::exec()
  * @note Address: 0x803432C8
  * @note Size: 0x74
  */
-void DirectorBase::playInit(JASTrack* track)
+inline void DirectorBase::playInit(JASTrack* track)
 {
 	onPlayInit(track);
 	OSLockMutex(&mMutex1);
@@ -295,7 +295,7 @@ void DirectorMgrBase::initAndAdaptToBgm(DirectedBgm& bgm)
 void DirectorMgrBase::playInit(JASTrack* track)
 {
 	for (u8 i = 0; i < mDirectorCount; i++) {
-		for (u8 j = 0; j < mDirectors[i]->getTrackCount(); j++) {
+		for (u8 j = 0; j < mDirectors[i]->mTrackNum; j++) {
 			DirectorBase* director = mDirectors[i];
 			director->checkTrackNum(j);
 			if (director->mTracks[j]->getTaskEntryList()->mTrack == track) {

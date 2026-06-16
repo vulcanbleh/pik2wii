@@ -159,7 +159,7 @@ void EnvSeMgr::on()
 void EnvSeMgr::on(u32 soundID, bool p2)
 {
 	for (JSULink<EnvSeBase>* link = mEnvList.getFirst(); link; link = link->getNext()) {
-		if ((soundID == link->getObject()->getSoundID() && (u8)p2 == true) || (soundID != link->getObject()->getSoundID() && p2 == false)) {
+		if ((soundID == link->getObject()->getSoundID() && p2 == true) || (soundID != link->getObject()->getSoundID() && p2 == false)) {
 			link->getObject()->mIsOn = true;
 		}
 	}
@@ -183,7 +183,7 @@ void EnvSeMgr::off()
 void EnvSeMgr::off(u32 soundID, bool p2)
 {
 	for (JSULink<EnvSeBase>* link = mEnvList.getFirst(); link; link = link->getNext()) {
-		if ((soundID == link->getObject()->getSoundID() && (u8)p2 == true) || (soundID != link->getObject()->getSoundID() && p2 == false)) {
+		if ((soundID == link->getObject()->getSoundID() && p2 == true) || (soundID != link->getObject()->getSoundID() && p2 == false)) {
 			link->getObject()->mIsOn = false;
 		}
 	}
@@ -282,7 +282,7 @@ void ClusterSe::Part::identify(PartInitArg initArg)
 	mInitArg = initArg;
 }
 
-void ClusterSe::Part::play(u8 count, JAInter::Object* obj)
+inline void ClusterSe::Part::play(u8 count, JAInter::Object* obj)
 {
 	if (count > mInitArg.mMaxEnemyCount) {
 		return;

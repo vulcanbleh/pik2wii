@@ -57,12 +57,12 @@ struct DirectedBgm : public BgmSeq {
 	inline void assertValidTrack()
 	{
 		bool check = mIsInitialized == 1 && mRootTrack;
-		P2ASSERTLINE(415, check);
+		P2ASSERTLINE(418, check);
 	}
 
 	inline SeqTrackChild* getChildTrack(int i)
 	{
-		P2ASSERTLINE(419, i < 16);
+		P2ASSERTLINE(422, i < 16);
 		return mChildTracks[i];
 	}
 
