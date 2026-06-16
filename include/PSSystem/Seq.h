@@ -37,7 +37,7 @@ struct SeqBase : public JSULink<SeqBase> {
 	// need to work out what these are
 	enum PauseMode { MODE0 = 0, MODE1 = 1, MODE2 = 2, MODE3 = 3, MODE4 = 4 };
 
-	SeqBase(const char* bmsFileName, const JAInter::SoundInfo& info);
+	SeqBase(const char* bmsFileName, const JAInter::SoundInfo& info) DECOMP_DONT_INLINE;
 
 	virtual ~SeqBase();                  // _08
 	virtual void init();                 // _0C

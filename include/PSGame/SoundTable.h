@@ -39,6 +39,7 @@ struct CategoryMgr : PSSystem::SingletonBase<CategoryMgr> {
 		SoundCat3_Item,
 		SoundCat4_Env,
 		SoundCat5_Enemy,
+		SoundCat6_WiiSystemSe,
 		SoundCat_COUNT,
 	};
 

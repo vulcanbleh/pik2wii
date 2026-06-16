@@ -11,7 +11,7 @@ namespace PSAutoBgm {
 bool MeloArr_RandomAvoid::avoidChk(MeloArrArg& meloArg)
 {
 	f32 randDec = JALCalc::getRandom_0_1();
-	u8 out      = (randDec < mChance);
+	bool out      = (randDec < mChance);
 	return out;
 }
 
@@ -19,7 +19,7 @@ bool MeloArr_RandomAvoid::avoidChk(MeloArrArg& meloArg)
  * @note Address: N/A
  * @note Size: 0x78
  */
-inline void MeloArrArg::assertCheck() const
+void MeloArrArg::assertCheck() const
 {
 	P2ASSERTLINE(89, mTrackIndex < 16);
 	P2ASSERTLINE(90, mCycleNum != 0xFF);

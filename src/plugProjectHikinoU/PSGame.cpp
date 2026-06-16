@@ -1,22 +1,22 @@
-#include "PSGame/BASARC.h"
-#include "PSSystem/PSSystemIF.h"
+#include "PSSystem/PSGame.h"
+#include "Game/gamePlayData.h"
+#include "JSystem/JAudio/JAI/JAInter/SeMgr.h"
+#include "JSystem/JAudio/JALCalc.h"
 #include "PSAutoBgm/PSAutoBgm.h"
+#include "PSGame/BASARC.h"
 #include "PSGame/CameraMgr.h"
 #include "PSGame/EnvSe.h"
+#include "PSGame/Global.h"
+#include "PSGame/PSSe.h"
 #include "PSGame/PikScene.h"
-#include "PSGame/SoundCreatureMgr.h"
 #include "PSGame/SceneInfo.h"
+#include "PSGame/SeMgr.h"
+#include "PSGame/SoundCreatureMgr.h"
 #include "PSGame/SoundTable.h"
 #include "PSGame/SysFactory.h"
 #include "PSM/BossSeq.h"
 #include "PSSystem/ConductorList.h"
-#include "PSGame/SeMgr.h"
-#include "PSGame/Global.h"
-#include "PSSystem/PSGame.h"
-#include "JSystem/JAudio/JALCalc.h"
-#include "JSystem/JAudio/JAI/JAInter/SeMgr.h"
-#include "Game/gamePlayData.h"
-#include "PSGame/PSSe.h"
+#include "PSSystem/PSSystemIF.h"
 
 bool PSGame::ConductorList::sToolMode;
 PSGame::ConductorList* PSSystem::SingletonBase<PSGame::ConductorList>::sInstance;
@@ -254,8 +254,11 @@ void SoundTable::CategoryMgr::initiate(u8 id)
 	case SoundCat5_Enemy:
 		mPerspInfo[id]->set(1.0f, 700.0f, 0.18f, 2600.0f, 200.0f);
 		break;
+	case SoundCat6_WiiSystemSe:
+		mPerspInfo[id]->set(1.0f, 700.0f, 0.18f, 2600.0f, 200.0f);
+		break;
 	default:
-		P2ASSERTLINE(341, false);
+		P2ASSERTLINE(345, false);
 	}
 }
 
@@ -303,7 +306,7 @@ f32 SoundTable::SePerspInfo::getDistVol(f32 factor, u8 flag)
 			mult = mForcedDistance;
 			break;
 		default:
-			JUT_PANICLINE(403, "P2Assert");
+			JUT_PANICLINE(407, "P2Assert");
 		}
 
 		if (factor < JAIGlobalParameter::getParamMaxVolumeDistance()) {
@@ -369,8 +372,7 @@ f32 CameraMgr::getBgmCamVol(u8 id)
  */
 void CameraMgr::update(u8 id, f32 distance)
 {
-	f32 volume            = getVol_DistBetweenCamAndLookat(distance);
-	mCamDistVolume[id]    = volume;
+	mCamDistVolume[id]    = getVol_DistBetweenCamAndLookat(distance);
 	mDistVolumeFactor[id] = 1.0f;
 }
 
@@ -418,36 +420,36 @@ SysFactory::SysFactory()
  */
 void SysFactory::newSoundSystem()
 {
-	P2ASSERTLINE(715, mHeap);
-	P2ASSERTLINE(716, mHeapSize);
-	P2ASSERTLINE(717, mAafFile);
+	P2ASSERTLINE(719, mHeap);
+	P2ASSERTLINE(720, mHeapSize);
+	P2ASSERTLINE(721, mAafFile);
 	preInitJAI();
 
 	JKRHeap* backupheap = JKRGetCurrentHeap();
 	mHeap->becomeCurrentHeap();
 
 	JKRSolidHeap* newheap = makeSolidHeap(mHeap->getFreeSize(), mHeap, false);
-	P2ASSERTLINE(741, newheap);
+	P2ASSERTLINE(745, newheap);
 	newheap->becomeCurrentHeap();
 	PSSystem::SingletonBase<SoundTable::CategoryMgr>::newInstance();
-	P2ASSERTLINE(748, mSolidHeapSize < newheap->getFreeSize());
+	P2ASSERTLINE(752, mSolidHeapSize < newheap->getFreeSize());
 
 	mSolidHeap = makeSolidHeap(mSolidHeapSize, newheap, false);
-	P2ASSERTLINE(754, mSolidHeap);
+	P2ASSERTLINE(758, mSolidHeap);
 
-	PSSystem::SetupArg arg = { mSolidHeap, mHeapSize, 231, seqCpuSync, mAafFile, "/SeqTest/" };
-	P2ASSERTLINE(769, !PSSystem::spSysIF);
+	PSSystem::SetupArg arg = { mSolidHeap, mHeapSize, 231, seqCpuSync, mAafFile, "SeqTest/" };
+	P2ASSERTLINE(773, !PSSystem::spSysIF);
 	PSSystem::SysIF::sMakeJAISeCallback = mMakeSeFunc;
 	PSSystem::SysIF* sysif              = new PSSystem::SysIF(arg);
-	P2ASSERTLINE(773, sysif);
+	P2ASSERTLINE(777, sysif);
 
 	PSSystem::spSceneMgr = (PSSystem::SceneMgr*)newSceneMgr();
-	P2ASSERTLINE(776, PSSystem::spSceneMgr);
+	P2ASSERTLINE(780, PSSystem::spSceneMgr);
 
 	postInitJAI();
 
-	PSAutoBgm::ConductorArcMgr::createInstance();
-	PSSystem::ArcMgr<BASARC>::createInstance();
+	PSAutoBgm::ConductorArcMgr::createInstance("AudioRes/Conductor.arc");
+	PSSystem::ArcMgr<BASARC>::createInstance("AudioRes/Key.arc");
 
 	PSSystem::SingletonBase<SeMgr>::newInstance();
 
@@ -490,9 +492,7 @@ void SysFactory::postInitJAI()
 	for (u8 i = 0; i < (u8)JAIGlobalParameter::getParamSeCategoryMax(); i++) {
 		if (JAInter::SoundTable::getSoundMax(i)) {
 			f32 calc = getSoundCategoryInfo(PSSystem::SingletonBase<PSGame::SoundTable::CategoryMgr>::sInstance, i)->_0C;
-			if (max < calc) {
-				max = calc;
-			}
+			max      = max < calc ? calc : max;
 			JAInter::SeMgr::seCategoryVolume[i]
 			    = getSoundCategoryInfo(PSSystem::SingletonBase<PSGame::SoundTable::CategoryMgr>::sInstance, i)->mDefaultDistance;
 		}
@@ -530,7 +530,7 @@ void SceneInfo::setStageFlag(SceneInfo::FlagDef flag, SceneInfo::FlagBitShift sh
 	} else if (flag == 1) {
 		mStageFlags |= (1 << shift);
 	} else {
-		JUT_PANICLINE(906, "flagは0 or1です");
+		JUT_PANICLINE(910, "flagは0 or1です");
 	}
 }
 
@@ -584,7 +584,8 @@ PSM::MiddleBossSeq* PikScene::getMiddleBossBgm()
 	}
 
 	name = seq->mBmsFileName;
-	if ((!strcmp(name, "m_boss.bms") || !strcmp(name, "l_boss.bms")) && seq->getCastType() == PSSystem::SeqBase::TYPE_JumpBgmSeq) {
+	if (((strcmp(name, "m_boss.bms") ? false : true) || (strcmp(name, "l_boss.bms") ? false : true))
+	    && seq->getCastType() == PSSystem::SeqBase::TYPE_JumpBgmSeq) {
 		return seq;
 	}
 	return nullptr;
@@ -605,34 +606,34 @@ void PikScene::getJumpMainBgm()
  */
 PSSystem::Scene* PikSceneMgr::newAndSetGlobalScene()
 {
-	JUT_ASSERTLINE(1002, !mScenes, "2重にグローバルシーンを作成しようとした"); // 'I tried to create a global scene twice'
+	JUT_ASSERTLINE(1006, !mScenes, "2重にグローバルシーンを作成しようとした"); // 'I tried to create a global scene twice'
 	SceneInfo info;
 	info.mSceneType = SceneInfo::SCENE_NULL;
 	info.mCameras   = 0;
 	info.setStageFlag(SceneInfo::SCENEFLAG_Unk0, SceneInfo::SFBS_1);
 
 	mScenes = newGameScene(0, &info);
-	P2ASSERTLINE(1015, mScenes);
+	P2ASSERTLINE(1019, mScenes);
 	mScenes->adaptTo(&mScenes);
 	mEndScene = mScenes;
 
 	PSSystem::SingletonBase<PSSystem::StreamDataList>::newInstance();
-	P2ASSERTLINE(1024, PSSystem::SingletonBase<PSSystem::StreamDataList>::getInstance()->onlyLoad("/user/Totaka/StreamList.txt",
+	P2ASSERTLINE(1028, PSSystem::SingletonBase<PSSystem::StreamDataList>::getInstance()->onlyLoad("user/Totaka/StreamList.txt",
 	                                                                                              JKRDvdRipper::ALLOC_DIR_TOP));
 	PSSystem::SingletonBase<PSSystem::SeqDataList>::newInstance();
-	P2ASSERTLINE(1028, PSSystem::SingletonBase<PSSystem::SeqDataList>::getInstance()->onlyLoad("/user/Totaka/BgmList.txt",
+	P2ASSERTLINE(1032, PSSystem::SingletonBase<PSSystem::SeqDataList>::getInstance()->onlyLoad("user/Totaka/BgmList.txt",
 	                                                                                           JKRDvdRipper::ALLOC_DIR_TOP));
 
 	JAInter::SoundInfo seInfo = { 0x00001F00, 255, 0, 0, 1.0f, 127, 0 };
-	P2ASSERTLINE(1040, seInfo.mVolume <= 127);
+	P2ASSERTLINE(1044, seInfo.mVolume <= 127);
 	PSSystem::SeSeq* seSeq = new PSSystem::SeSeq("se.bms", seInfo);
-	P2ASSERTLINE(1043, seSeq);
+	P2ASSERTLINE(1047, seSeq);
 	seSeq->init();
 	mScenes->appendSeq(seSeq);
 
 	JAInter::SoundInfo bgmInfo = { 0x00000000, 0x7F, 1, 0, 1.0f, 50, 0 };
-	PSSystem::BgmSeq* bgmSeq   = newStreamBgm(P2_STREAM_SOUND_ID(PSSTR_OPTION), bgmInfo);
-	P2ASSERTLINE(1061, bgmSeq);
+	PSSystem::BgmSeq* bgmSeq   = newStreamBgm(P2_STREAM_SOUND_ID(PSSTR_PIKMIN_GREET), bgmInfo);
+	P2ASSERTLINE(1071, bgmSeq);
 	bgmSeq->init();
 	mScenes->appendSeq(bgmSeq);
 	return mScenes;
@@ -645,27 +646,28 @@ PSSystem::Scene* PikSceneMgr::newAndSetGlobalScene()
 PSSystem::Scene* PikSceneMgr::newAndSetCurrentScene(SceneInfo& info)
 {
 	u8 sceneType = info.getSceneType();
-	P2ASSERTLINE(1093, sceneType != SceneInfo::SCENE_NULL);
-	JUT_ASSERTLINE(1094, sceneType < SceneInfo::SCENE_COUNT, "scene noが不正"); // 'scene no is invalid'
+	P2ASSERTLINE(1110, sceneType != SceneInfo::SCENE_NULL);
+	JUT_ASSERTLINE(1111, sceneType < SceneInfo::SCENE_COUNT, "scene noが不正"); // 'scene no is invalid'
 
 	checkScene();
 
-	JUT_ASSERTLINE(1095, !mScenes->mChild, "前回のmCurrentSceneの後処理が不正"); // 'previous mCurrentScene post-processing is invalid
+	JUT_ASSERTLINE(1112, !mScenes->mChild, "前回のmCurrentSceneの後処理が不正"); // 'previous mCurrentScene post-processing is invalid
 
 	info.setStageCamera();
 
-	P2ASSERTLINE(1105, mScenes);
-	P2ASSERTLINE(1106, !mScenes->mChild);
+	P2ASSERTLINE(1122, mScenes);
+	P2ASSERTLINE(1123, !mScenes->mChild);
 
 	u8 wScene                      = 255;
 	PSAutoBgm::ConductorMgr::sHeap = JKRGetCurrentHeap();
 	PSSystem::BgmSeq* seq          = initMainBgm(info, &wScene);
-	P2ASSERTLINE(1132, seq);
+	P2ASSERTLINE(1149, seq);
 
 	bool needboss              = false;
 	PSSystem::SeqBase* bossSeq = nullptr;
 	if ((u8)info.mSceneType == SceneInfo::CHALLENGE_MODE || (u8)info.mSceneType == SceneInfo::TWO_PLAYER_BATTLE
-	    || u8(info.mSceneType - 1) <= 3 || info.isCaveFloor()) {
+	    || (u8)info.mSceneType == SceneInfo::COURSE_TUTORIAL || (u8)info.mSceneType == SceneInfo::COURSE_FOREST
+	    || (u8)info.mSceneType == SceneInfo::COURSE_YAKUSHIMA || (u8)info.mSceneType == SceneInfo::COURSE_LAST || info.isCaveFloor()) {
 		needboss = true;
 	}
 
@@ -678,7 +680,7 @@ PSSystem::Scene* PikSceneMgr::newAndSetCurrentScene(SceneInfo& info)
 
 	if (needboss) {
 		bossSeq = initBossBgm(info, &wScene);
-		P2ASSERTLINE(1163, bossSeq);
+		P2ASSERTLINE(1180, bossSeq);
 	}
 
 	SceneInfo* newinfo;
@@ -689,16 +691,16 @@ PSSystem::Scene* PikSceneMgr::newAndSetCurrentScene(SceneInfo& info)
 	}
 
 	PSSystem::Scene* newscene = newGameScene(wScene, newinfo);
-	P2ASSERTLINE(1185, seq);
+	P2ASSERTLINE(1202, seq);
 	newscene->appendSeq(seq);
 
 	if (needboss) {
-		P2ASSERTLINE(1191, bossSeq);
+		P2ASSERTLINE(1208, bossSeq);
 		newscene->appendSeq(bossSeq);
 	}
 
 	initAdditionalBgm(info, newscene);
-	P2ASSERTLINE(1214, newscene);
+	P2ASSERTLINE(1231, newscene);
 	mScenes->adaptChildScene(newscene);
 	return newscene;
 }
@@ -710,7 +712,7 @@ PSSystem::Scene* PikSceneMgr::newAndSetCurrentScene(SceneInfo& info)
 PSSystem::BgmSeq* PikSceneMgr::newBgmSeq(char const* bmsFilePath, JAInter::SoundInfo& info)
 {
 	PSSystem::BgmSeq* seq = new PSSystem::BgmSeq(bmsFilePath, info);
-	P2ASSERTLINE(1223, seq);
+	P2ASSERTLINE(1240, seq);
 	seq->init();
 	return seq;
 }
@@ -723,7 +725,7 @@ PSSystem::BgmSeq* PikSceneMgr::newStreamBgm(u32 id, JAInter::SoundInfo& info)
 {
 	info.mFlag            = 0;
 	PSSystem::BgmSeq* seq = new PSSystem::StreamBgm(id, info);
-	P2ASSERTLINE(1234, seq);
+	P2ASSERTLINE(1251, seq);
 	return seq;
 }
 
@@ -744,12 +746,12 @@ PSSystem::BgmSeq* PikSceneMgr::initBossBgm(SceneInfo& info, u8* wScene)
 		seq = (PSSystem::DirectedBgm*)newDirectedBgm("m_boss.bms", soundInfo);
 	}
 
-	P2ASSERTLINE(1264, seq);
+	P2ASSERTLINE(1281, seq);
 
 	seq->assertValidTrack();
 
 	seq->mRootTrack->mBeatInterval = 60;
-	P2ASSERTLINE(1267, soundInfo.mVolume <= 127);
+	P2ASSERTLINE(1284, soundInfo.mVolume <= 127);
 	return seq;
 }
 
@@ -765,21 +767,21 @@ void PikSceneMgr::initAdditionalBgm(SceneInfo& info, PSSystem::Scene* scene)
 	switch (info.mSceneType) {
 	case SceneInfo::TITLE_SCREEN:
 		seq = newStreamBgm(P2_STREAM_SOUND_ID(PSSTR_OPTION), soundInfo);
-		P2ASSERTLINE(1290, seq);
+		P2ASSERTLINE(1307, seq);
 		scene->appendSeq(seq);
 
 		seq = newBgmSeq("hiscore.bms", soundInfo);
-		P2ASSERTLINE(1296, seq);
+		P2ASSERTLINE(1313, seq);
 		scene->appendSeq(seq);
 
 		seq = newStreamBgm(P2_STREAM_SOUND_ID(PSSTR_OMAKE), soundInfo);
-		P2ASSERTLINE(1302, seq);
+		P2ASSERTLINE(1319, seq);
 		scene->appendSeq(seq);
 		break;
 
 	case SceneInfo::COURSE_TUTORIALDAY1:
 		seq = newBgmSeq("n_tutorial_1stday.bms", soundInfo);
-		P2ASSERTLINE(1318, seq);
+		P2ASSERTLINE(1335, seq);
 		scene->appendSeq(seq);
 		break;
 
@@ -792,7 +794,7 @@ void PikSceneMgr::initAdditionalBgm(SceneInfo& info, PSSystem::Scene* scene)
 		seq                           = newAutoBgm("cavekeyget.cnd", "cavekeyget.bms", soundInfo, flag, info, seqold->mDirectorMgr);
 		scene->appendSeq(seq);
 		scene->setSecondaryWaveScene(PSSystem::WaveScene::WSCENE5_Challenge_KeyGet);
-		P2ASSERTLINE(1342, seq == scene->mSeqMgr.getSeq(2));
+		P2ASSERTLINE(1359, seq == scene->mSeqMgr.getSeq(2));
 		break;
 	}
 
@@ -800,7 +802,7 @@ void PikSceneMgr::initAdditionalBgm(SceneInfo& info, PSSystem::Scene* scene)
 	if (info.isCaveFloor() && info.mSceneType == SceneInfo::COURSE_YAKUSHIMA) {
 		if (static_cast<CaveFloorInfo&>(info).getCaveNoFromID() == 3 && !static_cast<CaveFloorInfo&>(info).isBossFloor()) {
 			seq = newBgmSeq("kuro_post.bms", soundInfo);
-			P2ASSERTLINE(1353, seq);
+			P2ASSERTLINE(1370, seq);
 			scene->appendSeq(seq);
 		}
 	}
@@ -812,7 +814,7 @@ void PikSceneMgr::initAdditionalBgm(SceneInfo& info, PSSystem::Scene* scene)
  */
 PSSystem::BgmSeq* PikSceneMgr::initMainBgm(SceneInfo& info, u8* wScene)
 {
-	P2ASSERTLINE(1378, wScene);
+	P2ASSERTLINE(1395, wScene);
 	JADUtility::AccessMode mode = (JADUtility::AccessMode)mAccessMode;
 	PSSystem::BgmSeq* bgm       = nullptr;
 
@@ -820,18 +822,18 @@ PSSystem::BgmSeq* PikSceneMgr::initMainBgm(SceneInfo& info, u8* wScene)
 	soundInfo._05                = 1;
 
 	CaveFloorInfo& cinfo = static_cast<CaveFloorInfo&>(info);
-	P2ASSERTLINE(1393, soundInfo._05 < 5);
+	P2ASSERTLINE(1410, soundInfo._05 < 5);
 
 	if (info.isCaveFloor()) {
 		// we're in a 'cave' (story mode cave, 2P battle, vs or challenge mode)
 		switch (info.mSceneType) {
 		case SceneInfo::CHALLENGE_MODE:
-			const char* path = "/user/Totaka/ChallengeBgmList.txt";
+			const char* path = "user/Totaka/ChallengeBgmList.txt";
 			PSSystem::SingletonBase<ConductorList>::newHeapInstance();
 
 			ConductorList* list = PSSystem::SingletonBase<ConductorList>::getInstance();
 			bool loaded         = list->load(path, JKRDvdRipper::ALLOC_DIR_BOTTOM);
-			P2ASSERTLINE(1417, loaded);
+			P2ASSERTLINE(1434, loaded);
 			char* name = list->getInfo(cinfo.mChallengeModeStageNum, cinfo.mFloorNum);
 			// getInfo might be returning some sort of wacky struct, with all the stack stuff
 			u8 wScene2;
@@ -866,38 +868,38 @@ PSSystem::BgmSeq* PikSceneMgr::initMainBgm(SceneInfo& info, u8* wScene)
 		if (info.isCaveFloor() && info.mSceneType == SceneInfo::COURSE_YAKUSHIMA) {
 			if (cinfo.getCaveNoFromID() == 3 && !cinfo.isBossFloor()) { // cave is submerged castle + not sublevel 5
 				bgm = newBgmSeq("kuro_pre.bms", soundInfo);             // cue spooky music
-				P2ASSERTLINE(1566, bgm);
+				P2ASSERTLINE(1583, bgm);
 				*wScene = PSSystem::WaveScene::WSCENE48_SubmergedCastle;
 			}
 		}
 
 		// story mode cave bgm settings
 		if (!bgm) {
-			P2ASSERTLINE(1574, !cinfo.mBetaType);
+			P2ASSERTLINE(1591, !cinfo.mBetaType);
 			char* txtpath = nullptr;
 			switch (info.mSceneType) {
 			case SceneInfo::COURSE_TUTORIAL:
 			case SceneInfo::COURSE_TUTORIALDAY1:
-				txtpath = "/user/Totaka/BgmList_Tutorial.txt";
+				txtpath = "user/Totaka/BgmList_Tutorial.txt";
 				break;
 			case SceneInfo::COURSE_FOREST:
-				txtpath = "/user/Totaka/BgmList_Forest.txt";
+				txtpath = "user/Totaka/BgmList_Forest.txt";
 				break;
 			case SceneInfo::COURSE_YAKUSHIMA:
-				txtpath = "/user/Totaka/BgmList_Yakushima.txt";
+				txtpath = "user/Totaka/BgmList_Yakushima.txt";
 				break;
 			case SceneInfo::COURSE_LAST:
-				txtpath = "/user/Totaka/BgmList_Last.txt";
+				txtpath = "user/Totaka/BgmList_Last.txt";
 				break;
 			case SceneInfo::COURSE_TEST:
-				txtpath = "/user/Totaka/BgmList_BgmTest.txt";
+				txtpath = "user/Totaka/BgmList_BgmTest.txt";
 				break;
 			}
 
 			PSSystem::SingletonBase<PSGame::ConductorList>::newHeapInstance();
 			ConductorList* list = PSSystem::SingletonBase<PSGame::ConductorList>::getInstance();
 			bool loaded         = list->load(txtpath, JKRDvdRipper::ALLOC_DIR_BOTTOM);
-			P2ASSERTLINE(1601, loaded);
+			P2ASSERTLINE(1618, loaded);
 			OSReport("caveID==%d\n", cinfo.getCaveNoFromID());
 			char* name = list->getInfo(cinfo.getCaveNoFromID(), cinfo.mFloorNum);
 			u8 wScene2;
@@ -927,7 +929,7 @@ PSSystem::BgmSeq* PikSceneMgr::initMainBgm(SceneInfo& info, u8* wScene)
 		case SceneInfo::COURSE_YAKUSHIMA:
 			bgm     = newMainBgm("yakushima.bms", soundInfo);
 			*wScene = PSSystem::WaveScene::WSCENE3_Perplexing_Pool;
-			P2ASSERTLINE(1640, bgm);
+			P2ASSERTLINE(1657, bgm);
 			static_cast<PSSystem::DirectedBgm*>(bgm)->assertValidTrack();
 			static_cast<PSSystem::DirectedBgm*>(bgm)->mRootTrack->mBeatInterval = 30;
 			break;
@@ -935,7 +937,7 @@ PSSystem::BgmSeq* PikSceneMgr::initMainBgm(SceneInfo& info, u8* wScene)
 		case SceneInfo::COURSE_LAST:
 			bgm     = newMainBgm("last.bms", soundInfo);
 			*wScene = PSSystem::WaveScene::WSCENE4_Wistful_Wild;
-			P2ASSERTLINE(1650, bgm);
+			P2ASSERTLINE(1667, bgm);
 			static_cast<PSSystem::DirectedBgm*>(bgm)->assertValidTrack();
 			static_cast<PSSystem::DirectedBgm*>(bgm)->mRootTrack->mBeatInterval = 30;
 			break;
@@ -996,12 +998,12 @@ PSSystem::BgmSeq* PikSceneMgr::initMainBgm(SceneInfo& info, u8* wScene)
 			bgm = newStreamBgm(P2_STREAM_SOUND_ID(PSSTR_VS_MENU), soundInfo);
 			break;
 		default:
-			JUT_PANICLINE(1745, "P2Assert");
+			JUT_PANICLINE(1762, "P2Assert");
 		}
 	}
 
-	P2ASSERTLINE(1749, bgm);
-	P2ASSERTLINE(1750, soundInfo.mVolume <= 127);
+	P2ASSERTLINE(1766, bgm);
+	P2ASSERTLINE(1767, soundInfo.mVolume <= 127);
 
 	return bgm;
 	/*
@@ -3045,10 +3047,10 @@ PSSystem::DirectedBgm* PSGetDirectedMainBgmA()
 {
 	PSSystem::DirectedBgm* seq = (PSSystem::DirectedBgm*)PSMGetSceneMgrCheck()->getChildScene()->getSeqMgr()->getFirstSeqA();
 	if (seq) {
-		P2ASSERTLINE(2241, seq->isDirectedType());
+		P2ASSERTLINE(2270, seq->isDirectedType());
 		return seq;
 	} else {
-		P2ASSERTLINE(2244, false);
+		P2ASSERTLINE(2273, false);
 	}
 	return nullptr;
 }

@@ -297,7 +297,7 @@ void StreamSound::stopInner(u32 type)
 SeqHeap::SeqHeap(u32 entry, SeqBase* seq)
 {
 	mOwner    = nullptr;
-	u32 size  = (entry + 0x1f) & 0xffffffe0;
+	u32 size  = entry;
 	mSize     = size;
 	mFileData = nullptr;
 	mOwnerSeq = seq;
@@ -459,7 +459,7 @@ void SeqBase::init()
 		if (SeqDataList::sInstance) {
 			mSoundInfo.mVolume = SeqDataList::sInstance->getSeqVolume(mBmsFileName);
 		}
-		mSeqHeap = new SeqHeap(((int*)getFileEntry())[3], this);
+		mSeqHeap = new SeqHeap((((int*)getFileEntry())[3]) + 0x1f & 0xffffffe0, this);
 	}
 }
 
@@ -550,7 +550,7 @@ void SeqBase::pauseOn(PauseMode pause)
 		}
 		break;
 	default:
-		JUT_PANICLINE(461, "P2Assert");
+		JUT_PANICLINE(479, "P2Assert");
 	}
 
 	if (noSound == true)
@@ -563,7 +563,7 @@ void SeqBase::pauseOn(PauseMode pause)
  */
 void SeqBase::pauseOff()
 {
-	P2ASSERTLINE(474, getHandleP());
+	P2ASSERTLINE(492, getHandleP());
 
 	if (mPauseMode == SeqBase::MODE3) {
 		startSeq();
@@ -629,9 +629,9 @@ void SeqBase::startSeq()
 	JAInter::SequenceMgr::storeSeqBuffer(handle, nullptr, flag, 0, 0, &mSoundInfo);
 
 	SeqSound** seqHandle = (SeqSound**)(JAISequence**)getHandleP();
-	P2ASSERTLINE(534, seqHandle);
+	P2ASSERTLINE(552, seqHandle);
 	SeqSound* sound = static_cast<SeqSound*>(*seqHandle);
-	JUT_ASSERTLINE(538, sound, "seq not played");
+	JUT_ASSERTLINE(556, sound, "seq not played");
 	sound->mSeq = this;
 	setConfigVolume();
 	mSeqSound = (SeqSound*)&(sound)->mSeqParameter.mTrack.mHead;
@@ -794,8 +794,6 @@ void SeSeq::seqLoadAfter()
  */
 void SeSeq::setConfigVolume()
 {
-	f32 vol = PSGetSystemIFA()->mSfxVolume;
-	(*getHandleP())->setVolume(vol, 0, SOUNDPARAM_Unk8);
 	(*getHandleP())->setVolume(1.0f, 0, SOUNDPARAM_Unk3);
 }
 
@@ -829,8 +827,8 @@ DirectedBgm::DirectedBgm(char const* bmsFileName, JAInter::SoundInfo const& info
  */
 void DirectedBgm::initRootTrack_onPlaying(JASTrack* track)
 {
-	P2ASSERTLINE(804, mIsInitialized == 1);
-	P2ASSERTLINE(805, mRootTrack);
+	P2ASSERTLINE(884, mIsInitialized == 1);
+	P2ASSERTLINE(885, mRootTrack);
 	PSSystem::setObject(track, mRootTrack, 18);
 	mRootTrack->init(track);
 	if (mDirectorMgr) {
@@ -844,8 +842,8 @@ void DirectedBgm::initRootTrack_onPlaying(JASTrack* track)
  */
 void DirectedBgm::initChildTrack_onPlaying(JASTrack* track, u8 id)
 {
-	P2ASSERTLINE(816, mIsInitialized == 1);
-	P2ASSERTLINE(817, id < 16);
+	P2ASSERTLINE(896, mIsInitialized == 1);
+	P2ASSERTLINE(897, id < 16);
 	PSSystem::setObject(track, mChildTracks[id], 18);
 	mChildTracks[id]->init(track);
 	if (mDirectorMgr) {
@@ -868,7 +866,7 @@ void DirectedBgm::getDirector(u8)
  */
 DirectorBase* DirectedBgm::getDirectorP(u8 id)
 {
-	P2ASSERTLINE(832, mDirectorMgr);
+	P2ASSERTLINE(912, mDirectorMgr);
 	return mDirectorMgr->getDirector(id);
 }
 
@@ -879,7 +877,7 @@ DirectorBase* DirectedBgm::getDirectorP(u8 id)
 SeqTrackRoot* DirectedBgm::newSeqTrackRoot()
 {
 	SeqTrackRoot* track = new SeqTrackRoot;
-	P2ASSERTLINE(839, track);
+	P2ASSERTLINE(919, track);
 	return track;
 }
 
@@ -890,7 +888,7 @@ SeqTrackRoot* DirectedBgm::newSeqTrackRoot()
 SeqTrackChild* DirectedBgm::newSeqTrackChild(u8, SeqTrackRoot& track)
 {
 	SeqTrackChild* newtrack = new SeqTrackChild(*(const_cast<const SeqTrackRoot*>(mRootTrack)));
-	P2ASSERTLINE(847, newtrack);
+	P2ASSERTLINE(927, newtrack);
 	return newtrack;
 }
 
@@ -902,7 +900,7 @@ void DirectedBgm::init()
 {
 	SeqBase::init();
 	mRootTrack = newSeqTrackRoot();
-	P2ASSERTLINE(855, mRootTrack);
+	P2ASSERTLINE(935, mRootTrack);
 	for (u8 i = 0; i < 16; i++) {
 		mChildTracks[i] = newSeqTrackChild(i, *mRootTrack);
 	}
@@ -1061,7 +1059,7 @@ u16 JumpBgmPort::output()
 		_50 = track;
 		OSUnlockMutex(&mMutex3);
 
-		P2ASSERTLINE(1173, mOwner);
+		P2ASSERTLINE(1253, mOwner);
 		if (mOwner->mDirectorMgr) {
 			mOwner->mDirectorMgr->off(mOwner);
 		}
@@ -1090,7 +1088,7 @@ JumpBgmSeq::JumpBgmSeq(char const* bmsFileName, JAInter::SoundInfo const& info, 
 SeqTrackRoot* JumpBgmSeq::newSeqTrackRoot()
 {
 	SeqTrackRoot* track = new SeqTrackRoot_JumpBgm(&mJumpPort);
-	P2ASSERTLINE(1211, track);
+	P2ASSERTLINE(1291, track);
 	return track;
 }
 

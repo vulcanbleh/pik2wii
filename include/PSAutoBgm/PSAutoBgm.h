@@ -87,17 +87,17 @@ struct AutoBgm : public PSSystem::DirectedBgm {
  * @size = 0x8
  */
 struct ConductorArcMgr {
-	ConductorArcMgr()
+	ConductorArcMgr(const char* name)
 	{
 		mArchive = nullptr;
-		mArchive = JKRMountArchive("/AudioRes/Conductor.arc", JKRArchive::EMM_Dvd, JKRGetCurrentHeap(), JKRArchive::EMD_Head);
+		mArchive = JKRMountArchive(name, JKRArchive::EMM_Dvd, JKRGetCurrentHeap(), JKRArchive::EMD_Head);
 		P2ASSERTLINE(746, mArchive);
 	}
 
-	static void createInstance()
+	static void createInstance(const char* name)
 	{
 		P2ASSERTLINE(726, !sInstance);
-		sInstance = new ConductorArcMgr;
+		sInstance = new ConductorArcMgr(name);
 		P2ASSERTLINE(728, sInstance);
 	}
 
