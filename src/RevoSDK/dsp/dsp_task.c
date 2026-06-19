@@ -4,11 +4,9 @@ DSPTaskInfo* __DSP_curr_task;
 DSPTaskInfo* __DSP_first_task;
 DSPTaskInfo* __DSP_last_task;
 DSPTaskInfo* __DSP_tmp_task;
+DSPTaskInfo* __DSP_rude_task;
+int __DSP_rude_task_pending;
 
-/**
- * @note Address: 0x800DAE50
- * @note Size: 0x1A0
- */
 void __DSP_exec_task(DSPTaskInfo* curr, DSPTaskInfo* next)
 {
 	if (curr) {
@@ -77,10 +75,6 @@ void __DSP_exec_task(DSPTaskInfo* curr, DSPTaskInfo* next)
 
 #define MSG_BASE 0x80F30000
 
-/**
- * @note Address: 0x800DAFF0
- * @note Size: 0x18C
- */
 void __DSP_boot_task(DSPTaskInfo* task)
 {
 
@@ -124,10 +118,6 @@ void __DSP_boot_task(DSPTaskInfo* task)
 	__DSP_debug_printf("__DSP_boot_task()  : Start Vector  : 0x%08X\n", (u32)(task->dsp_init_vector));
 }
 
-/**
- * @note Address: 0x800DB17C
- * @note Size: 0xA0
- */
 void __DSP_insert_task(DSPTaskInfo* task)
 {
 
@@ -163,10 +153,6 @@ void __DSP_insert_task(DSPTaskInfo* task)
 	}
 }
 
-/**
- * @note Address: N/A
- * @note Size: 0x78
- */
 // Unused, but close enough.
 void __DSP_add_task(DSPTaskInfo* task)
 {
@@ -182,10 +168,6 @@ void __DSP_add_task(DSPTaskInfo* task)
 	__DSP_debug_printf("__DSP_add_task() : Added task    : 0x%08X\n", (u32)(task->next));
 }
 
-/**
- * @note Address: 0x800DB21C
- * @note Size: 0x94
- */
 void __DSP_remove_task(DSPTaskInfo* task)
 {
 

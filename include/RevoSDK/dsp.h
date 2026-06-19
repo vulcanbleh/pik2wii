@@ -40,6 +40,8 @@ struct STRUCT_DSP_TASK {
 };
 
 // Task information storage.
+extern BOOL __DSP_rude_task_pending;
+extern DSPTaskInfo* __DSP_rude_task;
 extern DSPTaskInfo* __DSP_tmp_task;
 extern DSPTaskInfo* __DSP_last_task;
 extern DSPTaskInfo* __DSP_first_task;

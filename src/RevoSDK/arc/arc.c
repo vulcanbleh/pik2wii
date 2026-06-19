@@ -2,345 +2,374 @@
 #include "RevoSDK/os.h"
 #include "ctype.h"
 
-typedef struct FSTEntry FSTEntry;
+#undef NULL
+#define NULL ((void*)0)
 
-struct FSTEntry {
-    unsigned int isDirAndStringOff;
-    unsigned int parentOrPosition;
-    unsigned int nextEntryOrLength;
-};
+#undef ADD_PTR
+#define ADD_PTR(ptr, offset) ((void*)((u32)ptr + offset))
 
-#define ARCNodeIsFolder(node) ((node).packed_type_name & 0xFF000000)
-#define ARCNodeGetName(node) ((node).packed_type_name & 0x00FFFFFF)
+#undef IS_DIR
+#define IS_DIR(fst, entrynum) ((fst[entrynum].isDirAndStringOff & 0xFF000000) == 0 ? FALSE : TRUE)
 
-typedef struct ARCNode {
-    union {
-        struct {
-            u32 is_folder : 8;
-            u32 name : 24;
-        };
-        u32 packed_type_name;
-    }; // at 0x0
+#define ARC_FILE_MAGIC 0x55AA382D
 
-    union {
-        struct {
-            u32 offset;
-            u32 size;
-        } file;
+typedef struct FSTEntry {
+	unsigned int isDirAndStringOff; // at 0x0
+	unsigned int parentOrPosition;  // at 0x4
+	unsigned int nextEntryOrLength; // at 0x8
+} FSTEntry;
 
-        struct {
-            u32 parent;
-            u32 sibling_next;
-        } folder;
-    }; // at 0x4
-} ARCNode;
+BOOL ARCInitHandle(void* arcStart, ARCHandle* handle)
+{
+	FSTEntry* FSTEntries;
+	ARCHeader* arcHeader = (ARCHeader*)arcStart;
 
+	if (arcHeader->magic != ARC_FILE_MAGIC) {
+		OSErrorLine(74, "ARCInitHandle: bad archive format");
+	}
 
-static u32 entryToPath(ARCHandle* handle, u32 entrynum, char* string,
-                       u32 maxlen);
+	handle->archiveStartAddr = arcStart;
 
-#define entryIsDir(fstStart, i)     \
-    ( ( ( fstStart[i].isDirAndStringOff & 0xFF000000 ) == 0 )? FALSE : TRUE )
-#define stringOff(fstStart, i)      \
-        ( fstStart[i].isDirAndStringOff & 0x00FFFFFF )
-#define parentDir(fstStart, i)       \
-        ( fstStart[i].parentOrPosition )
-#define nextDir(fstStart, i)        \
-        ( fstStart[i].nextEntryOrLength )
-#define filePosition(fstStart, i)       \
-        ( fstStart[i].parentOrPosition )
-#define fileLength(fstStart, i)         \
-        ( fstStart[i].nextEntryOrLength )
+	FSTEntries        = (FSTEntry*)ADD_PTR(arcStart, arcHeader->fstStart);
+	handle->FSTStart  = FSTEntries;
+	handle->fileStart = ADD_PTR(arcStart, arcHeader->fileStart);
 
-BOOL ARCInitHandle(void* arcStart, ARCHandle* handle) {
-    FSTEntry* FSTEntries;
-    ARCHeader* arcHeader = (ARCHeader*)arcStart;
+	handle->entryNum       = FSTEntries[0].nextEntryOrLength;
+	handle->FSTStringStart = (char*)ADD_PTR(FSTEntries, handle->entryNum * sizeof(FSTEntry));
+	handle->FSTLength      = arcHeader->fstSize;
+	handle->currDir        = 0;
 
-    if (arcHeader->magic != 0x55AA382D) {
-        OSPanic(__FILE__, 0x4A, "ARCInitHandle: bad archive format");
-    }
-
-    handle->archiveStartAddr = arcStart;
-    handle->FSTStart = FSTEntries = (void*)((u32)arcStart + arcHeader->fstStart);
-    handle->fileStart = (void*)((u32)arcStart + arcHeader->fileStart);
-    handle->entryNum = nextDir(FSTEntries, 0);
-    handle->FSTStringStart = (char*)&(FSTEntries[handle->entryNum]);
-    handle->FSTLength = (u32)arcHeader->fstSize;
-    handle->currDir = 0;
-    return TRUE;
+	return TRUE;
 }
 
-BOOL ARCOpen(ARCHandle* handle, const char* path, ARCFileInfo* info) {
-    ARCNode* nodes = handle->FSTStart;
-    s32 entrynum = ARCConvertPathToEntrynum(handle, path);
+BOOL ARCOpen(ARCHandle* handle, const char* fileName, ARCFileInfo* af)
+{
+	s32 entry;
+	char currentDir[128];
+	FSTEntry* FSTEntries;
 
-    if (entrynum < 0) {
-        char dir[128];
-        ARCGetCurrentDir(handle, dir, sizeof(dir));
+	FSTEntries = (FSTEntry*)handle->FSTStart;
+	entry      = ARCConvertPathToEntrynum(handle, fileName);
 
-        OSReport("Warning: ARCOpen(): file '%s' was not found under %s in the "
-                 "archive.\n",
-                 path, dir);
+	if (entry < 0) {
+		ARCGetCurrentDir(handle, currentDir, sizeof(currentDir));
+		OSReport("Warning: ARCOpen(): file '%s' was not found under %s in the "
+		         "archive.\n",
+		         fileName, currentDir);
+		return FALSE;
+	}
 
-        return FALSE;
-    }
+	if (entry < 0 || IS_DIR(FSTEntries, entry)) {
+		return FALSE;
+	}
 
-    if (entrynum < 0 || ARCNodeIsFolder(nodes[entrynum])) {
-        return FALSE;
-    }
+	af->handle      = handle;
+	af->startOffset = FSTEntries[entry].parentOrPosition;
+	af->length      = FSTEntries[entry].nextEntryOrLength;
 
-    info->handle = handle;
-    info->startOffset = nodes[entrynum].file.offset;
-    info->length = nodes[entrynum].file.size;
-    return TRUE;
+	return TRUE;
 }
 
-BOOL ARCFastOpen(ARCHandle* handle, s32 entrynum, ARCFileInfo* af) {
-    FSTEntry* FSTEntries = (FSTEntry*)handle->FSTStart;
+BOOL ARCFastOpen(ARCHandle* handle, s32 entrynum, ARCFileInfo* af)
+{
+	FSTEntry* FSTEntries = (FSTEntry*)handle->FSTStart;
 
-    if ((entrynum < 0) || (entrynum >= handle->entryNum) || entryIsDir(FSTEntries, entrynum)) {
-        return FALSE;
-    }
+	if (!(entrynum >= 0 && entrynum < handle->entryNum) || IS_DIR(FSTEntries, entrynum)) {
+		return FALSE;
+	}
 
-    af->handle = handle;
-    af->startOffset = filePosition(FSTEntries, entrynum);
-    af->length = fileLength(FSTEntries, entrynum);
-    return TRUE;
+	af->handle      = handle;
+	af->startOffset = FSTEntries[entrynum].parentOrPosition;
+	af->length      = FSTEntries[entrynum].nextEntryOrLength;
+
+	return TRUE;
 }
 
-static BOOL isSame(const char* path, const char* string) {
-    while(*string != '\0') {
-        if (_tolower(*path++) != _tolower(*string++)) {
-            return FALSE;
-        }
-    }
+// Subroutine for ARCConvertPathToEntrynum
+static BOOL isSame(const char* path, const char* string)
+{
+	while (*string != '\0') {
+		if (_tolower(*path++) != _tolower(*string++)) {
+			return FALSE;
+		}
+	}
 
-    if ((*path == '/') || (*path == '\0')) {
-        return TRUE;
-    }
+	// '/' if we found the directory, '\0' if we found the file (or directory
+	// with no suffix) The caller will delineate between file and directory by
+	// checking the FST entry
+	if (*path == '/' || *path == '\0') {
+		return TRUE;
+	}
 
-    return FALSE;
+	return FALSE;
 }
 
 s32 ARCConvertPathToEntrynum(ARCHandle* handle, const char* pathPtr)
 {
-    const char*  ptr;
-    char* stringPtr;
-    BOOL isDir;
-    s32 length;
-    u32 dirLookAt;
-    u32 i;
-    const char* origPathPtr = pathPtr;
-    FSTEntry* FSTEntries;
+	const char* ptr;
+	const char* stringPtr;
+	BOOL isDir;
+	s32 length;
+	u32 dirLookAt;
+	u32 i;
+	const char* origPathPtr = pathPtr; // Unused
+	FSTEntry* FSTEntries;
 
-    dirLookAt = handle->currDir;
-    FSTEntries = (FSTEntry*)handle->FSTStart;
+	dirLookAt  = handle->currDir;
+	FSTEntries = (FSTEntry*)handle->FSTStart;
 
-    while (1) {
-        if (*pathPtr == '\0') {
-            return (s32)dirLookAt;
-        } 
-        else if (*pathPtr == '/') {
-            dirLookAt = 0;
-            pathPtr++;
-            continue;
-        }
-        else if (*pathPtr == '.') {
-            if (*(pathPtr + 1) == '.') {
-                if (*(pathPtr + 2) == '/') {
-                    dirLookAt = parentDir(FSTEntries, dirLookAt);
-                    pathPtr += 3;
-                    continue;
-                }
-                else if (*(pathPtr + 2) == '\0') {
-                    return (s32)parentDir(FSTEntries, dirLookAt);
-                }
-            }
-            else if (*(pathPtr + 1) == '/') {
-                pathPtr += 2;
-                continue;
-            }
-            else if (*(pathPtr + 1) == '\0') {
-                return (s32)dirLookAt;
-            }
-        }
+	while (TRUE) {
+		if (pathPtr[0] == '\0') {
+			// We found the directory (always a directory)
+			return dirLookAt;
+		} else if (pathPtr[0] == '/') {
+			// Restart at root
+			dirLookAt = 0;
+			++pathPtr;
+			continue;
+		} else if (pathPtr[0] == '.') {
+			if (pathPtr[1] == '.') {
+				if (pathPtr[2] == '/') {
+					// Restart at parent directory
+					dirLookAt = FSTEntries[dirLookAt].parentOrPosition;
+					pathPtr += 3;
+					continue;
+				} else if (pathPtr[2] == '\0') {
+					// We found the parent directory (always a directory)
+					return FSTEntries[dirLookAt].parentOrPosition;
+				}
+			} else if (pathPtr[1] == '/') {
+				// Restart at current directory
+				pathPtr += 2;
+				continue;
+			} else if (pathPtr[1] == '\0') {
+				// We found the current directory (always a directory)
+				return dirLookAt;
+			}
+		}
 
-        for(ptr = pathPtr; (*ptr != '\0') && (*ptr != '/'); ptr++);
-        isDir = (*ptr == '\0')? FALSE : TRUE;
-        length = (s32)(ptr - pathPtr);
-        ptr = pathPtr;
+		// Prep a substring formed by [pathPtr, ptr)
+		// We need this to compute the length so we can keep iterating later
+		for (ptr = pathPtr; *ptr != '\0' && *ptr != '/'; ++ptr) { }
 
-        for(i = dirLookAt + 1; i < nextDir(FSTEntries, dirLookAt);
-            i = entryIsDir(FSTEntries, i)? nextDir(FSTEntries, i): (i+1) )
-        {
-dot:
-            if ((entryIsDir(FSTEntries, i) == FALSE) && (isDir == TRUE)) {
-                continue;
-            }
+		// We need to iterate over all the items in the directory and see if the
+		// substring matches. Example: first we search [a]/b/c, then a/[b]/c,
+		// and finally find the leaf a/b/[c]. If ptr is '/', we need to search
+		// the next layer down and restart. If ptr is '\0', we need to find the
+		// file/subdirectory in that directory.
 
-            stringPtr = handle->FSTStringStart + stringOff(FSTEntries, i);
+		// NOTE: isDir == TRUE guarantees it's a directory but it can still be a
+		// directory if FALSE
+		isDir  = *ptr == '\0' ? FALSE : TRUE;
+		length = ptr - pathPtr;
+		ptr    = pathPtr; // Why?? There's no writes to pathPtr in the loop
 
-            if (*stringPtr == '.' && *(stringPtr + 1) == '\0') {
-                i++;
-                goto dot;
-            }
+		for (i = dirLookAt + 1; i < FSTEntries[dirLookAt].nextEntryOrLength;
+		     i = IS_DIR(FSTEntries, i) ? FSTEntries[i].nextEntryOrLength : i + 1) {
+			// We need a nested loop with no condition so that we can handle an
+			// edgecase. If the directory includes itself, we need to move onto
+			// the next FST entry. We can't do that in one loop without
+			// triggering the incrementer, so use a nested loop.
+			while (TRUE) {
+				if (!IS_DIR(FSTEntries, i) && isDir == TRUE) {
+					break;
+				}
 
-            if (isSame(ptr, stringPtr) == TRUE) {
-                goto next_hier;
-            }
-        }
+				stringPtr = handle->FSTStringStart + (FSTEntries[i].isDirAndStringOff & 0xFFFFFF);
+				// The directory includes itself, skip it
+				if (stringPtr[0] == '.' && stringPtr[1] == '\0') {
+					++i;
+					continue;
+				}
 
-        return -1;
+				if (isSame(ptr, stringPtr) == TRUE) {
+					// NOTE: This goto is to delineate breaking vs fallthrough
+					// This emulates Python's loop/else pattern
+					goto found;
+				}
 
-      next_hier:
-        if (!isDir) {
-            return (s32)i;
-        }
+				break;
+			}
+		}
 
-        dirLookAt = i;
-        pathPtr += length + 1;
-    }
+		// Natural fallthrough: We searched through the whole directory and
+		// didn't find it. Therefore, this path does not exist under these
+		// search conditions.
+		return -1;
 
-    // the world ends if this is reached
+	found:
+		// Unnatural fallthrough: If it's a leaf, we found it
+		if (isDir == FALSE) {
+			return i;
+		}
+
+		// Otherwise, we restart in the subdirectory we found
+		dirLookAt = i;
+		pathPtr += length + 1;
+	}
+
+	return -1;
 }
 
-static u32 myStrncpy(char* dest, char* src, u32 maxlen) {
-    u32 i = maxlen;
-
-    while ((i > 0) && (*src != 0)) {
-        *dest++ = *src++;
-        i--;
-    }
-    
-    return (maxlen - i);
+BOOL ARCEntrynumIsDir(const ARCHandle* handle, s32 entrynum)
+{
+	FSTEntry* FSTEntries = (FSTEntry*)handle->FSTStart;
+	return IS_DIR(FSTEntries, entrynum);
 }
 
-static u32 entryToPath(ARCHandle* handle, u32 entry, char* path, u32 maxlen) {
-    char* name;
-    u32 loc;
-    FSTEntry* FSTEntries = (FSTEntry*)handle->FSTStart;
-
-    if (entry == 0) {
-        return 0;
-    }
-
-    name = handle->FSTStringStart + stringOff(FSTEntries, entry);
-    loc = entryToPath(handle, parentDir(FSTEntries, entry), path, maxlen);
-    
-    if (loc == maxlen) {
-        return loc;
-    }
-
-    *(path + loc++) = '/';
-    loc += myStrncpy(path + loc, name, maxlen - loc);
-    return loc;
+// Subroutine for ARCConvertEntrynumToPath
+static u32 myStrncpy(char* dest, char* src, u32 maxlen)
+{
+	u32 i = maxlen;
+	for (; i != 0 && *src != '\0'; --i) {
+		*dest++ = *src++;
+	}
+	return maxlen - i;
 }
 
-static BOOL ARCConvertEntrynumToPath(ARCHandle* handle, s32 entrynum, char* path, u32 maxlen) {
-    u32 loc;
-    FSTEntry* FSTEntries = (FSTEntry*)handle->FSTStart;
+// Subroutine for ARCConvertEntrynumToPath
+static u32 entryToPath(ARCHandle* handle, u32 entry, char* path, u32 maxlen)
+{
+	char* name;
+	u32 loc;
+	FSTEntry* FSTEntries = (FSTEntry*)handle->FSTStart;
 
-    loc = entryToPath(handle, (u32)entrynum, path, maxlen);
+	if (entry == 0) {
+		return 0;
+	}
 
-    if (loc == maxlen) {
-        path[maxlen - 1] = '\0';
-        return FALSE;
-    }
+	name = handle->FSTStringStart + (FSTEntries[entry].isDirAndStringOff & 0xFFFFFF);
+	loc  = entryToPath(handle, FSTEntries[entry].parentOrPosition, path, maxlen);
+	if (loc == maxlen) {
+		return loc;
+	}
 
-    if (entryIsDir(FSTEntries, entrynum)) {
-        if (loc == maxlen - 1) {
-            path[loc] = '\0';
-            return FALSE;
-        }
-
-        path[loc++] = '/';
-    }
-    
-    path[loc] = '\0';
-    return TRUE;
+	path[loc++] = '/';
+	loc += myStrncpy(path + loc, name, maxlen - loc);
+	return loc;
 }
 
-static BOOL ARCGetCurrentDir(ARCHandle* handle, char* path, u32 maxlen) {
-    return ARCConvertEntrynumToPath(handle, (s32)handle->currDir, path, maxlen);
+static BOOL ARCConvertEntrynumToPath(ARCHandle* handle, s32 entrynum, char* path, u32 maxlen)
+{
+	u32 loc;
+	FSTEntry* FSTEntries = (FSTEntry*)handle->FSTStart;
+
+	loc = entryToPath(handle, entrynum, path, maxlen);
+	if (loc == maxlen) {
+		path[maxlen - 1] = '\0';
+		return FALSE;
+	}
+
+	if (IS_DIR(FSTEntries, entrynum)) {
+		if (loc == maxlen - 1) {
+			path[loc] = '\0';
+			return FALSE;
+		}
+
+		path[loc++] = '/';
+	}
+
+	path[loc] = '\0';
+	return TRUE;
 }
 
-void* ARCGetStartAddrInMem(ARCFileInfo* af) {
-    ARCHandle* handle = af->handle;
-    return (void*)((u32)handle->archiveStartAddr + af->startOffset);
+BOOL ARCGetCurrentDir(ARCHandle* handle, char* path, u32 maxlen)
+{
+	return ARCConvertEntrynumToPath(handle, handle->currDir, path, maxlen);
 }
 
-u32 ARCGetStartOffset(ARCFileInfo* info) {
-    return info->startOffset;
+void* ARCGetStartAddrInMem(ARCFileInfo* af)
+{
+	ARCHandle* handle = af->handle;
+	return ADD_PTR(handle->archiveStartAddr, af->startOffset);
 }
 
-u32 ARCGetLength(ARCFileInfo* af) {
-    return af->length;
+u32 ARCGetStartOffset(ARCFileInfo* af)
+{
+	return af->startOffset;
 }
 
-BOOL ARCClose(ARCFileInfo* af) {
-    return TRUE;
+u32 ARCGetLength(ARCFileInfo* af)
+{
+	return af->length;
 }
 
-BOOL ARCChangeDir(ARCHandle* handle, const char* dirName) {
-    s32 entry;   
-    FSTEntry* FSTEntries;
+BOOL ARCClose(ARCFileInfo* af)
+{
+#pragma unused(af)
 
-    entry = ARCConvertPathToEntrynum(handle, dirName);
-    FSTEntries = (FSTEntry*)handle->FSTStart;
-
-    if ((entry < 0) || (entryIsDir(FSTEntries, entry) == FALSE)) {
-        return FALSE;
-    }
-
-    handle->currDir = (u32)entry;
-    return TRUE;
+	return TRUE;
 }
 
-BOOL ARCOpenDir(ARCHandle* handle, const char* dirName, ARCDir* dir) {
-    s32         entry;
-    FSTEntry*   FSTEntries;
+BOOL ARCChangeDir(ARCHandle* handle, const char* dirName)
+{
+	s32 entry;
+	FSTEntry* FSTEntries;
 
-    entry = ARCConvertPathToEntrynum(handle, dirName);
-    FSTEntries = (FSTEntry*)handle->FSTStart;
+	entry      = ARCConvertPathToEntrynum(handle, dirName);
+	FSTEntries = (FSTEntry*)handle->FSTStart;
 
-    if ((entry < 0) || (entryIsDir(FSTEntries, entry) == FALSE)) {
-        return FALSE;
-    }
+	if (entry < 0 || !IS_DIR(FSTEntries, entry)) {
+		return FALSE;
+	}
 
-    dir->handle = handle;
-    dir->entryNum = (u32)entry;
-    dir->location = (u32)entry + 1;
-    dir->next = nextDir(FSTEntries, entry);
-    return TRUE;
+	handle->currDir = entry;
+	return TRUE;
 }
 
-BOOL ARCReadDir(ARCDir* dir, ARCDirEntry* dirent) {
-    u32 loc;
-    FSTEntry* FSTEntries;
-    ARCHandle* handle;
+BOOL ARCOpenDir(ARCHandle* handle, const char* dirName, ARCDir* dir)
+{
+	s32 entry;
+	FSTEntry* FSTEntries;
 
-    handle = dir->handle;
-    FSTEntries = (FSTEntry*)handle->FSTStart;
-    loc = dir->location;
-retry:
-    if ((loc <= dir->entryNum) || (dir->next <= loc)) {
-        return FALSE;
-    }
+	entry      = ARCConvertPathToEntrynum(handle, dirName);
+	FSTEntries = (FSTEntry*)handle->FSTStart;
 
-    dirent->handle = handle;
-    dirent->entryNum = loc;
-    dirent->isDir = entryIsDir(FSTEntries, loc);
-    dirent->name = handle->FSTStringStart + stringOff(FSTEntries, loc);
+	if (entry < 0 || !IS_DIR(FSTEntries, entry)) {
+		return FALSE;
+	}
 
-    if (dirent->name[0] == '.' && dirent->name[1] == '\0') {
-        loc++;
-        goto retry;
-    }
-
-    dir->location = entryIsDir(FSTEntries, loc)? nextDir(FSTEntries, loc) : (loc+1);
-    return TRUE;
+	dir->handle   = handle;
+	dir->entryNum = entry;
+	dir->location = entry + 1;
+	dir->next     = FSTEntries[entry].nextEntryOrLength;
+	return TRUE;
 }
 
-BOOL ARCCloseDir(ARCDir* dir) {
-    return TRUE;
+BOOL ARCReadDir(ARCDir* dir, ARCDirEntry* dirent)
+{
+	u32 loc;
+	FSTEntry* FSTEntries;
+	ARCHandle* handle = dir->handle;
+
+	FSTEntries = (FSTEntry*)handle->FSTStart;
+	loc        = dir->location;
+
+	while (TRUE) {
+		if (loc <= dir->entryNum || dir->next <= loc) {
+			return FALSE;
+		}
+
+		dirent->handle   = handle;
+		dirent->entryNum = loc;
+		dirent->isDir    = IS_DIR(FSTEntries, loc);
+		dirent->name     = handle->FSTStringStart + (FSTEntries[loc].isDirAndStringOff & 0xFFFFFF);
+		if (dirent->name[0] == '.' && dirent->name[1] == '\0') {
+			++loc;
+			continue;
+		}
+
+		break;
+	}
+
+	dir->location = IS_DIR(FSTEntries, loc) ? FSTEntries[loc].nextEntryOrLength : loc + 1;
+
+	return TRUE;
+}
+
+BOOL ARCCloseDir(ARCDir* dir)
+{
+#pragma unused(dir)
+
+	return TRUE;
 }

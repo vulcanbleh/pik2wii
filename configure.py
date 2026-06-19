@@ -894,7 +894,7 @@ config.libs = [
     },
     {
         "lib": "MSL_C",
-        "cflags": [*cflags_revo],
+        "cflags": [*cflags_revo, "-use_lmw_stmw on"],
         "mw_version": "GC/3.0a3p1",
         "progress_category": "sdk",
         "objects": [
@@ -1068,14 +1068,14 @@ config.libs = [
     {
         "lib": "ai",
         "cflags": [*cflags_revo, "-str noreadonly"],
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
-        "objects": [Object(NonMatching, "RevoSDK/ai/ai.c")],
+        "objects": [Object(Matching, "RevoSDK/ai/ai.c")],
     },
     {
         "lib": "ax",
         "cflags": [*cflags_revo, "-str noreadonly"],  # unknown
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "mw_version": "GC/3.0a5.2",  # unknown
         "progress_category": "sdk",
         "objects": [
             Object(Matching, "RevoSDK/ax/AX.c"),
@@ -1092,38 +1092,38 @@ config.libs = [
     },
     {
         "lib": "axfx",
-        "cflags": [*cflags_revo, "-str noreadonly"],  # unknown
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "cflags": [*cflags_revo, "-str noreadonly"],
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "RevoSDK/axfx/AXFXReverbHi.c"),
+            Object(Matching, "RevoSDK/axfx/AXFXReverbHi.c"),
             Object(NonMatching, "RevoSDK/axfx/AXFXReverbHiExp.c"),
-            Object(NonMatching, "RevoSDK/axfx/AXFXHooks.c"),
+            Object(Matching, "RevoSDK/axfx/AXFXHooks.c"),
         ],
     },
     {
         "lib": "base",
         "cflags": cflags_revo,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
         "objects": [Object(NonMatching, "RevoSDK/base/PPCArch.c")],
     },
     {
         "lib": "db",
         "cflags": [*cflags_revo, "-str noreadonly"],
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
-        "objects": [Object(NonMatching, "RevoSDK/db/db.c")],
+        "objects": [Object(Matching, "RevoSDK/db/db.c")],
     },
     {
         "lib": "dsp",
         "cflags": [*cflags_revo, "-str noreadonly"],
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "RevoSDK/dsp/dsp.c"),
+            Object(Matching, "RevoSDK/dsp/dsp.c"),
             Object(Matching, "RevoSDK/dsp/dsp_debug.c"),
-            Object(NonMatching, "RevoSDK/dsp/dsp_task.c"),
+            Object(Matching, "RevoSDK/dsp/dsp_task.c"),
         ],
     },
     {
@@ -1158,11 +1158,11 @@ config.libs = [
     {
         "lib": "gd",
         "cflags": [*cflags_revo, "-use_lmw_stmw off"],
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
         "objects": [
             Object(Matching, "RevoSDK/gd/GDBase.c"),
-            Object(NonMatching, "RevoSDK/gd/GDGeometry.c"),
+            Object(Matching, "RevoSDK/gd/GDGeometry.c"),
         ],
     },
     {
@@ -1190,14 +1190,14 @@ config.libs = [
     {
         "lib": "mtx",
         "cflags": cflags_revo,
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
         "objects": [
             Object(NonMatching, "RevoSDK/mtx/mtx.c"),
             Object(Matching, "RevoSDK/mtx/mtxvec.c"),
             Object(NonMatching, "RevoSDK/mtx/mtx44.c"),
-            Object(NonMatching, "RevoSDK/mtx/mtx44vec.c"),
-            Object(NonMatching, "RevoSDK/mtx/vec.c"),
+            Object(Matching, "RevoSDK/mtx/mtx44vec.c"),
+            Object(Matching, "RevoSDK/mtx/vec.c"),
         ],
     },
     {
@@ -1264,11 +1264,11 @@ config.libs = [
     {
         "lib": "si",
         "cflags": [*cflags_revo, "-str noreadonly"],
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "RevoSDK/si/SIBios.c"),
-            Object(NonMatching, "RevoSDK/si/SISamplingRate.c"),
+            Object(Matching, "RevoSDK/si/SIBios.c"),
+            Object(Matching, "RevoSDK/si/SISamplingRate.c"),
         ],
     },
     {
@@ -1285,7 +1285,7 @@ config.libs = [
     {
         "lib": "thp",
         "cflags": [*cflags_revo, "-str noreadonly"],
-        "mw_version": "GC/3.0a3p1",
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
         "objects": [
             Object(Matching, "RevoSDK/thp/THPDec.c"),
@@ -1294,8 +1294,8 @@ config.libs = [
     },
     {
         "lib": "tpl",
-        "cflags": [*cflags_revo, "-str noreadonly"],  # unknown
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "cflags": [*cflags_revo, "-str noreadonly"],
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
         "objects": [
             Object(Matching, "RevoSDK/tpl/TPL.c"),
@@ -1313,23 +1313,23 @@ config.libs = [
     {
         "lib": "wenc",
         "cflags": [*cflags_revo, "-str noreadonly"],  # unknown
-        "mw_version": "GC/3.0a3p1",  # unknown
+        "mw_version": "GC/3.0a5.2",  # unknown
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "RevoSDK/wenc/wenc.c"),
+            Object(Matching, "RevoSDK/wenc/wenc.c"),
         ],
     },
     {
         "lib": "wpad",
-        "cflags": [*cflags_revo, "-str noreadonly"],  # unknown
-        "mw_version": "GC/3.0a5.2",  # unknown
+        "cflags": [*cflags_revo, "-str noreadonly"],
+        "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
         "objects": [
-            Object(NonMatching, "RevoSDK/wpad/WPAD.c"),
+            Object(Matching, "RevoSDK/wpad/WPAD.c"),
             Object(NonMatching, "RevoSDK/wpad/WPADHIDParser.c"),
-            Object(NonMatching, "RevoSDK/wpad/WPADMem.c"),
+            Object(Matching, "RevoSDK/wpad/WPADMem.c"),
             Object(NonMatching, "RevoSDK/wpad/WPADEncrypt.c"),
-            Object(NonMatching, "RevoSDK/wpad/debug_msg.c"),
+            Object(Matching, "RevoSDK/wpad/debug_msg.c"),
         ],
     },
     {

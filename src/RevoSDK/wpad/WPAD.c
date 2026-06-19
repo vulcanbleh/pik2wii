@@ -1132,7 +1132,7 @@ static void WPADiConnCallback(WUDDevInfo* info, u8 open) {
         _dev_handle_index[dev_handle] = (s8)(chan & 0xff);
         __ClearControlBlock(chan);
 
-        if (!memcmp(info->devAddr, "Nintendo RVL-CNT", 16)) {
+        if (!memcmp(info, "Nintendo RVL-CNT", 16)) {
             p_wpd->devType = WPAD_DEV_CORE;
         } else {
             p_wpd->devType = WPAD_DEV_FUTURE;
