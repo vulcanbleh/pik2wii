@@ -2021,33 +2021,50 @@ RevoSDK/dsp/dsp_task.c:
 
 RevoSDK/dvd/dvdfs.c:
 	.text       start:0x80116490 end:0x80117250
+	.data       start:0x8056FA70 end:0x8056FC10
+	.sdata      start:0x8066AAE0 end:0x8066AAF0
 	.sbss       start:0x8066C120 end:0x8066C140
 
 RevoSDK/dvd/dvd.c:
 	.text       start:0x80117250 end:0x8011BF60
+	.data       start:0x8056FC10 end:0x8056FFB8
+	.bss        start:0x805ED980 end:0x805F2630
+	.sdata      start:0x8066AAF0 end:0x8066AB08
 	.sbss       start:0x8066C140 end:0x8066C1D8
 
 RevoSDK/dvd/dvdqueue.c:
 	.text       start:0x8011BF60 end:0x8011C1B8
+	.bss        start:0x805F2630 end:0x805F2650
 
 RevoSDK/dvd/dvderror.c:
 	.text       start:0x8011C1B8 end:0x8011CABC
-	.bss        start:0x805F27C0 end:0x805F28C0
-	.sbss       start:0x8066C1D8 end:0x8066C1E8
+	.data       start:0x8056FFB8 end:0x8056FFE3
+	.bss        start:0x805F2660 end:0x805F28C0
+	.sbss       start:0x8066C1D8 end:0x8066C1E4
 
 RevoSDK/dvd/dvdidutils.c:
 	.text       start:0x8011CABC end:0x8011CBAC
 
 RevoSDK/dvd/dvdFatal.c:
 	.text       start:0x8011CBAC end:0x8011CD04
-	.sbss       start:0x8066C1E8 end:0x8066C1F0
+	.rodata     start:0x80540260 end:0x80540298
+	.data       start:0x8056FFE8 end:0x805704F8
+	.sbss       start:0x8066C1E8 end:0x8066C1EC
+	.sdata2     start:0x8066EA68 end:0x8066EA6C
 
 RevoSDK/dvd/dvdDeviceError.c:
 	.text       start:0x8011CD04 end:0x8011CF9C
-	.sbss       start:0x8066C1F0 end:0x8066C1F8
+	.rodata     start:0x80540298 end:0x805402B8
+	.data       start:0x805704F8 end:0x80570690
+	.bss        start:0x805F28C0 end:0x805F28E0
+	.sdata      start:0x8066AB08 end:0x8066AB10
+	.sbss       start:0x8066C1F0 end:0x8066C1F4
 
 RevoSDK/dvd/dvd_broadway.c:
 	.text       start:0x8011CF9C end:0x8011F3E8
+	.data       start:0x80570690 end:0x80571550
+	.bss        start:0x805F28E0 end:0x805F2A80
+	.sdata      start:0x8066AB10 end:0x8066AB20
 	.sbss       start:0x8066C1F8 end:0x8066C220
 
 RevoSDK/exi/EXIBios.c:

@@ -2,6 +2,7 @@
 #define _DOLPHIN_CARD_H
 
 #include "RevoSDK/dsp.h"
+#include "RevoSDK/dvd.h"
 #include "RevoSDK/os.h"
 #include "types.h"
 

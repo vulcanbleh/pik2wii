@@ -48,6 +48,10 @@ f64 sin(f64);
 f32 sinf(f32);
 f64 tan(f64);
 f32 tanf(f32);
+inline f32 tanf(f32 x)
+{
+	return tan(x);
+}
 
 f64 acos(f64);
 f64 asin(f64);
@@ -61,13 +65,15 @@ f64 ldexp(f64, int);
 f64 sqrt(f64);
 
 f64 pow(f64, f64);
-inline f32 powf(f32 x1, f32 x2) {
-    return pow(x1, x2);
+inline f32 powf(f32 x1, f32 x2)
+{
+	return pow(x1, x2);
 }
 f64 log(f64);
 f64 log10(f64);
-inline f32 log10f(f32 x) {
-    return log10(x);
+inline f32 log10f(f32 x)
+{
+	return log10(x);
 }
 
 f64 fmod(f64, f64);
@@ -116,18 +122,23 @@ void __mtfsb1(int);
 f64 __setflm(f64);
 
 #define FABS(x) (f32) __fabs(x)
-inline f64 fabs(f64 f) {
-    return __fabs(f);
+inline f64 fabs(f64 f)
+{
+	return __fabs(f);
 }
 
-inline f128 fabsl(f128 x) { return __fabs((f64)x); }
+inline f128 fabsl(f128 x)
+{
+	return __fabs((f64)x);
+}
 /*
 inline f32 fabsf(f32 f) {
-	f64 newVal = fabs(f);
-	return (f32)newVal;
+    f64 newVal = fabs(f);
+    return (f32)newVal;
 }*/
-inline f32 fabsf(f32 f) {
-    return (f32)fabs((f64)f);
+inline f32 fabsf(f32 f)
+{
+	return (f32)fabs((f64)f);
 }
 
 /**
@@ -136,16 +147,23 @@ inline f32 fabsf(f32 f) {
  * If my theory is correct, those functions will become inlined by code using libDolphin as a library.
  */
 
-inline f32 tanf_kludge(f32 __x) { return tan((f64)__x); }
-inline f32 sinf_kludge(f32 __x) { return sin((f64)__x); }
-inline f32 cosf_kludge(f32 __x) { return cos((f64)__x); }
-
-
-
-inline f32 nonsqrtf(f32 x) {
-    return sqrt(x);
+inline f32 tanf_kludge(f32 __x)
+{
+	return tan((f64)__x);
+}
+inline f32 sinf_kludge(f32 __x)
+{
+	return sin((f64)__x);
+}
+inline f32 cosf_kludge(f32 __x)
+{
+	return cos((f64)__x);
 }
 
+inline f32 nonsqrtf(f32 x)
+{
+	return sqrt(x);
+}
 
 #ifdef __cplusplus
 };
@@ -168,7 +186,10 @@ static inline f32 dolsqrtf(f32 x)
 	return x;
 }
 
-static inline f64 sqrt_step(f64 tmpd, f32 mag) { return tmpd * 0.5 * (3.0 - mag * (tmpd * tmpd)); }
+static inline f64 sqrt_step(f64 tmpd, f32 mag)
+{
+	return tmpd * 0.5 * (3.0 - mag * (tmpd * tmpd));
+}
 
 static inline f32 dolsqrtfull(f32 mag)
 {
@@ -187,11 +208,26 @@ static inline f32 dolsqrtfull(f32 mag)
 	}
 }
 
-static inline f32 scaleValue(f32 scale, f32 value) { return scale * value; }
+static inline f32 scaleValue(f32 scale, f32 value)
+{
+	return scale * value;
+}
 
-static inline f32 dolsinf(f32 val) { return (f32)sin((f32)val); }
-static inline f32 dolcosf(f32 val) { return (f32)cos((f32)val); }
-static inline f32 doltanf(f32 val) { return (f32)tan((f32)val); }
-static inline f32 dolatan2f(f32 val1, f32 val2) { return (f32)atan2((f32)val1, (f32)val2); }
+static inline f32 dolsinf(f32 val)
+{
+	return (f32)sin((f32)val);
+}
+static inline f32 dolcosf(f32 val)
+{
+	return (f32)cos((f32)val);
+}
+static inline f32 doltanf(f32 val)
+{
+	return (f32)tan((f32)val);
+}
+static inline f32 dolatan2f(f32 val1, f32 val2)
+{
+	return (f32)atan2((f32)val1, (f32)val2);
+}
 
 #endif

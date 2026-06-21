@@ -3,6 +3,7 @@
 
 #include "RevoSDK/gx.h"
 #include "RevoSDK/os.h"
+#include "RevoSDK/dvd.h"
 #include "THP/THPBuffer.h"
 #include "THP/THPFile.h"
 #include "THP/THPInfo.h"

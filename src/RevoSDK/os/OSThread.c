@@ -1,5 +1,6 @@
 #include "RevoSDK/hw_regs.h"
 #include "RevoSDK/os.h"
+#include "RevoSDK/OS/OSBootInfo.h"
 
 static vu32 RunQueueBits;
 static volatile BOOL RunQueueHint;
@@ -112,6 +113,22 @@ static void __OSSwitchThread(OSThread* nextThread)
 BOOL OSIsThreadTerminated(OSThread* thread)
 {
 	return (thread->state == OS_THREAD_STATE_MORIBUND || thread->state == OS_THREAD_STATE_NULL) ? TRUE : FALSE;
+}
+
+static BOOL __OSIsThreadActive(OSThread* thread) {
+    OSThread* active;
+
+    if (thread->state == 0) {
+        return FALSE;
+    }
+
+    for (active = __OSActiveThreadQueue.head; active; active = active->linkActive.next) {
+        if (thread == active) {
+            return TRUE;
+        }
+    }
+
+    return FALSE;
 }
 
 /**
@@ -362,7 +379,6 @@ BOOL OSCreateThread(OSThread* thread, OSThreadStartFunction func, void* param, v
 	BOOL enable;
 	u32 stackThing;
 	int i;
-	u32 tmp[2]; // DUMB compiler smfh.
 
 	if (priority < OS_PRIORITY_MIN || priority > OS_PRIORITY_MAX) {
 		return FALSE;
@@ -489,6 +505,32 @@ void OSCancelThread(OSThread* thread)
 	OSRestoreInterrupts(enabled);
 
 	return;
+}
+
+BOOL OSJoinThread(OSThread* thread, void** val) {
+    BOOL enabled = OSDisableInterrupts();
+
+    if (!(thread->attr & 1) && thread->state != OS_THREAD_STATE_MORIBUND && thread->queueJoin.head == NULL) {
+        OSSleepThread(&thread->queueJoin);
+        if (!__OSIsThreadActive(thread)) {
+            OSRestoreInterrupts(enabled);
+            return FALSE;
+        }
+    }
+
+    if (((volatile OSThread*)thread)->state == OS_THREAD_STATE_MORIBUND) {
+        if (val) {
+            *val = thread->val;
+        }
+
+        RemoveItem(&__OSActiveThreadQueue, thread, linkActive);
+        thread->state = 0;
+        OSRestoreInterrupts(enabled);
+        return TRUE;
+    }
+
+    OSRestoreInterrupts(enabled);
+    return FALSE;
 }
 
 /**

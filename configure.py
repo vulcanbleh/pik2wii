@@ -1325,7 +1325,7 @@ config.libs = [
         "mw_version": "GC/3.0a5.2",
         "progress_category": "sdk",
         "objects": [
-            Object(Matching, "RevoSDK/wpad/WPAD.c"),
+            Object(NonMatching, "RevoSDK/wpad/WPAD.c"),
             Object(NonMatching, "RevoSDK/wpad/WPADHIDParser.c"),
             Object(Matching, "RevoSDK/wpad/WPADMem.c"),
             Object(NonMatching, "RevoSDK/wpad/WPADEncrypt.c"),
