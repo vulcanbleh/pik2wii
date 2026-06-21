@@ -1,5 +1,5 @@
-#ifndef _DOLPHIN_DB_H
-#define _DOLPHIN_DB_H
+#ifndef _REVOSDK_DB_H
+#define _REVOSDK_DB_H
 
 #include "RevoSDK/AmcExi2Stubs.h"
 #include "RevoSDK/os.h"
@@ -15,8 +15,8 @@ struct DBInterface {
 	u32 unk4;
 };
 
-static struct DBInterface* __DBInterface;
 static int DBVerbose;
+static struct DBInterface* __DBInterface;
 
 void DBInit(void);
 void DBInitComm(vu8**, AmcEXICallback); // possibly not this type, but some similar construction

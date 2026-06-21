@@ -1,10 +1,9 @@
-#ifndef _DOLPHIN_OS_H
-#define _DOLPHIN_OS_H
+#ifndef _REVOSDK_OS_H
+#define _REVOSDK_OS_H
 
 #include "RevoSDK/PPCArch.h"
-#include "RevoSDK/dvd.h"
-#include "types.h"
 #include "stdarg.h"
+#include "types.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -12,10 +11,10 @@ extern "C" {
 
 #include "RevoSDK/OS/OSAlarm.h"
 #include "RevoSDK/OS/OSAlloc.h"
-#include "RevoSDK/OS/OSBootInfo.h"
 #include "RevoSDK/OS/OSCache.h"
 #include "RevoSDK/OS/OSContext.h"
 #include "RevoSDK/OS/OSError.h"
+#include "RevoSDK/OS/OSExecParams.h"
 #include "RevoSDK/OS/OSException.h"
 #include "RevoSDK/OS/OSExpansion.h"
 #include "RevoSDK/OS/OSFastCast.h"
@@ -95,7 +94,6 @@ u32 OSGetConsoleType();
 
 const char* OSGetAppGamename(void);
 u8 OSGetAppType(void);
-
 
 #define OS_SOUND_MODE_MONO   0u
 #define OS_SOUND_MODE_STEREO 1u
@@ -222,6 +220,18 @@ u16 OSGetGbsMode();
 #define RTC_CHAN 0
 #define RTC_DEV  1
 #define RTC_FREQ 3
+
+typedef struct OSIOSRev {
+	u8 reserved;
+	u8 major;
+	u8 minor;
+	u8 micro;
+	u8 month;
+	u8 date;
+	u16 year;
+} OSIOSRev;
+
+void __OSGetIOSRev(OSIOSRev*);
 
 // extern things.
 extern OSThreadQueue __DVDThreadQueue;

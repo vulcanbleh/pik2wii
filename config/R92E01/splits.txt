@@ -1368,9 +1368,6 @@ JSystem/J3D/J3DTevs.cpp:
 	.sdata2     start:0x8066E1C8 end:0x8066E218
 	.sbss2      start:0x806762C8 end:0x806762D0
 
-RevoSDK/bte/bta_dm_cfg.c:
-	.sbss2      start:0x806762D0 end:0x806762E0
-
 JSystem/J3D/J3DDrawBuffer.cpp:
 	.text       start:0x800CB290 end:0x800CB9B4
 	.data       start:0x8056A1A0 end:0x8056A200
@@ -1565,9 +1562,6 @@ JSystem/JParticle/JPATexture.cpp:
 	.text       start:0x800FE0CC end:0x800FE18C
 	.data       start:0x8056BBE8 end:0x8056BBF4
 
-RevoSDK/MSL_C/MSL_Common/locale.c:
-	.data       start:0x8056BFE0 end:0x8056C1D8
-
 JSystem/JStage/JSGSystem.cpp:
 	.text       start:0x800FE18C end:0x800FE204
 
@@ -1713,9 +1707,6 @@ RevoSDK/runtime/__init_cpp_exceptions.cpp:
 	.dtors      start:0x805350E4 end:0x805350E8 rename:.dtors$15
 	.sdata      start:0x8066AA90 end:0x8066AA98
 
-RevoSDK/MSL_C/MSL_Common/float.c:
-	.sdata      start:0x8066AAA8 end:0x8066AAB8
-
 RevoSDK/runtime/Gecko_ExceptionPPC.cp:
 	.text       start:0x801049DC end:0x80104A40
 	.bss        start:0x805D7D20 end:0x805D7D30
@@ -1751,7 +1742,11 @@ RevoSDK/MSL_C/MSL_Common/buffer_io.c:
 
 RevoSDK/MSL_C/MSL_Common/ctype.c:
 	.text       start:0x80106BD8 end:0x80106C10
-	.rodata     start:0x8053F3A8 end:0x8053F918
+	.rodata     start:0x8053F3A8 end:0x8053F7A8
+
+RevoSDK/MSL_C/MSL_Common/locale.c:
+	.rodata     start:0x8053F7A8 end:0x8053F8B0
+	.data       start:0x8056BFE0 end:0x8056C1D8
 
 RevoSDK/MSL_C/MSL_Common/wctype.c:
 	.rodata     start:0x8053F918 end:0x8053FF18
@@ -1796,6 +1791,10 @@ RevoSDK/MSL_C/MSL_Common/printf.c:
 	extab       start:0x800065E0 end:0x80006640
 	extabindex  start:0x80006A70 end:0x80006B00
 	.text       start:0x801079FC end:0x80109DC4
+	.sdata      start:0x8066AA98 end:0x8066AAA0
+
+RevoSDK/MSL_C/MSL_Common/float.c:
+	.sdata      start:0x8066AAA8 end:0x8066AAB8
 
 RevoSDK/MSL_C/MSL_Common/rand.c:
 	.text       start:0x80109DC4 end:0x80109DEC
@@ -1932,6 +1931,8 @@ RevoSDK/MSL_C/MSL_Common_Embedded/Math/Double_precision/w_sqrt.c:
 
 RevoSDK/ai/ai.c:
 	.text       start:0x80111A6C end:0x80112070
+	.data       start:0x8056C5D0 end:0x8056C617
+	.sdata      start:0x8066AAB8 end:0x8066AABC
 	.sbss       start:0x8066BF80 end:0x8066BFC0
 
 RevoSDK/ax/AX.c:
@@ -1997,52 +1998,73 @@ RevoSDK/axfx/AXFXHooks.c:
 
 RevoSDK/base/PPCArch.c:
 	.text       start:0x80115B8C end:0x80115CF0
+	.data       start:0x8056F860 end:0x8056F898
 
 RevoSDK/db/db.c:
 	.text       start:0x80115CF0 end:0x80115DD8
+	.data       start:0x8056F898 end:0x8056F8B0
 	.sbss       start:0x8066C0F8 end:0x8066C100
 
 RevoSDK/dsp/dsp.c:
 	.text       start:0x80115DD8 end:0x80115FE0
-	.sdata      start:0x8066AAD8 end:0x8066AAE0
-	.sbss       start:0x8066C100 end:0x8066C100
+	.data       start:0x8056F8B0 end:0x8056F930
+	.sdata      start:0x8066AAD8 end:0x8066AADC
+	.sbss       start:0x8066C100 end:0x8066C104
 
 RevoSDK/dsp/dsp_debug.c:
 	.text       start:0x80115FE0 end:0x80116030
 
 RevoSDK/dsp/dsp_task.c:
 	.text       start:0x80116030 end:0x80116490
-	.sbss       start:0x8066C100 end:0x8066C120
+	.data       start:0x8056F930 end:0x8056FA70
+	.sbss       start:0x8066C108 end:0x8066C120
 
 RevoSDK/dvd/dvdfs.c:
 	.text       start:0x80116490 end:0x80117250
+	.data       start:0x8056FA70 end:0x8056FC10
+	.sdata      start:0x8066AAE0 end:0x8066AAF0
 	.sbss       start:0x8066C120 end:0x8066C140
 
 RevoSDK/dvd/dvd.c:
 	.text       start:0x80117250 end:0x8011BF60
+	.data       start:0x8056FC10 end:0x8056FFB8
+	.bss        start:0x805ED980 end:0x805F2630
+	.sdata      start:0x8066AAF0 end:0x8066AB08
 	.sbss       start:0x8066C140 end:0x8066C1D8
 
 RevoSDK/dvd/dvdqueue.c:
 	.text       start:0x8011BF60 end:0x8011C1B8
+	.bss        start:0x805F2630 end:0x805F2650
 
 RevoSDK/dvd/dvderror.c:
 	.text       start:0x8011C1B8 end:0x8011CABC
-	.bss        start:0x805F27C0 end:0x805F28C0
-	.sbss       start:0x8066C1D8 end:0x8066C1E8
+	.data       start:0x8056FFB8 end:0x8056FFE3
+	.bss        start:0x805F2660 end:0x805F28C0
+	.sbss       start:0x8066C1D8 end:0x8066C1E4
 
 RevoSDK/dvd/dvdidutils.c:
 	.text       start:0x8011CABC end:0x8011CBAC
 
 RevoSDK/dvd/dvdFatal.c:
 	.text       start:0x8011CBAC end:0x8011CD04
-	.sbss       start:0x8066C1E8 end:0x8066C1F0
+	.rodata     start:0x80540260 end:0x80540298
+	.data       start:0x8056FFE8 end:0x805704F8
+	.sbss       start:0x8066C1E8 end:0x8066C1EC
+	.sdata2     start:0x8066EA68 end:0x8066EA6C
 
 RevoSDK/dvd/dvdDeviceError.c:
 	.text       start:0x8011CD04 end:0x8011CF9C
-	.sbss       start:0x8066C1F0 end:0x8066C1F8
+	.rodata     start:0x80540298 end:0x805402B8
+	.data       start:0x805704F8 end:0x80570690
+	.bss        start:0x805F28C0 end:0x805F28E0
+	.sdata      start:0x8066AB08 end:0x8066AB10
+	.sbss       start:0x8066C1F0 end:0x8066C1F4
 
 RevoSDK/dvd/dvd_broadway.c:
 	.text       start:0x8011CF9C end:0x8011F3E8
+	.data       start:0x80570690 end:0x80571550
+	.bss        start:0x805F28E0 end:0x805F2A80
+	.sdata      start:0x8066AB10 end:0x8066AB20
 	.sbss       start:0x8066C1F8 end:0x8066C220
 
 RevoSDK/exi/EXIBios.c:
@@ -2061,6 +2083,7 @@ RevoSDK/gd/GDBase.c:
 
 RevoSDK/gd/GDGeometry.c:
 	.text       start:0x80121294 end:0x80121C7C
+	.data       start:0x80571598 end:0x80571600
 
 RevoSDK/gx/GXInit.c:
 	.text       start:0x80121C7C end:0x80122E48
@@ -2273,17 +2296,21 @@ RevoSDK/pad/Pad.c:
 
 RevoSDK/si/SIBios.c:
 	.text       start:0x8013B610 end:0x8013CB80
+	.data       start:0x8057FCB8 end:0x8057FD28
+	.bss        start:0x805F44C0 end:0x805F46E0
+	.sdata      start:0x8066AC58 end:0x8066AC5C
 	.sbss       start:0x8066C438 end:0x8066C448
 
 RevoSDK/si/SISamplingRate.c:
 	.text       start:0x8013CB80 end:0x8013CC60
-	.sbss       start:0x8066C448 end:0x8066C480
+	.data       start:0x8057FD28 end:0x8057FDBB
+	.sbss       start:0x8066C448 end:0x8066C44C
 
 RevoSDK/vi/vi.c:
 	.text       start:0x8013CC60 end:0x8013F6AC
 	.data       start:0x8057FDC0 end:0x805808A8
 	.sdata      start:0x8066AC60 end:0x8066ACA0
-	.sbss       start:0x8066C480 end:0x8066C520
+	.sbss       start:0x8066C450 end:0x8066C520
 
 RevoSDK/vi/i2c.c:
 	.text       start:0x8013F6AC end:0x801400C8
@@ -2295,7 +2322,7 @@ RevoSDK/thp/THPDec.c:
 	.text       start:0x8014176C end:0x80144B3C
 	.rodata     start:0x805402B8 end:0x80540348
 	.data       start:0x805808A8 end:0x805808F0
-	.bss        start:0x805F4880 end:0x805F49E0
+	.bss        start:0x805F4880 end:0x805F49CC
 	.sdata      start:0x8066ACA0 end:0x8066ACA4
 	.sbss       start:0x8066C520 end:0x8066C648
 	.sdata2     start:0x8066EC38 end:0x8066EC58
@@ -2305,15 +2332,19 @@ RevoSDK/thp/THPAudio.c:
 
 RevoSDK/tpl/TPL.c:
 	.text       start:0x80144FD0 end:0x801451E4
-	.data       start:0x805808F0 end:0x80580920
-	.sdata      start:0x8066ACA8 end:0x8066ACB0
+	.data       start:0x805808F0 end:0x8058091B
+	.sdata      start:0x8066ACA8 end:0x8066ACAE
 	.sdata2     start:0x8066EC58 end:0x8066EC60
 
 RevoSDK/usb/usb.c:
 	.text       start:0x801451E4 end:0x80146310
+	.data       start:0x80580920 end:0x80580FB0
+	.sdata      start:0x8066ACB0 end:0x8066ACBE
+	.sbss       start:0x8066C648 end:0x8066C657
 
 RevoSDK/wenc/wenc.c:
 	.text       start:0x80146310 end:0x801465E8
+	.rodata     start:0x80540348 end:0x80540388
 	.sdata2     start:0x8066EC60 end:0x8066EC68
 
 RevoSDK/wpad/WPAD.c:
@@ -2358,11 +2389,12 @@ RevoSDK/wud/debug_msg.c:
 
 RevoSDK/arc/arc.c:
 	.text       start:0x801593B0 end:0x80159D30
-	.data       start:0x80583D48 end:0x80583DB8
-	.sdata      start:0x8066ACE0 end:0x8066ACE8
+	.data       start:0x80583D48 end:0x80583DB2
+	.sdata      start:0x8066ACE0 end:0x8066ACE6
 
 RevoSDK/bte/gki_buffer.c:
 	.text       start:0x80159D30 end:0x8015B174
+	.data       start:0x80583DB8 end:0x80583F00
 
 RevoSDK/bte/gki_time.c:
 	.text       start:0x8015B174 end:0x8015B6CC
@@ -2372,9 +2404,16 @@ RevoSDK/bte/gki_ppc.c:
 
 RevoSDK/bte/hcisu_h2.c:
 	.text       start:0x8015B95C end:0x8015BFF8
+	.rodata     start:0x805403C8 end:0x805403E0
 
 RevoSDK/bte/uusb_ppc.c:
 	.text       start:0x8015BFF8 end:0x8015CBFC
+	.sdata      start:0x8066ACE8 end:0x8066ACF8
+
+RevoSDK/bte/bta_dm_cfg.c:
+	.rodata     start:0x805403E0 end:0x80540470
+	.sdata      start:0x8066ACF8 end:0x8066AD10
+	.sbss2      start:0x806762D0 end:0x806762D4
 
 RevoSDK/bte/bte_hcisu.c:
 	.text       start:0x8015CBFC end:0x8015CCB4

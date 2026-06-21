@@ -1,7 +1,7 @@
 #include "RevoSDK/hw_regs.h"
 #include "RevoSDK/si.h"
 
-char* __SIVersion = "<< Dolphin SDK - SI\trelease build: Apr 17 2003 12:33:19 (0x2301) >>";
+static const char* __SIVersion = "<< RVL_SDK - SI \trelease build: Aug  8 2007 02:07:10 (0x4199_60831) >>";
 
 static SIControl Si = { -1, 0, 0, nullptr, nullptr };
 static SIPacket Packet[SI_MAX_CHAN];
@@ -30,28 +30,16 @@ static void GetTypeCallback(s32 chan, u32 error, OSContext* context);
 // useful macros.
 #define ROUND(n, a) (((u32)(n) + (a) - 1) & ~((a) - 1))
 
-/**
- * @note Address: 0x800F4EFC
- * @note Size: 0x20
- */
 BOOL SIBusy()
 {
 	return Si.chan != -1 ? TRUE : FALSE;
 }
 
-/**
- * @note Address: 0x800F4F1C
- * @note Size: 0x3C
- */
 BOOL SIIsChanBusy(s32 chan)
 {
 	return Packet[chan].chan != -1 || Si.chan == chan;
 }
 
-/**
- * @note Address: N/A
- * @note Size: 0x1C
- */
 void SIClearTCInterrupt(void)
 {
 	u32 reg;
@@ -62,10 +50,6 @@ void SIClearTCInterrupt(void)
 	__SIRegs[SI_CC_STAT] = reg;
 }
 
-/**
- * @note Address: 0x800F4F58
- * @note Size: 0x2FC
- */
 static u32 CompleteTransfer(void)
 {
 	u32 sr;
@@ -118,10 +102,6 @@ static u32 CompleteTransfer(void)
 	return sr;
 }
 
-/**
- * @note Address: N/A
- * @note Size: 0xF0
- */
 void SITransferNext(s32 chan)
 {
 	int i;
@@ -141,10 +121,6 @@ void SITransferNext(s32 chan)
 	}
 }
 
-/**
- * @note Address: 0x800F5254
- * @note Size: 0x344
- */
 static void SIInterruptHandler(__OSInterrupt interrupt, OSContext* context)
 {
 	u32 reg;
@@ -214,10 +190,6 @@ static void SIInterruptHandler(__OSInterrupt interrupt, OSContext* context)
 	}
 }
 
-/**
- * @note Address: 0x800F5598
- * @note Size: 0x98
- */
 static BOOL SIEnablePollingInterrupt(BOOL doEnable)
 {
 	BOOL enabled;
@@ -246,10 +218,6 @@ static BOOL SIEnablePollingInterrupt(BOOL doEnable)
 	return rc;
 }
 
-/**
- * @note Address: 0x800F5630
- * @note Size: 0xCC
- */
 BOOL SIRegisterPollingHandler(__OSInterruptHandler handler)
 {
 	BOOL enabled;
@@ -277,10 +245,6 @@ BOOL SIRegisterPollingHandler(__OSInterruptHandler handler)
 	return FALSE;
 }
 
-/**
- * @note Address: 0x800F56FC
- * @note Size: 0xF4
- */
 BOOL SIUnregisterPollingHandler(__OSInterruptHandler handler)
 {
 	BOOL enabled;
@@ -310,12 +274,14 @@ BOOL SIUnregisterPollingHandler(__OSInterruptHandler handler)
 	return FALSE;
 }
 
-/**
- * @note Address: 0x800F57F0
- * @note Size: 0xB4
- */
 void SIInit(void)
 {
+	static BOOL Initialized = FALSE;
+
+	if (Initialized) {
+		return;
+	}
+
 	OSRegisterVersion(__SIVersion);
 
 	Packet[0].chan = Packet[1].chan = Packet[2].chan = Packet[3].chan = -1;
@@ -336,12 +302,10 @@ void SIInit(void)
 	SIGetType(1);
 	SIGetType(2);
 	SIGetType(3);
+
+	Initialized = TRUE;
 }
 
-/**
- * @note Address: 0x800F58A4
- * @note Size: 0x20C
- */
 static BOOL __SITransfer(s32 chan, void* output, u32 outputBytes, void* input, u32 inputBytes, SICallback callback)
 {
 	BOOL enabled;
@@ -384,10 +348,6 @@ static BOOL __SITransfer(s32 chan, void* output, u32 outputBytes, void* input, u
 	return TRUE;
 }
 
-/**
- * @note Address: N/A
- * @note Size: 0x108
- */
 u32 SISync(void)
 {
 	BOOL enabled;
@@ -407,10 +367,6 @@ u32 SISync(void)
 	return sr;
 }
 
-/**
- * @note Address: 0x800F5AB0
- * @note Size: 0x7C
- */
 u32 SIGetStatus(s32 chan)
 {
 	BOOL enabled;
@@ -432,37 +388,21 @@ u32 SIGetStatus(s32 chan)
 	return sr;
 }
 
-/**
- * @note Address: 0x800F5B2C
- * @note Size: 0x14
- */
 void SISetCommand(s32 chan, u32 command)
 {
 	__SIRegs[3 * chan] = command;
 }
 
-/**
- * @note Address: N/A
- * @note Size: 0x14
- */
 u32 SIGetCommand(s32 chan)
 {
 	return __SIRegs[3 * chan];
 }
 
-/**
- * @note Address: 0x800F5B40
- * @note Size: 0x10
- */
 void SITransferCommands(void)
 {
 	__SIRegs[SI_STAT] = 0x80000000;
 }
 
-/**
- * @note Address: 0x800F5B50
- * @note Size: 0x6C
- */
 u32 SISetXY(u32 x, u32 y)
 {
 	u32 poll;
@@ -482,10 +422,6 @@ u32 SISetXY(u32 x, u32 y)
 	return poll;
 }
 
-/**
- * @note Address: 0x800F5BBC
- * @note Size: 0x9C
- */
 u32 SIEnablePolling(u32 poll)
 {
 	BOOL enabled;
@@ -519,10 +455,6 @@ u32 SIEnablePolling(u32 poll)
 	return poll;
 }
 
-/**
- * @note Address: 0x800F5C58
- * @note Size: 0x6C
- */
 u32 SIDisablePolling(u32 poll)
 {
 	BOOL enabled;
@@ -545,10 +477,6 @@ u32 SIDisablePolling(u32 poll)
 	return poll;
 }
 
-/**
- * @note Address: 0x800F5CC4
- * @note Size: 0xD4
- */
 static BOOL SIGetResponseRaw(s32 chan)
 {
 	u32 sr;
@@ -563,10 +491,6 @@ static BOOL SIGetResponseRaw(s32 chan)
 	return FALSE;
 }
 
-/**
- * @note Address: 0x800F5D98
- * @note Size: 0xC4
- */
 BOOL SIGetResponse(s32 chan, void* data)
 {
 	BOOL rc;
@@ -584,10 +508,6 @@ BOOL SIGetResponse(s32 chan, void* data)
 	return rc;
 }
 
-/**
- * @note Address: 0x800F5E5C
- * @note Size: 0x8C
- */
 static void AlarmHandler(OSAlarm* alarm, OSContext* context)
 {
 	s32 chan;
@@ -603,10 +523,6 @@ static void AlarmHandler(OSAlarm* alarm, OSContext* context)
 	}
 }
 
-/**
- * @note Address: 0x800F5EE8
- * @note Size: 0x16C
- */
 BOOL SITransfer(s32 chan, void* output, u32 outputBytes, void* input, u32 inputBytes, SICallback callback, OSTime delay)
 {
 	BOOL enabled;
@@ -646,11 +562,7 @@ BOOL SITransfer(s32 chan, void* output, u32 outputBytes, void* input, u32 inputB
 	return TRUE;
 }
 
-/**
- * @note Address: N/A
- * @note Size: 0x78
- */
-void CallTypeAndStatusCallback(s32 chan, u32 type)
+static void CallTypeAndStatusCallback(s32 chan, u32 type)
 {
 	SITypeAndStatusCallback callback;
 	int i;
@@ -664,10 +576,6 @@ void CallTypeAndStatusCallback(s32 chan, u32 type)
 	}
 }
 
-/**
- * @note Address: 0x800F6054
- * @note Size: 0x298
- */
 static void GetTypeCallback(s32 chan, u32 error, OSContext* context)
 {
 	static u32 cmdFixDevice[SI_MAX_CHAN];
@@ -733,10 +641,6 @@ static void GetTypeCallback(s32 chan, u32 error, OSContext* context)
 	CallTypeAndStatusCallback(chan, Type[chan]);
 }
 
-/**
- * @note Address: 0x800F62EC
- * @note Size: 0x1C4
- */
 u32 SIGetType(s32 chan)
 {
 	static u32 cmdTypeAndStatus;
@@ -774,10 +678,6 @@ u32 SIGetType(s32 chan)
 	return type;
 }
 
-/**
- * @note Address: 0x800F64B0
- * @note Size: 0x13C
- */
 u32 SIGetTypeAsync(s32 chan, SITypeAndStatusCallback callback)
 {
 	BOOL enabled;
@@ -804,10 +704,6 @@ u32 SIGetTypeAsync(s32 chan, SITypeAndStatusCallback callback)
 	return type;
 }
 
-/**
- * @note Address: 0x800F65EC
- * @note Size: 0x14C
- */
 u32 SIDecodeType(u32 type)
 {
 	u32 error;
@@ -870,19 +766,11 @@ u32 SIDecodeType(u32 type)
 	return SI_ERROR_UNKNOWN;
 }
 
-/**
- * @note Address: 0x800F6738
- * @note Size: 0x24
- */
 u32 SIProbe(s32 chan)
 {
 	return SIDecodeType(SIGetType(chan));
 }
 
-/**
- * @note Address: N/A
- * @note Size: 0x158
- */
 char* SIGetTypeString(u32 type)
 {
 	switch (SIDecodeType(type)) {

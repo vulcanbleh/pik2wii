@@ -1,5 +1,7 @@
 #include "RevoSDK/os.h"
+#include "RevoSDK/OS/OSBootInfo.h"
 #include "RevoSDK/PPCArch.h"
+#include "RevoSDK/dvd.h"
 #include "RevoSDK/hw_regs.h"
 #include "types.h"
 
@@ -22,7 +24,7 @@ extern u8 __ArenaLo[];
 extern u32 __DVDLongFileNameFlag;
 extern u32 __PADSpec;
 // OS version
-char* __OSVersion = "<< Dolphin SDK - OS\trelease build: Nov 26 2003 05:18:37 (0x2301) >>";
+static const char* __OSVersion = "<< RVL_SDK - OS \trelease build: Jan 30 2008 01:38:43 (0x4199_60831) >>";
 
 // main workhorse functions
 void ClearArena();

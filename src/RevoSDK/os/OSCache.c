@@ -127,7 +127,7 @@ _loop:
  * @note Address: 0x800EC718
  * @note Size: 0x30
  */
-ASM void DCFlushRange(register void* addr, register u32 nBytes) {
+ASM void DCFlushRange(register const void* addr, register u32 nBytes) {
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 	cmplwi  nBytes,0
@@ -480,14 +480,22 @@ _loop:
 // 	// UNUSED FUNCTION
 // }
 
-// /**
-//  * @note Address: N/A
-//  * @note Size: 0x24
-//  */
-// void LCLoadBlocks(void* destTag, void* srcAddr, u32 numBlocks)
-// {
-// 	// UNUSED FUNCTION
-// }
+ASM void LCLoadBlocks(register void* dst, register const void* src, register u32 blocks) {
+	// clang-format off
+    nofralloc
+
+    rlwinm r6, blocks, 30, 27, 31
+    clrlwi src, src, 3
+    or r6, r6, src
+    mtspr DMA_U, r6
+    rlwinm r6, blocks, 2, 28, 29
+    or r6, r6, dst
+    ori r6, r6, 0x12
+    mtspr DMA_L, r6
+
+    blr
+	// clang-format on
+}
 
 /**
  * @note Address: 0x800EC980
@@ -497,7 +505,7 @@ ASM void LCStoreBlocks(register void* destAddr, register void* srcTag, register 
 #ifdef __MWERKS__ // clang-format off
 	nofralloc
 	rlwinm  r6, numBlocks, 30, 27, 31
-	rlwinm  destAddr, destAddr, 0, 4, 31
+	clrlwi  destAddr, destAddr, 3
 	or      r6, r6, destAddr
 	mtspr   DMA_U, r6
 	rlwinm  r6, numBlocks, 2, 28, 29
@@ -561,14 +569,16 @@ u32 LCStoreData(void* destAddr, // to main memory destination
 	return numTransactions;
 }
 
-// /**
-//  * @note Address: N/A
-//  * @note Size: 0xC
-//  */
-// u32 LCQueueLength(void)
-// {
-// 	// UNUSED FUNCTION
-// }
+ASM u32 LCQueueLength(void) {
+    // clang-format off
+    nofralloc
+
+    mfspr r4, 0x398
+    rlwinm r3, r4, 8, 28, 31
+
+    blr
+    // clang-format on
+}
 
 /**
  * @note Address: 0x800ECA50

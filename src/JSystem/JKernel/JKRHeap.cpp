@@ -4,7 +4,7 @@
 #include "JSystem/JKernel/JKRHeap.h"
 #include "JSystem/JSupport/JSUList.h"
 #include "JSystem/JUtility/JUTException.h"
-#include "RevoSDK/os.h"
+#include "RevoSDK/OS/OSBootInfo.h"
 
 // TODO: This is stupid-hacky. Fix pls.
 typedef void Destructor(void*, s16);
