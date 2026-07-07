@@ -54,6 +54,8 @@ struct Model : public MtxObject {
 	bool needViewCalc();
 	void setAnimatorAll(BaseAnimator&);
 
+	void drawMesh();
+
 	inline void updateModel()
 	{
 		Matrixf mtx;

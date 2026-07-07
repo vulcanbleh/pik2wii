@@ -64,7 +64,7 @@ struct TControl : public stb::TControl {
 		if (obj == nullptr) {
 			return nullptr;
 		}
-		return &obj->referFunctionValue();
+		return obj->referFunctionValue();
 	}
 
 	TFunctionValue* getFunctionValue_index(u32 index)
@@ -73,7 +73,7 @@ struct TControl : public stb::TControl {
 		if (obj == nullptr) {
 			return nullptr;
 		}
-		return &obj->referFunctionValue();
+		return obj->referFunctionValue();
 	}
 
 	inline f32 getOnGetRotY() const { return mTransformOnGet_RotY; }

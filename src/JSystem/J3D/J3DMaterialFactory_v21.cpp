@@ -52,44 +52,58 @@ u16 J3DMaterialFactory_v21::countUniqueMaterials()
 	return count;
 }
 
+u32 J3DMaterialFactory_v21::countTexGens(int index) const {
+    J3DMaterialInitData_v21* data = &mInitData[mMatRemapTable[index]];
+    if (data->mNumTexGensIndex != 0xff) {
+        return mTexGenNums[data->mNumTexGensIndex];
+    }
+    return 0;
+}
+
+u32 J3DMaterialFactory_v21::countStages(int index) const {
+    J3DMaterialInitData_v21* data = &mInitData[mMatRemapTable[index]];
+    u32 count1 = 0;
+    u32 count2 = 0;
+    if (data->mNumTevStagesIndex != 255) {
+        count2 = mTevStageNums[data->mNumTevStagesIndex];
+    }
+    for (int i = 0; i < 8; i++) {
+        if (mInitData->mTextureIndex[i] != 0xffff) {
+            count1++;
+        }
+    }
+    if (count2 != count1 && count1 != 0) {
+        u32 count3;
+        if (count2 > count1) {
+            count3 = count2;
+        } else {
+            count3 = count1;
+        }
+        return count3;
+    }
+    return count2;
+}
+
 /**
  * @note Address: 0x80084C2C
  * @note Size: 0x838
  */
 J3DMaterial* J3DMaterialFactory_v21::create(J3DMaterial* mat, int index, u32 flags) const
 {
-	int tevID                     = 0;
-	J3DMaterialInitData_v21* data = &mInitData[mMatRemapTable[index]];
-	if (data->mNumTevStagesIndex != 255) {
-		tevID = mTevStageNums[data->mNumTevStagesIndex];
-	}
-	int texNum = 0;
-	for (int i = 0; i < 8; i++) {
-		if (mInitData->mTextureIndex[i] != 0xffff) {
-			texNum++;
-		}
-	}
-	tevID = (tevID != texNum) ? tevID : texNum;
-
-	u8 tevNum = flags >> 0x10;
-	if (tevNum < tevID) {
-		tevNum = tevID;
-	}
-
-	int texNo = 8;
-	if (tevNum < 9) {
-		texNo = tevNum;
-	}
-
-	u8 texNum2;
-	if (data->mNumTexGensIndex != 255) {
-		texNum2 = mTexGenNums[data->mNumTexGensIndex];
+	const u32 tevID = countStages(index);
+    u32 tevNum = (flags & 0x001f0000) >> 0x10;
+	u32 tevNumMax;
+	if (tevID > tevNum) {
+		tevNumMax = tevNum;
 	} else {
-		texNum2 = 0;
+		tevNumMax = tevID;
 	}
 
+	u32 texNo = tevNumMax > 8 ? 8 : tevNumMax;
+    u32 texNum2 = countTexGens(index);
+
+	u32 texGenFlag = texNum2 > 4 ? (flags >> 0x0c000000) : flags & (0x0c000000);
 	u32 colorFlag  = flags & (J3DMLF_Material_Color_LightOn | J3DMLF_Material_Color_AmbientOn);
-	u32 texGenFlag = colorFlag & texNum2;
 	u32 PEFlag     = flags & (J3DMLF_Material_PE_Full | J3DMLF_Material_PE_FogOff);
 	u32 IndFlag    = (flags >> 0x18) & 1;
 
@@ -98,7 +112,7 @@ J3DMaterial* J3DMaterialFactory_v21::create(J3DMaterial* mat, int index, u32 fla
 	}
 	mat->mColorBlock   = mat->createColorBlock(colorFlag);
 	mat->mTexGenBlock  = mat->createTexGenBlock(texGenFlag);
-	mat->mTevBlock     = mat->createTevBlock(tevNum);
+	mat->mTevBlock     = mat->createTevBlock((u16)tevNumMax);
 	mat->mIndBlock     = mat->createIndBlock(IndFlag);
 	mat->mPEBlock      = mat->createPEBlock(PEFlag, mInitData[mMatRemapTable[index]].mPixelEngineMode);
 	mat->mIndex        = index;
@@ -118,11 +132,11 @@ J3DMaterial* J3DMaterialFactory_v21::create(J3DMaterial* mat, int index, u32 fla
 	for (u8 i = 0; i < texNo; i++) {
 		mat->mTevBlock->setTexNo(i, newTexNo(index, i));
 	}
-	for (u8 i = 0; i < tevNum; i++) {
+	for (u8 i = 0; i < tevNumMax; i++) {
 		mat->mTevBlock->setTevOrder(i, newTevOrder(i, index));
 	}
 
-	for (u8 i = 0; i < tevNum; i++) {
+	for (u8 i = 0; i < tevNumMax; i++) {
 		J3DMaterialInitData_v21* data = &mInitData[mMatRemapTable[index]];
 		mat->mTevBlock->setTevStage(i, newTevStage(i, index));
 		u16 id = data->mTevSwapModeInfoIndex[i];
@@ -162,15 +176,15 @@ J3DMaterial* J3DMaterialFactory_v21::create(J3DMaterial* mat, int index, u32 fla
 		mat->mTexGenBlock->setTexMtx(i, newTexMtx(i, index));
 	}
 
-	data = &mInitData[mMatRemapTable[index]];
-	for (u8 i = 0; i < tevNum; i++) {
+	J3DMaterialInitData_v21* data = &mInitData[mMatRemapTable[index]];
+	for (u8 i = 0; i < tevNumMax; i++) {
 		if (data->mTevKColorSels[i] != 255) {
 			mat->mTevBlock->setTevKColorSel(i, data->mTevKColorSels[i]);
 		} else {
 			mat->mTevBlock->setTevKColorSel(i, (u8)28);
 		}
 	}
-	for (u8 i = 0; i < tevNum; i++) {
+	for (u8 i = 0; i < tevNumMax; i++) {
 		if (data->mTevKAlphaSels[i] != 255) {
 			mat->mTevBlock->setTevKAlphaSel(i, data->mTevKAlphaSels[i]);
 		} else {
@@ -811,48 +825,6 @@ J3DGXColor J3DMaterialFactory_v21::newMatColor(int matID, int colID) const
 		return J3DGXColor(mColorData[id]);
 	}
 	return J3DGXColor(defaultJ3DGXColor);
-	/*
-	stwu     r1, -0x10(r1)
-	slwi     r0, r6, 1
-	lwz      r7, 8(r4)
-	slwi     r5, r5, 1
-	lwz      r8, lbl_80516AE0@sda21(r2)
-	lhzx     r5, r7, r5
-	stw      r8, 8(r1)
-	mulli    r5, r5, 0x138
-	lwz      r6, 4(r4)
-	lbz      r7, 9(r1)
-	lbz      r8, 0xa(r1)
-	addi     r5, r5, 8
-	lbz      r9, 0xb(r1)
-	add      r0, r5, r0
-	lhzx     r0, r6, r0
-	cmplwi   r0, 0xffff
-	beq      lbl_800854D8
-	lwz      r4, 0xc(r4)
-	rlwinm   r0, r0, 2, 0xe, 0x1d
-	add      r4, r4, r0
-	lbz      r0, 0(r4)
-	stb      r0, 0(r3)
-	lbz      r0, 1(r4)
-	stb      r0, 1(r3)
-	lbz      r0, 2(r4)
-	stb      r0, 2(r3)
-	lbz      r0, 3(r4)
-	stb      r0, 3(r3)
-	b        lbl_800854EC
-
-lbl_800854D8:
-	lbz      r0, 8(r1)
-	stb      r0, 0(r3)
-	stb      r7, 1(r3)
-	stb      r8, 2(r3)
-	stb      r9, 3(r3)
-
-lbl_800854EC:
-	addi     r1, r1, 0x10
-	blr
-	*/
 }
 
 /**
@@ -880,111 +852,6 @@ J3DColorChan J3DMaterialFactory_v21::newColorChan(int matID, int colID) const
 	}
 
 	return J3DColorChan();
-	/*
-	lwz      r7, 8(r4)
-	slwi     r5, r5, 1
-	slwi     r0, r6, 1
-	lwz      r6, 4(r4)
-	lhzx     r5, r7, r5
-	mulli    r5, r5, 0x138
-	addi     r5, r5, 0xc
-	add      r0, r5, r0
-	lhzx     r0, r6, r0
-	cmplwi   r0, 0xffff
-	beq      lbl_8008560C
-	lwz      r4, 0x14(r4)
-	rlwinm   r0, r0, 3, 0xd, 0x1c
-	add      r8, r4, r0
-	lbz      r10, 5(r8)
-	lbz      r0, 2(r8)
-	lbz      r5, 0(r8)
-	addi     r7, r10, -255
-	subfic   r6, r10, 0xff
-	lbz      r4, 1(r8)
-	nor      r6, r7, r6
-	rlwinm   r7, r5, 1, 0xf, 0x1e
-	srawi    r5, r6, 0x1f
-	lbz      r9, 4(r8)
-	andc     r5, r10, r5
-	or       r4, r7, r4
-	rlwinm   r6, r4, 0, 0x1a, 0x18
-	rlwinm   r11, r0, 7, 0x12, 0x12
-	rlwinm   r5, r5, 6, 0x12, 0x19
-	cntlzw   r4, r9
-	or       r12, r6, r5
-	lbz      r6, 3(r8)
-	rlwinm   r5, r4, 0x1b, 0x1f, 0x1f
-	neg      r4, r9
-	rlwimi   r12, r0, 2, 0x1d, 0x1d
-	rlwinm   r10, r0, 7, 0x11, 0x11
-	rlwimi   r12, r0, 2, 0x1c, 0x1c
-	neg      r5, r5
-	andc     r5, r6, r5
-	subfic   r6, r9, 2
-	rlwimi   r12, r0, 2, 0x1b, 0x1b
-	or       r4, r4, r9
-	rlwimi   r12, r0, 2, 0x1a, 0x1a
-	slwi     r7, r5, 7
-	rlwimi   r12, r0, 7, 0x14, 0x14
-	addi     r5, r9, -2
-	rlwimi   r12, r0, 7, 0x13, 0x13
-	rlwimi   r11, r12, 0, 0x13, 0x1f
-	or       r0, r6, r5
-	rlwimi   r10, r11, 0, 0x12, 0x1f
-	rlwinm   r5, r10, 0, 0x19, 0x16
-	or       r5, r5, r7
-	rlwimi   r5, r0, 0xa, 0x16, 0x16
-	rlwimi   r5, r4, 0xb, 0x15, 0x15
-	sth      r5, 0(r3)
-	blr
-
-lbl_8008560C:
-	addi     r8, r2, j3dDefaultColorChanInfo@sda21
-	lis      r4, 0x0000FFFF@ha
-	lbz      r10, 5(r8)
-	addi     r4, r4, 0x0000FFFF@l
-	lbz      r0, 2(r8)
-	lbz      r5, j3dDefaultColorChanInfo@sda21(r2)
-	subf     r7, r4, r10
-	subf     r6, r10, r4
-	lbz      r4, 1(r8)
-	nor      r6, r7, r6
-	rlwinm   r7, r5, 1, 0xf, 0x1e
-	srawi    r5, r6, 0x1f
-	lbz      r9, 4(r8)
-	andc     r5, r10, r5
-	or       r4, r7, r4
-	rlwinm   r6, r4, 0, 0x1a, 0x18
-	rlwinm   r11, r0, 7, 0x12, 0x12
-	rlwinm   r5, r5, 6, 0x12, 0x19
-	cntlzw   r4, r9
-	or       r12, r6, r5
-	lbz      r6, 3(r8)
-	rlwinm   r5, r4, 0x1b, 0x1f, 0x1f
-	neg      r4, r9
-	rlwimi   r12, r0, 2, 0x1d, 0x1d
-	rlwinm   r10, r0, 7, 0x11, 0x11
-	rlwimi   r12, r0, 2, 0x1c, 0x1c
-	neg      r5, r5
-	andc     r5, r6, r5
-	subfic   r6, r9, 2
-	rlwimi   r12, r0, 2, 0x1b, 0x1b
-	or       r4, r4, r9
-	rlwimi   r12, r0, 2, 0x1a, 0x1a
-	slwi     r7, r5, 7
-	rlwimi   r12, r0, 7, 0x14, 0x14
-	addi     r5, r9, -2
-	rlwimi   r12, r0, 7, 0x13, 0x13
-	rlwimi   r11, r12, 0, 0x13, 0x1f
-	or       r0, r6, r5
-	rlwimi   r10, r11, 0, 0x12, 0x1f
-	rlwinm   r5, r10, 0, 0x19, 0x16
-	or       r5, r5, r7
-	rlwimi   r5, r0, 0xa, 0x16, 0x16
-	rlwimi   r5, r4, 0xb, 0x15, 0x15
-	sth      r5, 0(r3)
-	blr
-	*/
 }
 
 /**
@@ -1075,11 +942,12 @@ J3DGXColorS10 J3DMaterialFactory_v21::newTevColor(int matID, int colID) const
 {
 	GXColorS10 defaultTevColor = { 0, 0, 0, 0 };
 	J3DGXColorS10 dflt         = defaultTevColor;
-	u16 id                     = getMaterialInitData(matID).mTevColorIndex[colID];
-	if (id != 0xFFFF) {
-		return mTevColors[id];
-	}
-	return dflt;
+	J3DMaterialInitData_v21* data = &mInitData[mMatRemapTable[matID]];
+	if (data->mTevColorIndex[colID] != 0xFFFF) {
+		return mTevColors[colID];
+	} else {
+        return dflt;
+    }
 	/*
 	stwu     r1, -0x10(r1)
 	slwi     r0, r6, 1
@@ -1139,48 +1007,6 @@ J3DGXColor J3DMaterialFactory_v21::newTevKColor(int matID, int colID) const
 		return mTevKColors[id];
 	}
 	return dflt;
-	/*
-	stwu     r1, -0x10(r1)
-	slwi     r0, r6, 1
-	lwz      r7, 8(r4)
-	slwi     r5, r5, 1
-	lwz      r8, lbl_80516AE4@sda21(r2)
-	lhzx     r5, r7, r5
-	stw      r8, 8(r1)
-	mulli    r5, r5, 0x138
-	lwz      r6, 4(r4)
-	lbz      r7, 9(r1)
-	lbz      r8, 0xa(r1)
-	addi     r5, r5, 0x80
-	lbz      r9, 0xb(r1)
-	add      r0, r5, r0
-	lhzx     r0, r6, r0
-	cmplwi   r0, 0xffff
-	beq      lbl_80085ADC
-	lwz      r4, 0x3c(r4)
-	rlwinm   r0, r0, 2, 0xe, 0x1d
-	add      r4, r4, r0
-	lbz      r0, 0(r4)
-	stb      r0, 0(r3)
-	lbz      r0, 1(r4)
-	stb      r0, 1(r3)
-	lbz      r0, 2(r4)
-	stb      r0, 2(r3)
-	lbz      r0, 3(r4)
-	stb      r0, 3(r3)
-	b        lbl_80085AF0
-
-lbl_80085ADC:
-	lbz      r0, 8(r1)
-	stb      r0, 0(r3)
-	stb      r7, 1(r3)
-	stb      r8, 2(r3)
-	stb      r9, 3(r3)
-
-lbl_80085AF0:
-	addi     r1, r1, 0x10
-	blr
-	*/
 }
 
 /**
@@ -1229,163 +1055,12 @@ J3DTevSwapModeTable J3DMaterialFactory_v21::newTevSwapModeTable(int matID, int t
 J3DFog J3DMaterialFactory_v21::newFog(int matID) const
 {
 	J3DFog fog;
-	u16 id = getMaterialInitData(matID).mFogInfoIndex;
-	if (id != 0xFFFF) {
-		fog = J3DFog(mFogInfo[id]);
+	J3DMaterialInitData_v21* data = &mInitData[mMatRemapTable[matID]];
+	if (data->mFogInfoIndex != 0xFFFF) {
+		fog.setFogInfo(mFogInfo[data->mFogInfoIndex]);
 	}
 
 	return fog;
-	/*
-	stwu     r1, -0x80(r1)
-	slwi     r0, r5, 1
-	lwz      r6, 8(r4)
-	lis      r5, j3dDefaultFogInfo@ha
-	stmw     r26, 0x68(r1)
-	addi     r31, r5, j3dDefaultFogInfo@l
-	lwz      r7, 4(r4)
-	lhzx     r0, r6, r0
-	lhz      r10, 0x18(r31)
-	mulli    r5, r0, 0x138
-	lhz      r9, 0x1a(r31)
-	lhz      r8, 0x1c(r31)
-	lhz      r6, 0x1e(r31)
-	addi     r0, r5, 0x130
-	lhz      r5, 0x20(r31)
-	lhzx     r26, r7, r0
-	sth      r10, 0x4c(r1)
-	lbz      r30, 0(r31)
-	cmplwi   r26, 0xffff
-	sth      r9, 0x4e(r1)
-	lbz      r29, 1(r31)
-	sth      r8, 0x50(r1)
-	lhz      r28, 2(r31)
-	sth      r6, 0x52(r1)
-	lfs      f3, 4(r31)
-	sth      r5, 0x54(r1)
-	lfs      f2, 8(r31)
-	lfs      f1, 0xc(r31)
-	lfs      f0, 0x10(r31)
-	lbz      r12, 0x14(r31)
-	lbz      r11, 0x15(r31)
-	lbz      r7, 0x16(r31)
-	lbz      r0, 0x17(r31)
-	lhz      r10, 0x22(r31)
-	lhz      r9, 0x24(r31)
-	lhz      r8, 0x26(r31)
-	lhz      r6, 0x28(r31)
-	lhz      r5, 0x2a(r31)
-	stb      r30, 0x34(r1)
-	stb      r29, 0x35(r1)
-	sth      r28, 0x36(r1)
-	stfs     f3, 0x38(r1)
-	stfs     f2, 0x3c(r1)
-	stfs     f1, 0x40(r1)
-	stfs     f0, 0x44(r1)
-	stb      r12, 0x48(r1)
-	stb      r11, 0x49(r1)
-	stb      r7, 0x4a(r1)
-	stb      r0, 0x4b(r1)
-	sth      r10, 0x56(r1)
-	sth      r9, 0x58(r1)
-	sth      r8, 0x5a(r1)
-	sth      r6, 0x5c(r1)
-	sth      r5, 0x5e(r1)
-	beq      lbl_80085E14
-	mulli    r0, r26, 0x2c
-	lwz      r4, 0x50(r4)
-	add      r8, r4, r0
-	lwz      r0, 0x18(r8)
-	lwz      r4, 0x1c(r8)
-	stw      r0, 0x20(r1)
-	lwz      r0, 0x20(r8)
-	stw      r4, 0x24(r1)
-	lwz      r4, 0(r8)
-	stw      r0, 0x28(r1)
-	lwz      r7, 4(r8)
-	stw      r4, 8(r1)
-	lwz      r6, 8(r8)
-	lwz      r5, 0xc(r8)
-	lwz      r4, 0x10(r8)
-	lwz      r0, 0x14(r8)
-	lwz      r28, 0x24(r8)
-	stw      r0, 0x1c(r1)
-	lwz      r29, 0x28(r8)
-	stw      r7, 0xc(r1)
-	lhz      r7, 0x20(r1)
-	stw      r6, 0x10(r1)
-	lhz      r6, 0x22(r1)
-	stw      r5, 0x14(r1)
-	lhz      r5, 0x24(r1)
-	stw      r4, 0x18(r1)
-	lhz      r4, 0x26(r1)
-	lhz      r0, 0x28(r1)
-	sth      r7, 0x4c(r1)
-	lbz      r30, 8(r1)
-	lbz      r31, 9(r1)
-	lhz      r12, 0xa(r1)
-	lfs      f3, 0xc(r1)
-	lfs      f2, 0x10(r1)
-	lfs      f1, 0x14(r1)
-	lfs      f0, 0x18(r1)
-	lbz      r11, 0x1c(r1)
-	lbz      r10, 0x1d(r1)
-	lbz      r9, 0x1e(r1)
-	lbz      r8, 0x1f(r1)
-	lhz      r7, 0x2a(r1)
-	stw      r28, 0x2c(r1)
-	sth      r6, 0x4e(r1)
-	lhz      r6, 0x2c(r1)
-	sth      r5, 0x50(r1)
-	lhz      r5, 0x2e(r1)
-	stw      r29, 0x30(r1)
-	sth      r4, 0x52(r1)
-	lhz      r4, 0x30(r1)
-	sth      r0, 0x54(r1)
-	lhz      r0, 0x32(r1)
-	stb      r30, 0x34(r1)
-	stb      r31, 0x35(r1)
-	sth      r12, 0x36(r1)
-	stfs     f3, 0x38(r1)
-	stfs     f2, 0x3c(r1)
-	stfs     f1, 0x40(r1)
-	stfs     f0, 0x44(r1)
-	stb      r11, 0x48(r1)
-	stb      r10, 0x49(r1)
-	stb      r9, 0x4a(r1)
-	stb      r8, 0x4b(r1)
-	sth      r7, 0x56(r1)
-	sth      r6, 0x58(r1)
-	sth      r5, 0x5a(r1)
-	sth      r4, 0x5c(r1)
-	sth      r0, 0x5e(r1)
-
-lbl_80085E14:
-	lwz      r0, 0x34(r1)
-	lwz      r4, 0x38(r1)
-	stw      r0, 0(r3)
-	lwz      r0, 0x3c(r1)
-	stw      r4, 4(r3)
-	lwz      r4, 0x40(r1)
-	stw      r0, 8(r3)
-	lwz      r0, 0x44(r1)
-	stw      r4, 0xc(r3)
-	lwz      r4, 0x48(r1)
-	stw      r0, 0x10(r3)
-	lwz      r0, 0x4c(r1)
-	stw      r4, 0x14(r3)
-	lwz      r4, 0x50(r1)
-	stw      r0, 0x18(r3)
-	lwz      r0, 0x54(r1)
-	stw      r4, 0x1c(r3)
-	lwz      r4, 0x58(r1)
-	stw      r0, 0x20(r3)
-	lwz      r0, 0x5c(r1)
-	stw      r4, 0x24(r3)
-	stw      r0, 0x28(r3)
-	lmw      r26, 0x68(r1)
-	addi     r1, r1, 0x80
-	blr
-	*/
 }
 
 /**

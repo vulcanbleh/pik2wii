@@ -420,29 +420,8 @@ TObject* TControl::getObject(void const* id, u32 length)
 	JGadget::TObjectList::iterator end   = mObjectContainer.end();
 	JGadget::TObjectList::iterator bob   = std::find_if(start, end, object::TPRObject_ID_equal(id, length));
 
-	// this needs to not inline later - probably an inline depth thing with iterators but Not Today :')
-	// clang-format off
-	(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0;
-	(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0;
-	(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0;
-	(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0;
-	(void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0; (void*)0;
-	// clang-format on
-
 	return (bob != end) ? &*bob : nullptr;
 }
-} // namespace stb
-} // namespace JStudio
-template <>
-JGadget::TObjectList::iterator std::find_if(JGadget::TObjectList::iterator first, JGadget::TObjectList::iterator last,
-                                            JStudio::object::TPRObject_ID_equal p)
-{
-	for (; first != last && !p(*first); ++first) { }
-	return first;
-}
-
-namespace JStudio {
-namespace stb {
 
 /**
  * @note Address: N/A

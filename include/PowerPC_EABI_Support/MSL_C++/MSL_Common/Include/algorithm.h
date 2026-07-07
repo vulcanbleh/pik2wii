@@ -26,11 +26,31 @@ ForwardIterator lower_bound(ForwardIterator first, ForwardIterator last, const T
 	return first;
 }
 
-template <class ForwardIterator, class T>
-ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last, const T& val);
+template <class ForwardIterator, class T, class Predicate>
+ForwardIterator upper_bound(ForwardIterator first, ForwardIterator last, const T& val, Predicate p)
+{
+	iterator_traits<ForwardIterator>::difference_type count = std::distance<ForwardIterator>(first, last);
+	while (count > 0) {
+		ForwardIterator it                                     = first;
+		iterator_traits<ForwardIterator>::difference_type step = count / 2;
+		std::advance(it, step);
+		if (!(val < *it)) {
+			first = ++it;
+			count -= step + 1;
+		} else {
+			count = step;
+		}
+	}
+	return first;
+}
 
 template <class InputIt, class UnaryPredicate>
-InputIt find_if(InputIt first, InputIt last, UnaryPredicate p);
+InputIt find_if(InputIt first, InputIt last, UnaryPredicate p){
+	while (first != last && !p(*first)) {
+		++first;
+	}
+	return first;
+}
 
 /*
 template<class OutputIt, class Size, int A2>
