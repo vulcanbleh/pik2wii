@@ -51,13 +51,13 @@ TotalResultData::TotalResultData(const int* p1, const int* p2, Game::Highscore**
 
 	int scoreIDs[GAME_HIGHSCORE_COUNT] = { 0, 8, 1, 2, 3, 4, 5, 6, 7, 14, 10, 11, 9, 13, 12, 15 };
 
-	LoadResource::Arg arg("/new_screen/cmn/result_final_image.szs");
+	LoadResource::Arg arg("new_screen/cmn/result_final_image.szs");
 	LoadResource::Node* node = gLoadResourceMgr->mountArchive(arg);
 
 	if (node) {
 		arc = node->mArchive;
 	} else {
-		JUT_PANICLINE(107, "failed");
+		JUT_PANICLINE(110, "failed");
 	}
 
 	mResults = new OneResultData*[GAME_HIGHSCORE_COUNT];
@@ -149,112 +149,6 @@ ObjFinalResult::ObjFinalResult()
 	mFlags = 0;
 	mFlags |= FinalResult_NeedScrollSe;
 	mFadeAlpha = 0;
-	/*
-	stwu     r1, -0x10(r1)
-	mflr     r0
-	stw      r0, 0x14(r1)
-	stw      r31, 0xc(r1)
-	mr       r31, r3
-	bl       __ct__Q26Screen7ObjBaseFv
-	lis      r4, __vt__Q32kh6Screen14ObjFinalResult@ha
-	lis      r3, msVal__Q32kh6Screen14ObjFinalResult@ha
-	addi     r4, r4, __vt__Q32kh6Screen14ObjFinalResult@l
-	li       r0, -1
-	stw      r4, 0(r31)
-	addi     r4, r4, 0x10
-	li       r7, 0
-	lfs      f0, lbl_805201A0@sda21(r2)
-	stw      r4, 0x18(r31)
-	li       r5, 1
-	addi     r6, r3, msVal__Q32kh6Screen14ObjFinalResult@l
-	li       r4, 3
-	stw      r0, 0x124(r31)
-	li       r0, 0xff
-	mr       r3, r31
-	stw      r7, 0x3c(r31)
-	stw      r7, 0x54(r31)
-	stw      r7, 0x50(r31)
-	stw      r7, 0x4c(r31)
-	stw      r7, 0x48(r31)
-	stw      r7, 0x44(r31)
-	stw      r7, 0x40(r31)
-	stw      r7, 0x60(r31)
-	stw      r7, 0x5c(r31)
-	stw      r7, 0x58(r31)
-	stw      r7, 0x64(r31)
-	stw      r7, 0x68(r31)
-	stfs     f0, 0x88(r31)
-	stfs     f0, 0x84(r31)
-	stfs     f0, 0x80(r31)
-	stfs     f0, 0x7c(r31)
-	stfs     f0, 0x78(r31)
-	stfs     f0, 0x74(r31)
-	stfs     f0, 0x70(r31)
-	stfs     f0, 0x6c(r31)
-	stw      r7, 0x8c(r31)
-	stw      r7, 0x9c(r31)
-	stw      r7, 0x98(r31)
-	stw      r7, 0x94(r31)
-	stw      r7, 0x90(r31)
-	stw      r7, 0xd0(r31)
-	stw      r7, 0xc0(r31)
-	stw      r7, 0xb0(r31)
-	stw      r7, 0xa0(r31)
-	stw      r7, 0x110(r31)
-	stw      r7, 0x100(r31)
-	stw      r7, 0xf0(r31)
-	stw      r7, 0xe0(r31)
-	stw      r7, 0xd4(r31)
-	stw      r7, 0xc4(r31)
-	stw      r7, 0xb4(r31)
-	stw      r7, 0xa4(r31)
-	stw      r7, 0x114(r31)
-	stw      r7, 0x104(r31)
-	stw      r7, 0xf4(r31)
-	stw      r7, 0xe4(r31)
-	stw      r7, 0xd8(r31)
-	stw      r7, 0xc8(r31)
-	stw      r7, 0xb8(r31)
-	stw      r7, 0xa8(r31)
-	stw      r7, 0x118(r31)
-	stw      r7, 0x108(r31)
-	stw      r7, 0xf8(r31)
-	stw      r7, 0xe8(r31)
-	stw      r7, 0xdc(r31)
-	stw      r7, 0xcc(r31)
-	stw      r7, 0xbc(r31)
-	stw      r7, 0xac(r31)
-	stw      r7, 0x11c(r31)
-	stw      r7, 0x10c(r31)
-	stw      r7, 0xfc(r31)
-	stw      r7, 0xec(r31)
-	stfs     f0, 0x120(r31)
-	stb      r7, 0x124(r31)
-	stb      r7, 0x125(r31)
-	stb      r7, 0x126(r31)
-	stb      r7, 0x127(r31)
-	stfs     f0, 0x128(r31)
-	stfs     f0, 0x12c(r31)
-	stw      r5, 0x130(r31)
-	lwz      r5, 4(r6)
-	stw      r5, 0x134(r31)
-	stw      r7, 0x138(r31)
-	lwz      r5, 8(r6)
-	stw      r5, 0x13c(r31)
-	stw      r4, 0x148(r31)
-	stb      r0, 0x14d(r31)
-	stb      r0, 0x14c(r31)
-	stb      r7, 0x14e(r31)
-	lbz      r0, 0x14e(r31)
-	ori      r0, r0, 8
-	stb      r0, 0x14e(r31)
-	stb      r7, 0x14f(r31)
-	lwz      r31, 0xc(r1)
-	lwz      r0, 0x14(r1)
-	mtlr     r0
-	addi     r1, r1, 0x10
-	blr
-	*/
 }
 
 /**
@@ -1162,7 +1056,7 @@ bool ObjFinalResult::doUpdate()
 			switch (mSaveMgr->mEndState) {
 			case ebi::Save::TMgr::End_SaveDone:
 			case ebi::Save::TMgr::End_SelectNoSave:
-				JUT_ASSERTLINE(382, getDispMember()->isID(OWNER_KH, MEMBER_FINAL_RESULT), "disp member err");
+				JUT_ASSERTLINE(385, getDispMember()->isID(OWNER_KH, MEMBER_FINAL_RESULT), "disp member err");
 				DispFinalResult* disp = static_cast<DispFinalResult*>(getDispMember());
 				disp->mExitStatus     = ::Screen::Game2DMgr::CHECK2D_FinalResult_Finished;
 				break;
@@ -1189,7 +1083,7 @@ bool ObjFinalResult::doUpdate()
 		}
 		if (mState == StatusNormal && mCurrentPage == 7) {
 			Controller* pad = getGamePad();
-			if (pad->getButtonDown() & Controller::PRESS_A) {
+			if (pad->isButtonDown(Controller::PRESS_A)) {
 				mFlags |= FinalResult_SaveOpen;
 				mSaveMgr->start();
 			}
@@ -1258,7 +1152,7 @@ void ObjFinalResult::doDraw(Graphics& gfx)
 	pane2->hide();
 	pane3->show();
 
-	JUT_ASSERTLINE(479, getDispMember()->isID(OWNER_KH, MEMBER_FINAL_RESULT), "disp member err");
+	JUT_ASSERTLINE(496, getDispMember()->isID(OWNER_KH, MEMBER_FINAL_RESULT), "disp member err");
 	DispFinalResult* disp = static_cast<DispFinalResult*>(getDispMember());
 	TotalResultData* data = disp->mTotalResultData;
 	for (int i = 0; i < GAME_HIGHSCORE_COUNT; i++) {
@@ -2265,7 +2159,7 @@ JUtility::TColor ObjFinalResult::getClr(const JUtility::TColor& col1, const JUti
  */
 void SceneFinalResult::doUserCallBackFunc(Resource::MgrCommand*)
 {
-	JUT_ASSERTLINE(856, mDispMember->isID(OWNER_KH, MEMBER_FINAL_RESULT), "disp member err");
+	JUT_ASSERTLINE(875, mDispMember->isID(OWNER_KH, MEMBER_FINAL_RESULT), "disp member err");
 	og::newScreen::makeLanguageResName(mName, "result_final.szs");
 	LoadResource::Arg arg(mName);
 	LoadResource::Node* node = gLoadResourceMgr->mountArchive(arg);
@@ -2274,7 +2168,7 @@ void SceneFinalResult::doUserCallBackFunc(Resource::MgrCommand*)
 		arc = node->mArchive;
 		registObj(new ObjFinalResult, arc);
 	} else {
-		JUT_PANICLINE(864, "failed");
+		JUT_PANICLINE(883, "failed");
 	}
 }
 

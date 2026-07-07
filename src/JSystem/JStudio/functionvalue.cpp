@@ -11,22 +11,6 @@
 #include "math.h"
 #include "types.h"
 
-namespace JGadget {
-template <typename Iterator, typename Value>
-// TODO: this
-Iterator findUpperBound_binary_current(Iterator i1, Iterator i2, Iterator i3, const Value& val)
-{
-	std::less<Value> comp;
-	findUpperBound_binary_current(i1, i2, i3, val, comp);
-}
-
-template <typename Iterator, typename Value>
-Iterator findUpperBound_binary_current(Iterator i1, Iterator i2, Iterator i3, const Value& val, std::less<Value>)
-{
-	i1.mValue = (const f32*)&val;
-}
-}; // namespace JGadget
-
 namespace JStudio {
 
 namespace {

@@ -3454,24 +3454,31 @@ plugProjectKandoU/gameCaveInfo.cpp:
 plugProjectKandoU/creatureLOD.cpp:
 	.text       start:0x802631D4 end:0x80263854
 	.ctors      start:0x80534DD0 end:0x80534DD4
+	.rodata     start:0x8054A4D0 end:0x8054A528
 	.bss        start:0x80638BB0 end:0x80638BC0
 	.sbss       start:0x8066CA60 end:0x8066CA70
+	.sdata2     start:0x806702A8 end:0x806702C0
 
 plugProjectKandoU/interactNavi.cpp:
 	.text       start:0x80263854 end:0x802644E8
 	.data       start:0x805985F8 end:0x80598640
+	.sdata2     start:0x806702C0 end:0x806702E8
 
 plugProjectKandoU/itemPikihead.cpp:
 	.text       start:0x802644E8 end:0x8026764C
 	.ctors      start:0x80534DD4 end:0x80534DD8
+	.rodata     start:0x8054A528 end:0x8054A5D8
 	.data       start:0x80598640 end:0x80598EB8
 	.bss        start:0x80638BC0 end:0x80638BD0
 	.sbss       start:0x8066CA70 end:0x8066CA80
+	.sdata2     start:0x806702E8 end:0x80670330
 
 plugProjectKandoU/itemPlant.cpp:
 	.text       start:0x8026764C end:0x8026B09C
+	.rodata     start:0x8054A5D8 end:0x8054A6C8
 	.data       start:0x80598EB8 end:0x805995D0
 	.sbss       start:0x8066CA80 end:0x8066CA88
+	.sdata2     start:0x80670330 end:0x806703E0
 
 plugProjectKandoU/itemRock.cpp:
 	.text       start:0x8026B09C end:0x8026D270
@@ -3580,10 +3587,12 @@ plugProjectKandoU/pelletOtakara.cpp:
 
 plugProjectKandoU/genPellet.cpp:
 	.text       start:0x802868F0 end:0x80286F44
+	.rodata     start:0x8054B2F0 end:0x8054B390
 	.data       start:0x8059DFE0 end:0x8059E020
 
 plugProjectKandoU/pelletItem.cpp:
 	.text       start:0x80286F44 end:0x8028812C
+	.rodata     start:0x8054B390 end:0x8054B3D0
 	.data       start:0x8059E020 end:0x8059E490
 	.sbss       start:0x8066CB30 end:0x8066CB38
 
@@ -3596,6 +3605,7 @@ plugProjectKandoU/mapMgrTraceMove.cpp:
 
 plugProjectKandoU/efxModelObjects.cpp:
 	.text       start:0x8028862C end:0x80288A90
+	.rodata     start:0x8054B3D0 end:0x8054B478
 	.data       start:0x8059E490 end:0x8059E4E0
 
 plugProjectKandoU/itemUjamushi.cpp:
@@ -5887,15 +5897,19 @@ plugProjectMorimuraU/shijimiChou.cpp:
 plugProjectMorimuraU/challengeSelect2D.cpp:
 	.text       start:0x8040AC7C end:0x80411BEC
 	.ctors      start:0x80534F88 end:0x80534F8C
+	.rodata     start:0x80554B08 end:0x805551F8
 	.data       start:0x805C58C8 end:0x805C5A60
 	.sdata      start:0x8066B538 end:0x8066B568
 	.sbss       start:0x8066CF98 end:0x8066CFB8
+	.sdata2     start:0x806744F8 end:0x806745F0
 
 plugProjectMorimuraU/challengeResult2D.cpp:
 	.text       start:0x80411BEC end:0x804194A4
+	.rodata     start:0x805551F8 end:0x805555C0
 	.data       start:0x805C5A60 end:0x805C5C20
 	.sdata      start:0x8066B568 end:0x8066B590
 	.sbss       start:0x8066CFB8 end:0x8066CFD0
+	.sdata2     start:0x806745F0 end:0x806746D8
 
 plugProjectMorimuraU/vsSelect2D.cpp:
 	.text       start:0x804194A4 end:0x80421BF8
@@ -6537,7 +6551,7 @@ sysGCU/sysShape.cpp:
 	.rodata     start:0x805596B0 end:0x80559770
 	.data       start:0x805CCD28 end:0x805CCD68
 	.bss        start:0x806394F0 end:0x80639500
-	.sbss       start:0x8066D1F0 end:0x8066D208
+	.sbss       start:0x8066D1F0 end:0x8066D200
 	.sdata2     start:0x806756E8 end:0x80675700
 
 sysGCU/reset.cpp:
@@ -6550,6 +6564,7 @@ sysGCU/dvdStatus.cpp:
 	.text       start:0x804B07A8 end:0x804B12F4
 	.rodata     start:0x80559A48 end:0x80559AA0
 	.sdata      start:0x8066B6F0 end:0x8066B6F8
+	.sbss       start:0x8066D200 end:0x8066D208
 	.sdata2     start:0x80675728 end:0x80675748
 
 sysGCU/sysTimers.cpp:

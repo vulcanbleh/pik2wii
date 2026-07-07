@@ -626,3 +626,10 @@ const J2DAnmTransform* J2DTextBoxEx::animationPane(const J2DAnmTransform* anm)
 	}
 	J2DPane::animationPane(anm);
 }
+
+// fix weak function order
+static void fakematch()
+{
+	J2DTextBoxEx* p = nullptr;
+	p->getMaterial();
+}

@@ -195,6 +195,10 @@ struct PelletInitArg : public CreatureInitArg {
 	int mMaxCarriers;         // _24
 };
 
+struct PelletGinkaInitArg : public PelletInitArg {
+	PelletGinkaInitArg();
+};
+
 struct PelletIndexInitArg : public PelletInitArg {
 	PelletIndexInitArg(int);
 };
@@ -394,25 +398,7 @@ struct Pellet : public DynCreature, public SysShape::MotionListener, public Carr
 		}
 	}
 
-	inline void animate_pmotions(SysShape::Animator* animator)
-	{
-		for (int i = 0; i < mNumPMotions; i++) {
-			animator->animate(1.0f);
-
-			char jointName[128];
-			sprintf(jointName, "pmotion");
-
-			SysShape::Joint* joint = mModel->getJoint(jointName);
-
-			if (joint) {
-				u16 index               = joint->mJointIndex;
-				SysShape::Model* model  = mModel;
-				J3DMtxCalcAnmBase* calc = static_cast<J3DMtxCalcAnmBase*>(animator->getCalc());
-
-				model->mJ3dModel->mModelData->mJointTree.mJoints[index]->mMtxCalc = calc;
-			}
-		}
-	}
+	void animate_pmotions(SysShape::Animator* animator);
 
 	inline bool doSpawnBuried()
 	{

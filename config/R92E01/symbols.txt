@@ -2571,7 +2571,7 @@ prepare_data___Q37JStudio3fvb15TObject_hermiteFRCQ57JStudio3fvb4data17TParse_TPa
 __ct__Q37JStudio3fvb8TControlFv = .text:0x80071F44; // type:function size:0x28 scope:global align:4
 __dt__Q37JStudio3fvb8TControlFv = .text:0x80071F6C; // type:function size:0x60 scope:global align:4
 getObject__Q37JStudio3fvb8TControlFPCvUl = .text:0x80071FCC; // type:function size:0x64 scope:global align:4
-find_if<Q37JGadget37TLinkList<Q37JStudio3fvb7TObject,-12>8iterator,Q37JStudio6object18TPRObject_ID_equal>__3stdFQ37JGadget37TLinkList<Q37JStudio3fvb7TObject,-12>8iteratorQ37JGadget37TLinkList<Q37JStudio3fvb7TObject,-12>8iteratorQ37JStudio6object18TPRObject_ID_equal = .text:0x80072030; // type:function size:0x94 scope:global align:4
+find_if<Q37JGadget37TLinkList<Q37JStudio3fvb7TObject,-12>8iterator,Q37JStudio6object18TPRObject_ID_equal>__3stdFQ37JGadget37TLinkList<Q37JStudio3fvb7TObject,-12>8iteratorQ37JGadget37TLinkList<Q37JStudio3fvb7TObject,-12>8iteratorQ37JStudio6object18TPRObject_ID_equal_Q37JGadget37TLinkList<Q37JStudio3fvb7TObject,-12>8iterator = .text:0x80072030; // type:function size:0x94 scope:global align:4
 getObject_index__Q37JStudio3fvb8TControlFUl = .text:0x800720C4; // type:function size:0x6C scope:global align:4
 __dt__Q37JStudio3fvb8TFactoryFv = .text:0x80072130; // type:function size:0x40 scope:global align:4
 create__Q37JStudio3fvb8TFactoryFRCQ47JStudio3fvb4data13TParse_TBlock = .text:0x80072170; // type:function size:0x2C0 scope:global align:4
@@ -37483,7 +37483,7 @@ mFlashInterval__Q28Morimura16TChallengeResult = .sdata:0x8066B57C; // type:objec
 mDemoSpeedUpRate__Q28Morimura16TChallengeResult = .sdata:0x8066B580; // type:object size:0x4 scope:global align:4 data:float
 mDemoSpeedUpMax__Q28Morimura16TChallengeResult = .sdata:0x8066B584; // type:object size:0x4 scope:global align:4 data:float
 mFlashColor__Q28Morimura16TChallengeResult = .sdata:0x8066B588; // type:object size:0x4 scope:global align:4 data:byte
-lbl_8066B58C = .sdata:0x8066B58C; // type:object size:0x4
+@STRING@getResName__Q28Morimura21TChallengeResultSceneCFv = .sdata:0x8066B58C; // type:object size:0x1
 mAngRate__Q28Morimura9TVsSelect = .sdata:0x8066B590; // type:object size:0x4 scope:global align:4 data:float
 mMoveSpeed__Q28Morimura9TVsSelect = .sdata:0x8066B594; // type:object size:0x4 scope:global align:4 data:float
 mIndVal__Q28Morimura9TVsSelect = .sdata:0x8066B598; // type:object size:0x4 scope:global align:4 data:float

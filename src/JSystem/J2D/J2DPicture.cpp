@@ -53,7 +53,7 @@ J2DPicture::J2DPicture(J2DPane* parent, JSURandomInputStream* input, J2DMaterial
 
 	for (int i = 0; i < 4; i++) {
 		mTexCoords[i]    = trailer.mTexCoords[i];
-		mCornerColors[i] = JUtility::TColor(GXCOLOR_AS_U32(trailer.mCornerColor[i]));
+		mCornerColors[i] = trailer.mCornerColor[i];
 	}
 	input->seek(headerPosition + header.mBlockLength, SEEK_SET);
 
@@ -73,10 +73,8 @@ J2DPicture::J2DPicture(J2DPane* parent, JSURandomInputStream* input, J2DMaterial
 		u8 texGenNum   = material->getTexGenBlock()->getTexGenNum();
 		u8 tevStageNum = material->getTevBlock()->getTevStageNum();
 		if ((texGenNum == 1 && tevStageNum != 1) || (texGenNum != 1 && tevStageNum != texGenNum + 1)) {
-			J2DGXColorS10 black;
-			J2DGXColorS10 white;
-			black = *material->getTevBlock()->getTevColor(0);
-			white = *material->getTevBlock()->getTevColor(1);
+			J2DGXColorS10 black = *material->getTevBlock()->getTevColor(0);
+			J2DGXColorS10 white = *material->getTevBlock()->getTevColor(1);
 
 			mBlack = JUtility::TColor(RGBA_TO_U32(black.r, black.g, black.b, black.a));
 			mWhite = JUtility::TColor(RGBA_TO_U32(white.r, white.g, white.b, white.a));
@@ -524,7 +522,7 @@ int J2DPicture::remove(JUTTexture* texture)
  * @note Address: 0x8003B768
  * @note Size: 0xE8
  */
-ResTIMG* J2DPicture::changeTexture(const ResTIMG* img, u8 id)
+const ResTIMG* J2DPicture::changeTexture(const ResTIMG* img, u8 id)
 {
 	if (id > mTextureCount || 4 <= id || img == nullptr) {
 		return nullptr;
@@ -549,7 +547,7 @@ ResTIMG* J2DPicture::changeTexture(const ResTIMG* img, u8 id)
  * @note Size: 0x58
  * changeTexture__10J2DPictureFPCcUc
  */
-ResTIMG* J2DPicture::changeTexture(const char* fileName, u8 id)
+const ResTIMG* J2DPicture::changeTexture(const char* fileName, u8 id)
 {
 	return changeTexture((ResTIMG*)J2DScreen::getNameResource(fileName), id);
 }
@@ -558,7 +556,7 @@ ResTIMG* J2DPicture::changeTexture(const char* fileName, u8 id)
  * @note Address: 0x8003B8CC
  * @note Size: 0x108
  */
-ResTIMG* J2DPicture::changeTexture(const ResTIMG* timg, u8 id, JUTPalette* palette)
+const ResTIMG* J2DPicture::changeTexture(const ResTIMG* timg, u8 id, JUTPalette* palette)
 {
 	if (id > mTextureCount || 4 <= id || timg == nullptr) {
 		return nullptr;
@@ -586,7 +584,7 @@ ResTIMG* J2DPicture::changeTexture(const ResTIMG* timg, u8 id, JUTPalette* palet
  * @note Size: 0x68
  * changeTexture__10J2DPictureFPCcUcP10JUTPalette
  */
-ResTIMG* J2DPicture::changeTexture(const char* fileName, u8 id, JUTPalette* palette)
+const ResTIMG* J2DPicture::changeTexture(const char* fileName, u8 id, JUTPalette* palette)
 {
 	return changeTexture((ResTIMG*)J2DScreen::getNameResource(fileName), id, palette);
 }

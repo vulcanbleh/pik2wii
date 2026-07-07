@@ -11,16 +11,29 @@
 #include "SysShape/MtxObject.h"
 #include "nans.h"
 
-static const u32 padding[]    = { 0, 0, 0 };
-static const char className[] = "sysShape";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "sysShape";
+}
 
 namespace SysShape {
 
 bool Animator::verbose;
 
+void Model::drawMesh()
+{
+	J3DShape::resetVcdVatCache();
+
+	mJ3dModel->getModelData()->getShapeNodePointer(0)->loadPreDrawSetting();
+	u16 shapeNum = mJ3dModel->getModelData()->getShapeNum();
+	for (u16 i = 0; i < shapeNum; i++) {
+		mJ3dModel->getShapePacket(i)->drawFast();
+	}
+}
+
 /**
- * @note Address: 0x80428C50
- * @note Size: 0x38
+ * @todo: Documentation
  */
 void Model::clearAnimatorAll()
 {
@@ -39,15 +52,14 @@ void Model::setAnimatorAll(BaseAnimator&)
 }
 
 /**
- * @note Address: 0x80428C88
- * @note Size: 0xC8
+ * @todo: Documentation
  */
 void Animator::startAnim(int animID, MotionListener* listener)
 {
 	mAnimInfo = mAnimMgr->getAnimByID(animID);
 	if (mAnimInfo == nullptr) {
 		mAnimMgr->dump();
-		JUT_PANICLINE(220, "go to hell !\n");
+		JUT_PANICLINE(237, "go to hell !\n");
 	}
 
 	mTimer      = 0.0f;
@@ -62,8 +74,7 @@ void Animator::startAnim(int animID, MotionListener* listener)
 }
 
 /**
- * @note Address: 0x80428D50
- * @note Size: 0x68
+ * @todo: Documentation
  */
 void Animator::startExAnim(AnimInfo* info)
 {
@@ -73,12 +84,11 @@ void Animator::startExAnim(AnimInfo* info)
 	mFlags.clear();
 	mCurAnimKey = nullptr;
 	setFlag(Unk80);
-	JUT_ASSERTLINE(252, verbose == 0, "OKOK\n");
+	JUT_ASSERTLINE(269, verbose == 0, "OKOK\n");
 }
 
 /**
- * @note Address: 0x80428DB8
- * @note Size: 0x8
+ * @todo: Documentation
  */
 bool Animator::assertValid(Model* model)
 {
@@ -86,8 +96,7 @@ bool Animator::assertValid(Model* model)
 }
 
 /**
- * @note Address: 0x80428DC0
- * @note Size: 0x40
+ * @todo: Documentation
  */
 void Animator::setCurrFrame(f32 timer)
 {
@@ -97,12 +106,11 @@ void Animator::setCurrFrame(f32 timer)
 }
 
 /**
- * @note Address: 0x80428E00
- * @note Size: 0x100
+ * @todo: Documentation
  */
 void Animator::setFrameByKeyType(u32 id)
 {
-	JUT_ASSERTLINE(300, !isFlag(Unk80), "ExMotionErr::setFrameByKeyType(%d)\n", id);
+	JUT_ASSERTLINE(317, !isFlag(Unk80), "ExMotionErr::setFrameByKeyType(%d)\n", id);
 
 	if (id == KEYEVENT_END) {
 		setCurrFrame(mAnimInfo->mAnm->getTotalFrameCount() - 1.0f);
@@ -116,8 +124,7 @@ void Animator::setFrameByKeyType(u32 id)
 }
 
 /**
- * @note Address: 0x80428F00
- * @note Size: 0x78
+ * @todo: Documentation
  */
 void Animator::setLastFrame()
 {
@@ -127,8 +134,7 @@ void Animator::setLastFrame()
 }
 
 /**
- * @note Address: 0x80428F78
- * @note Size: 0x2AC
+ * @todo: Documentation
  */
 void Animator::animate(f32 speed)
 {
@@ -155,7 +161,7 @@ void Animator::animate(f32 speed)
 					mTimer = start->getFrame();
 				} else {
 					mTimer = 0.0f;
-					JUT_PANICLINE(369, "mismatch LOOP_START - LOOP_END\n");
+					JUT_PANICLINE(386, "mismatch LOOP_START - LOOP_END\n");
 				}
 
 				loopEndFound = true;
@@ -188,8 +194,7 @@ void Animator::animate(f32 speed)
 }
 
 /**
- * @note Address: 0x80429224
- * @note Size: 0x80
+ * @todo: Documentation
  */
 BlendAnimator::BlendAnimator()
 {
@@ -202,28 +207,19 @@ BlendAnimator::BlendAnimator()
 }
 
 /**
- * @note Address: 0x804292A4
- * @note Size: 0x154
+ * @todo: Documentation
  */
 void BlendAnimator::setAnimMgr(AnimMgr* mgr)
 {
 	mIsBlendEnabled = false;
 
 	for (int i = 0; i < 2; i++) {
-		mAnimators[i].mAnimMgr  = mgr;
-		mAnimators[i].mAnimInfo = mAnimators[i].mAnimMgr->getAnimByID(0);
-		if (!mAnimators[i].mAnimInfo) {
-			mAnimators[i].mAnimMgr->dump();
-			JUT_PANICLINE(220, "go to hell !\n"); // so polite
-		}
-		mAnimators[i].mTimer      = 0.0f;
-		mAnimators[i].mCurAnimKey = mAnimators[i].mAnimInfo->getLowestAnimKey(0.0f);
-		mAnimators[i].mListener   = nullptr;
-		mAnimators[i].mFlags.clear();
+		mAnimators[i].mAnimMgr = mgr;
+		mAnimators[i].startAnim(0, nullptr);
 	}
 
 	AnimInfo* info = mgr->getAnimByID(0);
-	JUT_ASSERTLINE(442, info, "BlendAnimator : at least 1 motion is required!\n");
+	JUT_ASSERTLINE(459, info, "BlendAnimator : at least 1 motion is required!\n");
 
 	mMtxCalc = J3DUNewMtxCalcAnm(mgr->mModel->mJ3dModel->mModelData->mJointTree.mFlags & J3DMLF_MtxTypeMask, info->mAnm, info->mAnm,
 	                             nullptr, nullptr, MTXCalc_Blend);
@@ -235,7 +231,7 @@ void BlendAnimator::setAnimMgr(AnimMgr* mgr)
  */
 void BlendAnimator::setWeight(f32 weight)
 {
-	P2ASSERTBOOLLINE(454, 0.0f <= weight && weight <= 1.0f);
+	P2ASSERTBOOLLINE(471, 0.0f <= weight && weight <= 1.0f);
 
 	// set animation A to the inverse of the weight
 	mMtxCalc->setAnmTransform(0, mAnimators[0].getAnimation());
@@ -247,8 +243,7 @@ void BlendAnimator::setWeight(f32 weight)
 }
 
 /**
- * @note Address: 0x804293F8
- * @note Size: 0x15C
+ * @todo: Documentation
  */
 void BlendAnimator::startBlend(BlendFunction* func, f32 time, MotionListener* mlisten)
 {
@@ -263,8 +258,7 @@ void BlendAnimator::startBlend(BlendFunction* func, f32 time, MotionListener* ml
 }
 
 /**
- * @note Address: 0x80429554
- * @note Size: 0x18
+ * @todo: Documentation
  */
 void BlendAnimator::endBlend()
 {
@@ -274,8 +268,7 @@ void BlendAnimator::endBlend()
 }
 
 /**
- * @note Address: 0x8042956C
- * @note Size: 0x278
+ * @todo: Documentation
  */
 void BlendAnimator::animate(BlendFunction* func, f32 dt, f32 anim0Dt, f32 anim1Dt)
 {
@@ -302,8 +295,7 @@ void BlendAnimator::animate(BlendFunction* func, f32 dt, f32 anim0Dt, f32 anim1D
 }
 
 /**
- * @note Address: 0x804297E4
- * @note Size: 0x40
+ * @todo: Documentation
  */
 J3DMtxCalc* BlendAnimator::getCalc()
 {
@@ -314,8 +306,7 @@ J3DMtxCalc* BlendAnimator::getCalc()
 }
 
 /**
- * @note Address: 0x80429824
- * @note Size: 0x7C
+ * @todo: Documentation
  */
 void Joint::init(u16 index, Model* model, J3DJoint* j3dJoint)
 {
@@ -332,8 +323,7 @@ void Joint::init(u16 index, Model* model, J3DJoint* j3dJoint)
 }
 
 /**
- * @note Address: 0x804298A0
- * @note Size: 0x20
+ * @todo: Documentation
  */
 Matrixf* Joint::getWorldMatrix()
 {
@@ -368,9 +358,7 @@ void AnimInfo::attach(Model*, void*)
 }
 
 /**
- * @note Address: 0x804298C0
- * @note Size: 0x6C
- * Returns the lowest anim key after the given minimum frame.
+ * @note Returns the lowest anim key after the given minimum frame.
  */
 KeyEvent* AnimInfo::getLowestAnimKey(f32 minimumFrame)
 {
@@ -409,8 +397,7 @@ void AnimInfo::getLastLoopStart(f32)
 }
 
 /**
- * @note Address: 0x8042992C
- * @note Size: 0x28
+ * @todo: Documentation
  */
 KeyEvent* AnimInfo::getLastLoopStart(KeyEvent* key)
 {
@@ -424,8 +411,7 @@ KeyEvent* AnimInfo::getLastLoopStart(KeyEvent* key)
 }
 
 /**
- * @note Address: 0x80429954
- * @note Size: 0x28
+ * @todo: Documentation
  */
 KeyEvent* AnimInfo::getAnimKeyByType(u32 type)
 {
@@ -439,8 +425,7 @@ KeyEvent* AnimInfo::getAnimKeyByType(u32 type)
 }
 
 /**
- * @note Address: 0x8042997C
- * @note Size: 0x20
+ * @todo: Documentation
  */
 void AnimInfo::read(Stream& input)
 {
@@ -448,8 +433,7 @@ void AnimInfo::read(Stream& input)
 }
 
 /**
- * @note Address: 0x8042999C
- * @note Size: 0x10C
+ * @todo: Documentation
  */
 void AnimInfo::readEditor(Stream& input)
 {
@@ -465,12 +449,11 @@ void AnimInfo::readEditor(Stream& input)
 		key->mType    = input.readInt();
 		mKeyEvent.add(key);
 	}
-	JUT_PANICLINE(841, "reached eof\n");
+	JUT_PANICLINE(858, "reached eof\n");
 }
 
 /**
- * @note Address: 0x80429AA8
- * @note Size: 0x13C
+ * @todo: Documentation
  */
 AnimMgr* AnimMgr::load(char* path, J3DModelData* modelData, JKRFileLoader* fileLoader)
 {
@@ -488,13 +471,12 @@ AnimMgr* AnimMgr::load(char* path, J3DModelData* modelData, JKRFileLoader* fileL
 }
 
 /**
- * @note Address: 0x80429C68
- * @note Size: 0x80
+ * @todo: Documentation
  */
 void AnimMgr::dump()
 {
 	for (int i = 0; i < mCount; i++) {
-		getAnimByID(i)->mKeyEvent.getChildCount();
+		getAnimByID(i);
 	}
 }
 

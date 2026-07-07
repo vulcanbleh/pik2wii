@@ -212,6 +212,8 @@ struct J3DMaterialFactory_v21 {
 	J3DMaterialFactory_v21(const J3DMaterialBlock_v21&);
 
 	u16 countUniqueMaterials();
+	u32 countTexGens(int matID) const;
+	u32 countStages(int matID) const;
 	J3DMaterial* create(J3DMaterial*, int, u32) const;
 	J3DGXColor newMatColor(int, int) const;
 	u8 newColorChanNum(int) const;

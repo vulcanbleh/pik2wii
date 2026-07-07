@@ -13,7 +13,6 @@
 #include "Game/Entities/PelletItem.h"
 #include "Game/Entities/PelletNumber.h"
 #include "Game/Entities/PelletOtakara.h"
-#include "Game/VsGameSection.h"
 #include "Game/GameConfig.h"
 #include "Game/GameMessage.h"
 #include "Game/GameSystem.h"
@@ -22,6 +21,7 @@
 #include "Game/PikiMgr.h"
 #include "Game/PlatInstance.h"
 #include "Game/Stickers.h"
+#include "Game/VsGameSection.h"
 #include "Game/gamePlayData.h"
 #include "Game/gameStat.h"
 #include "Game/routeMgr.h"
@@ -36,6 +36,12 @@
 #include "efx/TFruitsDown.h"
 #include "efx/TOtakara.h"
 #include "nans.h"
+
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "pelletMgr";
+}
 
 namespace {
 struct NotOff : public Game::WPCondition {
@@ -83,9 +89,6 @@ PelletMgr* pelletMgr;
 bool PelletMgr::mDebug          = false;
 bool PelletMgr::disableDynamics = false;
 bool Pellet::sFromTekiEnable    = true;
-
-static const u32 padding[]    = { 0, 0, 0 };
-static const char className[] = "pelletMgr";
 
 /**
  * @note Address: 0x801658EC
@@ -169,7 +172,7 @@ u8 Pellet::getWallTimer()
  */
 PelletViewArg::PelletViewArg()
 {
-	mScale  = Vector3f(1.0f);
+	mScale.set(1.0f, 1.0f, 1.0f);
 	mEnemy  = nullptr;
 	mMatrix = nullptr;
 	mPosition.set(0.0f, 0.0f, 0.0f);
@@ -224,7 +227,7 @@ Pellet* PelletView::becomePellet(PelletViewArg* viewArg)
 		viewStartPreCarryMotion();
 
 		mCreature = static_cast<Creature*>(viewArg->mEnemy);
-		P2ASSERTLINE(895, mCreature);
+		P2ASSERTLINE(913, mCreature);
 	} else {
 		mPellet   = nullptr;
 		mCreature = nullptr;
@@ -435,8 +438,7 @@ void Pellet::updateClaim()
 
 			diff *= 30.0f;
 
-			Vector3f velocity    = getVelocity();
-			Vector3f newVelocity = velocity;
+			Vector3f newVelocity = getVelocity();
 			newVelocity += diff;
 			setVelocity(newVelocity);
 			mClaim = 0;
@@ -475,7 +477,7 @@ f32 Pellet::getBuryRadius(f32 pelletSize)
 	f32 indexFraction = (f32)arrayIndex * 0.25f;
 
 	f32 t = (pelletSize - indexFraction) * 4.0f;
-	P2ASSERTBOUNDSINCLUSIVELINE(1006, 0, arrayIndex, 4);
+	P2ASSERTBOUNDSINCLUSIVELINE(1024, 0, arrayIndex, 4);
 
 	// Interpolate between the two values (current and next in the array)
 	return (1.0f - t) * buryRadiusValues[arrayIndex] + t * buryRadiusValues[arrayIndex + 1];
@@ -499,7 +501,7 @@ bool Pellet::stimulate(Interaction& interaction)
  */
 bool InteractMattuan::actPellet(Pellet* pellet)
 {
-	if (pellet->getKind() == PelletType::Upgrade) {
+	if ((pellet->getKind() == PelletType::Upgrade) ? true : false) {
 		pellet->startDiscoverDisable(mWaitTimer / sys->getDeltaTime());
 	} else {
 		pellet->clearDiscoverDisable();
@@ -513,14 +515,10 @@ bool InteractMattuan::actPellet(Pellet* pellet)
  */
 bool InteractEat::actPellet(Pellet* pellet)
 {
-	if ((pellet->getKind() == PelletType::Berry) && pellet->isAlive()) {
-		// this is very dumb but also necessary to get a second vector on the stack??????
+	if (((pellet->getKind() == PelletType::Berry) ? true : false) && pellet->isAlive()) {
 		Vector3f position = pellet->getPosition();
-		Vector3f position2;
-		Vector3f* posPtr = &position2;
-		*posPtr          = position;
 
-		efx::Arg arg(position2);
+		efx::Arg arg(position);
 
 		if (pellet->mPelletColor == 0) {
 			efx::TFruitsDownR spicy;
@@ -544,9 +542,6 @@ bool InteractEat::actPellet(Pellet* pellet)
 bool InteractSuck::actPellet(Pellet* pellet)
 {
 	PelletGoalStateArg pelletGoalArg(mCreature);
-	if (mCreature) {
-		mCreature->getTypeName();
-	}
 	pellet->mPelletSM->transit(pellet, PELSTATE_GoalWait, &pelletGoalArg);
 	pellet->finishDisplayCarryInfo();
 	return true;
@@ -663,7 +658,7 @@ f32 Pellet::getCylinderHeight()
  */
 int Pellet::getConfigIndex()
 {
-	P2ASSERTLINE(1433, mConfig);
+	P2ASSERTLINE(1451, mConfig);
 	return mConfig->mParams.mIndex;
 }
 
@@ -676,6 +671,11 @@ char* Pellet::getConfigName()
 	return mConfig->mParams.mName.mData;
 }
 
+PelletGinkaInitArg::PelletGinkaInitArg() // unused, for string pooling
+{
+	mTextIdentifier = "ginka";
+}
+
 /**
  * @note Address: 0x80166A44
  * @note Size: 0x130
@@ -686,7 +686,7 @@ PelletIndexInitArg::PelletIndexInitArg(int idx)
 	pelletMgr->decode(idx, mPelletType, code);
 
 	BasePelletMgr* newPelletMgr = pelletMgr->getMgrByID(mPelletType);
-	P2ASSERTLINE(1465, newPelletMgr);
+	P2ASSERTLINE(1483, newPelletMgr);
 	PelletConfig* config = newPelletMgr->getPelletConfig(code);
 
 	mTextIdentifier = config->mParams.mName.mData;
@@ -746,7 +746,7 @@ bool Pellet::isPickable()
 void Pellet::onKill(CreatureKillArg* killArg)
 {
 	if (gameSystem->isVersusMode()) {
-		mPelletSM->start(this, 0, nullptr);
+		mPelletSM->start(this, PELSTATE_Normal, nullptr);
 	}
 
 	setAlive(false);
@@ -767,8 +767,8 @@ void Pellet::onKill(CreatureKillArg* killArg)
 
 	if (mModel) {
 		mLodSphere.mPosition.set(0.0f, 0.0f, 0.0f);
-		mLodSphere.mRadius   = FLOAT_DIST_MAX;
-		mScale               = Vector3f(1.0f);
+		mLodSphere.mRadius = FLOAT_DIST_MAX;
+		mScale.set(1.0f, 1.0f, 1.0f);
 		PSMTXCopy(mBaseTrMatrix.mMatrix.mtxView, mModel->mJ3dModel->mPosMtx);
 		mScale.set(mModel->mJ3dModel->mModelScale);
 		mModel->clearAnimatorAll();
@@ -791,7 +791,7 @@ void Pellet::onKill(CreatureKillArg* killArg)
 		mPelletView          = nullptr;
 	}
 
-	if (getKind() == PelletType::Treasure || getKind() == PelletType::Upgrade) {
+	if (((getKind() == PelletType::Treasure) ? true : false) || ((getKind() == PelletType::Upgrade) ? true : false)) {
 		Radar::Mgr::exit(this);
 	}
 }
@@ -824,20 +824,20 @@ void Pellet::onInit(CreatureInitArg* initArg)
 
 	mCarryPower = 0.0f;
 
-	P2ASSERTLINE(1632, initArg);
+	P2ASSERTLINE(1650, initArg);
 
 	u16 stateType = static_cast<PelletInitArg*>(initArg)->mState;
 	if (stateType == PelBirthType_Normal) {
 		mPelletSM->start(this, PELSTATE_Normal, nullptr);
-		mScale = Vector3f(1.0f);
+		mScale.set(1.0f, 1.0f, 1.0f);
 	} else if (stateType == PelBirthType_Piklopedia) {
 		mPelletSM->start(this, PELSTATE_Zukan, nullptr);
 	} else if (stateType == PelBirthType_Appear) {
 		mPelletSM->start(this, PELSTATE_Appear, nullptr);
-		mScale = Vector3f(0.01f);
+		mScale.set(0.01f, 0.01f, 0.01f);
 	} else {
 		mPelletSM->start(this, PELSTATE_ScaleAppear, nullptr);
-		mScale = Vector3f(0.01f);
+		mScale.set(0.01f, 0.01f, 0.01f);
 	}
 
 	mPikminCount[Blue]    = 0;
@@ -965,9 +965,9 @@ void Pellet::onInit(CreatureInitArg* initArg)
 	setupParticles();
 	do_onInit(initArg);
 
-	if (getKind() == PelletType::Treasure) {
+	if ((getKind() == PelletType::Treasure) ? true : false) {
 		Radar::Mgr::entry(this, Radar::MAP_TREASURE, 0);
-	} else if (getKind() == PelletType::Upgrade) {
+	} else if ((getKind() == PelletType::Upgrade) ? true : false) {
 		Radar::Mgr::entry(this, Radar::MAP_UPGRADE, 0);
 	}
 
@@ -1744,7 +1744,7 @@ void Pellet::setVelocity(Vector3f& velocity)
  */
 void Pellet::allocateTexCaster()
 {
-	if ((getKind() == PelletType::Treasure || getKind() == PelletType::Upgrade) && mCaster == nullptr) {
+	if (((getKind() == PelletType::Treasure ? true : false) || ((getKind() == PelletType::Upgrade) ? true : false)) && mCaster == nullptr) {
 		f32 radius = mConfig->mParams.mPRadius.mData;
 		Sys::Sphere sphere(mPelletPosition, 2.0f * radius);
 		mCaster = TexCaster::Mgr::sInstance->create(sphere, TAU * randFloat());
@@ -1773,7 +1773,7 @@ void Pellet::onSetPosition()
 			item->setPosition(mPelletPosition, false);
 			item->setTreasure(this);
 		} else {
-			JUT_PANICLINE(2326, "がっかり\n"); // 'disappointed' lol
+			JUT_PANICLINE(2344, "がっかり\n"); // 'disappointed' lol
 		}
 	}
 
@@ -1862,10 +1862,10 @@ void Pellet::setOrientation(Matrixf& mat)
 	}
 
 	if (x > 0.0f) {
-		P2ASSERTLINE(2504, checkASinCosBounds(z));
+		P2ASSERTLINE(2522, checkASinCosBounds(z));
 		mFaceDir = acosf(z);
 	} else {
-		P2ASSERTLINE(2507, checkASinCosBounds(z));
+		P2ASSERTLINE(2525, checkASinCosBounds(z));
 		mFaceDir = -acosf(z);
 	}
 
@@ -1921,7 +1921,7 @@ void Pellet::bounceCallback(Sys::Triangle* triangle)
 		mIsBounced = true;
 		return;
 	}
-	if (!mIsBounced && (getKind() != PelletType::Carcass)) {
+	if (!mIsBounced && ((getKind() == PelletType::Carcass) ? true : false)) {
 		mSoundMgr->startSound(fallType + 0x3808, 0);
 		mIsBounced = 1;
 		onBounce();
@@ -2051,8 +2051,8 @@ void Pellet::update()
 		if (mPickFlags & 1) {
 			moveSphere.mPosition.y -= 4.0f;
 		}
-		Vector3f* velocityPtr               = &mRigid.mConfigs[0].mVelocity;
-		moveSphere.mRadius                  = 0.5f * mConfig->mParams.mHeight.mData;
+		Vector3f* velocityPtr = &mRigid.mConfigs[0].mVelocity;
+		moveSphere.mRadius    = 0.5f * mConfig->mParams.mHeight.mData;
 		mRigid.mConfigs[0].mMomentum.set(0.0f, 0.0f, 0.0f);
 		mRigid.mConfigs[0].mRotatedMomentum.set(0.0f, 0.0f, 0.0f);
 
@@ -3598,6 +3598,26 @@ void Pellet::init_pmotions()
 	}
 }
 
+void Pellet::animate_pmotions(SysShape::Animator* animator)
+{
+	for (int i = 0; i < mNumPMotions; i++) {
+		animator->animate(1.0f);
+
+		char jointName[128];
+		sprintf(jointName, "pmotion");
+
+		SysShape::Joint* joint = mModel->getJoint(jointName);
+
+		if (joint) {
+			u16 index               = joint->mJointIndex;
+			SysShape::Model* model  = mModel;
+			J3DMtxCalcAnmBase* calc = static_cast<J3DMtxCalcAnmBase*>(animator->getCalc());
+
+			model->mJ3dModel->mModelData->mJointTree.mJoints[index]->mMtxCalc = calc;
+		}
+	}
+}
+
 /**
  * @note Address: 0x8016A208
  * @note Size: 0xB4
@@ -3605,7 +3625,9 @@ void Pellet::init_pmotions()
 void Pellet::update_pmotions()
 {
 	SysShape::Animator* animator = &mPmotionAnim;
-	animate_pmotions(animator);
+	if (mNumPMotions > 0) {
+		animate_pmotions(animator);
+	}
 }
 
 /**
@@ -3687,7 +3709,7 @@ bool Pellet::isSlotFree(s16 slot)
 		return (mIsAlwaysCarried == 0);
 	}
 
-	P2ASSERTBOUNDSLINE(3686, 0, slot, mSlotCount);
+	P2ASSERTBOUNDSLINE(3707, 0, slot, mSlotCount);
 
 	u32 index = slot >> 3;
 	u32 flag  = 1 << slot - index * 8;
@@ -3965,7 +3987,8 @@ Onyon* Pellet::getPelletGoal()
 	Onyon* goalOnyon;
 
 	if (gameSystem->isVersusMode()
-	    || (getKind() != PelletType::Treasure && getKind() != PelletType::Berry && getKind() != PelletType::Upgrade)) {
+	    || (!((getKind() == PelletType::Treasure) ? true : false) && !((getKind() == PelletType::Berry) ? true : false)
+	        && !((getKind() == PelletType::Upgrade) ? true : false))) {
 		int maxCount = -1;
 		int counter  = 0;
 		int i        = 0;
@@ -4043,7 +4066,7 @@ int Pellet::getTotalCarryPikmins()
  */
 int Pellet::getPikmins(int color)
 {
-	P2ASSERTBOUNDSLINE(3902, 0, color, PikiColorCount);
+	P2ASSERTBOUNDSLINE(3923, 0, color, PikiColorCount);
 	return mPikminCount[color];
 }
 
@@ -4054,14 +4077,14 @@ int Pellet::getPikmins(int color)
 void Pellet::onSlotStickStart(Creature* creature, s16 slot)
 {
 	if (slot != 9999) {
-		P2ASSERTBOUNDSLINE(3917, 0, slot, mSlotCount);
-		P2ASSERTLINE(3918, isSlotFree(slot));
+		P2ASSERTBOUNDSLINE(3938, 0, slot, mSlotCount);
+		P2ASSERTLINE(3939, isSlotFree(slot));
 		setSlotOccupied(slot);
 	}
 
 	if (creature->isPiki()) {
 		int pikminType = static_cast<Piki*>(creature)->mPikiKind;
-		P2ASSERTBOUNDSLINE(3925, 0, pikminType, PikiColorCount);
+		P2ASSERTBOUNDSLINE(3946, 0, pikminType, PikiColorCount);
 
 		mPikminCount[pikminType]++;
 		mCarryPower += static_cast<Piki*>(creature)->getPelletCarryPower();
@@ -4083,16 +4106,16 @@ void Pellet::onSlotStickStart(Creature* creature, s16 slot)
 void Pellet::onSlotStickEnd(Creature* creature, s16 slot)
 {
 	if (slot != 9999) {
-		P2ASSERTBOUNDSLINE(3952, 0, slot, mSlotCount);
+		P2ASSERTBOUNDSLINE(3973, 0, slot, mSlotCount);
 		if (isSlotFree(slot)) {
-			JUT_PANICLINE(3956, "onSlotStickEnd\n");
+			JUT_PANICLINE(3977, "onSlotStickEnd\n");
 		}
 		setSlotFree(slot);
 	}
 
 	if (creature->isPiki()) {
 		int pikminType = static_cast<Piki*>(creature)->mPikiKind;
-		P2ASSERTBOUNDSLINE(3964, 0, pikminType, PikiColorCount);
+		P2ASSERTBOUNDSLINE(3985, 0, pikminType, PikiColorCount);
 
 		mPikminCount[pikminType]--;
 		mCarryPower -= static_cast<Piki*>(creature)->getPelletCarryPower();
@@ -4130,7 +4153,7 @@ void Pellet::calcStickSlotGlobal(s16 slot, Vector3f& stickPosition)
 		pos.set(0.0f, 0.0f, 0.0f);
 	} else {
 		bool validSlot = (slot >= 0) && (slot < mSlotCount);
-		P2ASSERTLINE(4016, validSlot);
+		P2ASSERTLINE(4037, validSlot);
 		f32 radius = mConfig->mParams.mPRadius.mData;
 		f32 theta  = ((TAU / (f32)mSlotCount) * slot) + mAngleOffset;
 		pos        = Vector3f(radius * sinf(theta), 0.0f, radius * cosf(theta));
@@ -4315,14 +4338,15 @@ lbl_8016AFE8:
  */
 int Pellet::getFace()
 {
+	f32 zero = 0.0f;
 	if (mDynamicType == 2) {
 		return 0;
 	}
 	Vector3f yVec;
 	getYVector(yVec);
-	if (yVec.y > 0.0f) {
+	if (yVec.y > zero) {
 		return 0;
-	} else if (yVec.y < -0.0f) {
+	} else if (yVec.y < -zero) {
 		return 1;
 	} else {
 		return 2;
@@ -4346,8 +4370,8 @@ void Pellet::startPick()
 		Vector3f vec1;
 		int ySign;
 
-		if (mDynamicType != 2) {
-			getYVector(vec1);
+		if (getFace()) {
+			return;
 		}
 
 		getYVector(vec2);
@@ -4403,9 +4427,8 @@ void Pellet::endPick(bool b)
 
 		mPickFlags &= ~0x1;
 
-		Vector3f yVec;
-		if (mDynamicType != 2) {
-			getYVector(yVec);
+		if (getFace()) {
+			return;
 		}
 
 		DynParticle* particle = mDynParticle;
@@ -4644,7 +4667,7 @@ PelletConfig* BasePelletMgr::getPelletConfig(int i)
  */
 void BasePelletMgr::setUse(int i)
 {
-	P2ASSERTBOUNDSLINE(4419, 0, i, mEntries);
+	P2ASSERTBOUNDSLINE(4440, 0, i, mEntries);
 	mIsUsedList[i] = true;
 }
 
@@ -4654,7 +4677,7 @@ void BasePelletMgr::setUse(int i)
  */
 bool BasePelletMgr::used(int i)
 {
-	P2ASSERTBOUNDSLINE(4425, 0, i, mEntries);
+	P2ASSERTBOUNDSLINE(4446, 0, i, mEntries);
 	return mIsUsedList[i] != false;
 }
 
@@ -4682,11 +4705,11 @@ void BasePelletMgr::load()
 	if (gGameConfig.mParms.mPelletMultiLang.mData != 0) {
 		switch (sys->mRegion) {
 		case System::LANG_Japanese:
-			sprintf(buffer, "/user/Abe/Pellet/%s/", "jpn");
+			sprintf(buffer, "/pikmin2/user/Abe/Pellet/%s/", "jpn");
 			file = buffer;
 			break;
 		case System::LANG_English:
-			sprintf(buffer, "/user/Abe/Pellet/%s/", "us");
+			sprintf(buffer, "/pikmin2/user/Abe/Pellet/%s/", "us");
 			file = buffer;
 			break;
 		case System::LANG_French:
@@ -4694,12 +4717,12 @@ void BasePelletMgr::load()
 		// case System::LANG_HOL_UNUSED:
 		case System::LANG_Italian:
 		case System::LANG_Spanish:
-			sprintf(buffer, "/user/Abe/Pellet/%s/", "pal");
+			sprintf(buffer, "/pikmin2/user/Abe/Pellet/%s/", "pal");
 			file = buffer;
 			break;
 		}
 	} else {
-		file = "user/Kando/pellet/";
+		file = "/pikmin2/user/Kando/pellet/";
 	}
 
 	char buffer2[512];
@@ -4724,7 +4747,7 @@ void BasePelletMgr::load()
 
 			void* resource = JKRFileLoader::getGlbResource(buffer2, nullptr);
 			if (resource == nullptr) {
-				JUT_PANICLINE(4560, "meck ** %s : is not foun !\n", buffer2);
+				JUT_PANICLINE(4587, "meck ** %s : is not foun !\n", buffer2);
 			}
 
 			u32 flags = J3DMLF_Material_PE_FogOff | J3DMLF_Material_UseIndirect | J3DMLF_18 | J3DMLF_UseImmediateMtx;
@@ -4767,11 +4790,11 @@ void BasePelletMgr::load_texArc(char* filename)
 	if (gGameConfig.mParms.mPelletMultiLang.mData != 0) {
 		switch (sys->mRegion) {
 		case System::LANG_Japanese:
-			sprintf(buffer, "/user/Abe/Pellet/%s/", "jpn");
+			sprintf(buffer, "/pikmin2/user/Abe/Pellet/%s/", "jpn");
 			directory = buffer;
 			break;
 		case System::LANG_English:
-			sprintf(buffer, "/user/Abe/Pellet/%s/", "us");
+			sprintf(buffer, "/pikmin2/user/Abe/Pellet/%s/", "us");
 			directory = buffer;
 			break;
 		case System::LANG_French:
@@ -4779,19 +4802,19 @@ void BasePelletMgr::load_texArc(char* filename)
 		// case System::LANG_HOL_UNUSED:
 		case System::LANG_Italian:
 		case System::LANG_Spanish:
-			sprintf(buffer, "/user/Abe/Pellet/%s/", "pal");
+			sprintf(buffer, "/pikmin2/user/Abe/Pellet/%s/", "pal");
 			directory = buffer;
 			break;
 		}
 	} else {
-		directory = "user/Kando/pellet/";
+		directory = "/pikmin2/user/Kando/pellet/";
 	}
 
 	char path[512];
 	sprintf(path, "%s%s", directory, filename);
 
 	JKRArchive* textArc = openTextArc(path);
-	JUT_ASSERTLINE(4728, textArc, "%s: not found !\n", path);
+	JUT_ASSERTLINE(4761, textArc, "%s: not found !\n", path);
 
 	for (int i = 0; i < mConfigList->mConfigCnt; i++) {
 		PelletConfig* config = &mConfigList->mConfigs[i];
@@ -4810,13 +4833,13 @@ void BasePelletMgr::load_texArc(char* filename)
 			if (strcmp("null", config->mParams.mBmd.mData) == 0) {
 				mModelData[i] = nullptr;
 			} else {
-				JUT_ASSERTLINE(4776, archive, "archive not found\n");
+				JUT_ASSERTLINE(4809, archive, "archive not found\n");
 				sprintf(path, "%s", config->mParams.mBmd.mData);
 				void* resourceLoad = JKRFileLoader::getGlbResource(path, nullptr);
 				void* resource     = resourceLoad;
 				if (resourceLoad == nullptr) {
 					resource = archive->getResource(path);
-					JUT_PANICLINE(4786, "%s : is not foun !\n", path);
+					JUT_PANICLINE(4819, "%s : is not foun !\n", path);
 				}
 
 				if (config->mParams.mIndirectState != PelletConfig::Indirect_No) {
@@ -4870,11 +4893,11 @@ JKRArchive* BasePelletMgr::openTextArc(char* arc)
 	if (gGameConfig.mParms.mPelletMultiLang.mData != 0) {
 		switch (sys->mRegion) {
 		case System::LANG_Japanese:
-			sprintf(directory, "/user/Abe/Pellet/%s/", "jpn");
+			sprintf(directory, "/pikmin2/user/Abe/Pellet/%s/", "jpn");
 			file = directory;
 			break;
 		case System::LANG_English:
-			sprintf(directory, "/user/Abe/Pellet/%s/", "us");
+			sprintf(directory, "/pikmin2/user/Abe/Pellet/%s/", "us");
 			file = directory;
 			break;
 		case System::LANG_French:
@@ -4882,12 +4905,12 @@ JKRArchive* BasePelletMgr::openTextArc(char* arc)
 		// case System::LANG_HOL_UNUSED:
 		case System::LANG_Italian:
 		case System::LANG_Spanish:
-			sprintf(directory, "/user/Abe/Pellet/%s/", "pal");
+			sprintf(directory, "/pikmin2/user/Abe/Pellet/%s/", "pal");
 			file = directory;
 			break;
 		}
 	} else {
-		file = "user/Kando/pellet/";
+		file = "/pikmin2/user/Kando/pellet/";
 	}
 
 	char filePath[512];
@@ -4936,7 +4959,7 @@ SysShape::Model* BasePelletMgr::createShape(int modelDataIndex, int arg2)
 		model = mModelMgr->createModel(modelDataIndex, arg2);
 	} else {
 		if (mModelData[modelDataIndex] == nullptr) {
-			JUT_PANICLINE(5061, "bpmgr:no modelData!%d\n", modelDataIndex);
+			JUT_PANICLINE(5099, "bpmgr:no modelData!%d\n", modelDataIndex);
 		}
 		model = new SysShape::Model(mModelData[modelDataIndex], 0, modelType);
 		model->mJ3dModel->newDifferedTexMtx(TEXDIFF_Material);
@@ -5024,7 +5047,7 @@ void PelletIterator::first()
  */
 Pellet* PelletIterator::operator*()
 {
-	P2ASSERTLINE(5197, mMgr);
+	P2ASSERTLINE(5235, mMgr);
 	return mMgr->getObjectPtr((void*)mIndex);
 }
 
@@ -5037,7 +5060,7 @@ void PelletIterator::next()
 	if (mType == 0) {
 		mIndex = (int)mMgr->getNext((void*)mIndex);
 	} else {
-		JUT_PANICLINE(5206, "manda!\n");
+		JUT_PANICLINE(5244, "manda!\n");
 	}
 
 	if (mIndex == (u32)mMgr->getEnd()) {
@@ -5070,7 +5093,7 @@ void PelletIterator::setFirst()
 		if (mType == 0) {
 			mIndex = (int)mMgr->getStart();
 		} else {
-			JUT_PANICLINE(5233, "manda!\n");
+			JUT_PANICLINE(5271, "manda!\n");
 		}
 
 		if (mIndex == (u32)mMgr->getEnd()) {
@@ -5189,10 +5212,10 @@ void PelletMgr::calcNearestTreasure(Vector3f&, f32)
  */
 Pellet* PelletMgr::birth(PelletInitArg* arg)
 {
-	P2ASSERTBOOLLINE(5394, arg && arg->mPelletType != 255);
+	P2ASSERTBOOLLINE(5432, arg && arg->mPelletType != 255);
 
 	BasePelletMgr* mgr = getMgrByID(arg->mPelletType);
-	P2ASSERTLINE(5396, mgr);
+	P2ASSERTLINE(5434, mgr);
 
 	PelletConfig* config;
 	if (!gameSystem->isZukanMode() && !gameSystem->isVersusMode() && !PelletMgr::mDebug && !arg->mDontCheckCollected) {
@@ -5202,13 +5225,11 @@ Pellet* PelletMgr::birth(PelletInitArg* arg)
 			if (arg->mPelletType == PelletList::PLK_Otakara) {
 				u8 result = playData->mZukanStat->mOtakara(unk);
 				if (result & 2) {
-					mgr->mConfigList->getPelletConfig(arg->mTextIdentifier);
 					return nullptr;
 				}
 			} else if (arg->mPelletType == PelletList::PLK_Item) {
 				u8 result = playData->mZukanStat->mItem(unk);
 				if (result & 2) {
-					mgr->mConfigList->getPelletConfig(arg->mTextIdentifier);
 					return nullptr;
 				}
 			}
@@ -5243,10 +5264,10 @@ Pellet* PelletMgr::birth(PelletInitArg* arg)
  */
 bool PelletMgr::setUse(PelletInitArg* arg)
 {
-	P2ASSERTBOOLLINE(5531, arg && arg->mPelletType != PelletType::Invalid);
+	P2ASSERTBOOLLINE(5569, arg && arg->mPelletType != PelletType::Invalid);
 
 	BasePelletMgr* mgr = getMgrByID(arg->mPelletType);
-	P2ASSERTLINE(5533, mgr);
+	P2ASSERTLINE(5571, mgr);
 
 	PelletConfig* config;
 	// If not piklopedia (second condition always evaluates to true)
@@ -5259,13 +5280,11 @@ bool PelletMgr::setUse(PelletInitArg* arg)
 			if (arg->mPelletType == PelletList::PLK_Otakara) {
 				u8 result = playData->mZukanStat->mOtakara(pelletIdx);
 				if (result & 2) {
-					mgr->mConfigList->getPelletConfig(arg->mTextIdentifier);
 					return false;
 				}
 			} else if (arg->mPelletType == PelletList::PLK_Item) {
 				u8 result = playData->mZukanStat->mItem(pelletIdx);
 				if (result & 2) {
-					mgr->mConfigList->getPelletConfig(arg->mTextIdentifier);
 					return false;
 				}
 			}
@@ -5295,7 +5314,7 @@ bool PelletMgr::OtakaraItemCode::isNull()
 		mgr = PelletItem::mgr;
 	}
 
-	JUT_ASSERTLINE(5574, mgr, "illegal code (%x)\n", mValue);
+	JUT_ASSERTLINE(5612, mgr, "illegal code (%x)\n", mValue);
 
 	code = mValue;
 	if ((mValue & 0xFF) < 0 || code >= mgr->mConfigList->mConfigCnt) {
@@ -5304,7 +5323,7 @@ bool PelletMgr::OtakaraItemCode::isNull()
 		config = mgr->mConfigList->mConfigs + code;
 	}
 
-	JUT_ASSERTLINE(5578, config, "illegal code no config found (%x) index %d\n", mValue, code);
+	JUT_ASSERTLINE(5616, config, "illegal code no config found (%x) index %d\n", mValue, code);
 
 	if (strcmp("yes", config->mParams.mUnique.mData) == 0) {
 		u8 code = mValue;
@@ -5338,7 +5357,7 @@ bool PelletMgr::makePelletInitArg(PelletInitArg& arg, char* identifier)
 		config = mgr->mConfigList->getPelletConfig(identifier);
 	}
 
-	JUT_ASSERTLINE(5614, config, "no config found(%s)\n", identifier);
+	JUT_ASSERTLINE(5652, config, "no config found(%s)\n", identifier);
 
 	arg.mTextIdentifier = identifier;
 	arg.mPelletType     = mgr->getMgrID();
@@ -5393,7 +5412,7 @@ bool PelletMgr::makePelletInitArg(PelletInitArg& arg, PelletMgr::OtakaraItemCode
 		mgr = PelletItem::mgr;
 	}
 
-	JUT_ASSERTLINE(5672, mgr, "illegal code (%x)\n", itemCode.mValue);
+	JUT_ASSERTLINE(5710, mgr, "illegal code (%x)\n", itemCode.mValue);
 
 	code = itemCode.mValue;
 	if ((itemCode.mValue & 255) < 0 || code >= mgr->mConfigList->mConfigCnt) {
@@ -5402,7 +5421,7 @@ bool PelletMgr::makePelletInitArg(PelletInitArg& arg, PelletMgr::OtakaraItemCode
 		config = mgr->mConfigList->mConfigs + code;
 	}
 
-	JUT_ASSERTLINE(5676, config, "illegal code no config found (%x) index %d\n", itemCode.mValue, code);
+	JUT_ASSERTLINE(5714, config, "illegal code no config found (%x) index %d\n", itemCode.mValue, code);
 
 	arg.mTextIdentifier = config->mParams.mName.mData;
 	arg.mPelletType     = itemCode.getPelletKind();
@@ -5582,12 +5601,15 @@ int PelletMgr::encode(u8 pelletType, int code)
  */
 char* PelletMgr::getCaveName(int caveID)
 {
-	int idx            = caveID & 0xFFFFFF;
-	BasePelletMgr* mgr = getMgrByID((caveID >> 24) & 0xFF);
-	P2ASSERTLINE(5881, mgr);
-	PelletConfig* config = mgr->getPelletConfig(idx);
-	P2ASSERTLINE(5883, config);
-	return config->mParams.mName.mData;
+	u8 mgrID;
+	int configID;
+	decode(caveID, mgrID, configID);
+
+	BasePelletMgr* mgr = getMgrByID(mgrID);
+	P2ASSERTLINE(5919, mgr);
+	PelletConfig* config = mgr->getPelletConfig(configID);
+	P2ASSERTLINE(5921, config);
+	return config->getName();
 }
 
 /**
@@ -5602,8 +5624,7 @@ int PelletMgr::getCaveID(char* name)
 		BasePelletMgr* mgr = (BasePelletMgr*)*iter;
 		for (int i = 0; i < mgr->mConfigList->mConfigCnt; i++) {
 			if (IS_SAME_STRING_N(mgr->getPelletConfig(i)->getName(), name, strlen(name))) {
-				int id = (mgr->getMgrID() << 24);
-				return id | i;
+				return encode(mgr->getMgrID(), i);
 			}
 		}
 	}
