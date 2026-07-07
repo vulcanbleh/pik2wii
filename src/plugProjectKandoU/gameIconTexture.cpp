@@ -6,6 +6,12 @@
 #include "LoadResource.h"
 #include "P2Macros.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "iconTexture";
+}
+
 namespace Game {
 
 /**

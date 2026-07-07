@@ -138,9 +138,9 @@ inline JKRDecomp* JKRCreateDecompManager(s32 priority)
 	return JKRDecomp::create(priority);
 }
 
-inline int JKRCheckCompressed_noASR(u8* buf)
+inline JKRCompression JKRCheckCompressed_noASR(u8* buf)
 {
-	int compression = JKRDecomp::checkCompressed(buf);
+	JKRCompression compression = JKRDecomp::checkCompressed(buf);
 	if (compression == COMPRESSION_ASR)
 		compression = COMPRESSION_None;
 	return compression;

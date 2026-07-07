@@ -353,9 +353,9 @@ void Generator::update()
  * @note Address: N/A
  * @note Size: 0x4
  */
-void Generator::render(Graphics&)
+void Generator::render(Graphics&) // unused, for string pooling
 {
-	// UNUSED FUNCTION
+	OSReport("なし\0常に"); 
 }
 
 /**

@@ -1,11 +1,11 @@
 #include "Game/Navi.h"
 #include "Game/NaviParms.h"
-#include "SysShape/Model.h"
-#include "PSM/ObjMgr.h"
-#include "PSM/Navi.h"
-#include "utilityU.h"
-#include "JSystem/J3D/J3DModelLoader.h"
 #include "Game/PikiMgr.h"
+#include "JSystem/J3D/J3DModelLoader.h"
+#include "PSM/Navi.h"
+#include "PSM/ObjMgr.h"
+#include "SysShape/Model.h"
+#include "utilityU.h"
 
 namespace Game {
 
@@ -107,7 +107,12 @@ void NaviMgr::setupNavi(Navi* navi)
 {
 	navi->mModel       = createModel(navi->mNaviIndex);
 	navi->mParms       = mNaviParms;
-	navi->mMarkerModel = new SysShape::Model(mCursorModelData, 0, 2);
+	navi->mMarkerModel = new SysShape::Model(mCursorModelData, J3DMODEL_ShareDL, 2);
+	navi->mMarkerModel->mJ3dModel->newDifferedDisplayList(0x1000000);
+	navi->mMarkerModel->mJ3dModel->calc();
+	navi->mMarkerModel->mJ3dModel->calcMaterial();
+	navi->mMarkerModel->mJ3dModel->makeDL();
+	navi->mMarkerModel->mJ3dModel->lock();
 
 	navi->mCursorModel = new SysShape::Model(mMarkerModelData, J3DMODEL_ShareDL, 2);
 	navi->mCursorModel->mJ3dModel->newDifferedDisplayList(0x1000000);
@@ -115,6 +120,14 @@ void NaviMgr::setupNavi(Navi* navi)
 	navi->mCursorModel->mJ3dModel->calcMaterial();
 	navi->mCursorModel->mJ3dModel->makeDL();
 	navi->mCursorModel->mJ3dModel->lock();
+
+	navi->mCursorModel2 = nullptr;
+	navi->mCursorModel2 = new SysShape::Model(mCursorModelData2, J3DMODEL_ShareDL, 2);
+	navi->mCursorModel2->mJ3dModel->newDifferedDisplayList(0x1000000);
+	navi->mCursorModel2->mJ3dModel->calc();
+	navi->mCursorModel2->mJ3dModel->calcMaterial();
+	navi->mCursorModel2->mJ3dModel->makeDL();
+	navi->mCursorModel2->mJ3dModel->lock();
 }
 
 /**
@@ -127,7 +140,7 @@ Navi* NaviMgr::birth()
 	if (navi) {
 		navi->mNaviIndex = mActiveCount - 1;
 
-		P2ASSERTLINE(349, navi->mSoundObj);
+		P2ASSERTLINE(196, navi->mSoundObj);
 		navi->mSoundObj->init(navi->mNaviIndex);
 
 		// Use president sounds for navi ID 1
@@ -190,11 +203,11 @@ void NaviMgr::loadResources()
 void NaviMgr::load()
 {
 	P2DEBUG("Before mount: %d", JKRGetCurrentHeap()->getTotalFreeSize());
-	JKRArchive* texts = JKRMountArchive("/user/Kando/piki/texts.szs", JKRArchive::EMM_Mem, JKRGetCurrentHeap(), JKRArchive::EMD_Tail);
+	JKRArchive* texts = JKRMountArchive("user/Kando/piki/texts.szs", JKRArchive::EMM_Mem, JKRGetCurrentHeap(), JKRArchive::EMD_Tail);
 	P2DEBUG("After mount: %d", JKRGetCurrentHeap()->getTotalFreeSize());
 
 	sys->heapStatusStart("NaviMgr::Archive", nullptr);
-	JKRArchive* arc = JKRMountArchive("/user/Kando/piki/pikis.szs", JKRArchive::EMM_Mem, sys->mSysHeap, JKRArchive::EMD_Head);
+	JKRArchive* arc = JKRMountArchive("user/Kando/piki/pikis.szs", JKRArchive::EMM_Mem, sys->mSysHeap, JKRArchive::EMD_Head);
 	sys->heapStatusEnd("NaviMgr::Archive");
 
 	J3DModelData* model = J3DModelLoaderDataBase::load(arc->getResource("orima_model/orima1.bmd"),
@@ -210,15 +223,19 @@ void NaviMgr::load()
 	}
 	mCollData = CollPartFactory::load(texts, "naviColl.txt");
 
-	mCursorModelData
-	    = J3DModelLoaderDataBase::load(arc->getResource("cursor/cursor.bmd"), J3DMLF_UseUniqueMaterials | J3DMLF_UseSingleSharedDL);
+	const void* cursorModel = arc->getResource("cursor/cursor.bmd");
+
+	mCursorModelData  = J3DModelLoaderDataBase::load(cursorModel, J3DMLF_UseUniqueMaterials | J3DMLF_UseSingleSharedDL);
+	mCursorModelData2 = J3DModelLoaderDataBase::load(cursorModel, J3DMLF_UseUniqueMaterials | J3DMLF_UseSingleSharedDL);
+	mCursorModelData2->newSharedDisplayList(J3DMLF_UseSingleSharedDL);
+	mCursorModelData->newSharedDisplayList(J3DMLF_UseSingleSharedDL);
 	mMarkerModelData
 	    = J3DModelLoaderDataBase::load(arc->getResource("cursor/marker.bmd"), J3DMLF_UseUniqueMaterials | J3DMLF_UseSingleSharedDL);
 	mMarkerModelData->newSharedDisplayList(J3DMLF_UseSingleSharedDL);
 
 	SysShape::Model::enableMaterialAnim(mCursorModelData, 0);
-	mCursorAnims[0].attachResource(arc->getResource("cursor/wakka_orima.brk"), mCursorModelData);
-	mCursorAnims[1].attachResource(arc->getResource("cursor/wakka_luji.brk"), mCursorModelData);
+	// mCursorAnims[0].attachResource(arc->getResource("cursor/wakka_orima.brk"), mCursorModelData);
+	// mCursorAnims[1].attachResource(arc->getResource("cursor/wakka_luji.brk"), mCursorModelData);
 	mMarkerAnims[0].attachResource(arc->getResource("cursor/arrow_orima.brk"), mCursorModelData);
 	mMarkerAnims[1].attachResource(arc->getResource("cursor/arrow_luji.brk"), mCursorModelData);
 
@@ -231,7 +248,10 @@ void NaviMgr::load()
  * @note Address: 0x8015B02C
  * @note Size: 0x64
  */
-SysShape::Model* NaviMgr::createModel(int naviID) { return new SysShape::Model((&mOlimarModel)[naviID], 0, 2); }
+SysShape::Model* NaviMgr::createModel(int naviID)
+{
+	return new SysShape::Model((&mOlimarModel)[naviID], 0, 2);
+}
 
 /**
  * @note Address: 0x8015B090
@@ -239,7 +259,7 @@ SysShape::Model* NaviMgr::createModel(int naviID) { return new SysShape::Model((
  */
 void NaviMgr::loadResources_float()
 {
-	JKRArchive* arc = JKRMountArchive("/user/Kando/piki/pikis.szs", JKRArchive::EMM_Mem, sys->mSysHeap, JKRArchive::EMD_Head);
+	JKRArchive* arc = JKRMountArchive("user/Kando/piki/pikis.szs", JKRArchive::EMM_Mem, sys->mSysHeap, JKRArchive::EMD_Head);
 
 	void* file
 	    = playData->isStoryFlag(STORY_DebtPaid) ? arc->getResource("orima_model/syatyou.bmd") : arc->getResource("orima_model/orima3.bmd");
@@ -473,6 +493,8 @@ void NaviMgr::doSimulation(f32 rate)
  * @note Address: 0x8015BA20
  * @note Size: 0x4
  */
-void NaviMgr::setupSoundViewerAndBas() { }
+void NaviMgr::setupSoundViewerAndBas()
+{
+}
 
 } // namespace Game

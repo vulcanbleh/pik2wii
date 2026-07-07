@@ -17,11 +17,14 @@
 #include "nans.h"
 #include "stream.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "itemBarrel";
+}
+
 namespace Game {
 namespace ItemBarrel {
-
-static const int unusedBarrelArray[] = { 0, 0, 0 };
-static const char unusedBarrelName[] = "itemBarrel";
 
 Mgr* mgr;
 

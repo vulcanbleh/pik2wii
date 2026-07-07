@@ -8,11 +8,14 @@
 #include "Radar.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "itemBigFountain";
+}
+
 namespace Game {
 namespace ItemBigFountain {
-
-static const int unusedArray[]   = { 0, 0, 0 };
-static const char unusedBFName[] = "itemBigFountain";
 
 Mgr* mgr;
 
@@ -52,7 +55,8 @@ void AppearState::exec(Item* item)
 
 	if (timeRemaining <= 0.0f) {
 		timeRemaining = 0.0f;
-		Vector3f pos  = item->getPosition();
+		efx::Arg arg;
+		arg.mPosition = item->getPosition();
 		transit(item, BIGFOUNTAIN_Wait, nullptr);
 
 		PSSystem::spSysIF->playSystemSe(PSSE_SY_WORK_FINISH, 0);
@@ -328,7 +332,6 @@ void Item::update()
 	mSoundObj->exec();
 	updateCell();
 	if (mCellLayerIndex < 0 || mCellLayerIndex > 10) {
-		getTypeName();
 		JUT_PANICLINE(424, "cellLayerindex overflow\n");
 	}
 	do_updateLOD();

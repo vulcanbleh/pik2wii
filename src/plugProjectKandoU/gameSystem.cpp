@@ -1,16 +1,19 @@
 #include "Game/GameSystem.h"
-#include "DynamicsParms.h"
 #include "CellMgrParms.h"
-#include "Game/DynParticle.h"
+#include "DynamicsParms.h"
 #include "Game/AIConstants.h"
+#include "Game/DynParticle.h"
+#include "Game/MoviePlayer.h"
 #include "Game/Stickers.h"
 #include "Game/gameStat.h"
-#include "Game/MoviePlayer.h"
 #include "SysShape/Model.h"
 #include "nans.h"
 
-static const int unusedArray[] = { 0, 0, 0 };
-static const char name[]       = "gameSystem";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "gameSystem";
+}
 
 #define FRAMECOUNT_MAX 0x40000000
 
@@ -39,7 +42,10 @@ GameSystem::GameSystem(BaseGameSection* section)
  * @note Address: 0x801B4B80
  * @note Size: 0xE8
  */
-GameSystem::~GameSystem() { OptimiseController::deleteInstance(); }
+GameSystem::~GameSystem()
+{
+	OptimiseController::deleteInstance();
+}
 
 /**
  * @note Address: 0x801B4C68
@@ -177,25 +183,39 @@ void GameSystem::startFadewhite()
  * @note Address: 0x801B4F84
  * @note Size: 0x8
  */
-void GameSystem::setMoviePause(bool isMoviePause, char*) { mIsMoviePause = isMoviePause; }
+void GameSystem::setMoviePause(bool isMoviePause, char* name)
+{
+	OSReport("moviePause b : %d, name : %s \n", isMoviePause, name);
+	mIsMoviePause = isMoviePause;
+}
 
 /**
  * @note Address: 0x801B4F8C
  * @note Size: 0x8
  */
-void GameSystem::setFrozen(bool isFrozen, char*) { mIsFrozen = isFrozen; }
+void GameSystem::setFrozen(bool isFrozen, char*)
+{
+	mIsFrozen = isFrozen;
+}
 
 /**
  * @note Address: 0x801B4F94
  * @note Size: 0x2C
  */
-u32 GameSystem::setPause(bool isPausedSoft, char* str, int pauseID) { startPause(isPausedSoft, pauseID, str); }
+u32 GameSystem::setPause(bool isPausedSoft, char* name, int frame)
+{
+	OSReport("setPause: b : %d, name : %s, frame : %d \n", isPausedSoft, name, frame);
+	startPause(isPausedSoft, frame, name);
+}
 
 /**
  * @note Address: 0x801B4FC0
  * @note Size: 0x8
  */
-bool GameSystem::paused_soft() { return mIsPausedSoft; }
+bool GameSystem::paused_soft()
+{
+	return mIsPausedSoft;
+}
 
 /**
  * @note Address: 0x801B4FC8
@@ -240,7 +260,10 @@ void GameSystem::setDrawBuffer(int id)
  * @note Address: 0x801B506C
  * @note Size: 0xC
  */
-GameLightMgr* GameSystem::getLightMgr() { return mSection->mLightMgr; }
+GameLightMgr* GameSystem::getLightMgr()
+{
+	return mSection->mLightMgr;
+}
 
 /**
  * @note Address: 0x801B5078
@@ -366,13 +389,17 @@ void GameSystem::doSimpleDraw(Viewport* vp)
  * @note Address: 0x801B5F40
  * @note Size: 0x4
  */
-void GameSystem::doDirectDraw(Graphics&) { }
+void GameSystem::doDirectDraw(Graphics&)
+{
+}
 
 /**
  * @note Address: 0x801B5F44
  * @note Size: 0x4
  */
-void GameSystem::directDraw(Graphics&) { }
+void GameSystem::directDraw(Graphics&)
+{
+}
 
 /**
  * @note Address: 0x801B5F48
@@ -389,7 +416,10 @@ void GameSystem::addObjectMgr(GenericObjectMgr* mgr)
  * @note Address: 0x801B5FB4
  * @note Size: 0x20
  */
-void GameSystem::detachObjectMgr(GenericObjectMgr* mgr) { delNode(mgr); }
+void GameSystem::detachObjectMgr(GenericObjectMgr* mgr)
+{
+	delNode(mgr);
+}
 
 /**
  * @note Address: N/A
@@ -404,7 +434,10 @@ void GameSystem::detachAllMgr()
  * @note Address: 0x801B5FD4
  * @note Size: 0x24
  */
-void GameSystem::addObjectMgr_reuse(TObjectNode<GenericObjectMgr>* obj) { mNode.add(obj); }
+void GameSystem::addObjectMgr_reuse(TObjectNode<GenericObjectMgr>* obj)
+{
+	mNode.add(obj);
+}
 
 /**
  * @note Address: 0x801B5FF8
@@ -438,7 +471,10 @@ OptimiseController::OptimiseController()
  * @note Address: 0x801B6050
  * @note Size: 0x68
  */
-OptimiseController::~OptimiseController() { mInstance = nullptr; }
+OptimiseController::~OptimiseController()
+{
+	mInstance = nullptr;
+}
 
 /**
  * @note Address: 0x801B60B8

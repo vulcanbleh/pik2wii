@@ -145,9 +145,9 @@ struct NaviParms : public FakePikiParms {
 	NaviParms()
 	    : mNaviParms()
 	{
-		mCreatureProps.mProps.mFriction.mValue      = 1.0f;
-		mCreatureProps.mProps.mFaceDirAdjust.mValue = 0.5f;
-		mCreatureProps.mProps.mAccel.mValue         = 0.1f;
+		mCreatureProps.mProps.mFriction()      = 1.0f;
+		mCreatureProps.mProps.mFaceDirAdjust() = 0.5f;
+		mCreatureProps.mProps.mAccel()         = 0.1f;
 	}
 
 	virtual void read(Stream& stream) // _08 (weak)

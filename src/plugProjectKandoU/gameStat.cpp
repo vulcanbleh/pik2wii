@@ -1,6 +1,12 @@
 #include "Game/gameStat.h"
-#include "Game/gamePlayData.h"
 #include "Game/Navi.h"
+#include "Game/gamePlayData.h"
+
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "gameStat";
+}
 
 namespace Game {
 namespace GameStat {
@@ -81,7 +87,10 @@ int getAllPikmins(int id)
  * @note Address: 0x801D1034
  * @note Size: 0x3C
  */
-PikiCounter::PikiCounter() { clear(); }
+PikiCounter::PikiCounter()
+{
+	clear();
+}
 
 /**
  * @note Address: 0x801D1070
@@ -140,7 +149,10 @@ void PikiCounter::dec(int id)
  * @note Address: N/A
  * @note Size: 0x4C
  */
-PikiNaviCounter::PikiNaviCounter() { clear(); }
+PikiNaviCounter::PikiNaviCounter()
+{
+	clear();
+}
 
 /**
  * @note Address: 0x801D129C

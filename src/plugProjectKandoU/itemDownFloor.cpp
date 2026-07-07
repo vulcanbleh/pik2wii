@@ -12,11 +12,14 @@
 #include "efx/TPbag.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "itemDownFloor";
+}
+
 namespace Game {
 namespace ItemDownFloor {
-
-static const int unusedArray[] = { 0, 0, 0 };
-static const char unusedName[] = "itemDownFloor";
 
 Mgr* mgr;
 
@@ -360,7 +363,7 @@ void Item::doSave(Stream& output)
 void Item::doLoad(Stream& input)
 {
 	if (mDownFloorType == DFTYPE_PaperBag) {
-		u32 isPressed = input.readByte();
+		u8 isPressed = input.readByte();
 		setAlive(true);
 		if (isPressed) {
 			mAnimator.startAnim(2, nullptr);

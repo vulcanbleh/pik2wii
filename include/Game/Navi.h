@@ -271,7 +271,8 @@ struct Navi : public FakePiki, virtual public PelletView {
 	NaviWhistle* mWhistle;                  // _2A8
 	SysShape::Model* mMarkerModel;          // _2AC
 	SysShape::Model* mCursorModel;          // _2B0
-	u8 _2B4[4];                             // _2B4, unknown location, but before mCursorMatAnim
+	SysShape::Model* mCursorModel2;         // _2B4
+	//u8 _2B4[4];                             // _2B4, unknown location, but before mCursorMatAnim
 	Sys::MatRepeatAnimator* mCursorMatAnim; // _2B8
 	Sys::MatLoopAnimator* mArrowMatAnim;    // _2BC
 	f32 mHealth;                            // _2C0
@@ -356,8 +357,9 @@ struct NaviMgr : public MonoObjectMgr<Navi>, public JKRDisposer {
 	J3DModelData* mOlimarModel;              // _B0
 	J3DModelData* mLouieModel;               // _B4 (also president model)
 	J3DModelData* mCursorModelData;          // _B8
-	u8 _BC[8];                               // _BC, unused?
+	u8 _B4[8];                               // _BC, unused?
 	J3DModelData* mMarkerModelData;          // _C4
+	J3DModelData* mCursorModelData2;          // _C4
 	NaviParms* mNaviParms;                   // _C8
 	CollPartFactory* mCollData;              // _CC
 };

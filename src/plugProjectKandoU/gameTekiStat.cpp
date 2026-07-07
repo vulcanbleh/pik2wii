@@ -1,6 +1,12 @@
 #include "Game/TekiStat.h"
 #include "Game/GameSystem.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "tekiStat";
+}
+
 namespace Game {
 /**
  * @note Address: 0x8023381C

@@ -20,6 +20,33 @@ struct Creature;
 struct GeneratorMgr;
 struct GenObject;
 
+struct GenBase : public Parameters {
+	GenBase(u32, char*, char*);
+
+	virtual void doWrite(Stream&) { }                    // _08 (weak)
+	virtual void ramSaveParameters(Stream&);             // _0C
+	virtual void ramLoadParameters(Stream&);             // _10
+	virtual void doEvent(u32) { }                        // _14 (weak)
+	virtual void doRead(Stream&) { }                     // _18 (weak)
+	virtual void update(Generator*) { }                  // _1C (weak)
+	virtual void render(Graphics&, Generator*) { }       // _20 (weak)
+	virtual u32 getLatestVersion() { return 'udef'; }    // _24 (weak)
+	virtual J3DModelData* getShape() { return nullptr; } // _28 (weak)
+
+	void readVersion(Stream&);
+	void read(Stream&);
+	void writeVersion(Stream&);
+	void write(Stream&);
+
+	// _00 - _0C: Parameters
+	// _0C: vtable
+	u32 mTypeID;             // _10
+	u32 mRawID;              // _14
+	char* mLabelData;        // _18
+	char* mObjTypeName;      // _1C
+	SysShape::Model* mModel; // _20
+};
+
 struct Generator : public CNode {
 	Generator();
 	Generator(int);
@@ -155,33 +182,6 @@ struct GenArg : public CreatureInitArg {
 
 	// _00 VTBL
 	Vector3f mPosition; // _04
-};
-
-struct GenBase : public Parameters {
-	GenBase(u32, char*, char*);
-
-	virtual void doWrite(Stream&) { }                    // _08 (weak)
-	virtual void ramSaveParameters(Stream&);             // _0C
-	virtual void ramLoadParameters(Stream&);             // _10
-	virtual void doEvent(u32) { }                        // _14 (weak)
-	virtual void doRead(Stream&) { }                     // _18 (weak)
-	virtual void update(Generator*) { }                  // _1C (weak)
-	virtual void render(Graphics&, Generator*) { }       // _20 (weak)
-	virtual u32 getLatestVersion() { return 'udef'; }    // _24 (weak)
-	virtual J3DModelData* getShape() { return nullptr; } // _28 (weak)
-
-	void readVersion(Stream&);
-	void read(Stream&);
-	void writeVersion(Stream&);
-	void write(Stream&);
-
-	// _00 - _0C: Parameters
-	// _0C: vtable
-	u32 mTypeID;             // _10
-	u32 mRawID;              // _14
-	char* mLabelData;        // _18
-	char* mObjTypeName;      // _1C
-	SysShape::Model* mModel; // _20
 };
 
 struct EnemyGeneratorBase : public CNode {

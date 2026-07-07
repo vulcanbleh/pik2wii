@@ -6,6 +6,12 @@
 #include "P2Macros.h"
 #include "System.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "playCommonData";
+}
+
 namespace Game {
 
 /**

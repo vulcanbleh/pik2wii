@@ -224,9 +224,9 @@ struct PikiParms : public FakePikiParms {
 	PikiParms()
 	    : mPikiParms()
 	{
-		mCreatureProps.mProps.mFriction.mValue      = 0.1f;
-		mCreatureProps.mProps.mFaceDirAdjust.mValue = 0.8f;
-		mCreatureProps.mProps.mAccel.mValue         = 0.14f;
+		mCreatureProps.mProps.mFriction()      = 0.1f;
+		mCreatureProps.mProps.mFaceDirAdjust() = 0.8f;
+		mCreatureProps.mProps.mAccel()         = 0.14f;
 	}
 
 	virtual void read(Stream& stream) // _08 (weak)

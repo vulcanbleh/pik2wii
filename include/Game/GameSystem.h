@@ -13,6 +13,23 @@ struct LightMgr;
 struct Viewport;
 namespace Game {
 
+struct OptimiseController : public JKRDisposer, public Parameters {
+	OptimiseController();
+
+	virtual ~OptimiseController(); // _08
+
+	static void globalInstance();
+	static void deleteInstance();
+
+	static OptimiseController* mInstance;
+
+	// _00     = VTBL
+	// _00-_18 = JKRDisposer
+	// _18-_24 = Parameters
+	Parm<bool> mPikminNeck;             // _24, c000, 'pikmin neck'
+	Parm<bool> mCollisionBufferEnabled; // _40, c001, 'collision buffer enabled'
+};
+
 enum GameSystemMode {
 	GSM_STORY_MODE           = 0,
 	GSM_VERSUS_MODE          = 1,
@@ -105,23 +122,6 @@ struct GameSystem : public NodeObjectMgr<GenericObjectMgr> {
 	u32 mFrameTimer;           // _50
 	JUTTexture* mXfbTexture;   // _54
 	BaseGameSection* mSection; // _58
-};
-
-struct OptimiseController : public JKRDisposer, public Parameters {
-	OptimiseController();
-
-	virtual ~OptimiseController(); // _08
-
-	static void globalInstance();
-	static void deleteInstance();
-
-	static OptimiseController* mInstance;
-
-	// _00     = VTBL
-	// _00-_18 = JKRDisposer
-	// _18-_24 = Parameters
-	Parm<bool> mPikminNeck;             // _24, c000, 'pikmin neck'
-	Parm<bool> mCollisionBufferEnabled; // _40, c001, 'collision buffer enabled'
 };
 
 extern GameSystem* gameSystem;

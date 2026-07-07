@@ -169,7 +169,7 @@ JKRAramBlock* JKRAram::mainRamToAram(u8* buf, u32 bufSize, u32 alignedSize, JKRE
 	JKRAramBlock* block = nullptr;
 	checkOkAddress(buf, bufSize, nullptr, 0);
 	if (expandSwitch == Switch_1) {
-		expandSwitch = (JKRCheckCompressed(buf) == COMPRESSION_None) ? Switch_0 : Switch_1;
+		expandSwitch = (JKRCheckCompressed_noASR(buf) == COMPRESSION_None) ? Switch_0 : Switch_1;
 	}
 
 	if (expandSwitch == Switch_1) {
@@ -201,7 +201,7 @@ JKRAramBlock* JKRAram::mainRamToAram(u8* buf, u32 bufSize, u32 alignedSize, JKRE
 			if (block) {
 				JKRFreeToAram(block);
 			}
-			block = nullptr;
+			return nullptr;
 
 		} else {
 			JKRDecompress(buf, allocatedMem, fileSize, 0);
@@ -211,6 +211,7 @@ JKRAramBlock* JKRAram::mainRamToAram(u8* buf, u32 bufSize, u32 alignedSize, JKRE
 			if (pSize) {
 				*pSize = alignedSize;
 			}
+			return block;
 		}
 
 	} else {
@@ -254,7 +255,7 @@ u8* JKRAram::aramToMainRam(u32 address, u8* buf, u32 size, JKRExpandSwitch expan
 		u8 buffer[64];
 		u8* bufPtr = (u8*)ALIGN_NEXT((u32)buffer, 32);
 		JKRAramPcs(1, address, (u32)bufPtr, sizeof(buffer) / 2, nullptr); // probably change sizeof(buffer) / 2 to 32
-		compression = JKRCheckCompressed(bufPtr);
+		compression = JKRCheckCompressed_noASR(bufPtr);
 		expandSize  = JKRDecompExpandSize(bufPtr);
 	}
 
@@ -334,7 +335,7 @@ u8* JKRAram::aramToMainRam(JKRAramBlock* block, u8* buf, u32 address, u32 offset
 	checkOkAddress(buf, offset, block, 1);
 
 	if (!block) {
-		OSErrorLine(733, ":::Bad Aram Block specified.\n");
+		return nullptr;
 	}
 
 	if (offset >= block->mSize) {
@@ -349,8 +350,6 @@ u8* JKRAram::aramToMainRam(JKRAramBlock* block, u8* buf, u32 address, u32 offset
 
 	return aramToMainRam(offset + block->mAddress, buf, address, expandSwitch, maxExpandSize, heap, id, pSize);
 }
-
-static const char unusedBADSYNCstr[] = "---------------- BAD SYNC. you'd set callback, but now call sync.\n";
 
 /**
  * @note Address: 0x80018334

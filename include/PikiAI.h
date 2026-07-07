@@ -954,39 +954,6 @@ struct ActGotoSlot : public Action {
 	bool mIsFirstPiki;     // _1D, no other pikis grabbing = all slots free
 };
 
-struct ActOneshotArg : public ActionArg {
-	ActOneshotArg() { mAnimID = Game::IPikiAnims::NULLANIM; }
-
-	// _00 = VTBL
-	int mAnimID; // _04
-};
-
-struct ActOneshot : public ActBoreBase {
-	enum OneshotFlags {
-		ONESHOTFLAG_AnimFinished = 0x1,
-		ONESHOTFLAG_ForceFinish  = 0x2,
-	};
-
-	ActOneshot(Game::Piki* p);
-
-	virtual void init(ActionArg* arg);                        // _08
-	virtual int exec();                                       // _0C
-	virtual void cleanup();                                   // _10
-	virtual void finish();                                    // _3C
-	virtual void onKeyEvent(const SysShape::KeyEvent& event); // _40 (weak)
-
-	inline void setFlag(u8 flag) { mFlag.typeView |= flag; }
-	inline void resetFlag(u8 flag) { mFlag.typeView &= ~flag; }
-	inline bool isFlag(u8 flag) { return mFlag.typeView & flag; }
-
-	// _00     = VTBL
-	// _00-_10 = ActBoreBase
-	ActOneshotArg mOneshotArg; // _10
-	BitFlag<u8> mFlag;         // _18
-
-	// _1C = MotionListener
-};
-
 struct PathMoveArg : public ActionArg {
 	inline PathMoveArg(Game::Pellet* pellet, Vector3f& p2, s16 p3, u32 p4)
 	    : ActionArg()
@@ -1160,6 +1127,39 @@ struct ActRest : public ActBoreBase {
 	f32 mTimer;        // _14
 	BitFlag<u8> mFlag; // _18
 	                   // _1C = MotionListener
+};
+
+struct ActOneshotArg : public ActionArg {
+	ActOneshotArg() { mAnimID = Game::IPikiAnims::NULLANIM; }
+
+	// _00 = VTBL
+	int mAnimID; // _04
+};
+
+struct ActOneshot : public ActBoreBase {
+	enum OneshotFlags {
+		ONESHOTFLAG_AnimFinished = 0x1,
+		ONESHOTFLAG_ForceFinish  = 0x2,
+	};
+
+	ActOneshot(Game::Piki* p);
+
+	virtual void init(ActionArg* arg);                        // _08
+	virtual int exec();                                       // _0C
+	virtual void cleanup();                                   // _10
+	virtual void finish();                                    // _3C
+	virtual void onKeyEvent(const SysShape::KeyEvent& event); // _40 (weak)
+
+	inline void setFlag(u8 flag) { mFlag.typeView |= flag; }
+	inline void resetFlag(u8 flag) { mFlag.typeView &= ~flag; }
+	inline bool isFlag(u8 flag) { return mFlag.typeView & flag; }
+
+	// _00     = VTBL
+	// _00-_10 = ActBoreBase
+	ActOneshotArg mOneshotArg; // _10
+	BitFlag<u8> mFlag;         // _18
+
+	// _1C = MotionListener
 };
 
 enum StickAttackObjType {
