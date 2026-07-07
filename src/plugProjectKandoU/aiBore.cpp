@@ -7,6 +7,12 @@
 #include "RevoSDK/rand.h"
 #include "System.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "actBore";
+}
+
 #define BORE_BEHAVIOURS_FLOAT (2.0f) // what behaviours to randomly choose between - should match BORE_BehaviourCount
 
 namespace PikiAI {
@@ -329,8 +335,7 @@ void ActOneshot::finish()
  */
 int ActOneshot::exec()
 {
-	Vector3f vel(0.0f);
-	mParent->setCurrVelocity(vel);
+	mParent->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	if (isFlag(ONESHOTFLAG_ForceFinish)) {
 		return ACTEXEC_Success;
 	}

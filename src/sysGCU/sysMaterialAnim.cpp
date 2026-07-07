@@ -214,13 +214,6 @@ void MatBaseAnimator::animate(f32 rate)
 	do_animate(rate);
 }
 
-/**
- * @note Address: 0x804345C4
- * @note Size: 0x4
- */
-void MatBaseAnimator::do_animate(f32 rate)
-{
-}
 
 /**
  * @note Address: 0x804345C8
@@ -261,31 +254,5 @@ void MatRepeatAnimator::do_animate(f32 rate)
 			mStarted = true;
 		}
 	}
-}
-
-/**
- * @note Address: 0x80434AAC
- * @note Size: 0x4
- */
-void MatBaseAnimator::onStart()
-{
-}
-
-/**
- * @note Address: 0x80434AB0
- * @note Size: 0x8
- */
-J3DAnmBase* MatTevRegAnimation::getAnmBase()
-{
-	return mAnmTevRegKey;
-}
-
-/**
- * @note Address: 0x80434AB8
- * @note Size: 0x8
- */
-J3DAnmBase* MatTexAnimation::getAnmBase()
-{
-	return mAnmSRT;
 }
 } // namespace Sys

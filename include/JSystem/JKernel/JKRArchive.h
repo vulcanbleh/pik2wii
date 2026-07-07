@@ -39,7 +39,7 @@ struct JKRArchive : public JKRFileLoader {
 		u16 mHash;              // _00
 		u16 mLength;            // _02
 		char mString[PATH_MAX]; // _04
-		u8 _104[4];             // _104, unknown
+		u8 _104[2];             // _104, unknown
 	};
 
 	struct SDIFileEntry {
@@ -128,7 +128,7 @@ struct JKRArchive : public JKRFileLoader {
 	virtual ~JKRArchive();                                                                                    // _08
 
 	SDIDirEntry* findDirectory(const char* path, u32 index) const;
-	SDIFileEntry* findFsResource(const char* path, u32 index) const;
+	SDIFileEntry* findFsResource(const char* path, u32 index) const DECOMP_DONT_INLINE;
 	SDIFileEntry* findIdResource(u16 id) const;
 	SDIFileEntry* findIdxResource(u32 index) const;
 	SDIFileEntry* findNameResource(const char* name) const;

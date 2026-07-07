@@ -1,8 +1,12 @@
-#include "Game/Stickers.h"
-#include "Game/Navi.h" // specifically for the navi scale defines. no other reason to include --EpochFlame
 #include "CollInfo.h"
+#include "Game/Navi.h" // specifically for the navi scale defines. no other reason to include --EpochFlame
+#include "Game/Stickers.h"
 
-static const char className[] = "creatureStick";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "creatureStick";
+}
 
 namespace Game {
 
@@ -181,13 +185,19 @@ void Creature::endStick()
  * @note Size: 0x14
  * Returns whether the creature is stuck to anything
  */
-bool Creature::isStickTo() { return mSticker != nullptr; }
+bool Creature::isStickTo()
+{
+	return mSticker != nullptr;
+}
 
 /**
  * @note Address: 0x8019F588
  * @note Size: 0x60
  */
-bool Creature::isStickToMouth() { return mSticker && mStuckCollPart && mStuckCollPart->isMouth(); }
+bool Creature::isStickToMouth()
+{
+	return mSticker && mStuckCollPart && mStuckCollPart->isMouth();
+}
 
 /**
  * @note Address: N/A
@@ -246,7 +256,8 @@ void Creature::updateStick(Vector3f& pos)
 	} else { // If the creature is sticking to a non-mouth part
 		if (mStuckCollPart) {
 			// Calculate the global sticking position of the creature
-			Vector3f pos = getPosition();
+			Vector3f pos;
+			pos.set(getPosition());
 			mStuckCollPart->calcStickGlobal(mClimbingPosition, pos);
 
 			// Calculate the pose matrix based on part type (tubetree == climbing)
@@ -291,7 +302,10 @@ void Creature::updateStick(Vector3f& pos)
  * @note Address: 0x8019FA9C
  * @note Size: 0xC
  */
-void Creature::clearCapture() { mCaptureMatrix = nullptr; }
+void Creature::clearCapture()
+{
+	mCaptureMatrix = nullptr;
+}
 
 /**
  * @note Address: 0x8019FAA8
@@ -391,18 +405,27 @@ Creature* Stickers::get(void* id)
  * @note Address: 0x8019FE60
  * @note Size: 0x8
  */
-void* Stickers::getNext(void* in) { return (void*)((int)in + 1); }
+void* Stickers::getNext(void* in)
+{
+	return (void*)((int)in + 1);
+}
 
 /**
  * @note Address: 0x8019FE68
  * @note Size: 0x8
  */
-void* Stickers::getStart() { return nullptr; }
+void* Stickers::getStart()
+{
+	return nullptr;
+}
 
 /**
  * @note Address: 0x8019FE70
  * @note Size: 0x8
  */
-void* Stickers::getEnd() { return (void*)numBuffer; }
+void* Stickers::getEnd()
+{
+	return (void*)numBuffer;
+}
 
 } // namespace Game

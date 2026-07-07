@@ -19,10 +19,14 @@
 #include "efx/TTsuyuGrow.h"
 #include "nans.h"
 
-namespace Game {
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "pelletState";
+}
 
-static const u32 padding[]    = { 0, 0, 0 };
-static const char className[] = "pelletState";
+
+namespace Game {
 
 /**
  * @note Address: 0x801A4310
@@ -76,8 +80,6 @@ void PelletGoalWaitState::init(Pellet* pelt, StateArg* arg)
 
 	P2ASSERTLINE(432, arg);
 	mObj = sarg->mCreature;
-
-	pelt->getCreatureName();
 }
 
 /**
@@ -119,7 +121,7 @@ void PelletGoalState::init(Pellet* pellet, StateArg* arg)
 	pellet->clearClaim();
 
 	// check if a new upgrade is acquired
-	if (pellet->getKind() == PelletType::Upgrade && gameSystem->isStoryMode()) {
+	if (((pellet->getKind() == PelletType::Upgrade) ? true : false) && gameSystem->isStoryMode()) {
 		int id = pellet->getConfigIndex();
 		if (id >= 0 && id < OlimarData::ODII_LAST_NON_EXPLORATION_KIT_ITEM) {
 			playData->mOlimarData->getItem(id);
@@ -181,7 +183,7 @@ void PelletGoalState::init(Pellet* pellet, StateArg* arg)
 		mScale = pellet->mPelletView->viewGetBaseScale();
 	}
 
-	if (((int)mOnyon->mObjectTypeID == OBJTYPE_Onyon || (int)mOnyon->mObjectTypeID == OBJTYPE_Ufo) && !flag) {
+	if (((int)mOnyon->mObjectTypeID == OBJTYPE_Onyon || (int)mOnyon->mObjectTypeID <= OBJTYPE_Ufo) && !flag) {
 		static_cast<Onyon*>(mOnyon)->efxSuikomi();
 	}
 	mInDemo     = flag;
@@ -203,7 +205,7 @@ void PelletGoalState::init(Pellet* pellet, StateArg* arg)
 	}
 
 	pellet->sound_otakaraEventFinish();
-	if (!(u8)mOnyon->isSuckArriveWait()) {
+	if (!mOnyon->isSuckArriveWait()) {
 		InteractSuckArrive act(pellet);
 		mOnyon->stimulate(act);
 		mIsWaiting = 0;
@@ -225,10 +227,10 @@ bool PelletGoalState::checkMovie(Pellet* pelt)
 	if (gameSystem->isStoryMode()) {
 		isGot = playData->firstCarryPellet(pelt);
 	}
-	if (pelt->getKind() == PelletType::Berry) {
+	if (((pelt->getKind() == PelletType::Berry) ? true : false)) {
 		isGot = true;
 	}
-	if (pelt->getKind() == PelletType::Number) {
+	if (((pelt->getKind() == PelletType::Number) ? true : false)) {
 		isGot = true;
 	}
 
@@ -265,13 +267,8 @@ bool PelletGoalState::checkMovie(Pellet* pelt)
 					int type = pelt->mPelletColor;
 					// Spicy berries.
 					if ((int)pelt->mPelletColor == SPRAY_TYPE_SPICY) {
-						playData->getDopeFruitCount(type);
-						playData->isDemoFlag(DEMO_First_Spicy_Berry);
-						playData->isDemoFlag(DEMO_First_Spicy_Spray_Made);
 						int dope0 = playData->getDopeFruitCount(type);
 						playData->addDopeFruit(type);
-						playData->getDopeFruitCount(SPRAY_TYPE_SPICY);
-						playData->getDopeFruitCount(SPRAY_TYPE_BITTER);
 						if (!playData->isDemoFlag(DEMO_First_Spicy_Berry)) {
 							playData->setDemoFlag(DEMO_First_Spicy_Berry);
 							gameSystem->mSection->setDraw2DCreature(pelt);
@@ -282,7 +279,6 @@ bool PelletGoalState::checkMovie(Pellet* pelt)
 							doPlay = true;
 
 						} else if (!playData->isDemoFlag(DEMO_First_Spicy_Spray_Made)) {
-							playData->getDopeFruitCount(type);
 							if (dope0 + 1 >= _aiConstants->mDopeCount.mData) {
 								playData->setDemoFlag(DEMO_First_Spicy_Spray_Made);
 								BaseItem* item = ItemHoney::mgr->birth();
@@ -304,13 +300,8 @@ bool PelletGoalState::checkMovie(Pellet* pelt)
 
 						// Bitter berries.
 					} else {
-						playData->getDopeFruitCount(type);
-						playData->isDemoFlag(DEMO_First_Bitter_Berry);
-						playData->isDemoFlag(DEMO_First_Bitter_Spray_Made);
 						int dope0 = playData->getDopeFruitCount(type);
 						playData->addDopeFruit(type);
-						playData->getDopeFruitCount(SPRAY_TYPE_SPICY);
-						playData->getDopeFruitCount(SPRAY_TYPE_BITTER);
 						if (!playData->isDemoFlag(DEMO_First_Bitter_Berry)) {
 							playData->setDemoFlag(DEMO_First_Bitter_Berry);
 							gameSystem->mSection->setDraw2DCreature(pelt);
@@ -320,7 +311,6 @@ bool PelletGoalState::checkMovie(Pellet* pelt)
 							moviePlayer->play(arg);
 							doPlay = true;
 						} else if (!playData->isDemoFlag(DEMO_First_Bitter_Spray_Made)) {
-							playData->getDopeFruitCount(type);
 							if (dope0 + 1 >= _aiConstants->mDopeCount.mData) {
 								playData->setDemoFlag(DEMO_First_Bitter_Spray_Made);
 								BaseItem* item = ItemHoney::mgr->birth();
@@ -341,7 +331,7 @@ bool PelletGoalState::checkMovie(Pellet* pelt)
 						}
 					}
 
-				} else if (pelt->getKind() == PelletType::Treasure) {
+				} else if (((pelt->getKind() == PelletType::Treasure) ? true : false)) {
 					// Treasure carried to the ship (assume above ground)
 					gameSystem->mSection->setDraw2DCreature(pelt);
 					BaseGameSection* section = gameSystem->mSection;
@@ -351,7 +341,7 @@ bool PelletGoalState::checkMovie(Pellet* pelt)
 					moviePlayer->play(moviearg);
 					doPlay = true;
 
-				} else if (pelt->getKind() == PelletType::Upgrade) {
+				} else if (((pelt->getKind() == PelletType::Upgrade) ? true : false)) {
 					// Upgrade carried to the ship (this only appears with the globe in AW normally)
 					// strangely, upgrades with an ID of 8 or more use a different theme
 					gameSystem->mSection->setDraw2DCreature(pelt);
@@ -376,7 +366,7 @@ bool PelletGoalState::checkMovie(Pellet* pelt)
 				}
 			}
 		} else if (onyon && onyon->mOnyonType == ONYON_TYPE_POD) {
-			if (pelt->getKind() == PelletType::Treasure) {
+			if (((pelt->getKind() == PelletType::Treasure) ? true : false)) {
 				// Treasure carried to the cave pod
 				gameSystem->mSection->setDraw2DCreature(pelt);
 				MoviePlayArg moviearg("s22_cv_suck_treasure", nullptr, gameSystem->mSection->mMovieFinishCallback, 0);
@@ -388,7 +378,7 @@ bool PelletGoalState::checkMovie(Pellet* pelt)
 				moviePlayer->play(moviearg);
 				doPlay = true;
 
-			} else if (pelt->getKind() == PelletType::Upgrade) {
+			} else if (((pelt->getKind() == PelletType::Upgrade) ? true : false)) {
 				// Upgrade carried to the cave pod
 				gameSystem->mSection->setDraw2DCreature(pelt);
 				BaseGameSection* section = gameSystem->mSection;
@@ -404,7 +394,7 @@ bool PelletGoalState::checkMovie(Pellet* pelt)
 				moviePlayer->play(moviearg);
 				doPlay = true;
 
-			} else if (pelt->getKind() == PelletType::Carcass && pelt->mPelletFlag != Pellet::FLAG_NAVI_NAPSACK
+			} else if ((((pelt->getKind() == PelletType::Carcass) ? true : false)) && pelt->mPelletFlag != Pellet::FLAG_NAVI_NAPSACK
 			           && !playData->isDemoFlag(DEMO_First_Corpse_In_Cave)) {
 				// first corpse collected in cave
 				playData->setDemoFlag(DEMO_First_Corpse_In_Cave);
@@ -418,7 +408,7 @@ bool PelletGoalState::checkMovie(Pellet* pelt)
 				doPlay = true;
 			}
 		} else if (onyon && onyon->mOnyonType <= ONYON_TYPE_YELLOW) {
-			if (pelt->getKind() == PelletType::Number && !playData->isDemoFlag(DEMO_First_Number_Pellet)) {
+			if ((((pelt->getKind() == PelletType::Number) ? true : false)) && !playData->isDemoFlag(DEMO_First_Number_Pellet)) {
 				playData->setDemoFlag(DEMO_First_Number_Pellet);
 				BaseGameSection* section = gameSystem->mSection;
 				MoviePlayArg moviearg("x18_exp_pellet", nullptr, section->mMovieFinishCallback, 0);
@@ -434,17 +424,12 @@ bool PelletGoalState::checkMovie(Pellet* pelt)
 
 	if (doPlay) {
 		Pellet* pelt2 = nullptr;
-		if (pelt->getKind() == PelletType::Carcass) {
+		if (((pelt->getKind() == PelletType::Carcass) ? true : false)) {
 			pelt->mPelletView->mCreature->movie_begin(false);
-		} else if (pelt->getKind() == PelletType::Number) {
+		} else if (((pelt->getKind() == PelletType::Number) ? true : false)) {
 			pelt->movie_begin(false);
 		} else {
 			pelt2 = pelt;
-			pelt->getCreatureName();
-			pelt->getCreatureID();
-			if (pelt->mPelletView) {
-				pelt->mPelletView->viewGetShape();
-			}
 		}
 		if (!draw2d) {
 			gameSystem->mSection->setDraw2DCreature(pelt2);

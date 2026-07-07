@@ -1,12 +1,16 @@
-#include "PikiAI.h"
-#include "Game/gameStat.h"
 #include "Game/Entities/ItemGate.h"
 #include "Game/Piki.h"
 #include "Game/PikiState.h"
+#include "Game/gameStat.h"
+#include "PikiAI.h"
+
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "actBreakWall";
+}
 
 namespace PikiAI {
-
-static const char breakGateName[] = "actBreakWall";
 
 /**
  * @note Address: 0x801D04E8
@@ -73,7 +77,7 @@ void ActBreakGate::initGoto()
  * @note Size: 0x114
  * --INLINE--
  */
-void ActBreakGate::initStickAttack()
+inline void ActBreakGate::initStickAttack()
 {
 	u8 type = STICKATK_WhiteGate;
 	if (mGate->mColor == GATECOLOR_Black) {
@@ -626,18 +630,24 @@ lbl_801D0D74:
  * @note Address: 0x801D0D8C
  * @note Size: 0x4
  */
-void ActBreakGate::collisionCallback(Game::Piki*, Game::CollEvent&) { }
+void ActBreakGate::collisionCallback(Game::Piki*, Game::CollEvent&)
+{
+}
 
 /**
  * @note Address: 0x801D0D90
  * @note Size: 0x4
  */
-void ActBreakGate::bounceCallback(Game::Piki*, Sys::Triangle*) { }
+void ActBreakGate::bounceCallback(Game::Piki*, Sys::Triangle*)
+{
+}
 
 /**
  * @note Address: 0x801D0D94
  * @note Size: 0x4
  */
-void ActBreakGate::onKeyEvent(const SysShape::KeyEvent&) { }
+void ActBreakGate::onKeyEvent(const SysShape::KeyEvent&)
+{
+}
 
 } // namespace PikiAI

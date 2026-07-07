@@ -109,11 +109,12 @@ void* JKRDvdRipper::loadToMainRAM(s32 entryNum, u8* fileData, JKRExpandSwitch ex
 void* JKRDvdRipper::loadToMainRAM(JKRDvdFile* jkrDvdFile, u8* file, JKRExpandSwitch expandSwitch, u32 fileSize, JKRHeap* heap,
                                   EAllocDirection allocDirection, u32 startOffset, int* fileCompression, u32* newSize)
 {
+	s32 fileSizeAligned;
 	bool hasAllocated          = false;
 	JKRCompression compression = COMPRESSION_None;
 	u32 expandSize;
 	u8* mem             = nullptr;
-	s32 fileSizeAligned = ALIGN_NEXT(jkrDvdFile->getFileSize(), 32);
+	fileSizeAligned = ALIGN_NEXT(jkrDvdFile->getFileSize(), 32);
 
 	if (expandSwitch == Switch_1) {
 		u8 buffer[0x40];
@@ -133,7 +134,7 @@ void* JKRDvdRipper::loadToMainRAM(JKRDvdFile* jkrDvdFile, u8* file, JKRExpandSwi
 
 		DCInvalidateRange(bufPtr, 0x20);
 
-		compression = JKRCheckCompressed(bufPtr);
+		compression = JKRCheckCompressed_noASR(bufPtr);
 		expandSize  = JKRDecompExpandSize(bufPtr);
 	}
 
@@ -202,7 +203,7 @@ void* JKRDvdRipper::loadToMainRAM(JKRDvdFile* jkrDvdFile, u8* file, JKRExpandSwi
 			}
 
 			DCInvalidateRange(bufPtr, 32);
-			compression2 = JKRCheckCompressed(bufPtr);
+			compression2 = JKRCheckCompressed_noASR(bufPtr);
 		}
 
 		if ((compression2 == COMPRESSION_None || expandSwitch == Switch_2) || expandSwitch == Switch_0) {
@@ -237,14 +238,14 @@ void* JKRDvdRipper::loadToMainRAM(JKRDvdFile* jkrDvdFile, u8* file, JKRExpandSwi
 			JKRDecompressFromDVD(jkrDvdFile, file, fileSizeAligned, fileSize, 0, startOffset, newSize);
 
 		} else {
-			OSErrorLine(322, "Sorry, not prepared for SZP resource\n");
+			JUT_PANICLINE(323, "Sorry, not applied for SZP archive.");
 		}
 
 		return file;
 
 	} else if (compression == COMPRESSION_YAY0) {
 		if (startOffset != 0) {
-			OSErrorLine(332, ":::Not support SZP with offset read");
+			JUT_PANICLINE(333, "Not support SZP with offset read");
 		}
 
 		while (true) {

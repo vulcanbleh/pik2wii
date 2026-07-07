@@ -3425,16 +3425,19 @@ plugProjectKandoU/itemMgr.cpp:
 
 plugProjectKandoU/aiBreakGate.cpp:
 	.text       start:0x8025D3E0 end:0x8025DC34
+	.rodata     start:0x8054A1B8 end:0x8054A1F8
 	.data       start:0x80597A68 end:0x80597AE0
 
 plugProjectKandoU/gameStat.cpp:
 	.text       start:0x8025DC34 end:0x8025E574
 	.ctors      start:0x80534DC8 end:0x80534DCC
+	.rodata     start:0x8054A1F8 end:0x8054A218
 	.data       start:0x80597AE0 end:0x80597AF0
 
 plugProjectKandoU/itemHole.cpp:
 	.text       start:0x8025E574 end:0x8025FAC4
 	.ctors      start:0x80534DCC end:0x80534DD0
+	.rodata     start:0x8054A218 end:0x8054A2A8
 	.data       start:0x80597AF0 end:0x80597EB8
 	.bss        start:0x80638BA0 end:0x80638BB0
 	.sdata      start:0x8066B2A8 end:0x8066B2B0
@@ -3442,14 +3445,17 @@ plugProjectKandoU/itemHole.cpp:
 
 plugProjectKandoU/itemHoney.cpp:
 	.text       start:0x8025FAC4 end:0x80261C14
+	.rodata     start:0x8054A2A8 end:0x8054A330
 	.data       start:0x80597EB8 end:0x80598530
 	.sdata      start:0x8066B2B0 end:0x8066B2B8
 	.sbss       start:0x8066CA58 end:0x8066CA60
 
 plugProjectKandoU/gameCaveInfo.cpp:
 	.text       start:0x80261C14 end:0x802631D4
+	.rodata     start:0x8054A330 end:0x8054A4D0
 	.data       start:0x80598530 end:0x805985F8
 	.sdata      start:0x8066B2B8 end:0x8066B358
+	.sdata2     start:0x80670298 end:0x806702A8
 
 plugProjectKandoU/creatureLOD.cpp:
 	.text       start:0x802631D4 end:0x80263854
@@ -3503,12 +3509,14 @@ plugProjectKandoU/registItem.cpp:
 
 plugProjectKandoU/gamePlayData.cpp:
 	.text       start:0x8026ECC4 end:0x8027353C
+	.rodata     start:0x8054A868 end:0x8054A9A0
 	.data       start:0x80599FA8 end:0x80599FD8
 	.sbss       start:0x8066CA98 end:0x8066CAA0
 
 plugProjectKandoU/itemCave.cpp:
 	.text       start:0x8027353C end:0x8027568C
 	.ctors      start:0x80534DDC end:0x80534DE0
+	.rodata     start:0x8054A9A0 end:0x8054AA68
 	.data       start:0x80599FD8 end:0x8059A5B0
 	.bss        start:0x80638BE0 end:0x80638BF0
 	.sbss       start:0x8066CAA0 end:0x8066CAB0
@@ -3516,27 +3524,32 @@ plugProjectKandoU/itemCave.cpp:
 plugProjectKandoU/itemBigFountain.cpp:
 	.text       start:0x8027568C end:0x80277190
 	.ctors      start:0x80534DE0 end:0x80534DE4
+	.rodata     start:0x8054AA68 end:0x8054AB78
 	.data       start:0x8059A5B0 end:0x8059AE38
 	.bss        start:0x80638BF0 end:0x80638C00
 	.sbss       start:0x8066CAB0 end:0x8066CAC0
 
 plugProjectKandoU/itemBridge.cpp:
 	.text       start:0x80277190 end:0x8027A8BC
+	.rodata     start:0x8054AB78 end:0x8054ACD8
 	.data       start:0x8059AE38 end:0x8059B628
 	.sbss       start:0x8066CAC0 end:0x8066CAC8
 
 plugProjectKandoU/pikiContainer.cpp:
 	.text       start:0x8027A8BC end:0x8027AF50
+	.rodata     start:0x8054ACD8 end:0x8054AD58
 	.data       start:0x8059B628 end:0x8059B638
 
 plugProjectKandoU/gameGeneratorCache.cpp:
 	.text       start:0x8027AF50 end:0x8027C760
+	.rodata     start:0x8054AD58 end:0x8054AF48
 	.data       start:0x8059B638 end:0x8059B648
 	.sbss       start:0x8066CAC8 end:0x8066CAD0
 
 plugProjectKandoU/itemTreasure.cpp:
 	.text       start:0x8027C760 end:0x8027E058
 	.ctors      start:0x80534DE4 end:0x80534DE8
+	.rodata     start:0x8054AF48 end:0x8054AFD0
 	.data       start:0x8059B648 end:0x8059BE30
 	.bss        start:0x80638C00 end:0x80638C10
 	.sbss       start:0x8066CAD0 end:0x8066CAE0
@@ -3544,6 +3557,7 @@ plugProjectKandoU/itemTreasure.cpp:
 plugProjectKandoU/itemDownFloor.cpp:
 	.text       start:0x8027E058 end:0x802805CC
 	.ctors      start:0x80534DE8 end:0x80534DEC
+	.rodata     start:0x8054AFD0 end:0x8054B160
 	.data       start:0x8059BE30 end:0x8059C5A0
 	.bss        start:0x80638C10 end:0x80638C20
 	.sbss       start:0x8066CAE0 end:0x8066CAF0
@@ -3556,6 +3570,7 @@ plugProjectKandoU/kandoLib.cpp:
 plugProjectKandoU/itemBarrel.cpp:
 	.text       start:0x80280674 end:0x80281B28
 	.ctors      start:0x80534DEC end:0x80534DF0
+	.rodata     start:0x8054B160 end:0x8054B208
 	.data       start:0x8059C5A0 end:0x8059CDB8
 	.bss        start:0x80638C20 end:0x80638C30
 	.sbss       start:0x8066CAF0 end:0x8066CB00
@@ -3563,17 +3578,20 @@ plugProjectKandoU/itemBarrel.cpp:
 
 plugProjectKandoU/pelletNumber.cpp:
 	.text       start:0x80281B28 end:0x80283088
+	.rodata     start:0x8054B208 end:0x8054B268
 	.data       start:0x8059CDB8 end:0x8059D290
 	.sbss       start:0x8066CB00 end:0x8066CB08
 
 plugProjectKandoU/pelletCarcass.cpp:
 	.text       start:0x80283088 end:0x80283EDC
+	.rodata     start:0x8054B268 end:0x8054B280
 	.data       start:0x8059D290 end:0x8059D700
 	.sbss       start:0x8066CB08 end:0x8066CB10
 
 plugProjectKandoU/pelletFruit.cpp:
 	.text       start:0x80283EDC end:0x802850D8
 	.ctors      start:0x80534DF0 end:0x80534DF4
+	.rodata     start:0x8054B280 end:0x8054B298
 	.data       start:0x8059D700 end:0x8059DB70
 	.bss        start:0x80638C30 end:0x80638C40
 	.sbss       start:0x8066CB10 end:0x8066CB20
@@ -3581,6 +3599,7 @@ plugProjectKandoU/pelletFruit.cpp:
 plugProjectKandoU/pelletOtakara.cpp:
 	.text       start:0x802850D8 end:0x802868F0
 	.ctors      start:0x80534DF4 end:0x80534DF8
+	.rodata     start:0x8054B298 end:0x8054B2F0
 	.data       start:0x8059DB70 end:0x8059DFE0
 	.bss        start:0x80638C40 end:0x80638C50
 	.sbss       start:0x8066CB20 end:0x8066CB30
@@ -3755,6 +3774,7 @@ plugProjectKandoU/vsGS_Result.cpp:
 plugProjectKandoU/vsGS_Load.cpp:
 	.text       start:0x802B14DC end:0x802B1A90
 	.ctors      start:0x80534E3C end:0x80534E40
+	.rodata     start:0x8054CAC0 end:0x8054CAD8
 	.data       start:0x805A0300 end:0x805A0380
 	.bss        start:0x80638D68 end:0x80638D78
 	.sbss       start:0x8066CC00 end:0x8066CC08
@@ -3762,12 +3782,14 @@ plugProjectKandoU/vsGS_Load.cpp:
 plugProjectKandoU/vsStageData.cpp:
 	.text       start:0x802B1A90 end:0x802B263C
 	.ctors      start:0x80534E40 end:0x80534E44
+	.rodata     start:0x8054CAD8 end:0x8054CBE8
 	.data       start:0x805A0380 end:0x805A03C0
 	.bss        start:0x80638D78 end:0x80638D88
 	.sbss       start:0x8066CC08 end:0x8066CC10
 
 plugProjectKandoU/cellMgrParms.cpp:
 	.text       start:0x802B263C end:0x802B27CC
+	.rodata     start:0x8054CBE8 end:0x8054CC30
 	.data       start:0x805A03C0 end:0x805A03D8
 	.sbss       start:0x8066CC10 end:0x8066CC18
 
@@ -3807,6 +3829,7 @@ plugProjectKandoU/aiBore.cpp:
 plugProjectKandoU/mapPartsView.cpp:
 	.text       start:0x802B6328 end:0x802B66CC
 	.data       start:0x805A05B8 end:0x805A05F8
+	.sdata2     start:0x80670B68 end:0x80670B70
 
 plugProjectKandoU/singleGS_Ending.cpp:
 	.text       start:0x802B66CC end:0x802B752C
@@ -3817,17 +3840,21 @@ plugProjectKandoU/singleGS_Ending.cpp:
 
 plugProjectKandoU/gameIconTexture.cpp:
 	.text       start:0x802B752C end:0x802B78AC
+	.rodata     start:0x8054CD30 end:0x8054CD90
 	.data       start:0x805A06A8 end:0x805A06C0
 
 plugProjectKandoU/gameTekiStat.cpp:
 	.text       start:0x802B78AC end:0x802B7D7C
+	.rodata     start:0x8054CD90 end:0x8054CDB8
 
 plugProjectKandoU/gameHighscore.cpp:
 	.text       start:0x802B7D7C end:0x802B8240
+	.rodata     start:0x8054CDB8 end:0x8054CDE0
 	.data       start:0x805A06C0 end:0x805A06D0
 
 plugProjectKandoU/gamePlayCommonData.cpp:
 	.text       start:0x802B8240 end:0x802B8FA0
+	.rodata     start:0x8054CDE0 end:0x8054CE10
 	.data       start:0x805A06D0 end:0x805A06E0
 
 plugProjectKandoU/pelletCarry.cpp:

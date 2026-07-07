@@ -16,8 +16,6 @@
 
 namespace Game {
 
-static const int unusedPikiMgrArray[] = { 0, 0, 0 };
-
 bool PikiMgr::throwPikiDebug = false;
 PikiMgr* pikiMgr;
 int PikiMgr::mBirthMode = PikiMgr::PSM_Normal;
@@ -179,9 +177,8 @@ void PikiMgr::load(int viewNum)
 {
 	JKRHeap* heap = JKRGetCurrentHeap();
 	heap->getFreeSize();
-	JKRArchive* arc = JKRMountArchive("/user/Kando/piki/pikis.szs", JKRArchive::EMM_Mem, sys->mSysHeap, JKRArchive::EMD_Head);
+	JKRArchive* arc = JKRMountArchive("user/Kando/piki/pikis.szs", JKRArchive::EMM_Mem, sys->mSysHeap, JKRArchive::EMD_Head);
 	mModelArchive   = arc;
-	heap->getFreeSize();
 
 	JUT_ASSERTLINE(450, arc, "pikis.szs not found !\n");
 
@@ -495,7 +492,7 @@ void PikiMgr::setupSoundViewerAndBas()
  */
 int PikiMgr::getColorTransportScale(int color)
 {
-	P2ASSERTBOUNDSLINE(857, 0, color, PikiColorCount);
+	P2ASSERTBOUNDSLINE(856, 0, color, PikiColorCount);
 	if (color == Purple) {
 		return 10;
 	}

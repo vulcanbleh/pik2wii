@@ -11,11 +11,14 @@
 #include "efx/TPk.h"
 #include "utilityU.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "aiBattle";
+}
+
 namespace PikiAI {
 
-#if MATCHING
-static const char unusedAiBattleName[] = "aiBattle";
-#endif
 
 /**
  * @note Address: 0x8022ECB4

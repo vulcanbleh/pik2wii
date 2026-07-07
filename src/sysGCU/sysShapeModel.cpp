@@ -1,6 +1,6 @@
-#include "SysShape/Model.h"
-#include "SysShape/Joint.h"
 #include "Graphics.h"
+#include "SysShape/Joint.h"
+#include "SysShape/Model.h"
 #include "Viewport.h"
 #include "nans.h"
 
@@ -385,8 +385,8 @@ void Model::initJoints()
  */
 Joint::Joint()
 {
-	mMin.set(SHORT_FLOAT_MAX);
-	mMax.set(-SHORT_FLOAT_MAX);
+	mMin.set(SHORT_FLOAT_MAX, SHORT_FLOAT_MAX, SHORT_FLOAT_MAX);
+	mMax.set(-SHORT_FLOAT_MAX, -SHORT_FLOAT_MAX, -SHORT_FLOAT_MAX);
 }
 
 /**
@@ -639,7 +639,10 @@ lbl_8043EF88:
  * @note Address: 0x8043EFB4
  * @note Size: 0x30
  */
-u16 Model::getJointIndex(char* name) { return mJ3dModel->getModelData()->getJointName()->getIndex(name); }
+u16 Model::getJointIndex(char* name)
+{
+	return mJ3dModel->getModelData()->getJointName()->getIndex(name);
+}
 
 /**
  * @note Address: 0x8043EFE4
@@ -667,13 +670,19 @@ void Model::update()
  * @note Address: 0x8043F040
  * @note Size: 0xC
  */
-void Model::setViewCalcModeImm() { viewCalcMode = false; }
+void Model::setViewCalcModeImm()
+{
+	viewCalcMode = false;
+}
 
 /**
  * @note Address: 0x8043F04C
  * @note Size: 0xC
  */
-void Model::setViewCalcModeInd() { viewCalcMode = true; }
+void Model::setViewCalcModeInd()
+{
+	viewCalcMode = true;
+}
 
 /**
  * @note Address: N/A
@@ -716,12 +725,18 @@ void Model::setCurrentViewNo(u32 viewportNumber)
  * @note Address: 0x8043F10C
  * @note Size: 0x14
  */
-bool Model::isMtxImmediate() { return mJ3dModel->getModelData()->getFlag() >> 4 & 1; }
+bool Model::isMtxImmediate()
+{
+	return mJ3dModel->getModelData()->getFlag() >> 4 & 1;
+}
 
 /**
  * @note Address: 0x8043F130
  * @note Size: 0x30
  */
-void Model::jointVisible(bool flag, Joint* joint) { jointVisible(flag, joint->mJointIndex); }
+void Model::jointVisible(bool flag, Joint* joint)
+{
+	jointVisible(flag, joint->mJointIndex);
+}
 
 } // namespace SysShape

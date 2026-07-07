@@ -1,6 +1,16 @@
 #include "Game/gameGenerator.h"
 
-static const char name[] = "genPellet";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "genPellet";
+}
+
+// TODO: fix this up
+static void unused(const char** fmt, ...)
+{
+	*fmt = "PELLET をセット";
+}
 
 /**
  * @note Address: 0x8020278C
@@ -49,10 +59,11 @@ void GenPellet::doEvent(u32 flag)
  */
 void GenPellet::generatorMakeMatrix(Matrixf& mtx, Vector3f& pos)
 {
-	f32 x, y, z;
+	f32 x, y, z;	
+	
+	x = mRotation.x * DEG2RAD * PI;
 	y = mRotation.y * DEG2RAD * PI;
 	z = mRotation.z * DEG2RAD * PI;
-	x = mRotation.x * DEG2RAD * PI;
 
 	Vector3f ang(x, y, z);
 	mtx.makeTR(pos, ang);
