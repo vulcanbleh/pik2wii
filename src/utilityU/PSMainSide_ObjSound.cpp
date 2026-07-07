@@ -1657,6 +1657,7 @@ void EnemyBoss::onCalcOn()
 {
 	calcDistance();
 	EnemyBase::onCalcOn();
+	FORCE_DONT_INLINE;
 }
 
 /**
