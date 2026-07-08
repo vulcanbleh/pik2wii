@@ -3,10 +3,15 @@
 #include "Game/Entities/Imomushi.h"
 #include "Game/MapMgr.h"
 #include "types.h"
+
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-ImomushiState";
+}
+
 namespace Game {
 namespace Imomushi {
-
-const char statename[] = "246-ImomushiState";
 
 /**
  * @note Address: 0x802BA0D8
@@ -16,21 +21,21 @@ void FSM::init(EnemyBase* enemy)
 {
 	create(IMOMUSHI_Count);
 
-	registerState(new StateDead);
-	registerState(new StateFallDive);
-	registerState(new StateFallMove);
-	registerState(new StateStay);
-	registerState(new StateAppear);
-	registerState(new StateDive);
-	registerState(new StateMove);
-	registerState(new StateGoHome);
-	registerState(new StateClimb);
-	registerState(new StateAttack);
-	registerState(new StateWait);
+	registerState(new StateDead("dead"));
+	registerState(new StateFallDive("falldive"));
+	registerState(new StateFallMove("fallmove"));
+	registerState(new StateStay("stay"));
+	registerState(new StateAppear("appear"));
+	registerState(new StateDive("dive"));
+	registerState(new StateMove("move"));
+	registerState(new StateGoHome("gohome"));
+	registerState(new StateClimb("climb"));
+	registerState(new StateAttack("attack"));
+	registerState(new StateWait("wait"));
 	// zukan states
-	registerState(new StateZukanStay);
-	registerState(new StateZukanAppear);
-	registerState(new StateZukanMove);
+	registerState(new StateZukanStay("zukanstay"));
+	registerState(new StateZukanAppear("zukanappear"));
+	registerState(new StateZukanMove("zukanmove"));
 }
 
 /**
@@ -41,7 +46,7 @@ void StateDead::init(EnemyBase* enemy, StateArg* stateArg)
 {
 	Obj* imomushi = OBJ(enemy);
 	imomushi->deathProcedure();
-	imomushi->mTargetVelocity = 0.0f;
+	imomushi->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	imomushi->startMotion(IMOMUSHIANIM_Dead, nullptr);
 }
 
@@ -94,7 +99,7 @@ void StateFallDive::exec(EnemyBase* enemy)
 		imomushi->finishMotion();
 	}
 	if (imomushi->mCurAnim->mIsPlaying && (u32)imomushi->mCurAnim->mType == KEYEVENT_END) {
-		if (imomushi->mHealth <= 0.0f) {
+		if (imomushi->isDead()) {
 			transit(imomushi, IMOMUSHI_Dead, nullptr);
 		} else {
 			transit(imomushi, IMOMUSHI_GoHome, nullptr);
@@ -137,7 +142,7 @@ void StateFallMove::exec(EnemyBase* enemy)
 		imomushi->finishMotion();
 	}
 	if (imomushi->mCurAnim->mIsPlaying && (u32)imomushi->mCurAnim->mType == KEYEVENT_END) {
-		if (imomushi->mHealth <= 0.0f) {
+		if (imomushi->isDead()) {
 			transit(imomushi, IMOMUSHI_Dead, nullptr);
 		} else if (imomushi->mTargetCreature = imomushi->getRandFruitsPlant()) {
 			transit(imomushi, IMOMUSHI_Move, nullptr);
@@ -234,7 +239,7 @@ void StateAppear::exec(EnemyBase* enemy)
 {
 	Obj* imomushi = OBJ(enemy);
 	if (imomushi->mCurAnim->mIsPlaying && (u32)imomushi->mCurAnim->mType == KEYEVENT_END) {
-		if (imomushi->mHealth <= 0.0f) {
+		if (imomushi->isDead()) {
 			transit(imomushi, IMOMUSHI_Dead, nullptr);
 		} else if (imomushi->mTargetCreature = imomushi->getRandFruitsPlant()) {
 			transit(imomushi, IMOMUSHI_Move, nullptr);
@@ -315,7 +320,7 @@ void StateMove::exec(EnemyBase* enemy)
 	Creature* creature;
 	Obj* imomushi = OBJ(enemy);
 
-	if (imomushi->mHealth <= 0.0f) {
+	if (imomushi->isDead()) {
 		transit(imomushi, IMOMUSHI_Dead, nullptr);
 		return;
 	}
@@ -394,7 +399,7 @@ void StateGoHome::exec(EnemyBase* enemy)
 {
 	Obj* imomushi = OBJ(enemy);
 
-	if (imomushi->mHealth <= 0.0f) {
+	if (imomushi->isDead()) {
 		transit(imomushi, IMOMUSHI_Dead, nullptr);
 		return;
 	}
@@ -459,7 +464,7 @@ void StateClimb::init(EnemyBase* enemy, StateArg* stateArg)
 void StateClimb::exec(EnemyBase* enemy)
 {
 	Obj* imomushi = OBJ(enemy);
-	if (imomushi->mHealth <= 0.0f) {
+	if (imomushi->isDead()) {
 		transit(imomushi, IMOMUSHI_FallDive, nullptr);
 		return;
 	}
@@ -531,7 +536,7 @@ void StateAttack::exec(EnemyBase* enemy)
 {
 	Obj* imomushi = OBJ(enemy);
 
-	if (imomushi->mHealth <= 0.0f) {
+	if (imomushi->isDead()) {
 		transit(imomushi, IMOMUSHI_FallDive, nullptr);
 		return;
 	}
@@ -598,7 +603,7 @@ void StateWait::exec(EnemyBase* enemy)
 	Creature* sticker;
 	Obj* imomushi = OBJ(enemy);
 
-	if (imomushi->mHealth <= 0.0f) {
+	if (imomushi->isDead()) {
 		transit(imomushi, IMOMUSHI_FallDive, nullptr);
 		return;
 	}

@@ -868,7 +868,7 @@ config.libs = [
     },
     {
         "lib": "runtime",
-        "cflags": [*cflags_trk, "-inline deferred"],
+        "cflags": [*cflags_trk, "-use_lmw_stmw on",],
         "mw_version": "GC/3.0a3p1",
         "progress_category": "sdk",
         "objects": [

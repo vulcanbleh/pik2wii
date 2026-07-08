@@ -12,10 +12,14 @@
 #include "RevoSDK/rand.h"
 #include "efx/THebi.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-SnakeWhole";
+}
+
 namespace Game {
 namespace SnakeWhole {
-
-static const char unusedSnakeWholeName[] = "246-SnakeWhole";
 
 /**
  * @note Address: 0x802CE798
@@ -141,7 +145,7 @@ void Obj::getShadowParam(ShadowParam& shadowParam)
 {
 	shadowParam.mPosition                 = mModel->getJoint("kutijnt1")->getWorldMatrix()->getColumn(3);
 	shadowParam.mPosition.y               = mPosition.y + 2.5f;
-	shadowParam.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	shadowParam.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 	if (isEvent(1, EB2_Earthquake)) {
 		shadowParam.mBoundingSphere.mRadius = 50.0f;
 	} else {

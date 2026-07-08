@@ -289,8 +289,8 @@ struct State : public EnemyFSMState {
 };
 
 struct StateAppear1 : public State {
-	inline StateAppear1()
-	    : State(SNAKEWHOLE_Appear1, "appear1")
+	inline StateAppear1(const char* name)
+	    : State(SNAKEWHOLE_Appear1, name)
 	{
 	}
 
@@ -303,8 +303,8 @@ struct StateAppear1 : public State {
 };
 
 struct StateAppear2 : public State {
-	inline StateAppear2()
-	    : State(SNAKEWHOLE_Appear2, "appear2")
+	inline StateAppear2(const char* name)
+	    : State(SNAKEWHOLE_Appear2, name)
 	{
 	}
 
@@ -317,8 +317,8 @@ struct StateAppear2 : public State {
 };
 
 struct StateAttack : public State {
-	inline StateAttack()
-	    : State(SNAKEWHOLE_Attack, "attack")
+	inline StateAttack(const char* name)
+	    : State(SNAKEWHOLE_Attack, name)
 	{
 	}
 
@@ -331,8 +331,8 @@ struct StateAttack : public State {
 };
 
 struct StateDead : public State {
-	inline StateDead()
-	    : State(SNAKEWHOLE_Dead, "dead")
+	inline StateDead(const char* name)
+	    : State(SNAKEWHOLE_Dead, name)
 	{
 	}
 
@@ -345,8 +345,8 @@ struct StateDead : public State {
 };
 
 struct StateDisappear : public State {
-	inline StateDisappear()
-	    : State(SNAKEWHOLE_Disappear, "disappear")
+	inline StateDisappear(const char* name)
+	    : State(SNAKEWHOLE_Disappear, name)
 	{
 	}
 
@@ -359,8 +359,8 @@ struct StateDisappear : public State {
 };
 
 struct StateEat : public State {
-	inline StateEat()
-	    : State(SNAKEWHOLE_Eat, "eat")
+	inline StateEat(const char* name)
+	    : State(SNAKEWHOLE_Eat, name)
 	{
 	}
 
@@ -373,8 +373,8 @@ struct StateEat : public State {
 };
 
 struct StateHome : public State {
-	inline StateHome()
-	    : State(SNAKEWHOLE_Home, "home")
+	inline StateHome(const char* name)
+	    : State(SNAKEWHOLE_Home, name)
 	{
 	}
 
@@ -387,8 +387,8 @@ struct StateHome : public State {
 };
 
 struct StateStay : public State {
-	inline StateStay()
-	    : State(SNAKEWHOLE_Stay, "stay")
+	inline StateStay(const char* name)
+	    : State(SNAKEWHOLE_Stay, name)
 	{
 	}
 
@@ -401,8 +401,8 @@ struct StateStay : public State {
 };
 
 struct StateStruggle : public State {
-	inline StateStruggle()
-	    : State(SNAKEWHOLE_Struggle, "struggle")
+	inline StateStruggle(const char* name)
+	    : State(SNAKEWHOLE_Struggle, name)
 	{
 	}
 
@@ -415,8 +415,8 @@ struct StateStruggle : public State {
 };
 
 struct StateWait : public State {
-	inline StateWait()
-	    : State(SNAKEWHOLE_Wait, "wait")
+	inline StateWait(const char* name)
+	    : State(SNAKEWHOLE_Wait, name)
 	{
 	}
 
@@ -429,8 +429,8 @@ struct StateWait : public State {
 };
 
 struct StateWalk : public State {
-	inline StateWalk()
-	    : State(SNAKEWHOLE_Walk, "walk")
+	inline StateWalk(const char* name)
+	    : State(SNAKEWHOLE_Walk, name)
 	{
 	}
 

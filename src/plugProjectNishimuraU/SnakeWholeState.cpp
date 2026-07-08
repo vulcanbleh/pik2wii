@@ -11,6 +11,12 @@
 #include "efx/THebi.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-SnakeWholeState";
+}
+
 namespace Game {
 namespace SnakeWhole {
 
@@ -21,17 +27,17 @@ namespace SnakeWhole {
 void FSM::init(EnemyBase* enemy)
 {
 	create(SNAKEWHOLE_Count);
-	registerState(new StateDead);
-	registerState(new StateStay);
-	registerState(new StateAppear1);
-	registerState(new StateAppear2);
-	registerState(new StateDisappear);
-	registerState(new StateWait);
-	registerState(new StateWalk);
-	registerState(new StateHome);
-	registerState(new StateAttack);
-	registerState(new StateEat);
-	registerState(new StateStruggle);
+	registerState(new StateDead("dead"));
+	registerState(new StateStay("stay"));
+	registerState(new StateAppear1("appear1"));
+	registerState(new StateAppear2("appear2"));
+	registerState(new StateDisappear("disappear"));
+	registerState(new StateWait("wait"));
+	registerState(new StateWalk("walk"));
+	registerState(new StateHome("home"));
+	registerState(new StateAttack("attack"));
+	registerState(new StateEat("eat"));
+	registerState(new StateStruggle("struggle"));
 }
 
 /**
@@ -273,7 +279,7 @@ void StateAppear1::exec(EnemyBase* enemy)
 
 		} else if ((u32)snagret->mCurAnim->mType == KEYEVENT_END) {
 			snagret->setAttackPosition();
-			if (snagret->mHealth <= 0.0f) {
+			if (snagret->isDead()) {
 				transit(snagret, SNAKEWHOLE_Dead, nullptr);
 
 			} else if (EnemyFunc::isStartFlick(snagret, false)) {
@@ -374,7 +380,7 @@ void StateAppear2::exec(EnemyBase* enemy)
 
 		} else if ((u32)snagret->mCurAnim->mType == KEYEVENT_END) {
 			snagret->setAttackPosition();
-			if (snagret->mHealth <= 0.0f) {
+			if (snagret->isDead()) {
 				transit(snagret, SNAKEWHOLE_Dead, nullptr);
 
 			} else if (EnemyFunc::isStartFlick(snagret, false)) {
@@ -510,7 +516,7 @@ void StateWait::init(EnemyBase* enemy, StateArg* stateArg)
 void StateWait::exec(EnemyBase* enemy)
 {
 	Obj* snagret = OBJ(enemy);
-	if (snagret->mHealth <= 0.0f) {
+	if (snagret->isDead()) {
 		snagret->mNextState = SNAKEWHOLE_Dead;
 		snagret->finishMotion();
 	} else if (EnemyFunc::isStartFlick(snagret, false) || snagret->mStateTimer > CG_PROPERPARMS(snagret).mWaitTime.mValue) {
@@ -569,7 +575,7 @@ void StateWalk::exec(EnemyBase* enemy)
 {
 	Obj* snagret = OBJ(enemy);
 	snagret->setAttackPosition();
-	if (snagret->mHealth <= 0.0f) {
+	if (snagret->isDead()) {
 		snagret->mNextState = SNAKEWHOLE_Dead;
 		snagret->finishMotion();
 	} else if (EnemyFunc::isStartFlick(snagret, false)) {
@@ -655,7 +661,7 @@ void StateHome::exec(EnemyBase* enemy)
 {
 	Obj* snagret = OBJ(enemy);
 	snagret->setAttackPosition();
-	if (snagret->mHealth <= 0.0f) {
+	if (snagret->isDead()) {
 		snagret->mNextState = SNAKEWHOLE_Dead;
 		snagret->finishMotion();
 	} else if (EnemyFunc::isStartFlick(snagret, false)) {
@@ -726,7 +732,7 @@ void StateAttack::exec(EnemyBase* enemy)
 		snagret->setAttackPosition();
 	}
 
-	if (snagret->mHealth <= 0.0f) {
+	if (snagret->isDead()) {
 		snagret->finishMotion();
 	}
 
@@ -775,7 +781,7 @@ void StateAttack::exec(EnemyBase* enemy)
 			}
 
 		} else if ((u32)snagret->mCurAnim->mType == KEYEVENT_END) {
-			if (snagret->mHealth <= 0.0f) {
+			if (snagret->isDead()) {
 				transit(snagret, SNAKEWHOLE_Dead, nullptr);
 				return;
 			}
@@ -850,7 +856,7 @@ void StateEat::exec(EnemyBase* enemy)
 		} else if ((u32)snagret->mCurAnim->mType == KEYEVENT_END) {
 			snagret->setAttackPosition();
 
-			if (snagret->mHealth <= 0.0f) {
+			if (snagret->isDead()) {
 				transit(snagret, SNAKEWHOLE_Dead, nullptr);
 				return;
 			}
@@ -921,7 +927,7 @@ void StateStruggle::exec(EnemyBase* enemy)
 	if (snagret->mCurAnim->mIsPlaying && (u32)snagret->mCurAnim->mType == KEYEVENT_END) {
 		snagret->setAttackPosition();
 
-		if (snagret->mHealth <= 0.0f) {
+		if (snagret->isDead()) {
 			transit(snagret, SNAKEWHOLE_Dead, nullptr);
 			return;
 		}

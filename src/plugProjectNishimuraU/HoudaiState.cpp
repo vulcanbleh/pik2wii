@@ -6,6 +6,12 @@
 #include "RevoSDK/rand.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-HoudaiState";
+}
+
 namespace Game {
 namespace Houdai {
 
@@ -16,13 +22,13 @@ namespace Houdai {
 void FSM::init(EnemyBase* enemy)
 {
 	create(HOUDAI_Count);
-	registerState(new StateDead);
-	registerState(new StateStay);
-	registerState(new StateLand);
-	registerState(new StateWait);
-	registerState(new StateFlick);
-	registerState(new StateWalk);
-	registerState(new StateShot);
+	registerState(new StateDead("dead"));
+	registerState(new StateStay("stay"));
+	registerState(new StateLand("land"));
+	registerState(new StateWait("wait"));
+	registerState(new StateFlick("flick"));
+	registerState(new StateWalk("walk"));
+	registerState(new StateShot("shot"));
 }
 
 /**
@@ -199,7 +205,7 @@ void StateLand::exec(EnemyBase* enemy)
 
 		} else if ((u32)houdai->mCurAnim->mType == KEYEVENT_END) {
 			EnemyFunc::flickStickPikmin(houdai, 1.0f, 100.0f, 0.0f, FLICK_BACKWARD_ANGLE, nullptr);
-			if (houdai->mHealth <= 0.0f) {
+			if (houdai->isDead()) {
 				transit(houdai, HOUDAI_Dead, nullptr);
 
 			} else if (EnemyFunc::isStartFlick(houdai, false)) {
@@ -249,7 +255,7 @@ void StateWait::exec(EnemyBase* enemy)
 	Obj* houdai = OBJ(enemy);
 	houdai->mStateTimer += sys->getDeltaTime();
 
-	if (houdai->mHealth <= 0.0f) {
+	if (houdai->isDead()) {
 		houdai->mNextState = HOUDAI_Dead;
 		houdai->finishMotion();
 	} else if (EnemyFunc::isStartFlick(houdai, false)) {
@@ -313,7 +319,7 @@ void StateFlick::exec(EnemyBase* enemy)
 			houdai->finishChimneyEffect();
 
 		} else if ((u32)houdai->mCurAnim->mType == KEYEVENT_END) {
-			if (houdai->mHealth <= 0.0f) {
+			if (houdai->isDead()) {
 				transit(houdai, HOUDAI_Dead, nullptr);
 
 			} else {
@@ -367,7 +373,7 @@ void StateWalk::exec(EnemyBase* enemy)
 		houdai->finishIKMotion();
 	}
 
-	if (houdai->mHealth <= 0.0f) {
+	if (houdai->isDead()) {
 		transit(houdai, HOUDAI_Dead, nullptr);
 	} else if (houdai->isFinishIKMotion()) {
 		transit(houdai, houdai->mNextState, nullptr);
@@ -454,7 +460,7 @@ void StateShot::exec(EnemyBase* enemy)
 	houdai->mShotGunSearchTimer += sys->getDeltaTime();
 	houdai->mStateTimer += sys->getDeltaTime();
 
-	if (houdai->mHealth <= 0.0f) {
+	if (houdai->isDead()) {
 		if (houdai->isStopMotion()) {
 			houdai->startMotion();
 		}
@@ -494,7 +500,7 @@ void StateShot::exec(EnemyBase* enemy)
 			houdai->finishBossAttackLoopBGM();
 
 		} else if ((u32)houdai->mCurAnim->mType == KEYEVENT_END) {
-			if (houdai->mHealth <= 0.0f) {
+			if (houdai->isDead()) {
 				transit(houdai, HOUDAI_Dead, nullptr);
 
 			} else {

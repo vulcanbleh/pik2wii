@@ -1,10 +1,13 @@
 #include "P2DScreen.h"
 #include "og/Screen/callbackNodes.h"
-#include "og/ogLib2D.h"
 #include "og/Screen/ogScreen.h"
+#include "og/ogLib2D.h"
 #include "trig.h"
 
-inline u64 J2DPane::getTagName() const { return mTag; }
+inline u64 J2DPane::getTagName() const
+{
+	return mTag;
+}
 
 namespace og {
 namespace Screen {
@@ -27,6 +30,44 @@ CallBack_Message::CallBack_Message()
 	mMinX              = 1.0f;
 }
 
+void CallBack_Message::drawInfo(J2DGrafContext& graf)
+{
+	Matrixf mtx;
+	u64 tag = mPane->mMessageID;
+	if (tag != mMessageIDAsULL) {
+		mMessageIDAsULL = tag;
+		P2JME::convertU64ToMessageID(mMessageIDAsULL, &mMessageIDAs2UL[0], &mMessageIDAs2UL[1]);
+	}
+	PSMTXConcat(graf.mPosMtx, mPane->mGlobalMtx, mtx.mMatrix.mtxView);
+	GXLoadPosMtxImm(mtx.mMatrix.mtxView, 0);
+
+	J2DPane* pane = mPane;
+	f32 x1        = pane->getWidth();
+	f32 y1        = pane->getHeight();
+	int flag      = pane->mBasePosition % 3;
+
+	f32 y2, x2;
+	x2 = 0.0f;
+	y2 = 0.0f;
+
+	if (flag == 1) {
+		x2 = x1 / 2;
+	} else if (flag == 2) {
+		x2 = x1;
+	}
+
+	flag = pane->mBasePosition / 3;
+
+	if (flag == 1) {
+		y2 = y1 / 2;
+	} else if (flag == 2) {
+		y2 = y1;
+	}
+
+	mWidth  = x2;
+	mHeight = y2;
+}
+
 /**
  * @note Address: 0x803096AC
  * @note Size: 0x1B4
@@ -35,39 +76,7 @@ void CallBack_Message::draw(Graphics& gfx, J2DGrafContext& graf)
 {
 	Matrixf mtx;
 	if (checkVisibleGlb(mPane)) {
-		u64 tag = mPane->mMessageID;
-		if (tag != mMessageIDAsULL) {
-			mMessageIDAsULL = tag;
-			P2JME::convertU64ToMessageID(mMessageIDAsULL, &mMessageIDAs2UL[0], &mMessageIDAs2UL[1]);
-		}
-		PSMTXConcat(graf.mPosMtx, mPane->mGlobalMtx, mtx.mMatrix.mtxView);
-		GXLoadPosMtxImm(mtx.mMatrix.mtxView, 0);
-
-		J2DPane* pane = mPane;
-		f32 x1        = pane->getWidth();
-		f32 y1        = pane->getHeight();
-		int flag      = pane->mBasePosition % 3;
-
-		f32 y2, x2;
-		x2 = 0.0f;
-		y2 = 0.0f;
-
-		if (flag == 1) {
-			x2 = x1 / 2;
-		} else if (flag == 2) {
-			x2 = x1;
-		}
-
-		flag = pane->mBasePosition / 3;
-
-		if (flag == 1) {
-			y2 = y1 / 2;
-		} else if (flag == 2) {
-			y2 = y1;
-		}
-
-		mWidth                           = x2;
-		mHeight                          = y2;
+		drawInfo(graf);
 		P2JME::TRenderingProcessor* proc = mMessage->mProcessor;
 		proc->mXOffset                   = -mWidth;
 		proc->mYOffset                   = -mHeight;
@@ -84,7 +93,9 @@ void CallBack_Message::draw(Graphics& gfx, J2DGrafContext& graf)
  * @note Size: 0xE4
  * NB: this never gets used, but it has to be here to generate the weak CallBack_Message dtor in the right spot
  */
-CallBack_MessageAndShadow::CallBack_MessageAndShadow(f32, f32, J2DPane*) { }
+CallBack_MessageAndShadow::CallBack_MessageAndShadow(f32, f32, J2DPane*)
+{
+}
 
 /**
  * @note Address: 0x803098E0
@@ -122,12 +133,17 @@ void setCallBackMessageSub(P2DScreen::Mgr* mgr, J2DPane* pane)
 		setCallBackMessageSub(mgr, cPane);
 		++iterator;
 	}
+
+	FORCE_DONT_INLINE;
 }
 
 /**
  * @note Address: 0x80309E00
  * @note Size: 0x24
  */
-void setCallBackMessage(P2DScreen::Mgr* mgr) { setCallBackMessageSub(mgr, mgr); }
+void setCallBackMessage(P2DScreen::Mgr* mgr)
+{
+	setCallBackMessageSub(mgr, mgr);
+}
 } // namespace Screen
 } // namespace og

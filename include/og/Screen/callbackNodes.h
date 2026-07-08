@@ -480,6 +480,7 @@ struct AnimText_Screen : public CallBack_Screen {
 };
 
 extern const char* SujiTex32[11];
+extern const char* SujiFloor[10]; //unused
 extern const char* SujiTexMap[11];
 
 } // namespace Screen
