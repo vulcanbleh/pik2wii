@@ -1,6 +1,6 @@
 #include "JSystem/J3D/J3DTypes.h"
 #include "JSystem/J3D/J3DTransform.h"
-#include "Vector3.h"
+#include "stl/math.h"
 
 const J3DTransformInfo j3dDefaultTransformInfo = {
 	{ 1.0f, 1.0f, 1.0f },
@@ -24,30 +24,24 @@ void J3DCalcBBoardMtx(register Mtx mtx)
 	y = SQUARE(mtx[0][1]) + SQUARE(mtx[1][1]) + SQUARE(mtx[2][1]);
 	z = SQUARE(mtx[0][2]) + SQUARE(mtx[1][2]) + SQUARE(mtx[2][2]);
 	if (x > 0.0f) {
-		x = JMAFastSqrt(x);
+		x = sqrt(x);
 	}
 	if (y > 0.0f) {
-		y = JMAFastSqrt(y);
+		y = sqrt(y);
 	}
 	if (z > 0.0f) {
-		z = JMAFastSqrt(z);
+		z = sqrt(z);
 	}
 
-	register f32 zero = 0.0f;
-
-// zero out gaps of zeroes
-#ifdef __MWERKS__ // clang-format off
-    asm {
-        psq_st zero, 0x04(mtx), 0, 0
-      
-        psq_st zero, 0x20(mtx), 0, 0
-    }
-#endif // clang-format on
+	mtx[0][1] = 0.0f;
+	mtx[0][2] = 0.0f;
+	mtx[2][0] = 0.0f;
+	mtx[2][1] = 0.0f;
 
 	mtx[0][0] = x;
-	mtx[1][0] = zero;
+	mtx[1][0] = 0.0f;
 	mtx[1][1] = y;
-	mtx[1][2] = zero;
+	mtx[1][2] = 0.0f;
 	mtx[2][2] = z;
 }
 
@@ -147,6 +141,9 @@ lbl_8005F118:
  */
 void J3DGetTranslateRotateMtx(const J3DTransformInfo& tx, Mtx dst)
 {
+	f32 cxsz;
+	f32 sxcz;
+
 	f32 sx = JMASSin(tx.mRotation.x), cx = JMASCos(tx.mRotation.x);
 	f32 sy = JMASSin(tx.mRotation.y), cy = JMASCos(tx.mRotation.y);
 	f32 sz = JMASSin(tx.mRotation.z), cz = JMASCos(tx.mRotation.z);
@@ -157,15 +154,15 @@ void J3DGetTranslateRotateMtx(const J3DTransformInfo& tx, Mtx dst)
 	dst[2][1] = cy * sx;
 	dst[2][2] = cy * cx;
 
-	f32 cxsz  = cx * sz;
-	f32 sxcz  = sx * cz;
+	cxsz  = cx * sz;
+	sxcz  = sx * cz;
 	dst[0][1] = sxcz * sy - cxsz;
 	dst[1][2] = cxsz * sy - sxcz;
 
-	f32 sxsz  = sx * sz;
-	f32 cxcz  = cx * cz;
-	dst[0][2] = cxcz * sy + sxsz;
-	dst[1][1] = sxsz * sy + cxcz;
+	cxsz = sx * sz;
+    sxcz = cx * cz;
+    dst[0][2] = sxcz * sy + cxsz;
+    dst[1][1] = cxsz * sy + sxcz;
 
 	dst[0][3] = tx.mTranslation.x;
 	dst[1][3] = tx.mTranslation.y;
@@ -178,6 +175,9 @@ void J3DGetTranslateRotateMtx(const J3DTransformInfo& tx, Mtx dst)
  */
 void J3DGetTranslateRotateMtx(s16 rx, s16 ry, s16 rz, f32 tx, f32 ty, f32 tz, Mtx dst)
 {
+	f32 cxsz;
+	f32 sxcz;
+
 	f32 sx = JMASSin(rx), cx = JMASCos(rx);
 	f32 sy = JMASSin(ry), cy = JMASCos(ry);
 	f32 sz = JMASSin(rz), cz = JMASCos(rz);
@@ -188,15 +188,15 @@ void J3DGetTranslateRotateMtx(s16 rx, s16 ry, s16 rz, f32 tx, f32 ty, f32 tz, Mt
 	dst[2][1] = cy * sx;
 	dst[2][2] = cy * cx;
 
-	f32 cxsz  = cx * sz;
-	f32 sxcz  = sx * cz;
-	dst[0][1] = sxcz * sy - cxsz;
-	dst[1][2] = cxsz * sy - sxcz;
+	cxsz = cx * sz;
+    sxcz = sx * cz;
+    dst[0][1] = sxcz * sy - cxsz;
+    dst[1][2] = cxsz * sy - sxcz;
 
-	f32 sxsz  = sx * sz;
-	f32 cxcz  = cx * cz;
-	dst[0][2] = cxcz * sy + sxsz;
-	dst[1][1] = sxsz * sy + cxcz;
+    cxsz = sx * sz;
+    sxcz = cx * cz;
+    dst[0][2] = sxcz * sy + cxsz;
+    dst[1][1] = cxsz * sy + sxcz;
 
 	dst[0][3] = tx;
 	dst[1][3] = ty;

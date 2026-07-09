@@ -220,7 +220,15 @@ J3DErrType J3DDrawPacket::newDisplayList(u32 size)
 J3DErrType J3DDrawPacket::newSingleDisplayList(u32 size)
 {
 	mDisplayList = new J3DDisplayListObj;
-	return (mDisplayList == nullptr) ? JET_OutOfMemory : mDisplayList->newSingleDisplayList(size);
+
+    if (mDisplayList == nullptr)
+        return JET_OutOfMemory;
+
+    J3DErrType ret = mDisplayList->newSingleDisplayList(size);
+    if (ret != JET_Success)
+        return ret;
+
+    return JET_Success;
 }
 
 /**
@@ -296,7 +304,7 @@ u32 J3DMatPacket::endDiff()
  */
 bool J3DMatPacket::isSame(J3DMatPacket* other) const
 {
-	return !(mDiffFlag != other->mDiffFlag || mDiffFlag >> 31);
+	return mDiffFlag == other->mDiffFlag && (mDiffFlag >> 31) == 0;
 }
 
 /**
@@ -414,11 +422,14 @@ int J3DShapePacket::calcDifferedBufferSize(u32 flag)
  */
 J3DErrType J3DShapePacket::newDifferedDisplayList(u32 flag)
 {
-	mDiffFlag        = flag;
-	u32 bufSize      = calcDifferedBufferSize(flag);
-	J3DErrType error = newDisplayList(bufSize);
+	mDiffFlag = flag;
+    u32 bufSize = calcDifferedBufferSize(flag);
+    J3DErrType error = newDisplayList(bufSize);
+    if (error != JET_Success) {
+        return error;
+    }
 
-	return (error != JET_Success) ? error : JET_Success;
+    return JET_Success;
 }
 
 /**

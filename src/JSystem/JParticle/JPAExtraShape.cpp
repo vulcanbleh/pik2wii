@@ -77,9 +77,9 @@ void JPACalcScaleAnmRepeatY(JPAEmitterWorkData* work, JPABaseParticle* ptcl)
 void JPACalcScaleAnmReverseX(JPAEmitterWorkData* work, JPABaseParticle* ptcl)
 {
 	JPAExtraShape* esp = work->mResource->getEsp();
-	s32 cycle          = ptcl->mAge / esp->getScaleAnmCycleX();
+	f32 cycle          = ptcl->mAge / esp->getScaleAnmCycleX() & 1;
 	f32 base           = (ptcl->mAge % esp->getScaleAnmCycleX()) / (f32)esp->getScaleAnmCycleX();
-	work->mScaleAnm    = base + ((cycle & 1) * (1.0f - base * 2.0f));
+	work->mScaleAnm    = base + cycle * (1.0f - base * 2.0f);
 }
 
 /**
@@ -89,9 +89,9 @@ void JPACalcScaleAnmReverseX(JPAEmitterWorkData* work, JPABaseParticle* ptcl)
 void JPACalcScaleAnmReverseY(JPAEmitterWorkData* work, JPABaseParticle* ptcl)
 {
 	JPAExtraShape* esp = work->mResource->getEsp();
-	s32 cycle          = ptcl->mAge / esp->getScaleAnmCycleY();
+	f32 cycle          = ptcl->mAge / esp->getScaleAnmCycleY() & 1;
 	f32 base           = (ptcl->mAge % esp->getScaleAnmCycleY()) / (f32)esp->getScaleAnmCycleY();
-	work->mScaleAnm    = base + ((cycle & 1) * (1.0f - base * 2.0f));
+	work->mScaleAnm    = base + cycle * (1.0f - base * 2.0f);
 }
 
 /**

@@ -301,7 +301,7 @@ struct JUTCacheFont : public JUTResFont {
 
 	// Unused/inlined:
 	TGlyphCacheInfo* determineBlankPage();
-	void getGlyphFromAram(TGlyphCacheInfo*, TCachePage*, int*, int*);
+	void getGlyphFromAram(TGlyphCacheInfo*, TCachePage*, int*, int*) DECOMP_DONT_INLINE;
 	void loadCache_char(int, bool);
 	void loadCache_string_size(const char*, u32, bool);
 	void unlockCache_all();

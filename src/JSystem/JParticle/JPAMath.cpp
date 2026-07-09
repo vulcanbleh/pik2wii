@@ -47,81 +47,6 @@ void JPAGetDirMtx(const JGeometry::TVec3f& vec, Mtx mtx)
 	mtx[2][1] = -xLen;
 	mtx[2][2] = vec.z;
 	mtx[2][3] = 0.0f;
-
-	/*
-	lfs      f0, 0(r3)
-	lfs      f3, 4(r3)
-	fneg     f4, f0
-	lfs      f1, lbl_80516C1C@sda21(r2)
-	fmuls    f0, f4, f4
-	fmadds   f0, f3, f3, f0
-	fadds    f7, f1, f0
-	fcmpo    cr0, f7, f1
-	cror     2, 0, 2
-	bne      lbl_80093B10
-	b        lbl_80093B34
-
-lbl_80093B10:
-	frsqrte  f5, f7
-	lfs      f2, lbl_80516C20@sda21(r2)
-	lfs      f0, lbl_80516C24@sda21(r2)
-	frsp     f5, f5
-	fmuls    f1, f5, f5
-	fmuls    f2, f2, f5
-	fnmsubs  f0, f7, f1, f0
-	fmuls    f0, f2, f0
-	fmuls    f7, f7, f0
-
-lbl_80093B34:
-	lis      r5, __float_epsilon@ha
-	lfs      f1, lbl_80516C28@sda21(r2)
-	lfs      f0, __float_epsilon@l(r5)
-	fmuls    f0, f1, f0
-	fcmpo    cr0, f7, f0
-	cror     2, 0, 2
-	bne      lbl_80093B5C
-	lfs      f2, lbl_80516C1C@sda21(r2)
-	fmr      f8, f2
-	b        lbl_80093B6C
-
-lbl_80093B5C:
-	lfs      f0, lbl_80516C18@sda21(r2)
-	fdivs    f0, f0, f7
-	fmuls    f8, f3, f0
-	fmuls    f2, f4, f0
-
-lbl_80093B6C:
-	fmuls    f10, f8, f8
-	lfs      f6, lbl_80516C18@sda21(r2)
-	lfs      f9, 8(r3)
-	fmuls    f12, f2, f7
-	fmuls    f11, f2, f2
-	lfs      f3, lbl_80516C1C@sda21(r2)
-	fsubs    f1, f6, f10
-	lfs      f0, 8(r3)
-	fsubs    f5, f6, f9
-	fmuls    f4, f8, f2
-	fmadds   f2, f9, f1, f10
-	fsubs    f1, f6, f11
-	fmuls    f6, f5, f4
-	stfs     f2, 0(r4)
-	fneg     f4, f12
-	fmuls    f5, f8, f7
-	stfs     f6, 4(r4)
-	fmadds   f2, f9, f1, f11
-	stfs     f4, 8(r4)
-	fneg     f1, f5
-	stfs     f3, 0xc(r4)
-	stfs     f6, 0x10(r4)
-	stfs     f2, 0x14(r4)
-	stfs     f5, 0x18(r4)
-	stfs     f3, 0x1c(r4)
-	stfs     f12, 0x20(r4)
-	stfs     f1, 0x24(r4)
-	stfs     f0, 0x28(r4)
-	stfs     f3, 0x2c(r4)
-	blr
-	*/
 }
 
 /**
@@ -169,10 +94,10 @@ void JPAGetXYZRotateMtx(s16 x, s16 y, s16 z, Mtx mtx)
 	f32 sinxcosz = sinx * cosz;
 	mtx[0][1]    = sinxcosz * siny - cosxsinz;
 	mtx[1][2]    = cosxsinz * siny - sinxcosz;
-	f32 sinxsinz = sinx * sinz;
-	f32 cosxcosz = cosx * cosz;
-	mtx[0][2]    = sinxsinz + cosxcosz * siny;
-	mtx[1][1]    = cosxcosz + sinxsinz * siny;
+	cosxsinz = sinx * sinz;
+	sinxcosz = cosx * cosz;
+	mtx[0][2]    = cosxsinz + sinxcosz * siny;
+	mtx[1][1]    = sinxcosz + cosxsinz * siny;
 	mtx[2][3]    = 0.0f;
 	mtx[1][3]    = 0.0f;
 	mtx[0][3]    = 0.0f;

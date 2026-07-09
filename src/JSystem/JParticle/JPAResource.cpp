@@ -857,11 +857,11 @@ void JPAResource::drawC(JPAEmitterWorkData* data)
 {
 	data->mEmitter->setFlag(JPAEMIT_DrawChild);
 	if (mChildShape->isScaleInherited()) {
-		data->mGlobalPtclScl.x = data->mEmitter->mGlobalPScl.x * mBaseShape->mData->mBaseSizeX;
-		data->mGlobalPtclScl.y = data->mEmitter->mGlobalPScl.y * mBaseShape->mData->mBaseSizeY;
+		data->mGlobalPtclScl.x = data->mEmitter->mGlobalPScl.x * mBaseShape->getBaseSizeX();
+		data->mGlobalPtclScl.y = data->mEmitter->mGlobalPScl.y * mBaseShape->getBaseSizeY();
 	} else {
-		data->mGlobalPtclScl.x = data->mEmitter->mGlobalPScl.x * mChildShape->mData->mScaleX;
-		data->mGlobalPtclScl.y = data->mEmitter->mGlobalPScl.y * mChildShape->mData->mScaleY;
+		data->mGlobalPtclScl.x = data->mEmitter->mGlobalPScl.x * mChildShape->getScaleX();
+		data->mGlobalPtclScl.y = data->mEmitter->mGlobalPScl.y * mChildShape->getScaleY();
 	}
 
 	u32 flag = mChildShape->mData->mFlags & 0xf;

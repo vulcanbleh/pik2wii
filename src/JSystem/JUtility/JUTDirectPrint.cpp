@@ -271,13 +271,11 @@ void JUTDirectPrint::printSub(u16 positionX, u16 positionY, const char* format, 
 			int codepoint = sAsciiTable[*charPtr & 0x7f];
 			if (codepoint == 0xFE) {
 				// Newline character
-				positionX = initialPositionX;
 				positionY += 7;
+				positionX = initialPositionX;
 			} else if (codepoint == 0xFD) {
-				// Tab character
-				s32 currentPosition = (int)positionX;
-				s32 tabSpace        = (currentPosition - initialPositionX + 0x2f) % 0x30;
-				positionX           = currentPosition + 0x30 - tabSpace;
+				// positionX character
+				positionX = positionX + 0x30 - ((positionX - initialPositionX + 0x2f) % 0x30);
 			} else {
 				// Draw the character
 				if (codepoint != 0xFF) {

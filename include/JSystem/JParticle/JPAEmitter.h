@@ -282,7 +282,7 @@ struct JPABaseEmitter {
 		mGlobalTrs.z = z;
 	}
 
-	bool checkDynFlag(u32 flag) { return !!(mResource->getDyn()->getFlag() & flag); }
+	u32 checkDynFlag(u32 flag) { return mResource->getDyn()->getFlag() & flag; }
 	u8 getResourceManagerID() const { return mResMgrID; }
 	u8 getGroupID() const { return mGroupID; }
 	u8 getDrawTimes() const { return mDrawTimes; }

@@ -97,12 +97,12 @@ struct J3DTexMtx {
 	void load(u32) const;
 	void loadTexMtx(u32 p1) const
 	{
-		__GDCheckOverflowed(0x35);
+		GDOverflowCheck(0x35);
 		J3DGDLoadTexMtxImm(const_cast<f32(*)[4]>(mMtx), p1 * 3 + 30, (_GXTexMtxType)mTexMtxInfo.mProjection);
 	}
 	void loadPostTexMtx(u32 p1) const
 	{
-		__GDCheckOverflowed(0x35);
+		GDOverflowCheck(0x35);
 		J3DGDLoadPostTexMtxImm(const_cast<f32(*)[4]>(mMtx), p1 * 3 + 0x40);
 	}
 

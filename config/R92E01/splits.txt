@@ -1454,7 +1454,7 @@ JSystem/J3D/J3DMaterialFactory_v21.cpp:
 
 JSystem/J3D/J3DShapeMtx.cpp:
 	.text       start:0x800EC4DC end:0x800EDAE8
-	.data       start:0x8056B3E8 end:0x8056B668
+	.data       start:0x8056B3E8 end:0x8056B618
 	.sbss       start:0x8066BED0 end:0x8066BEF0
 	.sdata2     start:0x8066E310 end:0x8066E318
 
@@ -1463,7 +1463,7 @@ JSystem/J3D/J3DModelLoaderCalcSize.cpp:
 
 JSystem/J3D/J3DJointTree.cpp:
 	.text       start:0x800EE480 end:0x800EE83C
-	.data       start:0x8056B668 end:0x8056B678
+	.data       start:0x8056B618 end:0x8056B678
 	.sdata2     start:0x8066E318 end:0x8066E31C
 
 JSystem/J3D/J3DSkinDeform.cpp:
@@ -1495,7 +1495,7 @@ JSystem/JFramework/JFWDisplay.cpp:
 	.text       start:0x800EFCE4 end:0x800F1404
 	.ctors      start:0x80534D30 end:0x80534D34
 	.rodata     start:0x8053EF40 end:0x8053F010
-	.data       start:0x8056B6A0 end:0x8056B740
+	.data       start:0x8056B6A0 end:0x8056B738
 	.bss        start:0x805D5830 end:0x805D5860
 	.sbss       start:0x8066BF10 end:0x8066BF38
 	.sdata2     start:0x8066E340 end:0x8066E368
