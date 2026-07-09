@@ -368,7 +368,7 @@ void Obj::getTargetPosition()
 			}
 		}
 	} else {
-		mTargetPosition = mHomePosition;
+		mTargetPosition.set(mHomePosition);
 	}
 
 	setIKSystemTargetPosition(mTargetPosition);

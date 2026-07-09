@@ -75,6 +75,8 @@ void AnimBaseBase::init(JKRArchive* archive, char* resourcePath)
 	mDoDelayUpdate  = 1;
 
 	OSInitFastCast();
+
+	FORCE_DONT_INLINE;
 }
 
 /**

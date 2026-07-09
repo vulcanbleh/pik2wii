@@ -257,7 +257,7 @@ struct RollingStateArg : public StateArg {
 };
 
 struct State : public EnemyFSMState {
-	inline State(int stateID, char* name)
+	inline State(int stateID, const char* name)
 	    : EnemyFSMState(stateID)
 	{
 		mName = name;
@@ -268,8 +268,8 @@ struct State : public EnemyFSMState {
 };
 
 struct StateBorn : public State {
-	inline StateBorn()
-	    : State(QUEEN_Born, "born")
+	inline StateBorn(const char* name)
+	    : State(QUEEN_Born, name)
 	{
 	}
 
@@ -282,8 +282,8 @@ struct StateBorn : public State {
 };
 
 struct StateDamage : public State {
-	inline StateDamage()
-	    : State(QUEEN_Damage, "damage")
+	inline StateDamage(const char* name)
+	    : State(QUEEN_Damage, name)
 	{
 	}
 
@@ -296,8 +296,8 @@ struct StateDamage : public State {
 };
 
 struct StateDead : public State {
-	inline StateDead()
-	    : State(QUEEN_Dead, "dead")
+	inline StateDead(const char* name)
+	    : State(QUEEN_Dead, name)
 	{
 	}
 
@@ -310,8 +310,8 @@ struct StateDead : public State {
 };
 
 struct StateFlick : public State {
-	inline StateFlick()
-	    : State(QUEEN_Flick, "flick")
+	inline StateFlick(const char* name)
+	    : State(QUEEN_Flick, name)
 	{
 	}
 
@@ -324,8 +324,8 @@ struct StateFlick : public State {
 };
 
 struct StateRolling : public State {
-	inline StateRolling()
-	    : State(QUEEN_Rolling, "rolling")
+	inline StateRolling(const char* name)
+	    : State(QUEEN_Rolling, name)
 	{
 	}
 
@@ -338,8 +338,8 @@ struct StateRolling : public State {
 };
 
 struct StateSleep : public State {
-	inline StateSleep()
-	    : State(QUEEN_Sleep, "sleep")
+	inline StateSleep(const char* name)
+	    : State(QUEEN_Sleep, name)
 	{
 	}
 
@@ -352,8 +352,8 @@ struct StateSleep : public State {
 };
 
 struct StateWait : public State {
-	inline StateWait()
-	    : State(QUEEN_Wait, "wait")
+	inline StateWait(const char* name)
+	    : State(QUEEN_Wait, name)
 	{
 	}
 

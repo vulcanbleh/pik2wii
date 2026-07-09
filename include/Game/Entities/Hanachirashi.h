@@ -223,7 +223,7 @@ struct FSM : public EnemyStateMachine {
 };
 
 struct State : public EnemyFSMState {
-	inline State(int stateID, char* name)
+	inline State(int stateID, const char* name)
 	    : EnemyFSMState(stateID)
 	{
 		mName = name;
@@ -234,8 +234,8 @@ struct State : public EnemyFSMState {
 };
 
 struct StateAttack : public State {
-	inline StateAttack()
-	    : State(HANACHIRASHI_Attack, "attack")
+	inline StateAttack(const char* name)
+	    : State(HANACHIRASHI_Attack, name)
 	{
 	}
 
@@ -248,8 +248,8 @@ struct StateAttack : public State {
 };
 
 struct StateChase : public State {
-	inline StateChase()
-	    : State(HANACHIRASHI_Chase, "chase")
+	inline StateChase(const char* name)
+	    : State(HANACHIRASHI_Chase, name)
 	{
 	}
 
@@ -262,8 +262,8 @@ struct StateChase : public State {
 };
 
 struct StateChaseInside : public State {
-	inline StateChaseInside()
-	    : State(HANACHIRASHI_ChaseInside, "chaseinside")
+	inline StateChaseInside(const char* name)
+	    : State(HANACHIRASHI_ChaseInside, name)
 	{
 	}
 
@@ -276,8 +276,8 @@ struct StateChaseInside : public State {
 };
 
 struct StateDead : public State {
-	inline StateDead()
-	    : State(HANACHIRASHI_Dead, "dead")
+	inline StateDead(const char* name)
+	    : State(HANACHIRASHI_Dead, name)
 	{
 	}
 
@@ -290,8 +290,8 @@ struct StateDead : public State {
 };
 
 struct StateFall : public State {
-	inline StateFall()
-	    : State(HANACHIRASHI_Fall, "fall")
+	inline StateFall(const char* name)
+	    : State(HANACHIRASHI_Fall, name)
 	{
 	}
 
@@ -304,8 +304,8 @@ struct StateFall : public State {
 };
 
 struct StateFlyFlick : public State {
-	inline StateFlyFlick()
-	    : State(HANACHIRASHI_FlyFlick, "flyflick")
+	inline StateFlyFlick(const char* name)
+	    : State(HANACHIRASHI_FlyFlick, name)
 	{
 	}
 
@@ -318,8 +318,8 @@ struct StateFlyFlick : public State {
 };
 
 struct StateGround : public State {
-	inline StateGround()
-	    : State(HANACHIRASHI_Ground, "ground")
+	inline StateGround(const char* name)
+	    : State(HANACHIRASHI_Ground, name)
 	{
 	}
 
@@ -332,8 +332,8 @@ struct StateGround : public State {
 };
 
 struct StateGroundFlick : public State {
-	inline StateGroundFlick()
-	    : State(HANACHIRASHI_GroundFlick, "groundflick")
+	inline StateGroundFlick(const char* name)
+	    : State(HANACHIRASHI_GroundFlick, name)
 	{
 	}
 
@@ -346,8 +346,8 @@ struct StateGroundFlick : public State {
 };
 
 struct StateLand : public State {
-	inline StateLand()
-	    : State(HANACHIRASHI_Land, "land")
+	inline StateLand(const char* name)
+	    : State(HANACHIRASHI_Land, name)
 	{
 	}
 
@@ -360,8 +360,8 @@ struct StateLand : public State {
 };
 
 struct StateLaugh : public State {
-	inline StateLaugh()
-	    : State(HANACHIRASHI_Laugh, "laugh")
+	inline StateLaugh(const char* name)
+	    : State(HANACHIRASHI_Laugh, name)
 	{
 	}
 
@@ -374,8 +374,8 @@ struct StateLaugh : public State {
 };
 
 struct StateMove : public State {
-	inline StateMove()
-	    : State(HANACHIRASHI_Move, "move")
+	inline StateMove(const char* name)
+	    : State(HANACHIRASHI_Move, name)
 	{
 	}
 
@@ -388,8 +388,8 @@ struct StateMove : public State {
 };
 
 struct StateTakeOff : public State {
-	inline StateTakeOff()
-	    : State(HANACHIRASHI_TakeOff, "takeoff")
+	inline StateTakeOff(const char* name)
+	    : State(HANACHIRASHI_TakeOff, name)
 	{
 	}
 
@@ -402,8 +402,8 @@ struct StateTakeOff : public State {
 };
 
 struct StateWait : public State {
-	inline StateWait()
-	    : State(HANACHIRASHI_Wait, "wait")
+	inline StateWait(const char* name)
+	    : State(HANACHIRASHI_Wait, name)
 	{
 	}
 

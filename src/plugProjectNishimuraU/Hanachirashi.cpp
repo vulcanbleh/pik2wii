@@ -5,6 +5,12 @@
 #include "Game/PikiMgr.h"
 #include "RevoSDK/rand.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-Hanachirashi";
+}
+
 namespace Game {
 namespace Hanachirashi {
 
@@ -142,7 +148,7 @@ void Obj::getShadowParam(ShadowParam& shadow)
 	shadow.mPosition *= 0.5f;
 	shadow.mPosition.y = mPosition.y + mShadowOffset;
 
-	shadow.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	shadow.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 	if (isFlying() || !mFloorTriangle) {
 		shadow.mBoundingSphere.mRadius = C_PROPERPARMS.mStandardFlightHeight.mValue + 100.0f;
 	} else {
@@ -299,7 +305,7 @@ void Obj::setRandTarget()
 
 	f32 theta = aboutTheta + randWeightFloat(PI) + HALF_PI;
 
-	mTargetPosition = Vector3f(radius * sinf(theta) + homePos.x, homePos.y, radius * cosf(theta) + homePos.z);
+	mTargetPosition = Vector3f(radius * cosf(theta) + homePos.x, homePos.y, radius * sinf(theta) + homePos.z);
 }
 
 /**
@@ -375,7 +381,7 @@ void Obj::subShadowRadius()
 void Obj::updateFallTimer()
 {
 	if (mStuckPikminCount) {
-		mFallTimer += sys->mDeltaTime;
+		mFallTimer += sys->getDeltaTime();
 	} else {
 		mFallTimer = 0.0f;
 	}
@@ -387,7 +393,7 @@ void Obj::updateFallTimer()
  */
 StateID Obj::getFlyingNextState()
 {
-	if (mHealth <= 0.0f) {
+	if (isDead()) {
 		return HANACHIRASHI_Dead;
 	}
 
@@ -411,7 +417,7 @@ StateID Obj::getFlyingNextState()
  */
 void Obj::addPitchRatio()
 {
-	mPitchRatio += C_PROPERPARMS.mVerticalSwingSpeed.mValue * sys->mDeltaTime;
+	mPitchRatio += C_PROPERPARMS.mVerticalSwingSpeed.mValue * sys->getDeltaTime();
 	if (mPitchRatio > TAU) {
 		mPitchRatio -= TAU;
 	}
@@ -678,7 +684,7 @@ Creature* Obj::isAttackable()
 	const f32 faceDir = getFaceDir();
 	Parms* parms      = C_PARMS;
 	Vector3f vec
-	    = Vector3f(parms->mGeneral.mMaxAttackRange.mValue * sinf(faceDir), 0.0f, parms->mGeneral.mMaxAttackRange.mValue * cosf(faceDir));
+	    = Vector3f(parms->mGeneral.mMaxAttackRange.mValue * cosf(faceDir), 0.0f, parms->mGeneral.mMaxAttackRange.mValue * sinf(faceDir));
 	vec += getPosition();
 	f32 radius = SQUARE(C_GENERALPARMS.mMaxAttackAngle.mValue);
 
@@ -962,7 +968,7 @@ void Obj::updateEmit()
 		mEfxMatrix->getTranslation(mEfxPosition);
 	}
 
-	mFaceDirection = Vector3f(sinf(getFaceDir()), -0.85f, cosf(getFaceDir()));
+	mFaceDirection = Vector3f(cosf(getFaceDir()), -0.85f, sinf(getFaceDir()));
 	mFaceDirection.normalise();
 }
 
@@ -988,8 +994,7 @@ Vector3f Obj::getAttackPosition()
 
 	for (f32 ratio = t; ratio < 1.0f; ratio += inc) {
 		f32 ratioCompl = 1.0f - ratio;
-		nextPos
-		    = Vector3f(vec2.x * ratioCompl + vec1.x * ratio, vec2.y * ratioCompl + vec1.y * ratio, vec2.z * ratioCompl + vec1.z * ratio);
+		nextPos.set(vec2.x * ratioCompl + vec1.x * ratio, vec2.y * ratioCompl + vec1.y * ratio, vec2.z * ratioCompl + vec1.z * ratio);
 
 		f32 minY = mapMgr->getMinY(nextPos);
 		if (minY > nextPos.y) {
@@ -1055,8 +1060,8 @@ bool Obj::windTarget()
 			f32 dotProd      = sep.dot(vec2);
 			if (dotProd < radius && dotProd > 0.0f) {
 				// more vector math here.
-				InteractWind wind(this, 0.0f, &vec2); // not vec2
-				isHitPiki = piki->stimulate(wind);
+				InteractHanaChirashi hanachirashi(this, 0.0f, &vec2); // not vec2
+				isHitPiki = piki->stimulate(hanachirashi);
 			}
 		}
 	}

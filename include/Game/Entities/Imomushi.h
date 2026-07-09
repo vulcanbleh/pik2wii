@@ -205,8 +205,8 @@ struct State : public EnemyFSMState {
 };
 
 struct StateAppear : public State {
-	inline StateAppear()
-	    : State(IMOMUSHI_Appear, "appear")
+	inline StateAppear(const char* name)
+	    : State(IMOMUSHI_Appear, name)
 	{
 	}
 	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
@@ -218,8 +218,8 @@ struct StateAppear : public State {
 };
 
 struct StateAttack : public State {
-	inline StateAttack()
-	    : State(IMOMUSHI_Attack, "attack")
+	inline StateAttack(const char* name)
+	    : State(IMOMUSHI_Attack, name)
 	{
 	}
 	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
@@ -231,8 +231,8 @@ struct StateAttack : public State {
 };
 
 struct StateClimb : public State {
-	inline StateClimb()
-	    : State(IMOMUSHI_Climb, "climb")
+	inline StateClimb(const char* name)
+	    : State(IMOMUSHI_Climb, name)
 	{
 	}
 	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
@@ -244,8 +244,8 @@ struct StateClimb : public State {
 };
 
 struct StateDead : public State {
-	inline StateDead()
-	    : State(IMOMUSHI_Dead, "dead")
+	inline StateDead(const char* name)
+	    : State(IMOMUSHI_Dead, name)
 	{
 	}
 
@@ -258,8 +258,8 @@ struct StateDead : public State {
 };
 
 struct StateDive : public State {
-	inline StateDive()
-	    : State(IMOMUSHI_Dive, "dive")
+	inline StateDive(const char* name)
+	    : State(IMOMUSHI_Dive, name)
 	{
 	}
 
@@ -272,8 +272,8 @@ struct StateDive : public State {
 };
 
 struct StateFallDive : public State {
-	inline StateFallDive()
-	    : State(IMOMUSHI_FallDive, "falldive")
+	inline StateFallDive(const char* name)
+	    : State(IMOMUSHI_FallDive, name)
 	{
 	}
 
@@ -286,8 +286,8 @@ struct StateFallDive : public State {
 };
 
 struct StateFallMove : public State {
-	inline StateFallMove()
-	    : State(IMOMUSHI_FallMove, "fallmove")
+	inline StateFallMove(const char* name)
+	    : State(IMOMUSHI_FallMove, name)
 	{
 	}
 	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
@@ -299,8 +299,8 @@ struct StateFallMove : public State {
 };
 
 struct StateGoHome : public State {
-	inline StateGoHome()
-	    : State(IMOMUSHI_GoHome, "gohome")
+	inline StateGoHome(const char* name)
+	    : State(IMOMUSHI_GoHome, name)
 	{
 	}
 	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
@@ -312,8 +312,8 @@ struct StateGoHome : public State {
 };
 
 struct StateMove : public State {
-	inline StateMove()
-	    : State(IMOMUSHI_Move, "move")
+	inline StateMove(const char* name)
+	    : State(IMOMUSHI_Move, name)
 	{
 	}
 	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
@@ -325,8 +325,8 @@ struct StateMove : public State {
 };
 
 struct StateStay : public State {
-	inline StateStay()
-	    : State(IMOMUSHI_Stay, "stay")
+	inline StateStay(const char* name)
+	    : State(IMOMUSHI_Stay, name)
 	{
 	}
 	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
@@ -338,8 +338,8 @@ struct StateStay : public State {
 };
 
 struct StateWait : public State {
-	inline StateWait()
-	    : State(IMOMUSHI_Wait, "wait")
+	inline StateWait(const char* name)
+	    : State(IMOMUSHI_Wait, name)
 	{
 	}
 	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
@@ -351,8 +351,8 @@ struct StateWait : public State {
 };
 
 struct StateZukanAppear : public State {
-	inline StateZukanAppear()
-	    : State(IMOMUSHI_ZukanAppear, "zukanappear")
+	inline StateZukanAppear(const char* name)
+	    : State(IMOMUSHI_ZukanAppear, name)
 	{
 	}
 	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
@@ -364,8 +364,8 @@ struct StateZukanAppear : public State {
 };
 
 struct StateZukanMove : public State {
-	inline StateZukanMove()
-	    : State(IMOMUSHI_ZukanMove, "zukanmove")
+	inline StateZukanMove(const char* name)
+	    : State(IMOMUSHI_ZukanMove, name)
 	{
 	}
 	virtual void init(EnemyBase* enemy, StateArg* settings); // _08
@@ -377,8 +377,8 @@ struct StateZukanMove : public State {
 };
 
 struct StateZukanStay : public State {
-	inline StateZukanStay()
-	    : State(IMOMUSHI_ZukanStay, "zukanstay")
+	inline StateZukanStay(const char* name)
+	    : State(IMOMUSHI_ZukanStay, name)
 	{
 	}
 	virtual void init(EnemyBase* enemy, StateArg* settings); // _08

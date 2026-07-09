@@ -6,6 +6,12 @@
 #include "Game/PikiMgr.h"
 #include "Game/MapMgr.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-LeafChappy";
+}
+
 namespace Game {
 namespace LeafChappy {
 
@@ -54,7 +60,7 @@ void Obj::getShadowParam(ShadowParam& param)
 	if (param.mPosition.y < heightFloat) {
 		param.mPosition.y = heightFloat;
 	}
-	param.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	param.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 
 	if (isEvent(1, EB2_Earthquake)) {
 		param.mBoundingSphere.mRadius = 50.0f;
@@ -119,7 +125,7 @@ void Obj::birthChildren(EnemyBirthArg& birthArg)
 	f32 angle          = birthArg.mFaceDir + PI;
 	Vector3f motherPos = birthArg.mPosition;
 
-	Vector3f vec(sinf(angle), 0.0f, cosf(angle));
+	Vector3f vec(cosf(angle), 0.0f, sinf(angle));
 
 	for (int i = 0; i < 10; i++) {
 		f32 modifier        = 2.5f * i + 17.5f;

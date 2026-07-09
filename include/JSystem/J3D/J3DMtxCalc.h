@@ -114,13 +114,7 @@ struct J3DMtxCalcAnimationAdaptorDefault {
 };
 
 struct J3DMtxCalcBlendAnmBase : public J3DMtxCalc {
-	inline J3DMtxCalcBlendAnmBase()
-	{
-		for (int i = 0; i < 4; i++) {
-			mAnims[i]   = nullptr;
-			mWeights[i] = 0.0f;
-		}
-	}
+	J3DMtxCalcBlendAnmBase();
 
 	virtual ~J3DMtxCalcBlendAnmBase() { }                                               // _08 (weak)
 	virtual void setAnmTransform(J3DAnmTransform* anim) { mAnims[0] = anim; }           // _0C (weak)

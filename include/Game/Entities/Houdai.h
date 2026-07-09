@@ -385,8 +385,8 @@ struct State : public EnemyFSMState {
 };
 
 struct StateDead : public State {
-	inline StateDead()
-	    : State(HOUDAI_Dead, "dead")
+	inline StateDead(const char* name)
+	    : State(HOUDAI_Dead, name)
 	{
 	}
 
@@ -399,8 +399,8 @@ struct StateDead : public State {
 };
 
 struct StateFlick : public State {
-	inline StateFlick()
-	    : State(HOUDAI_Flick, "flick")
+	inline StateFlick(const char* name)
+	    : State(HOUDAI_Flick, name)
 	{
 	}
 
@@ -413,8 +413,8 @@ struct StateFlick : public State {
 };
 
 struct StateLand : public State {
-	inline StateLand()
-	    : State(HOUDAI_Land, "land")
+	inline StateLand(const char* name)
+	    : State(HOUDAI_Land, name)
 	{
 	}
 
@@ -427,8 +427,8 @@ struct StateLand : public State {
 };
 
 struct StateShot : public State {
-	inline StateShot()
-	    : State(HOUDAI_Shot, "shot")
+	inline StateShot(const char* name)
+	    : State(HOUDAI_Shot, name)
 	{
 	}
 
@@ -441,8 +441,8 @@ struct StateShot : public State {
 };
 
 struct StateStay : public State {
-	inline StateStay()
-	    : State(HOUDAI_Stay, "stay")
+	inline StateStay(const char* name)
+	    : State(HOUDAI_Stay, name)
 	{
 	}
 
@@ -455,8 +455,8 @@ struct StateStay : public State {
 };
 
 struct StateWait : public State {
-	inline StateWait()
-	    : State(HOUDAI_Wait, "wait")
+	inline StateWait(const char* name)
+	    : State(HOUDAI_Wait, name)
 	{
 	}
 
@@ -469,8 +469,8 @@ struct StateWait : public State {
 };
 
 struct StateWalk : public State {
-	inline StateWalk()
-	    : State(HOUDAI_Walk, "walk")
+	inline StateWalk(const char* name)
+	    : State(HOUDAI_Walk, name)
 	{
 	}
 

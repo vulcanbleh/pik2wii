@@ -1,7 +1,7 @@
-#include "JSystem/J3D/J3DAnmTransform.h"
 #include "JSystem/J3D/J3DAnmLoader.h"
-#include "JSystem/J3D/J3DMtxCalc.h"
+#include "JSystem/J3D/J3DAnmTransform.h"
 #include "JSystem/J3D/J3DMtxBuffer.h"
+#include "JSystem/J3D/J3DMtxCalc.h"
 
 /**
  * @note Address: 0x80015DF0
@@ -82,6 +82,14 @@ J3DMtxCalc* J3DUNewMtxCalcAnm(u32 blendType, J3DAnmTransform* anm0, J3DAnmTransf
 	return calc;
 }
 
+J3DMtxCalcBlendAnmBase::J3DMtxCalcBlendAnmBase()
+{
+	for (int i = 0; i < 4; i++) {
+		mAnims[i]   = nullptr;
+		mWeights[i] = 0.0f;
+	}
+}
+
 /**
  * @note Address: 0x8001642C
  * @note Size: 0x348
@@ -107,12 +115,6 @@ void J3DMtxCalcBlend::calcBlend(Vec* scale, Vec* position, J3DAnmTransform** ani
 	}
 
 	switch (num) {
-	case 0: // no animations with enough weight, no blend
-		PSMTXIdentity(anmMtx);
-		scale->x = scale->y = scale->z = 0.0f;
-		position->x = position->y = position->z = 0.0f;
-		break;
-
 	case 1: // only one animation with enough weight, just calculate matrix and assign scale/position based on that anim's info
 		J3DTransformInfo info;
 		anims[maxAnim]->getTransform(id, &info);
@@ -160,15 +162,11 @@ void J3DMtxCalcBlend::calcBlend(Vec* scale, Vec* position, J3DAnmTransform** ani
 			if (anm) {
 				f32 proportion;
 				if ((proportion = weights[i]) > 0.005f) {
-					proportion /= totalWeight;
+					proportion *= totalWeight;
 					J3DTransformInfo info;
 					anm->getTransform(id, &info);
-					scale->x += info.mScale.x * proportion;
-					scale->y += info.mScale.y * proportion;
-					scale->z += info.mScale.z * proportion;
-					position->x += info.mTranslation.x * proportion;
-					position->y += info.mTranslation.y * proportion;
-					position->z += info.mTranslation.z * proportion;
+					JMAVECScaleAdd(scale, scale, &info.mScale, proportion);
+					JMAVECScaleAdd(position, position, &info.mTranslation, proportion);
 					Quaternion rotQuat;
 					JMAEulerToQuat(info.mRotation.x, info.mRotation.y, info.mRotation.z, &rotQuat);
 					JMAQuatLerp(&mtxQuat, &rotQuat, proportion, &mtxQuat);

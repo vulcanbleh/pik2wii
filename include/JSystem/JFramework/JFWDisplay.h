@@ -1,10 +1,10 @@
 #ifndef _JSYSTEM_JFW_JFWDISPLAY_H
 #define _JSYSTEM_JFW_JFWDISPLAY_H
 
-#include "types.h"
-#include "JSystem/JUtility/TColor.h"
 #include "JSystem/JUtility/JUTFader.h"
 #include "JSystem/JUtility/JUTXfb.h"
+#include "JSystem/JUtility/TColor.h"
+#include "types.h"
 
 struct JKRHeap;
 
@@ -103,8 +103,12 @@ struct JFWDisplay {
 	u32 mCurrentTick;             // _2C
 	u32 mFrameDuration;           // _30
 	u32 mTickDifference;          // _34
-	s16 mCurrentXfbIndex;         // _38, NB: TP has more members here.
-	u8 _3A;                       // _3A
+	int _38;                      // _38
+	int _3C;                      // _3C
+	bool _40;                     // _40
+	JFWDisplayUnkFunc _44;        // _44
+	s16 mCurrentXfbIndex;         // _48
+	u8 _4A;                       // _4A
 };
 
 #endif

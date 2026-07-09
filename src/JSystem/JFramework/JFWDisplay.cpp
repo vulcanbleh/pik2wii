@@ -28,7 +28,7 @@ JFWDisplay* JFWDisplay::sManager;
 void JFWDisplay::ctor_subroutine(bool doEnableAlpha)
 {
 	mIsAlphaEnabled   = doEnableAlpha;
-	mClamp            = 3;
+	mClamp            = GX_CLAMP_TOP | GX_CLAMP_BOTTOM;
 	mClearColor       = TCOLOR_BLACK_U8;
 	mZClear           = 0xFFFFFF;
 	mGamma            = 0;
@@ -40,11 +40,15 @@ void JFWDisplay::ctor_subroutine(bool doEnableAlpha)
 	mCurrentTick      = OSGetTick();
 	mTickDifference   = 0;
 	mCurrentXfbIndex  = 0;
-	_3A               = 0;
+	_4A               = 0;
 	mDrawDoneMethod   = JFWDRAW_Unk0;
 	clearEfb_init();
 	JUTProcBar::create();
 	JUTProcBar::clear();
+	_38 = 1;
+	_3C = 0;
+	_40 = 0;
+	_44 = 0;
 }
 
 /**
@@ -219,6 +223,11 @@ void JFWDisplay::exchangeXfb_double()
 
 	if (xfbMng->getDrawnXfbIndex() == xfbMng->getDisplayingXfbIndex()) {
 		if (xfbMng->getDrawingXfbIndex() >= 0) {
+
+			if (_44) {
+				_44();
+			}
+
 			prepareCopyDisp();
 			GXCopyDisp(xfbMng->getDrawingXfb(), GX_TRUE);
 			if (mDrawDoneMethod == 0) {
@@ -277,6 +286,9 @@ void JFWDisplay::copyXfb_triple()
 	JUTXfb* xfbMng = JUTXfb::getManager();
 
 	if (xfbMng->getDrawingXfbIndex() >= 0) {
+		if (_44) {
+            _44();
+        }
 		prepareCopyDisp();
 		GXCopyDisp(xfbMng->getDrawingXfb(), GX_TRUE);
 		GXPixModeSync();
@@ -344,9 +356,14 @@ void JFWDisplay::endGX()
  */
 void JFWDisplay::beginRender()
 {
-	JUTProcBar::getManager()->wholeLoopEnd();
-	JUTProcBar::getManager()->wholeLoopStart();
-	JUTProcBar::getManager()->idleStart();
+	if (_40) {
+		JUTProcBar::getManager()->wholeLoopEnd();
+	}
+
+	if (_40) {
+		JUTProcBar::getManager()->wholeLoopStart();
+		JUTProcBar::getManager()->idleStart();
+	}
 
 	waitForTick(mTickRate, mFrameRate);
 	JUTVideo::getManager()->waitRetraceIfNeed();
@@ -356,31 +373,46 @@ void JFWDisplay::beginRender()
 	mCurrentTick    = tick;
 	mTickDifference = mCurrentTick - JUTVideo::getVideoLastTick();
 
-	JUTProcBar::getManager()->idleEnd();
-
-	JUTProcBar::getManager()->gpStart();
-	JUTXfb* xfbMgr = JUTXfb::getManager();
-	switch (xfbMgr->getBufferNum()) {
-	case JUTXfb::SingleBuffer:
-		if (xfbMgr->getSDrawingFlag() != 2) {
-			xfbMgr->setSDrawingFlag(1);
-			clearEfb(mClearColor);
-		} else {
-			xfbMgr->setSDrawingFlag(1);
-		}
-		xfbMgr->setDrawingXfbIndex(mCurrentXfbIndex);
-		break;
-	case JUTXfb::DoubleBuffer:
-		exchangeXfb_double();
-		break;
-	case JUTXfb::TripleBuffer:
-		exchangeXfb_triple();
-		break;
-	default:
-		break;
+	if (_40) {
+		JUTProcBar::getManager()->idleEnd();
 	}
 
-	preGX();
+	if (_40) {
+		JUTProcBar::getManager()->gpStart();
+
+		JUTXfb* xfbMgr = JUTXfb::getManager();
+		switch (xfbMgr->getBufferNum()) {
+		case JUTXfb::SingleBuffer:
+			if (xfbMgr->getSDrawingFlag() != 2) {
+				xfbMgr->setSDrawingFlag(1);
+				clearEfb(mClearColor);
+			} else {
+				xfbMgr->setSDrawingFlag(1);
+			}
+			xfbMgr->setDrawingXfbIndex(mCurrentXfbIndex);
+			break;
+		case JUTXfb::DoubleBuffer:
+			exchangeXfb_double();
+			break;
+		case JUTXfb::TripleBuffer:
+			exchangeXfb_triple();
+			break;
+		default:
+			break;
+		}
+	}
+
+	_3C++;
+	_40 = _3C >= _38;
+
+	if (_40) {
+		_3C = 0;
+	}
+
+	if (_40) {
+		clearEfb();
+		preGX();
+	}
 }
 
 /**
@@ -391,15 +423,17 @@ void JFWDisplay::endRender()
 {
 	endGX();
 
-	switch (JUTXfb::getManager()->getBufferNum()) {
-	case 1:
-		drawendXfb_single();
-	case 2:
-		break;
-	case 3:
-		copyXfb_triple();
-	default:
-		break;
+	if (_40) {
+		switch (JUTXfb::getManager()->getBufferNum()) {
+		case 1:
+			drawendXfb_single();
+		case 2:
+			break;
+		case 3:
+			copyXfb_triple();
+		default:
+			break;
+		}
 	}
 
 	JUTProcBar::getManager()->cpuStart();
@@ -414,30 +448,33 @@ void JFWDisplay::endFrame()
 {
 	JUTProcBar::getManager()->cpuEnd();
 
-	JUTProcBar::getManager()->gpWaitStart();
-	switch (JUTXfb::getManager()->getBufferNum()) {
-	case JUTXfb::SingleBuffer:
-		break;
-	case JUTXfb::DoubleBuffer:
-		JFWDrawDoneAlarm();
-		GXFlush();
-		break;
-	case JUTXfb::TripleBuffer:
-		JFWDrawDoneAlarm();
-		GXFlush();
-		break;
-	default:
-		break;
+	if (_40) {
+		JUTProcBar::getManager()->gpWaitStart();
+		switch (JUTXfb::getManager()->getBufferNum()) {
+		case JUTXfb::SingleBuffer:
+			break;
+		case JUTXfb::DoubleBuffer:
+			JFWDrawDoneAlarm();
+			GXFlush();
+			break;
+		case JUTXfb::TripleBuffer:
+			JFWDrawDoneAlarm();
+			GXFlush();
+			break;
+		default:
+			break;
+		}
+
+		JUTProcBar::getManager()->gpWaitEnd();
+		JUTProcBar::getManager()->gpEnd();
 	}
 
-	JUTProcBar::getManager()->gpWaitEnd();
-	JUTProcBar::getManager()->gpEnd();
-
-	static bool init;
-	static u32 prevFrame = VIGetRetraceCount();
-	u32 retrace_cnt      = VIGetRetraceCount();
-	JUTProcBar::getManager()->setCostFrame(retrace_cnt - prevFrame);
-	prevFrame = retrace_cnt;
+	if (_40) {
+		static u32 prevFrame = VIGetRetraceCount();
+		u32 retrace_cnt      = VIGetRetraceCount();
+		JUTProcBar::getManager()->setCostFrame(retrace_cnt - prevFrame);
+		prevFrame = retrace_cnt;
+	}
 }
 
 /**
@@ -458,19 +495,17 @@ void JFWDisplay::waitBlanking(int blankTime)
 void waitForTick(u32 sleepTime, u16 msgTime)
 {
 	if (sleepTime != 0) {
-		static bool init;
-		static s64 nextTick = OSGetTime();
-		s64 time            = OSGetTime();
+		static OSTime nextTick = OSGetTime();
+		OSTime time            = OSGetTime();
 		while (time < nextTick) {
 			JFWDisplay::getManager()->threadSleep((nextTick - time));
 			time = OSGetTime();
 		}
 		nextTick = time + sleepTime;
 	} else {
-		static bool init;
 		static u32 nextCount = VIGetRetraceCount();
 		u32 time             = (msgTime != 0) ? msgTime : 1;
-		void* msg;
+		OSMessage msg;
 		do {
 			if (!OSReceiveMessage(JUTVideo::getManager()->getMessageQueue(), &msg, OS_MESSAGE_BLOCK)) {
 				msg = 0;
@@ -651,7 +686,7 @@ void JFWDisplay::clearEfb(int xMin, int yMin, int xDelta, int yDelta, _GXColor c
 
 	if (mIsAlphaEnabled) {
 		GXSetAlphaUpdate(GX_ENABLE);
-		GXSetDstAlpha(GX_ENABLE, 0);
+		GXSetDstAlpha(GX_ENABLE, color.a);
 	}
 	GXSetZMode(GX_ENABLE, GX_ALWAYS, GX_ENABLE);
 	GXSetCullMode(GX_CULL_BACK);
@@ -676,7 +711,7 @@ void JFWDisplay::clearEfb(int xMin, int yMin, int xDelta, int yDelta, _GXColor c
 	GXSetZTexture(GX_ZT_DISABLE, GX_TF_Z24X8, 0);
 	GXSetZCompLoc(GX_ENABLE);
 	if (mIsAlphaEnabled) {
-		GXSetDstAlpha(GX_DISABLE, 0);
+		GXSetDstAlpha(GX_DISABLE, color.a);
 	}
 }
 

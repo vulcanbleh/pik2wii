@@ -439,30 +439,30 @@ JUTCacheFont::TGlyphCacheInfo* JUTCacheFont::determineBlankPage()
 void JUTCacheFont::getGlyphFromAram(JUTCacheFont::TGlyphCacheInfo* glyphInfo, JUTCacheFont::TCachePage* cachePage, int* glyphCode,
                                     int* texturePageID)
 {
-	memcpy(cachePage, glyphInfo, sizeof(TGlyphCacheInfo));
-	prepend(cachePage);
+	TGlyphCacheInfo* glyphCacheInfo = cachePage;
+    int* glyph = glyphCode;
+	memcpy(glyphCacheInfo, glyphInfo, sizeof(TGlyphCacheInfo));
+	prepend(glyphCacheInfo);
 
-	int totalCells = cachePage->mNumRows * cachePage->mNumCols;
-	int pageNumber = *glyphCode / totalCells;
+	int totalCells = glyphCacheInfo->mNumRows * glyphCacheInfo->mNumCols;
+	int pageNumber = *glyph / totalCells;
 
-	cachePage->mStartCode += pageNumber * totalCells;
+	glyphCacheInfo->mStartCode += pageNumber * totalCells;
 
 	// Set the end code of the page to the smaller of the existing end code and the last code
-	u16 lastCode        = cachePage->mStartCode + totalCells - 1;
-	cachePage->mEndCode = cachePage->mEndCode < lastCode ? cachePage->mEndCode : lastCode;
+	u16 lastCode        = glyphCacheInfo->mStartCode + totalCells - 1;
+	glyphCacheInfo->mEndCode = glyphCacheInfo->mEndCode < lastCode ? glyphCacheInfo->mEndCode : lastCode;
 
 	*texturePageID = pageNumber;
-	*glyphCode -= pageNumber * totalCells;
+	*glyph -= pageNumber * totalCells;
 
-	u8* imageData = getImage(cachePage);
-	u8* addr = JKRAram::aramToMainRam((u32)glyphInfo->mPrev + cachePage->mPageSize * pageNumber, imageData, cachePage->mPageSize, Switch_0,
+	u8* addr = JKRAram::aramToMainRam((u32)glyphInfo->mPrev + glyphCacheInfo->mPageSize * pageNumber, cachePage->mImage, glyphCacheInfo->mPageSize, Switch_0,
 	                                  0, nullptr, 0xFFFFFFFF, nullptr);
 
 	// Set the image data to the page
-	GXTexObj* textureObject = getTexObj(cachePage);
-	GXInitTexObj(textureObject, imageData, cachePage->mTexWidth, cachePage->mTexHeight, (GXTexFmt)cachePage->mTexFormat, GX_CLAMP, GX_CLAMP,
+	GXInitTexObj(&cachePage->mTexObj, cachePage->mImage, glyphCacheInfo->mTexWidth, glyphCacheInfo->mTexHeight, (GXTexFmt)glyphCacheInfo->mTexFormat, GX_CLAMP, GX_CLAMP,
 	             GX_FALSE);
-	GXInitTexObjLOD(textureObject, GX_LINEAR, GX_LINEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
+	GXInitTexObjLOD(&cachePage->mTexObj, GX_LINEAR, GX_LINEAR, 0.0f, 0.0f, 0.0f, GX_FALSE, GX_FALSE, GX_ANISO_1);
 }
 
 /**

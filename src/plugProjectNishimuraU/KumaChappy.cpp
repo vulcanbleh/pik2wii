@@ -9,6 +9,12 @@
 #include "RevoSDK/rand.h"
 #include "trig.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-KumaChappy";
+}
+
 namespace Game {
 namespace KumaChappy {
 
@@ -102,7 +108,7 @@ void Obj::getShadowParam(ShadowParam& param)
 		param.mPosition.y = temp;
 	}
 
-	param.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	param.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 	if (isEvent(1, EB2_Earthquake)) {
 		param.mBoundingSphere.mRadius = 100.0f;
 	} else {
@@ -395,8 +401,8 @@ void Obj::updateTargetDistance()
 void Obj::updateHomePosition()
 {
 
-	mHomePosition = Vector3f(C_GENERALPARMS.mHomeRadius.mValue * sinf(mFaceDir) + mPosition.x, mPosition.y,
-	                         C_GENERALPARMS.mHomeRadius.mValue * cosf(mFaceDir) + mPosition.z);
+	mHomePosition = Vector3f(C_GENERALPARMS.mHomeRadius.mValue * cosf(mFaceDir) + mPosition.x, mPosition.y,
+	                         C_GENERALPARMS.mHomeRadius.mValue * sinf(mFaceDir) + mPosition.z);
 	/*
 	stwu     r1, -0x20(r1)
 	lfs      f0, lbl_8051BB68@sda21(r2)

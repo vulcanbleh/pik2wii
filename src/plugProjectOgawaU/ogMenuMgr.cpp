@@ -37,14 +37,14 @@ MenuMgr::MenuMgr()
 	mCursorState      = CURSOR_Inactive;
 	mCursorDelayTimer = 0.0f;
 
-	mCursorPos1       = Vector2f(0.0f);
-	mCursorPos2       = Vector2f(0.0f);
+	mCursorPos1.set(-6.0f, -6.0f);
+	mCursorPos2.set(-6.0f, -6.0f);
 	mIsChangingSelect = false;
 
-	mTransitionPosLeft  = Vector2f(0.0f);
-	mTransitionPosRight = Vector2f(0.0f);
-	mSelPosLeft         = Vector2f(0.0f);
-	mSelPosRight        = Vector2f(0.0f);
+	mTransitionPosLeft.set(0.0f, 0.0f);
+	mTransitionPosRight.set(0.0f, 0.0f);
+	mSelPosLeft.set(0.0f, 0.0f);
+	mSelPosRight.set(0.0f, 0.0f);
 	mSelectChangeTimer  = 0.0f;
 	mPrevSelected       = 0;
 
@@ -72,6 +72,8 @@ void MenuMgr::startCursor(f32 time)
 		mCursorState      = CURSOR_DelayStart;
 		mCursorDelayTimer = time;
 	}
+
+	FORCE_DONT_INLINE;
 }
 
 /**
@@ -96,6 +98,7 @@ void MenuMgr::killCursor()
 //  */
 void MenuMgr::initCommon()
 {
+	
 	mTimer            = 0.0f;
 	mTimerMax         = 1.0f;
 	mLeftCursorPanes  = nullptr;
@@ -110,10 +113,33 @@ void MenuMgr::initCommon()
 //  * @note Address: N/A
 //  * @note Size: 0x2F4
 //  */
-// void MenuMgr::initSub(J2DScreen*, u16, u64, u64, u64)
-// {
-// 	// UNUSED FUNCTION
-// }
+void MenuMgr::initSub(J2DScreen* screen, u16 numOptions, u64 tag1, u64 tag2, u64 tag3)
+{
+	mElementCount = numOptions;
+ 	mMainPanes        = new J2DPane*[numOptions];
+	mTextBoxPanes     = new J2DPane*[numOptions];
+	mTextBoxTakuPanes = new J2DPane*[numOptions];
+	mScaleMgrs        = new ScaleMgr[numOptions];
+
+	u64 mesg1 = 0;
+	if (tag1) {
+		mesg1 = MojiToNum(tag1, 2);
+	}
+	u64 mesg2 = MojiToNum(tag2, 2);
+	u64 mesg3 = MojiToNum(tag3, 2);
+
+	u64 baseTag1 = ((tag1 & 0xFFFFFFFFFFFF0000) | '00');
+	u64 baseTag2 = ((tag2 & 0xFFFFFFFFFFFF0000) | '00');
+	u64 baseTag3 = ((tag3 & 0xFFFFFFFFFFFF0000) | '00');
+
+	for (int i = 0; i < mElementCount; i++) {
+		mMainPanes[i]        = screen->search(baseTag1 + ((mesg1 + i) % 10) + ((mesg1 + i) / 10) % 10 * 256);
+		mTextBoxPanes[i]     = screen->search(baseTag2 + ((mesg2 + i) % 10) + ((mesg2 + i) / 10) % 10 * 256);
+		mTextBoxTakuPanes[i] = screen->search(baseTag3 + ((mesg3 + i) % 10) + ((mesg3 + i) / 10) % 10 * 256);
+	}
+
+	initCommon();
+}
 
 /**
  * @note Address: 0x8030A204
@@ -169,28 +195,6 @@ void MenuMgr::init2takuTitle(J2DScreen* screen, u64 tag1, u64 tag2, u64 tag3, u6
 //  */
 void MenuMgr::init(J2DScreen* screen, u16 numOptions, u64 tag1, u64 tag2, u64 tag3)
 {
-	mMainPanes        = new J2DPane*[numOptions];
-	mTextBoxPanes     = new J2DPane*[numOptions];
-	mTextBoxTakuPanes = new J2DPane*[numOptions];
-	mScaleMgrs        = new ScaleMgr[numOptions];
-
-	u64 mesg1 = 0;
-	if (tag1) {
-		mesg1 = MojiToNum(tag1, 2);
-	}
-	u64 mesg2 = MojiToNum(tag2, 2);
-	u64 mesg3 = MojiToNum(tag3, 2);
-
-	u64 baseTag1 = ((tag1 & 0xFFFFFFFFFFFF0000) | '00');
-	u64 baseTag2 = ((tag2 & 0xFFFFFFFFFFFF0000) | '00');
-	u64 baseTag3 = ((tag3 & 0xFFFFFFFFFFFF0000) | '00');
-
-	for (int i = 0; i < mElementCount; i++) {
-		mMainPanes[i]        = screen->search(baseTag1 + ((mesg1 + i) % 10) + ((mesg1 + i) / 10) % 10 * 256);
-		mTextBoxPanes[i]     = screen->search(baseTag2 + ((mesg2 + i) % 10) + ((mesg2 + i) / 10) % 10 * 256);
-		mTextBoxTakuPanes[i] = screen->search(baseTag3 + ((mesg3 + i) % 10) + ((mesg3 + i) / 10) % 10 * 256);
-	}
-
 	initCommon();
 }
 
@@ -200,8 +204,7 @@ void MenuMgr::init(J2DScreen* screen, u16 numOptions, u64 tag1, u64 tag2, u64 ta
  */
 void MenuMgr::init(J2DScreen* screen, u16 numOptions, u64 tag1, u64 tag2, u64 tag3, u64 tag4, u64 tag5)
 {
-	mElementCount = numOptions;
-	init(screen, numOptions, tag1, tag2, tag3);
+	initSub(screen, numOptions, tag1, tag2, tag3);
 
 	u64 mesg4 = MojiToNum(tag4, 2);
 	u64 mesg5 = MojiToNum(tag5, 2);
@@ -299,15 +302,7 @@ void MenuMgr::update()
 	case CURSOR_DelayStart:
 		mCursorDelayTimer -= sys->getDeltaTime();
 		if (mCursorDelayTimer < 0.0f) {
-			mIsCursorActive   = true;
-			mCursorState      = CURSOR_Start;
-			mCursorDelayTimer = 0.0f;
-			if (mEfxCursor1) {
-				mEfxCursor1->create(nullptr);
-			}
-			if (mEfxCursor2) {
-				mEfxCursor2->create(nullptr);
-			}
+			startCursor(0.0f);
 		}
 		break;
 

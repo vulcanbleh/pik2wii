@@ -95,12 +95,12 @@ struct JPABaseShape {
 	BOOL isGlblClrAnm() const { return mData->mFlags & 0x00001000; }
 	BOOL isGlblTexAnm() const { return mData->mFlags & 0x00004000; }
 	BOOL isPrjTex() const { return mData->mFlags & 0x00100000; }
-	bool isDrawFwdAhead() const { return !!(mData->mFlags & 0x00200000); }
+	BOOL isDrawFwdAhead() const { return mData->mFlags & 0x00200000; }
 	bool isDrawPrntAhead() const { return !!(mData->mFlags & 0x00400000); }
 	bool isClipOn() const { return !!(mData->mFlags & 0x00800000); }
 	BOOL isTexCrdAnm() const { return mData->mFlags & 0x01000000; }
-	bool isNoDrawParent() const { return !!(mData->mFlags & 0x08000000); }
-	bool isNoDrawChild() const { return !!(mData->mFlags & 0x10000000); }
+	BOOL isNoDrawParent() const { return mData->mFlags >> 27 & 1; }
+	BOOL isNoDrawChild() const { return mData->mFlags >> 28 & 1; }
 
 	s16 getClrAnmMaxFrm() const { return mData->mClrAnmFrmMax; }
 	void getPrmClr(GXColor* dst) { *dst = mData->mClrPrm; }
@@ -114,7 +114,7 @@ struct JPABaseShape {
 	f32 getBaseSizeX() const { return mData->mBaseSizeX; }
 	f32 getBaseSizeY() const { return mData->mBaseSizeY; }
 	u8 getClrLoopOfstMask() const { return mData->mClrAnmRndmMask; }
-	u32 getClrLoopOfst(u32 param_1) const { return getClrLoopOfstMask() & param_1; }
+	s32 getClrLoopOfst(u32 param_1) const { return getClrLoopOfstMask() & param_1; }
 	u8 getTexLoopOfstMask() const { return mData->mTexAnmRndmMask; }
 	u32 getTexLoopOfst(u8 param_1) const { return getTexLoopOfstMask() & param_1; }
 	u8 getLoopOfstValue() const { return mData->mAnmRndm; }
@@ -188,6 +188,9 @@ struct JPAChildShape {
 	s16 getRotInitSpeed() const { return mData->mRotSpeed; }
 	s16 getRate() const { return mData->mRate; }
 	u8 getPrmAlpha() const { return mData->mPrmClr.a; }
+
+	f32 getScaleX() const { return mData->mScaleX; }
+    f32 getScaleY() const { return mData->mScaleY; }
 
 	f32 getPosRndm() const { return mData->mPosRndm; }
 	f32 getBaseVel() const { return mData->mBaseVel; }

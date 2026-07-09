@@ -13,6 +13,12 @@
 #include "efx/TOoota.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-Houdai";
+}
+
 namespace Game {
 namespace Houdai {
 
@@ -210,10 +216,10 @@ void Obj::setFSM(FSM* fsm)
  */
 void Obj::getShadowParam(ShadowParam& param)
 {
-	param.mPosition                 = mPosition;
-	param.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
-	param.mBoundingSphere.mRadius   = 0.1f;
-	param.mSize                     = 0.1f;
+	param.mPosition = mPosition;
+	param.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
+	param.mBoundingSphere.mRadius = 0.1f;
+	param.mSize                   = 0.1f;
 }
 
 /**
@@ -349,7 +355,7 @@ void Obj::getTargetPosition()
 			mTargetPosition.z = randDist * cosf(randAngle) + mHomePosition.z;
 		}
 	} else {
-		mTargetPosition = mHomePosition;
+		mTargetPosition.set(mHomePosition);
 	}
 
 	setIKSystemTargetPosition(mTargetPosition);
@@ -380,7 +386,7 @@ void Obj::setShotGunTargetPosition()
 		f32 randAngle      = randWeightFloat(TAU);
 		f32 randDist       = randWeightFloat(C_GENERALPARMS.mSearchDistance.mValue);
 
-		mShotGunTargetPosition = Vector3f(randDist * sinf(randAngle) + mPosition.x, mPosition.y, randDist * cosf(randAngle) + mPosition.z);
+		mShotGunTargetPosition.set(randDist * cosf(randAngle) + mPosition.x, mPosition.y, randDist * sinf(randAngle) + mPosition.z);
 	}
 
 	setShotGunTarget(mShotGunTargetPosition);
