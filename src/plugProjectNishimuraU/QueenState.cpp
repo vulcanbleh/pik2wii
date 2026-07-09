@@ -5,6 +5,13 @@
 #include "Game/rumble.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-QueenState";
+}
+
+
 namespace Game {
 namespace Queen {
 /**
@@ -14,13 +21,13 @@ namespace Queen {
 void FSM::init(EnemyBase* enemy)
 {
 	create(7);
-	registerState(new StateDead);
-	registerState(new StateSleep);
-	registerState(new StateWait);
-	registerState(new StateDamage);
-	registerState(new StateFlick);
-	registerState(new StateRolling);
-	registerState(new StateBorn);
+	registerState(new StateDead("dead"));
+	registerState(new StateSleep("sleep"));
+	registerState(new StateWait("wait"));
+	registerState(new StateDamage("damage"));
+	registerState(new StateFlick("flick"));
+	registerState(new StateRolling("rolling"));
+	registerState(new StateBorn("born"));
 }
 
 /**
@@ -86,12 +93,12 @@ void StateSleep::init(EnemyBase* enemy, StateArg* stateArg)
 void StateSleep::exec(EnemyBase* enemy)
 {
 	Obj* queen = OBJ(enemy);
-	if ((queen->mHealth <= 0.0f) || (queen->isHitCounterUp()) || (queen->isCreateBaby())) {
+	if ((queen->isDead()) || (queen->isHitCounterUp()) || (queen->isCreateBaby())) {
 		queen->finishMotion();
 	}
 
 	if (queen->isFinishMotion()) {
-		if (queen->mHealth <= 0.0f) {
+		if (queen->isDead()) {
 			queen->mNextState = QUEEN_Dead;
 		} else if (EnemyFunc::isStartFlick(queen, false)) {
 			queen->mNextState = QUEEN_Flick;
@@ -170,7 +177,7 @@ void StateWait::exec(EnemyBase* enemy)
 		queen->finishMotion();
 	}
 
-	if (queen->mHealth <= 0.0f) {
+	if (queen->isDead()) {
 		queen->mNextState = QUEEN_Dead;
 		queen->finishMotion();
 	}
@@ -231,7 +238,7 @@ void StateDamage::exec(EnemyBase* enemy)
 		queen->finishMotion();
 	}
 
-	if (queen->mHealth <= 0.0f) {
+	if (queen->isDead()) {
 		queen->mNextState = QUEEN_Dead;
 		queen->finishMotion();
 	}
@@ -282,7 +289,7 @@ void StateFlick::exec(EnemyBase* enemy)
 		if ((u32)queen->mCurAnim->mType == KEYEVENT_2) {
 			queen->flickPikmin(queen->getFaceDir());
 		} else if ((u32)queen->mCurAnim->mType == KEYEVENT_END) {
-			if (queen->mHealth <= 0.0f) {
+			if (queen->isDead()) {
 				transit(queen, QUEEN_Dead, nullptr);
 			} else if (queen->isRollingAttackLeft()) {
 				transit(queen, QUEEN_Rolling, (StateArg*)"left");
@@ -373,7 +380,7 @@ void StateRolling::exec(EnemyBase* enemy)
 		queen->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	}
 
-	if (queen->mHealth <= 0.0f) {
+	if (queen->isDead()) {
 		queen->mNextState = QUEEN_Dead;
 		queen->mIsRolling = false;
 		queen->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
@@ -402,7 +409,7 @@ void StateRolling::exec(EnemyBase* enemy)
 			f32 territory = parms->mGeneral.mTerritoryRadius.mValue - 50.0f;
 			f32 homeRad   = -(50.0f + parms->mGeneral.mHomeRadius.mValue);
 
-			if (queen->mHealth <= 0.0f) {
+			if (queen->isDead()) {
 				queen->finishBossAttackLoopBGM();
 			}
 
@@ -911,7 +918,7 @@ void StateBorn::exec(EnemyBase* enemy)
 			queen->createBabyChappy();
 			queen->createBornEffect();
 		} else if ((u32)queen->mCurAnim->mType == KEYEVENT_END) {
-			if (queen->mHealth <= 0.0f) {
+			if (queen->isDead()) {
 				transit(queen, QUEEN_Dead, nullptr);
 			} else {
 				transit(queen, QUEEN_Wait, nullptr);

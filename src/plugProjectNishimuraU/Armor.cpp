@@ -7,6 +7,12 @@
 #include "RevoSDK/rand.h"
 #include "efx/TYoroi.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-Armor";
+}
+
 namespace Game {
 namespace Armor {
 
@@ -106,7 +112,7 @@ void Obj::getShadowParam(ShadowParam& param)
 			param.mBoundingSphere.mRadius = 25.0f;
 		}
 	}
-	param.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	param.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 	param.mSize                     = 25.0f;
 }
 

@@ -3,10 +3,14 @@
 #include "Game/Entities/Hanachirashi.h"
 #include "Game/MapMgr.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-HanachirashiState";
+}
+
 namespace Game {
 namespace Hanachirashi {
-
-static const char unusedName[] = "246-HanachirashiState";
 
 /**
  * @note Address: 0x8029F228
@@ -15,19 +19,19 @@ static const char unusedName[] = "246-HanachirashiState";
 void FSM::init(EnemyBase* enemy)
 {
 	create(HANACHIRASHI_StateCount);
-	registerState(new StateDead);
-	registerState(new StateWait);
-	registerState(new StateMove);
-	registerState(new StateChase);
-	registerState(new StateChaseInside);
-	registerState(new StateAttack);
-	registerState(new StateFall);
-	registerState(new StateLand);
-	registerState(new StateGround);
-	registerState(new StateTakeOff);
-	registerState(new StateFlyFlick);
-	registerState(new StateGroundFlick);
-	registerState(new StateLaugh);
+	registerState(new StateDead("dead"));
+	registerState(new StateWait("wait"));
+	registerState(new StateMove("move"));
+	registerState(new StateChase("chase"));
+	registerState(new StateChaseInside("chaseinside"));
+	registerState(new StateAttack("attack"));
+	registerState(new StateFall("fall"));
+	registerState(new StateLand("land"));
+	registerState(new StateGround("ground"));
+	registerState(new StateTakeOff("takeoff"));
+	registerState(new StateFlyFlick("flyflick"));
+	registerState(new StateGroundFlick("groundflick"));
+	registerState(new StateLaugh("laugh"));
 }
 
 /**
@@ -884,7 +888,7 @@ void StateAttack::exec(EnemyBase* enemy)
 		}
 	}
 
-	if (hanachirashi->mHealth <= 0.0f) {
+	if (hanachirashi->isDead()) {
 		transit(hanachirashi, HANACHIRASHI_Dead, nullptr);
 		return;
 	}
@@ -961,7 +965,7 @@ void StateFall::exec(EnemyBase* enemy)
 
 	hanachirashi->mAirWaitTime += sys->getDeltaTime();
 
-	if (hanachirashi->mHealth <= 0.0f) {
+	if (hanachirashi->isDead()) {
 		transit(hanachirashi, HANACHIRASHI_Dead, nullptr);
 		return;
 	}
@@ -1004,7 +1008,7 @@ void StateLand::init(EnemyBase* enemy, StateArg* stateArg)
  */
 void StateLand::exec(EnemyBase* enemy)
 {
-	if (enemy->mHealth <= 0.0f) {
+	if (enemy->isDead()) {
 		transit(enemy, HANACHIRASHI_Dead, nullptr);
 		return;
 	}
@@ -1051,7 +1055,7 @@ void StateGround::exec(EnemyBase* enemy)
 
 	hanachirashi->mAirWaitTime += sys->getDeltaTime();
 
-	if (hanachirashi->mHealth <= 0.0f) {
+	if (hanachirashi->isDead()) {
 		transit(hanachirashi, HANACHIRASHI_Dead, nullptr);
 		return;
 	}
@@ -1100,7 +1104,7 @@ void StateTakeOff::exec(EnemyBase* enemy)
 		hanachirashi->subShadowOffset();
 	}
 
-	if (hanachirashi->mHealth <= 0.0f) {
+	if (hanachirashi->isDead()) {
 		transit(hanachirashi, HANACHIRASHI_Dead, nullptr);
 		return;
 	}
@@ -1148,7 +1152,7 @@ void StateFlyFlick::exec(EnemyBase* enemy)
 	Obj* hanachirashi = OBJ(enemy);
 	hanachirashi->setHeightVelocity();
 
-	if (hanachirashi->mHealth <= 0.0f) {
+	if (hanachirashi->isDead()) {
 		transit(hanachirashi, HANACHIRASHI_Dead, nullptr);
 		return;
 	}
@@ -1195,7 +1199,7 @@ void StateGroundFlick::init(EnemyBase* enemy, StateArg* stateArg)
  */
 void StateGroundFlick::exec(EnemyBase* enemy)
 {
-	if (enemy->mHealth <= 0.0f) {
+	if (enemy->isDead()) {
 		transit(enemy, HANACHIRASHI_Dead, nullptr);
 		return;
 	}

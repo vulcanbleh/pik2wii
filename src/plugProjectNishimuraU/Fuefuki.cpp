@@ -100,7 +100,7 @@ void Obj::doUpdate()
 {
 	mFsm->exec(this);
 	mAppearTimer += sys->getDeltaTime();
-	if (mSquadTimer > 0.0f) {
+	if (doScuttle()) {
 		mSquadTimer--;
 	}
 
@@ -146,7 +146,7 @@ void Obj::getShadowParam(ShadowParam& param)
 	param.mPosition.x               = sphere.mPosition.x;
 	param.mPosition.y               = mPosition.y + 5.0f;
 	param.mPosition.z               = sphere.mPosition.z;
-	param.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	param.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 	if (isEvent(1, EB2_Earthquake)) {
 		param.mBoundingSphere.mRadius = 75.0f;
 	} else {
@@ -328,7 +328,7 @@ void Obj::resetWhisleTimer(bool check)
  */
 bool Obj::isWhisleTimeMax()
 {
-	if (mSquadTimer > 0.0f) {
+	if (doScuttle()) {
 		if (mStuckPikminCount != 0) {
 			if (mWhistleTimer > C_PROPERPARMS.mMaxWhistleTimeNoSquad.mValue) {
 				return true;
@@ -426,7 +426,7 @@ void Obj::setTargetPosition(bool check)
 		randAngle = ang2 + ang1 + ang3; // dumb fix for regswap
 	}
 
-	mTargetPosition = Vector3f(randDist * sinf(randAngle) + mHomePosition.x, mHomePosition.y, randDist * cosf(randAngle) + mHomePosition.z);
+	mTargetPosition.set(randDist * cosf(randAngle) + mHomePosition.x, mHomePosition.y, randDist * sinf(randAngle) + mHomePosition.z);
 
 	if (check) {
 		mTargetPosition.y = mapMgr->getMinY(mTargetPosition);
@@ -443,7 +443,7 @@ bool Obj::isJumpAway()
 		return true;
 	}
 
-	if (!(mSquadTimer > 0.0f)) {
+	if (!(doScuttle())) {
 		f32 privRad = C_GENERALPARMS.mPrivateRadius.mValue;
 		Sys::Sphere sphere(mPosition, privRad);
 		f32 privateDiameter = privRad * privRad;

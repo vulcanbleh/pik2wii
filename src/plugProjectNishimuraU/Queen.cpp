@@ -12,6 +12,12 @@
 #include "RevoSDK/rand.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-Queen";
+}
+
 namespace Game {
 namespace Queen {
 
@@ -173,7 +179,7 @@ void Obj::getShadowParam(ShadowParam& shadowParam)
 {
 	shadowParam.mPosition = getPosition();
 	shadowParam.mPosition.y += 15.0f;
-	shadowParam.mBoundingSphere.mPosition = Vector3f(0.0f, 1.0f, 0.0f);
+	shadowParam.mBoundingSphere.mPosition.set(0.0f, 1.0f, 0.0f);
 	shadowParam.mBoundingSphere.mRadius   = 50.0f;
 	shadowParam.mSize                     = 45.0f;
 }
@@ -361,7 +367,7 @@ bool Obj::isRollingAttackLeft()
 		Navi* navi  = naviMgr->getActiveNavi();
 		if (navi) {
 			f32 angle       = HALF_PI + getFaceDir();
-			Vector3f angles = Vector3f(sinf(angle), 0.0f, cosf(angle));
+			Vector3f angles = Vector3f(cosf(angle), 0.0f, sinf(angle));
 			Vector3f sep    = navi->getPosition() - mPosition;
 			sep.y           = 0.0f;
 
@@ -432,7 +438,7 @@ void Obj::createBabyChappy()
 		if (baby) {
 			f32 angle           = birthArg.mFaceDir;
 			Queen::Parms* parms = C_PARMS;
-			Vector3f vel = Vector3f(parms->mGeneral.mSearchDistance() * sinf(angle), 0.0f, parms->mGeneral.mSearchDistance() * cosf(angle));
+			Vector3f vel = Vector3f(parms->mGeneral.mSearchDistance() * cosf(angle), 0.0f, parms->mGeneral.mSearchDistance() * sinf(angle));
 			baby->init(nullptr);
 			baby->setVelocity(vel);
 			baby->mTargetVelocity = vel;
