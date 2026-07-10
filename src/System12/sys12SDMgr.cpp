@@ -3,7 +3,7 @@
 
 namespace System12 {
 
-EGG_SINGLETON_IMPL(SDMgr);
+EGG_SINGLETON_IMPL(22, SDMgr);
 
 void SDMgr::initialize()
 {
