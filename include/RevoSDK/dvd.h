@@ -164,6 +164,15 @@ struct DVDPartitionParams {
 	u8 h3Hash[98304];
 };
 
+typedef enum {
+    DVD_PRIO_HIGHEST,
+    DVD_PRIO_HIGH,
+    DVD_PRIO_MEDIUM,
+    DVD_PRIO_LOW,
+
+    DVD_PRIO_MAX,
+} DVDQueuePriority;
+
 //////////////////////////////////
 
 ///////// DVD FUNCTIONS //////////
@@ -205,7 +214,7 @@ BOOL DVDReadDir(DVDDir* dir, DVDDirEntry* dirEntry);
 BOOL DVDCloseDir(DVDDir* dir);
 BOOL DVDGetCurrentDir(char* path, u32 maxLength);
 BOOL DVDChangeDir(char* dirName);
-s32 DVDConvertPathToEntrynum(char* path);
+s32 DVDConvertPathToEntrynum(const char* path);
 
 // Other disk functions.
 s32 DVDGetTransferredSize(DVDFileInfo* fileInfo);

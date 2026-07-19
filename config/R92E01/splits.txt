@@ -103,11 +103,11 @@ System12/sys12ControllerBatteryMgr.cpp:
 	.text       start:0x80013AD4 end:0x80013E60
 	.rodata     start:0x80536768 end:0x80536838
 	.data       start:0x8055F170 end:0x8055F180
-	.sbss       start:0x8066B910 end:0x8066B920
+	.sbss       start:0x8066B910 end:0x8066B918
 
 System12/system12DvdLoader.cpp:
-	.text       start:0x80013E60 end:0x800140EC
-	.rodata     start:0x80536838 end:0x80536908
+	.text       start:0x80013F5C end:0x800140EC
+	.rodata     start:0x80536850 end:0x80536908
 
 System12/system12FrameCounter.cpp:
 	.text       start:0x800140EC end:0x80014738
@@ -7251,14 +7251,14 @@ egg/core/eggStream.cpp:
 
 egg/core/eggDvdRipper.cpp:
 	.text       start:0x805000C0 end:0x8050032C
-	.sdata      start:0x8066B7F8 end:0x8066B800
-	.sbss       start:0x8066D430 end:0x8066D438
+	.sdata      start:0x8066B7F8 end:0x8066B7F9
+	.sbss       start:0x8066D430 end:0x8066D434
 
 egg/core/eggDvdFile.cpp:
 	.text       start:0x8050032C end:0x80500684
 	.data       start:0x805D0E70 end:0x805D0E98
-	.bss        start:0x80641C20 end:0x80641C30
-	.sbss       start:0x8066D438 end:0x8066D440
+	.bss        start:0x80641C20 end:0x80641C2C
+	.sbss       start:0x8066D438 end:0x8066D439
 
 egg/core/eggDisposer.cpp:
 	.text       start:0x80500684 end:0x8050074C
@@ -7266,9 +7266,9 @@ egg/core/eggDisposer.cpp:
 
 egg/core/eggArchive.cpp:
 	.text       start:0x8050074C end:0x805009CC
-	.data       start:0x805D0EA8 end:0x805D0EB8
-	.bss        start:0x80641C30 end:0x80641C40
-	.sbss       start:0x8066D440 end:0x8066D448
+	.data       start:0x805D0EA8 end:0x805D0EB4
+	.bss        start:0x80641C30 end:0x80641C3C
+	.sbss       start:0x8066D440 end:0x8066D441
 
 egg/core/eggLongStopWatch.cpp:
 	.text       start:0x805009CC end:0x80500AFC
