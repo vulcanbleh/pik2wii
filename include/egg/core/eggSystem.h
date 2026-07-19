@@ -7,9 +7,9 @@
 #include <RevoSDK/os.h>
 #include <egg/prim/eggBitFlag.h>
 
-namespace EGG {
-
 struct OSBootInfo;
+
+namespace EGG {
 
 class Display;
 class Heap;

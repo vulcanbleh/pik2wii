@@ -33,7 +33,7 @@ void ConfigurationData::initMemory()
 	mMem1End         = arena1Start;
 	mMem2Start       = pMEM2ArenaLo;
 	mMem2End         = arena2Start;
-	mMemSize         = *((u32*)0x80000028);
+	mMemSize         = mBootInfo->memorySize;
 
 	OSSetMEM1ArenaLo(arena1Start);
 	OSSetMEM1ArenaHi(arena1Start);
