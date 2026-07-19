@@ -17,7 +17,7 @@ Matrix34f Matrix34f::ident(1.0f, 0.0f, 0.0f, 0.0f,
  */
 void Matrix34f::inverseTransposeTo(Matrix34f& to) const
 {
-	// PSMTXInvXpose(m, to.m);
+	PSMTXInvXpose(m, to.m);
 }
 
 /**

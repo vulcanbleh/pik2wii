@@ -421,6 +421,17 @@ private:
     CoreController* mController;     // _14
 };
 
+class GCControllerMgr {
+    EGG_SINGLETON_DECL(GCControllerMgr);
+
+public:
+    void calc(); // _08
+
+private:
+    GCControllerMgr();
+
+};
+
 } // namespace EGG
 
 #endif
