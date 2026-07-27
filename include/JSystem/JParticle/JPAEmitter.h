@@ -329,6 +329,8 @@ struct JPABaseEmitter {
 	void playCalcEmitter() { resetFlag(JPAEMIT_StopCalc); }
 	void stopDrawParticle() { setFlag(JPAEMIT_StopDraw); }
 	void playDrawParticle() { resetFlag(JPAEMIT_StopDraw); }
+	
+	inline bool isFinished() { return isFlag(JPAEMIT_EnableDeleteEmitter) && getParticleNumber() == 0; }
 
 	JGeometry::TVec3f mLocalScl;             // _00
 	JGeometry::TVec3f mLocalTrs;             // _0C

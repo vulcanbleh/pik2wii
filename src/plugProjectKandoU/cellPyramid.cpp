@@ -8,6 +8,12 @@
 #include "P2Macros.h"
 #include "trig.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "cellPyramid";
+}
+
 namespace Game {
 
 CellPyramid* cellMgr;
@@ -18,8 +24,7 @@ u8 CellPyramid::sSpeedUpResolveColl;
 CellPyramid* Cell::sCurrCellMgr;
 int CellPyramid::sCellBugID;
 
-u8 CellPyramid::sOptResolveColl = 1;
-char* CellPyramid::sCellBugName = "cellPyramid";
+u8 CellPyramid::sOptResolveColl = 2;
 
 /**
  * @note Address: 0x801565C8
@@ -615,7 +620,22 @@ void CellPyramid::clearAllCollBuffer()
  */
 void Cell::appendList()
 {
-	// UNUSED FUNCTION
+	if (!mPrevCell && Cell::sCurrCellMgr) {
+		P2ASSERTLINE(780, Cell::sCurrCellMgr);
+
+		Cell* layerCell = &Cell::sCurrCellMgr->mLayers[mLayerIdx].mCurrCell;
+		Cell* nextCell  = layerCell->mNextCell;
+
+		if (nextCell) {
+			mNextCell            = nextCell;
+			mNextCell->mPrevCell = this;
+			mPrevCell            = layerCell;
+			layerCell->mNextCell = this;
+		} else {
+			layerCell->mNextCell = this;
+			mPrevCell            = layerCell;
+		}
+	}
 }
 
 /**
@@ -625,7 +645,7 @@ void Cell::appendList()
 void Cell::remove()
 {
 	if ((!mLeg) && (Cell::sCurrCellMgr)) {
-		P2ASSERTLINE(786, Cell::sCurrCellMgr);
+		P2ASSERTLINE(803, Cell::sCurrCellMgr);
 		if (mPrevCell) {
 			mPrevCell->mNextCell = mNextCell;
 			if (mNextCell) {
@@ -688,7 +708,7 @@ void Cell::exit(CellLeg* exitingLeg, bool isPikiOrNavi)
  */
 void Cell::entry(CellLeg* leg, bool isPikiOrNavi)
 {
-	P2ASSERTLINE(836, leg != nullptr);
+	P2ASSERTLINE(853, leg != nullptr);
 	if (leg->mCell) {
 		leg->mCell->exit(leg, isPikiOrNavi);
 	}
@@ -716,7 +736,7 @@ void Cell::entry(CellLeg* leg, bool isPikiOrNavi)
 
 	bool legCheck = mLeg->findLeg(leg);
 	if (!legCheck) {
-		JUT_PANICLINE(855, "leg entry failed !\n");
+		JUT_PANICLINE(872, "leg entry failed !\n");
 	}
 
 	if (isPikiOrNavi) {
@@ -734,7 +754,7 @@ void Cell::entry(CellLeg* leg, bool isPikiOrNavi)
 
 	Cell* currCell3 = mPrevCell;
 	if (!currCell3 && Cell::sCurrCellMgr) {
-		P2ASSERTLINE(763, Cell::sCurrCellMgr);
+		P2ASSERTLINE(780, Cell::sCurrCellMgr);
 
 		Cell* layerCell = &Cell::sCurrCellMgr->mLayers[mLayerIdx].mCurrCell;
 		Cell* nextCell  = layerCell->mNextCell;
@@ -822,25 +842,25 @@ void CellLayer::pileup(CellLayer& layer)
 	for (int x2 = 0, x1 = 0; x1 < mSizeX; x2 += 2, x1++) {
 		for (int y2 = 0, y1 = 0; y1 < mSizeY; y2 += 2, y1++) {
 			Cell* currCell                 = (*this)(x1, y1);
-			currCell->mNeighboringCells[0] = (*this)(x2, y2);
-			currCell->mNeighboringCells[1] = (*this)(x2 + 1, y2);
-			currCell->mNeighboringCells[2] = (*this)(x2, y2 + 1);
-			currCell->mNeighboringCells[3] = (*this)(x2 + 1, y2 + 1);
+			currCell->mNeighboringCells[0] = layer(x2, y2);
+			currCell->mNeighboringCells[1] = layer(x2 + 1, y2);
+			currCell->mNeighboringCells[2] = layer(x2, y2 + 1);
+			currCell->mNeighboringCells[3] = layer(x2 + 1, y2 + 1);
 
-			if ((*this)(x2, y2)) {
-				(*this)(x2, y2)->mHeadCell = currCell;
+			if (layer(x2, y2)) {
+				layer(x2, y2)->mHeadCell = currCell;
 			}
 
-			if ((*this)(x2 + 1, y2)) {
-				(*this)(x2 + 1, y2)->mHeadCell = currCell;
+			if (layer(x2 + 1, y2)) {
+				layer(x2 + 1, y2)->mHeadCell = currCell;
 			}
 
-			if ((*this)(x2, y2 + 1)) {
-				(*this)(x2, y2 + 1)->mHeadCell = currCell;
+			if (layer(x2, y2 + 1)) {
+				layer(x2, y2 + 1)->mHeadCell = currCell;
 			}
 
-			if ((*this)(x2 + 1, y2 + 1)) {
-				(*this)(x2 + 1, y2 + 1)->mHeadCell = currCell;
+			if (layer(x2 + 1, y2 + 1)) {
+				layer(x2 + 1, y2 + 1)->mHeadCell = currCell;
 			}
 		}
 	}
@@ -1334,6 +1354,8 @@ void CellPyramid::clear()
 	mZNode.mPrev = 0;
 }
 
+char* CellPyramid::sCellBugName = "none";
+
 /**
  * @note Address: 0x80158390
  * @note Size: 0x190
@@ -1353,7 +1375,7 @@ void CellPyramid::calcExtent(Sys::Sphere& sphere, int& layerIdx, Recti& outRect)
 	}
 
 	u16 layerSize = getLayer(layer)->mLayerSize;
-	f32 scale     = 1.0f / ((f32)layerSize * mScale); // f9
+	f32 mult      = (f32)layerSize * mScale;
 
 	f32 radius = sphere.mRadius;
 	f32 left   = mBounds.x;
@@ -1368,6 +1390,8 @@ void CellPyramid::calcExtent(Sys::Sphere& sphere, int& layerIdx, Recti& outRect)
 	f32 yLowDiff = yLow - left;
 	f32 xHiDiff  = xHi - right;
 	f32 yHiDiff  = yHi - left;
+	
+	f32 scale = 1.0f / mult;
 
 	outRect.p1.x = xLowDiff * scale;
 	outRect.p1.y = yLowDiff * scale;
@@ -1500,8 +1524,6 @@ void CellPyramid::entry(CellObject* object, Sys::Sphere& sphere)
 	Cell::sCurrCellMgr = nullptr;
 }
 
-// TODO: Finish this. It's pretty much one big ol' usage of inlined functions.
-// I know that SysShape::Model::entry(Sys::Sphere&) exists, among others...
 /**
  * @note Address: 0x80158554
  * @note Size: 0x4B8
@@ -1510,114 +1532,56 @@ void CellPyramid::entry(CellObject* object, Sys::Sphere& sphere, int& layerIndex
 {
 	Cell::sCurrCellMgr = this;
 
-	f32 sphereRadiusLog = log10(sphere.mRadius * 2.0f * mInverseScale);
-	f32 log2            = log10(2.0f);
-	f32 layerIndexFloat = (sphereRadiusLog / log2);
+	calcExtent(sphere, layerIndex, boundingRect);
 
-	// Ensure the layer is non-negative
-	if (layerIndexFloat < 0.0f) {
-		layerIndexFloat = 0.0f;
-	}
-
-	layerIndex = (int)ceil(MAX(layerIndexFloat, 0.0f));
-
-	// Ensure that layerIndex is within bounds
-	if (mLayerCount <= layerIndex) {
-		layerIndex = mLayerCount - 1;
-	}
-
-	f32 sphereRadius       = sphere.mRadius;
-	f32 sphereX            = sphere.mPosition.x;
-	f32 sphereZ            = sphere.mPosition.z;
-	f32 rightBoundary      = mBounds.y;
-	f32 leftBoundary       = mBounds.x;
-	f32 inverseScaleFactor = 1.0f / ((mLayers[layerIndex].mLayerSize) * mScale);
-
-	// Calculate the bounding rectangle
-	boundingRect.p1.x = (int)(((sphereX - sphereRadius) - rightBoundary) * inverseScaleFactor);
-	boundingRect.p1.y = (int)(((sphereZ - sphereRadius) - leftBoundary) * inverseScaleFactor);
-	boundingRect.p2.x = (int)(((sphereX + sphereRadius) - rightBoundary) * inverseScaleFactor);
-	boundingRect.p2.y = (int)(((sphereZ + sphereRadius) - leftBoundary) * inverseScaleFactor);
-
-	// Update the layerIndex
-	layerIndex = layerIndex;
-
-	// Check if layerIndex is out of bounds
-	if ((layerIndex < 0) || (mLayerCount <= layerIndex)) {
-		JUT_PANICLINE(1206, "illegal layerLevel %d : out of bounds 0～%d\n", layerIndex, mLayerCount);
+	if ((layerIndex < 0) || (layerIndex >= mLayerCount)) {
+		JUT_PANICLINE(1229, "illegal layerLevel %d : out of bounds 0～%d\n", layerIndex, mLayerCount);
 		return;
 	}
 
-	int objectLayerIndex    = 0;
-	bool isPikiOrNavi       = false;
-	CellLayer* currentLayer = &mLayers[layerIndex];
-	bool isPiki             = object->isPiki();
-
+	CellLayer* layer = &mLayers[layerIndex];
+	bool isPikiOrNavi = false;
+	bool isPiki      = object->isPiki();
 	if ((isPiki != false) || (isPiki = object->isNavi(), isPiki != false)) {
-		objectLayerIndex = 1;
-		isPikiOrNavi     = true;
+		isPikiOrNavi = true;
 	}
-
-	layerIndex = objectLayerIndex;
 
 	for (int i = 0; i < 4; i++) {
-		Cell* cell = object->mCellLegs->mCell;
-
+		Cell* cell = object->mCellLegs[i].mCell;
 		if (cell) {
-			cell->exit(object->mCellLegs, isPikiOrNavi);
-
-			if (cell->mLeg == object->mCellLegs) {
-				cell->mLeg = object->mCellLegs->mNext;
-
-				if (cell->mLeg) {
-					cell->mLeg->mPrev = nullptr;
-				}
-			}
-
-			if (isPikiOrNavi && cell->mLocalPikiNaviCount != 0) {
-				cell->mLocalPikiNaviCount--;
-
-				for (Cell* iCell = cell->mHeadCell; iCell != nullptr; iCell = iCell->mHeadCell) {
-					iCell->mTotalPikiNaviCount--;
-				}
-			}
-
-			cell->mTotalObjectCount--;
-			for (Cell* iCell = cell->mHeadCell; iCell != nullptr; iCell = iCell->mHeadCell) {
-				iCell->mTotalObjectCount--;
-			}
-
-			CellLeg* leg = object->mCellLegs->mPrev;
-
-			if (leg != nullptr) {
-				leg->mNext = object->mCellLegs->mNext;
-			}
-
-			leg = object->mCellLegs->mNext;
-
-			if (leg) {
-				leg->mPrev = object->mCellLegs->mPrev;
-			}
-
-			object->mCellLegs->mPrev = nullptr;
-			object->mCellLegs->mNext = nullptr;
-
-			if (cell->mLeg == nullptr && Cell::sCurrCellMgr != nullptr) {
-				if (cell->mPrevCell) {
-					cell->mPrevCell->mNextCell = cell->mNextCell;
-
-					if (cell->mNextCell) {
-						cell->mNextCell->mPrevCell = cell->mPrevCell;
-					}
-				}
-
-				cell->mPrevCell = nullptr;
-				cell->mNextCell = nullptr;
-			}
-
-			object->mCellLegs->mCell = nullptr;
+			cell->exit(&object->mCellLegs[i], isPikiOrNavi);
+			object->mCellLegs[i].mCell = nullptr;
 		}
 	}
+
+	int legIndex = 0;
+	if (((boundingRect.p2.x - boundingRect.p1.x) * (boundingRect.p2.y - boundingRect.p1.y)) > 10) {
+		JUT_PANICLINE(1428, "Cell Inf-Loop かもしれない\n");
+		return;
+	}
+
+	for (int x = boundingRect.p1.x; x <= boundingRect.p2.x; x++) {
+		for (int y = boundingRect.p1.y; y <= boundingRect.p2.y; y++) {
+			Cell* cell = (*layer)(x, y);
+			if (cell) {
+				if (legIndex >= 4) {
+					Cell::sCurrCellMgr = nullptr;
+					return;
+				}
+
+				cell->entry(&object->mCellLegs[legIndex], isPikiOrNavi);
+
+				bool legCheck = cell->mLeg->findLeg(&object->mCellLegs[legIndex]);
+				if (!legCheck) {
+					JUT_PANICLINE(1462, "leg entry failed !!!!!!!!!!\n");
+					return;
+				}
+			}
+			legIndex++;
+		}
+	}
+
+	Cell::sCurrCellMgr = nullptr;
 }
 
 /**
@@ -1651,7 +1615,7 @@ void CellPyramid::create(BoundBox2d& box, f32 scale)
 
 	int maxDimension = pixelWidth > pixelHeight ? pixelWidth : pixelHeight;
 
-	int layerCount = (f32)ceil((f32)log10((f32)maxDimension) / (f32)log10(2.0f));
+	int layerCount = (f32)ceil(log10f(maxDimension) / log10f(2.0f));
 	pow(2.0, (f64)layerCount);
 
 	mLayerCount       = layerCount + 1;
@@ -1664,210 +1628,6 @@ void CellPyramid::create(BoundBox2d& box, f32 scale)
 	}
 
 	mFreeMemory = mFreeMemory - JKRHeap::sCurrentHeap->getFreeSize();
-	/*
-	.loc_0x0:
-	  stwu      r1, -0x70(r1)
-	  mflr      r0
-	  stw       r0, 0x74(r1)
-	  stfd      f31, 0x60(r1)
-	  psq_st    f31,0x68(r1),0,0
-	  stfd      f30, 0x50(r1)
-	  psq_st    f30,0x58(r1),0,0
-	  stfd      f29, 0x40(r1)
-	  psq_st    f29,0x48(r1),0,0
-	  stmw      r27, 0x2C(r1)
-	  fmr       f31, f1
-	  mr        r31, r3
-	  lwz       r3, -0x77D4(r13)
-	  mr        r27, r4
-	  bl        -0x135290
-	  lfs       f0, -0x5D08(r2)
-	  stw       r3, 0x28(r31)
-	  fdivs     f0, f0, f31
-	  lfs       f2, 0x0(r27)
-	  lfs       f1, 0x4(r27)
-	  stfs      f1, 0x3C(r31)
-	  stfs      f2, 0x40(r31)
-	  lfs       f4, 0x8(r27)
-	  lfs       f3, 0x0(r27)
-	  lfs       f2, 0xC(r27)
-	  lfs       f1, 0x4(r27)
-	  fsubs     f3, f4, f3
-	  stfs      f31, 0x34(r31)
-	  fsubs     f1, f2, f1
-	  fabs      f2, f3
-	  stfs      f0, 0x38(r31)
-	  fabs      f1, f1
-	  frsp      f30, f2
-	  lfs       f0, 0x38(r31)
-	  frsp      f29, f1
-	  fmuls     f1, f30, f0
-	  bl        -0x89954
-	  frsp      f2, f1
-	  lfs       f0, 0x38(r31)
-	  fmuls     f1, f29, f0
-	  fctiwz    f0, f2
-	  stfd      f0, 0x8(r1)
-	  lwz       r28, 0xC(r1)
-	  bl        -0x89970
-	  frsp      f0, f1
-	  cmpwi     r28, 0xC8
-	  fctiwz    f0, f0
-	  stfd      f0, 0x10(r1)
-	  lwz       r27, 0x14(r1)
-	  bgt-      .loc_0xD0
-	  cmpwi     r27, 0xC8
-	  ble-      .loc_0x120
-
-	.loc_0xD0:
-	  lfs       f1, -0x5D04(r2)
-	  lfs       f0, -0x5D08(r2)
-	  fmuls     f31, f31, f1
-	  fdivs     f0, f0, f31
-	  stfs      f31, 0x34(r31)
-	  stfs      f0, 0x38(r31)
-	  lfs       f0, 0x38(r31)
-	  fmuls     f1, f30, f0
-	  bl        -0x899B4
-	  frsp      f2, f1
-	  lfs       f0, 0x38(r31)
-	  fmuls     f1, f29, f0
-	  fctiwz    f0, f2
-	  stfd      f0, 0x10(r1)
-	  lwz       r28, 0x14(r1)
-	  bl        -0x899D0
-	  frsp      f0, f1
-	  fctiwz    f0, f0
-	  stfd      f0, 0x8(r1)
-	  lwz       r27, 0xC(r1)
-
-	.loc_0x120:
-	  cmpw      r28, r27
-	  mr        r30, r27
-	  ble-      .loc_0x130
-	  mr        r30, r28
-
-	.loc_0x130:
-	  lfd       f1, -0x5D10(r2)
-	  bl        -0x89154
-	  xoris     r3, r30, 0x8000
-	  lis       r0, 0x4330
-	  stw       r3, 0x14(r1)
-	  frsp      f29, f1
-	  lfd       f1, -0x5D00(r2)
-	  stw       r0, 0x10(r1)
-	  lfd       f0, 0x10(r1)
-	  fsubs     f1, f0, f1
-	  bl        -0x89178
-	  frsp      f0, f1
-	  fdivs     f1, f0, f29
-	  bl        -0x89A28
-	  frsp      f0, f1
-	  lis       r0, 0x4330
-	  stw       r0, 0x18(r1)
-	  lfd       f2, -0x5D00(r2)
-	  fctiwz    f0, f0
-	  lfd       f1, -0x5D10(r2)
-	  stfd      f0, 0x8(r1)
-	  lwz       r29, 0xC(r1)
-	  xoris     r0, r29, 0x8000
-	  stw       r0, 0x1C(r1)
-	  lfd       f0, 0x18(r1)
-	  fsub      f2, f0, f2
-	  bl        -0x89198
-	  addi      r0, r29, 0x1
-	  stw       r0, 0x2C(r31)
-	  lwz       r30, 0x2C(r31)
-	  mulli     r3, r30, 0x38
-	  addi      r3, r3, 0x10
-	  bl        -0x134C10
-	  lis       r4, 0x8016
-	  mr        r7, r30
-	  subi      r4, r4, 0x7308
-	  li        r5, 0
-	  li        r6, 0x38
-	  bl        -0x971E4
-	  stw       r3, 0x30(r31)
-	  li        r3, 0x1
-	  li        r0, 0
-	  lwz       r29, 0x30(r31)
-	  sth       r28, 0x0(r29)
-	  sth       r27, 0x2(r29)
-	  sth       r3, 0x4(r29)
-	  sth       r0, 0x6(r29)
-	  lhz       r3, 0x0(r29)
-	  lhz       r0, 0x2(r29)
-	  mullw     r30, r3, r0
-	  mulli     r3, r30, 0x2C
-	  addi      r3, r3, 0x10
-	  bl        -0x134C60
-	  lis       r4, 0x8015
-	  mr        r7, r30
-	  addi      r4, r4, 0x6740
-	  li        r5, 0
-	  li        r6, 0x2C
-	  bl        -0x97234
-	  stw       r3, 0x8(r29)
-	  li        r5, 0
-	  mr        r6, r5
-	  stw       r5, 0x2C(r29)
-	  mr        r7, r5
-	  stw       r5, 0x30(r29)
-	  b         .loc_0x260
-
-	.loc_0x238:
-	  lwz       r3, 0x8(r29)
-	  addi      r0, r7, 0x28
-	  addi      r6, r6, 0x1
-	  add       r3, r3, r7
-	  addi      r7, r7, 0x2C
-	  stw       r5, 0x1C(r3)
-	  sth       r5, 0x18(r3)
-	  lhz       r4, 0x6(r29)
-	  lwz       r3, 0x8(r29)
-	  sthx      r4, r3, r0
-
-	.loc_0x260:
-	  lhz       r3, 0x0(r29)
-	  lhz       r0, 0x2(r29)
-	  mullw     r0, r3, r0
-	  cmpw      r6, r0
-	  blt+      .loc_0x238
-	  li        r27, 0x1
-	  li        r29, 0x38
-	  b         .loc_0x2A0
-
-	.loc_0x280:
-	  subi      r0, r27, 0x1
-	  lwz       r4, 0x30(r31)
-	  mulli     r0, r0, 0x38
-	  add       r3, r4, r29
-	  add       r4, r4, r0
-	  bl        -0xF5C
-	  addi      r29, r29, 0x38
-	  addi      r27, r27, 0x1
-
-	.loc_0x2A0:
-	  lwz       r0, 0x2C(r31)
-	  cmpw      r27, r0
-	  blt+      .loc_0x280
-	  lwz       r3, -0x77D4(r13)
-	  bl        -0x135508
-	  lwz       r0, 0x28(r31)
-	  sub       r0, r0, r3
-	  stw       r0, 0x28(r31)
-	  psq_l     f31,0x68(r1),0,0
-	  lfd       f31, 0x60(r1)
-	  psq_l     f30,0x58(r1),0,0
-	  lfd       f30, 0x50(r1)
-	  psq_l     f29,0x48(r1),0,0
-	  lfd       f29, 0x40(r1)
-	  lmw       r27, 0x2C(r1)
-	  lwz       r0, 0x74(r1)
-	  mtlr      r0
-	  addi      r1, r1, 0x70
-	  blr
-	*/
 }
 
 /**
@@ -1918,7 +1678,7 @@ int CellPyramid::getPikiCount(int layerLevel, Recti& extent)
 	if (disableAICulling) {
 		return 1;
 	}
-	JUT_ASSERTLINE(1565, (layerLevel >= 0) && (layerLevel < mLayerCount), "illegal layerLevel %d : out of bounds 0～%d\n", layerLevel,
+	JUT_ASSERTLINE(1588, (layerLevel >= 0) && (layerLevel < mLayerCount), "illegal layerLevel %d : out of bounds 0～%d\n", layerLevel,
 	               mLayerCount);
 	CellLayer* layer = &mLayers[layerLevel];
 	int sum          = 0;

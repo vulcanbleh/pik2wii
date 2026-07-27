@@ -7,13 +7,16 @@
 #include "RevoSDK/rand.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "itemUjamushi";
+}
+
 #define UJAMUSHI_DROP_CHANCE (0.6f)
 
 namespace Game {
 namespace ItemUjamushi {
-
-static const int unusedArray[]         = { 0, 0, 0 };
-static const char unusedUjamushiName[] = "itemUjamushi";
 
 Mgr* mgr;
 
@@ -2425,7 +2428,7 @@ Mgr::Mgr()
 	setModelSize(2);
 	loadArchive("arc.szs");
 	loadBmd("ujamushi_poly.bmd", 0, J3DMODEL_CreateNewDL);
-	loadBmd("ujamushi_bill.bmd", 1, J3DMODEL_Unk26 | J3DMODEL_CreateNewDL);
+	loadBmd("ujamushi_bill.bmd", 1, J3DMODEL_Unk30 | J3DMODEL_CreateNewDL);
 	_308                   = 0;
 	_304                   = 0;
 	_30C                   = 0.0f;

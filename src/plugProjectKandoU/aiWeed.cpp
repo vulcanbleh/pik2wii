@@ -7,9 +7,13 @@
 #include "nans.h"
 #include "string.h"
 
-namespace PikiAI {
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "actWeed";
+}
 
-static const int unusedArray[] = { 0, 0, 0 };
+namespace PikiAI {
 
 /**
  * @note Address: 0x8020D784
@@ -39,13 +43,8 @@ ActWeed::ActWeed(Game::Piki* parent)
  */
 void ActWeed::init(ActionArg* arg)
 {
-	bool isWeedArg = false;
-	if (arg) {
-		bool strCheck = strcmp("ActWeedArg", arg->getName()) == 0;
-		if (strCheck) {
-			isWeedArg = true;
-		}
-	}
+	bool isWeedArg = arg && arg->is("ActWeedArg");
+	
 	P2ASSERTLINE(120, isWeedArg);
 	ActWeedArg* weedArg = static_cast<ActWeedArg*>(arg);
 	JUT_ASSERTLINE(124, arg, "no actweedarg");
@@ -80,7 +79,7 @@ void ActWeed::decideTarget()
  */
 void ActWeed::initStickAttack()
 {
-	bool isWeed = mFlockMgr->isWeed(mTargetFlockIdx) > 0; // sigh
+	bool isWeed = mFlockMgr->isWeed(mTargetFlockIdx);
 	f32 damage  = mParent->getAttackDamage();
 	FlockAttackActionArg flockAttackActionArg(damage, isWeed, mWeed, mTargetFlockIdx);
 	mFlockAttack->init(&flockAttackActionArg);
@@ -216,13 +215,7 @@ ActFlockAttack::ActFlockAttack(Game::Piki* parent)
  */
 void ActFlockAttack::init(ActionArg* arg)
 {
-	bool isFlockArg = false;
-	if (arg) {
-		bool strCheck = strcmp("FlockAttackActionArg", arg->getName()) == 0;
-		if (strCheck) {
-			isFlockArg = true;
-		}
-	}
+	bool isFlockArg = arg && arg->is("FlockAttackActionArg");
 
 	P2ASSERTLINE(276, isFlockArg);
 	FlockAttackActionArg* flockArg = static_cast<FlockAttackActionArg*>(arg);
