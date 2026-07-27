@@ -3,6 +3,12 @@
 #include "PikiAI.h"
 #include "RevoSDK/rand.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "actFormation"; // ?
+}
+
 #define PIKI_ENTERSHIP_RADIUS  (30.0f)
 #define PIKI_ENTERONYON_RADIUS (10.0f)
 #define PIKI_ENTERONYON_SPEED  (50.0f)
@@ -47,7 +53,7 @@ void ActEnter::init(ActionArg* arg)
 		Vector3f gotoPos  = startPos + offset;
 		GotoPosActionArg gotoArg;
 		gotoArg.mPosition = gotoPos;
-		gotoArg.mRadius   = PIKI_ENTERSHIP_RADIUS;
+		gotoArg.mRadius   = 2.0f;
 		mGotoPos->init(&gotoArg);
 		mState = ENTER_ShipGoto;
 		return;
@@ -165,7 +171,7 @@ void ActEnter::initStay()
 int ActEnter::execStay()
 {
 	mTimer -= sys->getDeltaTime();
-	mParent->mTargetVelocity = 0.0f;
+	mParent->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	if (mTimer <= 0.0f) {
 		mState = ENTER_ShipSuck;
 		initSuck();

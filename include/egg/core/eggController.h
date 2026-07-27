@@ -251,6 +251,8 @@ public:
     void startPatternRumble(const char* pPattern, int frame, bool force);
     void startPowerFrameRumble(f32 power, int frame, bool force);
     void stopRumbleMgr();
+
+    bool isConnected() const { return mFlag.onBit(0); }
 	
 	Vector2f getDpdRawPos();
     f32 getDpdDistance();

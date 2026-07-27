@@ -46,13 +46,7 @@ void ActTransport::init(ActionArg* settings)
 {
 	Game::GameStat::workPikis.inc(mParent);
 
-	bool isTportArg = false;
-	if (settings) {
-		bool strCheck = strcmp("ActTransportArg", settings->getName()) == 0;
-		if (strCheck) {
-			isTportArg = true;
-		}
-	}
+	bool isTportArg = settings && settings->is("ActTransportArg");
 	P2ASSERTLINE(175, isTportArg);
 
 	ActTransportArg* arg = static_cast<ActTransportArg*>(settings);

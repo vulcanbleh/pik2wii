@@ -34,6 +34,12 @@
 #include "og/ogLib2D.h"
 #include "utilityU.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "baseGameSection";
+}
+
 namespace og {
 namespace Screen {
 
@@ -50,9 +56,6 @@ void setBlendPane(J2DBlendInfo, J2DScreen*, u64*)
 
 } // namespace Screen
 } // namespace og
-
-static const u32 padding[]    = { 0, 0, 0 };
-static const char className[] = "baseGameSection";
 
 static Delegate1<Game::BaseGameSection, Game::CameraArg*>* cameraMgrCallback;
 static JKRExpHeap* theExpHeap;
@@ -522,7 +525,7 @@ void BaseGameSection::initJ3D()
 	j3dSys.setDrawBuffer(mOpaqueDrawBuffer->get(DB_NormalLayer)->mBuffer, J3DSys::SYSDRAW_Opa);
 	j3dSys.setDrawBuffer(mTransparentDrawBuffer->get(DB_NormalLayer)->mBuffer, J3DSys::SYSDRAW_Xlu);
 
-	System::FragmentationChecker frag("poyol", false);
+	System::FragmentationChecker frag("poyo1", false);
 }
 
 /**
@@ -647,7 +650,7 @@ void BaseGameSection::initGenerators()
 
 #pragma region plantsgen
 
-		sprintf(filenameCharArr, "/%s/plantsgen.txt", mapMgr->mCourseInfo->mAbeFolder);
+		sprintf(filenameCharArr, "%s/plantsgen.txt", mapMgr->mCourseInfo->mAbeFolder);
 		int entrynum = DVDConvertPathToEntrynum(filenameCharArr);
 
 		if (entrynum != -1) {
@@ -2176,7 +2179,7 @@ void BaseGameSection::setupFloatMemory()
 	if (!mapMgr) {
 		cave = true;
 		char path[512];
-		sprintf(path, "user/Mukki/mapunits/caveinfo/%s", getCaveFilename());
+		sprintf(path, "user/Mukki/mapunits/caveinfo/us/%s", getCaveFilename());
 		getCaveFilename();
 		Cave::CaveInfo* info       = Cave::CaveInfo::load(path);
 		Cave::EditMapUnit* mapunit = nullptr;
@@ -2222,14 +2225,14 @@ void BaseGameSection::setupFloatMemory()
 
 		sys->heapStatusStart("CellMgr", nullptr);
 
-		BoundBox2d bounds(FLOAT_DIST_MAX, FLOAT_DIST_MAX, FLOAT_DIST_MIN, FLOAT_DIST_MIN);
+		BoundBox2d bounds(12800000.0f, 12800000.0f, -12800000.0f, -12800000.0f);
 		mapMgr->getBoundBox2d(bounds);
 		sys->heapStatusStart("PlatCellMgr", nullptr);
 		platCellMgr = new CellPyramid;
 		platCellMgr->create(bounds, 128.0f);
 		sys->heapStatusEnd("PlatCellMgr");
 
-		BoundBox2d bounds2(FLOAT_DIST_MAX, FLOAT_DIST_MAX, FLOAT_DIST_MIN, FLOAT_DIST_MIN);
+		BoundBox2d bounds2(12800000.0f, 12800000.0f, -12800000.0f, -12800000.0f);
 		mapMgr->getBoundBox2d(bounds2);
 		sys->heapStatusStart("MapRoomCellMgr", nullptr);
 		mapRoomCellMgr = new CellPyramid;
@@ -2266,7 +2269,7 @@ void BaseGameSection::setupFloatMemory()
 
 	sys->heapStatusStart("CellMgr", nullptr);
 	cellMgr = new CellPyramid;
-	BoundBox2d bounds(FLOAT_DIST_MAX, FLOAT_DIST_MAX, FLOAT_DIST_MIN, FLOAT_DIST_MIN);
+	BoundBox2d bounds(12800000.0f, 12800000.0f, -12800000.0f, -12800000.0f);
 	mapMgr->getBoundBox2d(bounds);
 	JKRGetCurrentHeap()->getFreeSize();
 	cellMgr->create(bounds, 108.0f);

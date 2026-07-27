@@ -4,9 +4,13 @@
 #include "PSGame/SeMgr.h"
 #include "SoundID.h"
 
-namespace PikiAI {
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "actBreakWall";
+}
 
-static const char breakRockName[] = "actBreakWall";
+namespace PikiAI {
 
 /**
  * @note Address: 0x801E36A0
@@ -28,14 +32,8 @@ ActBreakRock::ActBreakRock(Game::Piki* parent)
  */
 void ActBreakRock::init(ActionArg* actionArg)
 {
-	bool isCorrectArg = false;
-	if (actionArg) {
-		bool strCheck = strcmp("ActBreakRockArg", actionArg->getName()) == 0;
-		if (strCheck) {
-			isCorrectArg = true;
-		}
-	}
-
+	bool isCorrectArg = actionArg && actionArg->is("ActBreakRockArg");
+	
 	P2ASSERTLINE(80, isCorrectArg);
 
 	Game::GameStat::workPikis.inc(mParent);

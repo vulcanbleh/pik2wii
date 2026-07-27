@@ -92,13 +92,7 @@ void ActBattle::recv(BattleMessage& msg)
  */
 void ActBattle::init(PikiAI::ActionArg* arg)
 {
-	bool isBattleArg = false;
-	if (arg) {
-		bool strCheck = strcmp("ActBattleArg", arg->getName()) == 0;
-		if (strCheck) {
-			isBattleArg = true;
-		}
-	}
+	bool isBattleArg = arg && arg->is("ActBattleArg");
 
 	P2ASSERTLINE(179, isBattleArg);
 

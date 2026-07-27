@@ -15,10 +15,13 @@
 #include "nans.h"
 #include "types.h"
 
-namespace Game {
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "gameMapParts";
+}
 
-static const int unusedArray[] = { 0, 0, 0 };
-static const char unusedName[] = "gameMapParts";
+namespace Game {
 
 int RoomMapMgr::numRoomCulled            = 0;
 bool RoomMapMgr::mUseCylinderViewCulling = false;
@@ -2175,8 +2178,8 @@ lbl_801B9B20:
  */
 void RoomMapMgr::getBoundBox2d(BoundBox2d& boundbox)
 {
-	boundbox.mMin = Vector2f(mBoundbox.mMin.x, mBoundbox.mMin.z);
-	boundbox.mMax = Vector2f(mBoundbox.mMax.x, mBoundbox.mMax.z);
+	boundbox.mMin.set(mBoundbox.mMin.x, mBoundbox.mMin.z);
+	boundbox.mMax.set(mBoundbox.mMax.x, mBoundbox.mMax.z);
 }
 
 /**

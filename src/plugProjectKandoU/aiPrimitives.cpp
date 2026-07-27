@@ -85,13 +85,7 @@ ActApproachPos::ActApproachPos(Game::Piki* p)
  */
 void ActApproachPos::init(ActionArg* settings)
 {
-	bool isApproachArg = false;
-	if (settings) {
-		bool strCheck = strcmp("ApproachPosActionArg", settings->getName()) == 0;
-		if (strCheck) {
-			isApproachArg = true;
-		}
-	}
+	bool isApproachArg = settings && settings->is("ApproachPosActionArg");
 	P2ASSERTLINE(424, isApproachArg);
 	ApproachPosActionArg* approachArg = static_cast<ApproachPosActionArg*>(settings);
 
@@ -177,241 +171,6 @@ int ActApproachPos::exec()
 	}
 
 	return ACTEXEC_Continue;
-
-	/*
-	stwu     r1, -0x60(r1)
-	mflr     r0
-	stw      r0, 0x64(r1)
-	stfd     f31, 0x50(r1)
-	psq_st   f31, 88(r1), 0, qr0
-	stfd     f30, 0x40(r1)
-	psq_st   f30, 72(r1), 0, qr0
-	stfd     f29, 0x30(r1)
-	psq_st   f29, 56(r1), 0, qr0
-	stw      r31, 0x2c(r1)
-	mr       r31, r3
-	addi     r3, r1, 8
-	lwz      r4, 4(r31)
-	lwz      r12, 0(r4)
-	lwz      r12, 8(r12)
-	mtctr    r12
-	bctrl
-	lfs      f3, 0x18(r31)
-	lfs      f2, 0x10(r1)
-	lfs      f1, 0x10(r31)
-	lfs      f0, 8(r1)
-	fsubs    f4, f3, f2
-	lfs      f3, 0x14(r31)
-	fsubs    f2, f1, f0
-	lfs      f1, 0xc(r1)
-	fmuls    f5, f4, f4
-	lfs      f0, lbl_80518F60@sda21(r2)
-	fsubs    f1, f3, f1
-	stfs     f4, 0x1c(r1)
-	fmuls    f3, f2, f2
-	stfs     f2, 0x14(r1)
-	stfs     f1, 0x18(r1)
-	fadds    f1, f3, f5
-	fcmpo    cr0, f1, f0
-	ble      lbl_80197694
-	fmadds   f30, f2, f2, f5
-	fcmpo    cr0, f30, f0
-	ble      lbl_80197698
-	frsqrte  f0, f30
-	fmuls    f30, f0, f30
-	b        lbl_80197698
-
-lbl_80197694:
-	fmr      f30, f0
-
-lbl_80197698:
-	lfs      f29, 0x18(r1)
-	lfs      f1, lbl_80518F60@sda21(r2)
-	fmuls    f4, f29, f29
-	fadds    f0, f3, f4
-	fadds    f0, f5, f0
-	fcmpo    cr0, f0, f1
-	ble      lbl_801976D0
-	fmadds   f0, f2, f2, f4
-	fadds    f3, f5, f0
-	fcmpo    cr0, f3, f1
-	ble      lbl_801976D4
-	frsqrte  f0, f3
-	fmuls    f3, f0, f3
-	b        lbl_801976D4
-
-lbl_801976D0:
-	fmr      f3, f1
-
-lbl_801976D4:
-	lfs      f0, lbl_80518F60@sda21(r2)
-	fcmpo    cr0, f3, f0
-	ble      lbl_8019770C
-	lfs      f0, lbl_80518F64@sda21(r2)
-	lfs      f2, 0x14(r1)
-	fdivs    f3, f0, f3
-	lfs      f1, 0x18(r1)
-	lfs      f0, 0x1c(r1)
-	fmuls    f2, f2, f3
-	fmuls    f1, f1, f3
-	fmuls    f0, f0, f3
-	stfs     f2, 0x14(r1)
-	stfs     f1, 0x18(r1)
-	stfs     f0, 0x1c(r1)
-
-lbl_8019770C:
-	lis      r3, atanTable___5JMath@ha
-	lfs      f1, 0x14(r1)
-	lfs      f2, 0x1c(r1)
-	addi     r3, r3, atanTable___5JMath@l
-	bl       "atan2___Q25JMath18TAtanTable<1024,f>CFff"
-	lwz      r3, 4(r31)
-	fmr      f31, f1
-	lwz      r12, 0(r3)
-	lwz      r12, 0x64(r12)
-	mtctr    r12
-	bctrl
-	fmr      f2, f1
-	fmr      f1, f31
-	bl       angDist__Fff
-	lfs      f2, 0x1c(r31)
-	fmr      f31, f1
-	lfs      f0, lbl_80518F60@sda21(r2)
-	fcmpo    cr0, f2, f0
-	ble      lbl_80197788
-	lwz      r3, sys@sda21(r13)
-	lfs      f1, 0x20(r31)
-	lfs      f0, 0x54(r3)
-	fadds    f0, f1, f0
-	stfs     f0, 0x20(r31)
-	lfs      f1, 0x20(r31)
-	lfs      f0, 0x1c(r31)
-	fcmpo    cr0, f1, f0
-	cror     2, 1, 2
-	bne      lbl_80197788
-	li       r3, 0
-	b        lbl_801978EC
-
-lbl_80197788:
-	lbz      r0, 0x25(r31)
-	cmplwi   r0, 0
-	beq      lbl_801977B0
-	fabs     f1, f29
-	lfs      f0, lbl_80518F68@sda21(r2)
-	frsp     f1, f1
-	fcmpo    cr0, f1, f0
-	ble      lbl_801977B0
-	li       r3, 2
-	b        lbl_801978EC
-
-lbl_801977B0:
-	lfs      f1, 0xc(r31)
-	fcmpo    cr0, f30, f1
-	bge      lbl_801977EC
-	lwz      r3, 4(r31)
-	li       r4, 0
-	lwz      r12, 0(r3)
-	lwz      r12, 0x1d8(r12)
-	mtctr    r12
-	bctrl
-	fmr      f2, f30
-	lwz      r3, 4(r31)
-	lfs      f1, lbl_80518F6C@sda21(r2)
-	addi     r4, r1, 0x14
-	bl       "setSpeed__Q24Game4PikiFfR10Vector3<f>f"
-	b        lbl_801978E8
-
-lbl_801977EC:
-	lfs      f0, lbl_80518F70@sda21(r2)
-	fadds    f0, f0, f1
-	fcmpo    cr0, f30, f0
-	ble      lbl_80197868
-	lwz      r3, 4(r31)
-	li       r4, 1
-	lwz      r12, 0(r3)
-	lwz      r12, 0x1d8(r12)
-	mtctr    r12
-	bctrl
-	lbz      r0, 0x24(r31)
-	cmplwi   r0, 0
-	beq      lbl_80197854
-	lfs      f1, lbl_80518F74@sda21(r2)
-	lfs      f0, lbl_80518F64@sda21(r2)
-	fmuls    f1, f1, f30
-	fcmpo    cr0, f1, f0
-	ble      lbl_80197838
-	fmr      f1, f0
-
-lbl_80197838:
-	lfs      f0, lbl_80518F78@sda21(r2)
-	addi     r4, r1, 0x14
-	lwz      r3, 4(r31)
-	fmuls    f1, f1, f0
-	fadds    f1, f0, f1
-	bl       "setSpeed__Q24Game4PikiFfR10Vector3<f>"
-	b        lbl_801978E8
-
-lbl_80197854:
-	lwz      r3, 4(r31)
-	addi     r4, r1, 0x14
-	lfs      f1, lbl_80518F78@sda21(r2)
-	bl       "setSpeed__Q24Game4PikiFfR10Vector3<f>"
-	b        lbl_801978E8
-
-lbl_80197868:
-	lwz      r3, 4(r31)
-	lis      r4, "zero__10Vector3<f>"@ha
-	addi     r4, r4, "zero__10Vector3<f>"@l
-	lwz      r12, 0(r3)
-	lwz      r12, 0x68(r12)
-	mtctr    r12
-	bctrl
-	fabs     f1, f31
-	lfs      f0, lbl_80518F7C@sda21(r2)
-	frsp     f1, f1
-	fcmpo    cr0, f1, f0
-	bge      lbl_801978CC
-	lbz      r0, 0x25(r31)
-	cmplwi   r0, 0
-	beq      lbl_801978C4
-	lfs      f1, 0x18(r1)
-	lfs      f0, lbl_80518F80@sda21(r2)
-	fabs     f1, f1
-	frsp     f1, f1
-	fcmpo    cr0, f1, f0
-	ble      lbl_801978C4
-	li       r3, 1
-	b        lbl_801978EC
-
-lbl_801978C4:
-	li       r3, 0
-	b        lbl_801978EC
-
-lbl_801978CC:
-	lwz      r3, 4(r31)
-	lfs      f1, lbl_80518F84@sda21(r2)
-	lfs      f0, 0x1fc(r3)
-	fmadds   f1, f1, f31, f0
-	bl       roundAng__Ff
-	lwz      r3, 4(r31)
-	stfs     f1, 0x1fc(r3)
-
-lbl_801978E8:
-	li       r3, 1
-
-lbl_801978EC:
-	psq_l    f31, 88(r1), 0, qr0
-	lfd      f31, 0x50(r1)
-	psq_l    f30, 72(r1), 0, qr0
-	lfd      f30, 0x40(r1)
-	psq_l    f29, 56(r1), 0, qr0
-	lfd      f29, 0x30(r1)
-	lwz      r0, 0x64(r1)
-	lwz      r31, 0x2c(r1)
-	mtlr     r0
-	addi     r1, r1, 0x60
-	blr
-	*/
 }
 
 /**
@@ -438,13 +197,7 @@ ActGotoSlot::ActGotoSlot(Game::Piki* p)
  */
 void ActGotoSlot::init(ActionArg* settings)
 {
-	bool isGotoSlotArg = false;
-	if (settings) {
-		bool strCheck = strcmp("GotoSlotArg", settings->getName()) == 0;
-		if (strCheck) {
-			isGotoSlotArg = true;
-		}
-	}
+	bool isGotoSlotArg = settings && settings->is("GotoSlotArg");
 	P2ASSERTLINE(529, isGotoSlotArg);
 
 	mParent->startMotion(Game::IPikiAnims::WALK, Game::IPikiAnims::WALK, nullptr, nullptr);
@@ -1500,15 +1253,12 @@ ActPathMove::ActPathMove(Game::Piki* p)
  */
 void ActPathMove::init(ActionArg* settings)
 {
-	bool isPathMove    = false;
-	mVsWayPointCounter = 0;
-	if (settings) {
-		bool strCheck = strcmp("PathMoveArg", settings->getName()) == 0;
-		if (strCheck) {
-			isPathMove = true;
-		}
-	}
-	P2ASSERTLINE(790, isPathMove);
+	mVsWayPointCounter = false;
+	
+	bool check = settings && settings->is("PathMoveArg");
+	
+	P2ASSERTLINE(790, check);
+
 	PathMoveArg* pathMoveArg = static_cast<PathMoveArg*>(settings);
 
 	mOnyon  = nullptr;
@@ -1540,127 +1290,6 @@ void ActPathMove::init(ActionArg* settings)
 			pellet->mPelletCarry->reset();
 		}
 	}
-	/*
-	stwu     r1, -0x30(r1)
-	mflr     r0
-	stw      r0, 0x34(r1)
-	stw      r31, 0x2c(r1)
-	mr       r31, r3
-	lis      r3, lbl_8047F070@ha
-	stw      r30, 0x28(r1)
-	addi     r30, r3, lbl_8047F070@l
-	stw      r29, 0x24(r1)
-	li       r29, 0
-	stw      r28, 0x20(r1)
-	or.      r28, r4, r4
-	stb      r29, 0x3d(r31)
-	beq      lbl_801986BC
-	mr       r3, r28
-	lwz      r12, 0(r28)
-	lwz      r12, 8(r12)
-	mtctr    r12
-	bctrl
-	mr       r4, r3
-	addi     r3, r30, 0x6c
-	bl       strcmp
-	cntlzw   r0, r3
-	rlwinm.  r0, r0, 0x1b, 0x18, 0x1f
-	beq      lbl_801986BC
-	li       r29, 1
-
-lbl_801986BC:
-	clrlwi.  r0, r29, 0x18
-	bne      lbl_801986D8
-	addi     r3, r30, 0x34
-	addi     r5, r30, 0x48
-	li       r4, 0x316
-	crclr    6
-	bl       panic_f__12JUTExceptionFPCciPCce
-
-lbl_801986D8:
-	li       r0, 0
-	stw      r0, 0x34(r31)
-	lwz      r0, 4(r28)
-	stw      r0, 0x30(r31)
-	lwz      r3, 0x18(r28)
-	neg      r0, r3
-	andc     r0, r0, r3
-	srwi     r0, r0, 0x1f
-	stb      r0, 0x3c(r31)
-	lbz      r0, 0x3c(r31)
-	cmplwi   r0, 0
-	beq      lbl_8019872C
-	lwz      r3, 0x18(r28)
-	lis      r0, 0x4330
-	stw      r0, 0x18(r1)
-	xoris    r0, r3, 0x8000
-	lfd      f1, lbl_80518FA8@sda21(r2)
-	stw      r0, 0x1c(r1)
-	lfd      f0, 0x18(r1)
-	fsubs    f0, f0, f1
-	stfs     f0, 0x38(r31)
-
-lbl_8019872C:
-	li       r0, 0
-	lfs      f0, lbl_80518F60@sda21(r2)
-	stw      r0, 0x20(r31)
-	mr       r3, r31
-	li       r4, 1
-	stfs     f0, 0xb0(r31)
-	stfs     f0, 0xb4(r31)
-	stfs     f0, 0xb8(r31)
-	bl       initPathfinding__Q26PikiAI11ActPathMoveFb
-	li       r0, 1
-	addi     r3, r1, 8
-	stb      r0, 0x6c(r31)
-	lwz      r4, 0x30(r31)
-	lwz      r12, 0(r4)
-	lwz      r12, 8(r12)
-	mtctr    r12
-	bctrl
-	lfs      f0, 8(r1)
-	stfs     f0, 0x10(r31)
-	lfs      f0, 0xc(r1)
-	stfs     f0, 0x14(r31)
-	lfs      f0, 0x10(r1)
-	stfs     f0, 0x18(r31)
-	lwz      r3, 0x30(r31)
-	lwz      r12, 0(r3)
-	lwz      r12, 0x80(r12)
-	mtctr    r12
-	bctrl
-	clrlwi.  r0, r3, 0x18
-	beq      lbl_801987F0
-	lwz      r3, 0x30(r31)
-	lis      r4, "zero__10Vector3<f>"@ha
-	addi     r4, r4, "zero__10Vector3<f>"@l
-	lwz      r12, 0(r3)
-	mr       r29, r3
-	lwz      r12, 0x68(r12)
-	mtctr    r12
-	bctrl
-	lfs      f0, lbl_80518F60@sda21(r2)
-	mr       r3, r29
-	stfs     f0, 0x1c8(r29)
-	stfs     f0, 0x1cc(r29)
-	stfs     f0, 0x1d0(r29)
-	bl       getSpeicalSlot__Q24Game6PelletFv
-	extsh    r0, r3
-	cmpwi    r0, -1
-	bne      lbl_801987F0
-	lwz      r3, 0x334(r29)
-	bl       reset__Q24Game11PelletCarryFv
-
-lbl_801987F0:
-	lwz      r0, 0x34(r1)
-	lwz      r31, 0x2c(r1)
-	lwz      r30, 0x28(r1)
-	lwz      r29, 0x24(r1)
-	lwz      r28, 0x20(r1)
-	mtlr     r0
-	addi     r1, r1, 0x30
-	blr
-	*/
 }
 
 /**
@@ -1686,7 +1315,6 @@ void ActPathMove::initPathfinding(bool resetLinkCount)
 	Vector3f pelletPos = mPellet->getPosition();
 	Game::WPEdgeSearchArg searchArg(pelletPos);
 	s16 roomIndex    = mParent->mRoomIndex;
-	Vector3f* posPtr = &pelletPos; // required to make pelletPos go on stack properly smh
 	if (Game::gameSystem->mIsInCave) {
 		Sys::Sphere sphere;
 		sphere.mPosition = pelletPos;
@@ -1754,9 +1382,9 @@ void ActPathMove::initPathfinding(bool resetLinkCount)
 		flag |= Game::PATHFLAG_DisallowUnfinishedBridges;
 		if (Game::gameSystem && Game::gameSystem->isVersusMode()) {
 			if (mOnyon->mOnyonType == ONYON_TYPE_BLUE) {
-				flag |= (Game::PATHFLAG_DisallowVsRed | Game::PATHFLAG_AllowUnvisited);
+				flag |= (Game::PATHFLAG_VsRed | Game::PATHFLAG_AllowUnvisited);
 			} else {
-				flag |= (Game::PATHFLAG_DisallowVsBlue | Game::PATHFLAG_AllowUnvisited);
+				flag |= (Game::PATHFLAG_VsBlue | Game::PATHFLAG_AllowUnvisited);
 			}
 		}
 
@@ -3113,7 +2741,7 @@ bool ActPathMove::contextCheck(int idx)
 			Game::WayPoint* wp = getWayPoint(nextIdx);
 
 			if (mOnyon->mOnyonType == ONYON_TYPE_BLUE) {
-				if (wp->isFlag(Game::PATHFLAG_DisallowVsBlue)) {
+				if (wp->isFlag(Game::PATHFLAG_VsBlue)) {
 					mVsWayPointCounter++;
 					if (mVsWayPointCounter < 2) {
 						return false;
@@ -3121,7 +2749,7 @@ bool ActPathMove::contextCheck(int idx)
 				} else {
 					mVsWayPointCounter = 0;
 				}
-			} else if (wp->isFlag(Game::PATHFLAG_DisallowVsRed)) {
+			} else if (wp->isFlag(Game::PATHFLAG_VsRed)) {
 				mVsWayPointCounter++;
 				if (mVsWayPointCounter < 2) {
 					return false;
@@ -4704,13 +4332,7 @@ ActStickAttack::ActStickAttack(Game::Piki* p)
  */
 void ActStickAttack::init(ActionArg* settings)
 {
-	bool isStickArg = false;
-	if (settings) {
-		bool strCheck = strcmp("StickAttackActionArg", settings->getName()) == 0;
-		if (strCheck) {
-			isStickArg = true;
-		}
-	}
+	bool isStickArg = settings && settings->is("StickAttackActionArg");
 	P2ASSERTLINE(2331, isStickArg);
 	StickAttackActionArg* arg = static_cast<StickAttackActionArg*>(settings);
 
@@ -5035,7 +4657,7 @@ ActGather::ActGather(Game::Piki* p)
  */
 void ActGather::init(ActionArg* settings)
 {
-	bool strCheck = strcmp("GatherActionArg", settings->getName()) == 0;
+	bool strCheck = settings->is("GatherActionArg");
 	P2ASSERTLINE(2669, strCheck);
 
 	GatherActionArg* arg = static_cast<GatherActionArg*>(settings);
@@ -5052,8 +4674,7 @@ void ActGather::init(ActionArg* settings)
  */
 int ActGather::exec()
 {
-	Vector3f pikiPos = mParent->getPosition();
-	Vector3f dir     = mGoalPosition - pikiPos;
+	Vector3f dir     = mGoalPosition - mParent->getPosition();
 	f32 dist         = dir.normalise();
 
 	mTimer -= sys->getDeltaTime();
