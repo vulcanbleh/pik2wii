@@ -12,8 +12,6 @@
 TParticle2dMgr* particle2dMgr;
 TParticle2dMgr* TParticle2dMgr::_instance;
 
-static void strippedFunc_1() { OSReport("\0\0\0\0\0\0\0\0\0\0\0"); }
-
 /**
  * @note Address: N/A
  * @note Size: 0xE4

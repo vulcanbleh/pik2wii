@@ -23,9 +23,9 @@ namespace efx {
  */
 void TParticleCallBack_Yodare::init(JPABaseEmitter*, JPABaseParticle*)
 {
-	_00   = 0.0f;
-	mName = "ArgType";
-	_08   = 1.0f;
+//	_00   = 0.0f;
+//	mName = "ArgType";
+//	_08   = 1.0f;
 	// UNUSED FUNCTION
 }
 
@@ -53,7 +53,7 @@ void TTestYodareGen::create(Arg*)
  */
 bool TPkNageBlur::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgType", static_cast<ArgType*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgType");
 	P2ASSERTLINE(319, nameCheck);
 	ArgType* targ = static_cast<ArgType*>(arg);
 	switch (targ->mType) {
@@ -84,7 +84,7 @@ static void fakeFuncEfxPikmin(TParticleCallBack_Yodare* callback) { callback->_0
  */
 bool TDopingSmoke::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgDopingSmoke", static_cast<ArgDopingSmoke*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgDopingSmoke");
 	P2ASSERTLINE(349, nameCheck);
 	ArgDopingSmoke* targ = static_cast<ArgDopingSmoke*>(arg);
 	switch (targ->mDopeType) {
@@ -193,7 +193,7 @@ bool TCursor::create(Arg* arg)
 {
 	mAngleTimer = 0.0f;
 
-	bool nameCheck = strcmp("ArgCursor", static_cast<ArgCursor*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgCursor");
 	P2ASSERTLINE(459, nameCheck);
 	ArgCursor* targ = static_cast<ArgCursor*>(arg);
 

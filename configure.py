@@ -2309,7 +2309,7 @@ config.libs = [
     },
     {
         "lib": "sysGCU",
-        "cflags": [*cflags_pikmin, "-lang=c++"],
+        "cflags": [*cflags_pikmin, "-lang=c++", "-DNW4R_LOG", "-DEGG_LOG"],
         "mw_version": "GC/3.0a3p1",
         "progress_category": "game",
         "objects": [
@@ -2339,7 +2339,7 @@ config.libs = [
             Object(NonMatching, "sysGCU/gameConfig.cpp"),
             Object(NonMatching, "sysGCU/fogMgr.cpp"),
             Object(NonMatching, "sysGCU/aramMgr.cpp"),
-            Object(NonMatching, "sysGCU/resourceMgr.cpp"),
+            Object(Matching, "sysGCU/resourceMgr.cpp"),
             Object(Matching, "sysGCU/resourceMgr2D.cpp"),
             Object(Matching, "sysGCU/sysMaterialAnim.cpp"),
             Object(Matching, "sysGCU/P2DScreen.cpp"),

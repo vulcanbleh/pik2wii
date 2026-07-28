@@ -34,7 +34,7 @@ static void _Print(char* format, ...) { OSReport(format, __FILE__); }
  */
 bool TChibiHit::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(23, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSimple4::create(arg)) {
@@ -57,7 +57,7 @@ bool TChibiHit::create(Arg* arg)
  */
 bool TChouDown::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgChou", static_cast<ArgChou*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgChou");
 	P2ASSERTLINE(43, nameCheck);
 	int type = static_cast<ArgChou*>(arg)->mType;
 
@@ -72,7 +72,7 @@ bool TChouDown::create(Arg* arg)
 		mEffectID = PID_ChouDown_1;
 		break;
 	}
-	return (u8)TSync::create(arg);
+	return TSync::create(arg);
 }
 
 /**
@@ -94,7 +94,7 @@ void TUmiHamon::setGlobalScale(f32 scale)
  */
 bool TUmiFlick::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(80, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSimple3::create(arg)) {
@@ -112,7 +112,7 @@ bool TUmiFlick::create(Arg* arg)
  */
 bool TUmiAttack::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(97, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSimpleMtx1::create(arg)) {
@@ -150,7 +150,7 @@ void TUmiDeadawa::setGlobalScale(f32 scale)
  */
 bool TUmiDeadmelt::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(134, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSimple1::create(arg)) {
@@ -166,7 +166,7 @@ bool TUmiDeadmelt::create(Arg* arg)
  */
 bool TJgmAttack::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(153, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSyncGroup2<TChasePos>::create(arg)) {
@@ -184,7 +184,7 @@ bool TJgmAttack::create(Arg* arg)
  */
 bool TJgmAttackW::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(169, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSyncGroup3<TChasePosYRot>::create(arg)) {
@@ -202,7 +202,7 @@ bool TJgmAttackW::create(Arg* arg)
  */
 bool TJgmBack::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(185, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSync::create(arg)) {
@@ -218,7 +218,7 @@ bool TJgmBack::create(Arg* arg)
  */
 bool TJgmBackW::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(199, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSyncGroup2<TChasePosYRot>::create(arg)) {
@@ -236,7 +236,7 @@ bool TJgmBackW::create(Arg* arg)
  */
 bool TImoEat::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgImoEat", static_cast<ArgImoEat*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgImoEat");
 	P2ASSERTLINE(217, nameCheck);
 	ArgImoEat* sarg = static_cast<ArgImoEat*>(arg);
 
@@ -287,7 +287,7 @@ bool TUjinkoAp_Imo::create(Arg* arg)
  */
 bool TImoSmoke::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(263, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSync::create(arg)) {
@@ -303,7 +303,7 @@ bool TImoSmoke::create(Arg* arg)
  */
 bool TOtaPartsoff::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(279, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSimple1::create(arg)) {
@@ -486,7 +486,7 @@ void TYakiBody::setRateLOD(int id)
  */
 bool TPanApp::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(456, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSimple1::create(arg)) {
@@ -502,7 +502,7 @@ bool TPanApp::create(Arg* arg)
  */
 bool TPanHide::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(473, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSync::create(arg)) {
@@ -518,7 +518,7 @@ bool TPanHide::create(Arg* arg)
  */
 bool TPanSmoke::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(489, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSync::create(arg)) {
@@ -534,7 +534,7 @@ bool TPanSmoke::create(Arg* arg)
  */
 bool TBabaFly_ver01::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(506, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSync::create(arg)) {
@@ -550,7 +550,7 @@ bool TBabaFly_ver01::create(Arg* arg)
  */
 bool TBabaHe::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgRotY", static_cast<ArgRotY*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgRotY");
 	P2ASSERTLINE(521, nameCheck);
 	ArgRotY* sarg = static_cast<ArgRotY*>(arg);
 	Matrixf mtx;
@@ -568,7 +568,7 @@ bool TBabaHe::create(Arg* arg)
 		trs += pos;
 		JGeometry::TVec3f newpos;
 		newpos.set(trs.x, trs.y, trs.z);
-		volatile Vector3f dumb = trs;
+		Vector3f dumb = trs;
 		mEmitters[0]->setGlobalTranslation(newpos);
 		return true;
 	}
@@ -706,7 +706,7 @@ bool TKoganeHit::create(Arg* arg)
  */
 bool TKoganeDive::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(562, nameCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	if (TSimple2::create(arg)) {
@@ -908,11 +908,14 @@ void TDnkmsThunderA::doExecuteEmitterOperation(JPABaseEmitter* emit)
 	Vector3f pos2 = *mPartnerPosition;
 	Mtx mtx;
 	makeMtxZAxisAlongPosPos(mtx, pos1, pos2);
-	JPASetRMtxTVecfromMtx(mtx, emit->mGlobalRot, &emit->mGlobalTrs);
+	emit->setGlobalRTMatrix(mtx);
 
 	f32 z = (*mPosition).distance(*mPartnerPosition);
-	volatile Vector3f test(z);
-	emit->setScaleMain(emit->mLocalScl.x, emit->mLocalScl.y, z / 120.0f);
+	JGeometry::TVec3f v;
+	emit->getLocalScale(v);
+	v.z = z / 120.0f;
+
+	emit->setScaleMain(v);
 	/*
 	stwu     r1, -0x70(r1)
 	mflr     r0
@@ -1028,11 +1031,14 @@ void TDnkmsThunderB::doExecuteEmitterOperation(JPABaseEmitter* emit)
 	Vector3f pos2 = *mPartnerPosition;
 	Mtx mtx;
 	makeMtxZAxisAlongPosPos(mtx, pos1, pos2);
-	JPASetRMtxTVecfromMtx(mtx, emit->mGlobalRot, &emit->mGlobalTrs);
+	emit->setGlobalRTMatrix(mtx);
 
 	f32 z = (*mPosition).distance(*mPartnerPosition);
-	volatile Vector3f test(z);
-	emit->setScaleMain(emit->mLocalScl.x, emit->mLocalScl.y, z / 120.0f);
+	JGeometry::TVec3f v;
+	emit->getLocalScale(v);
+	v.z = z / 120.0f;
+
+	emit->setScaleMain(v);
 
 	/*
 	stwu     r1, -0x70(r1)
@@ -1163,7 +1169,7 @@ void THibaFire::setRateLOD(int id)
  */
 bool TGasuHiba::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgGasuHiba", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgGasuHiba");
 	P2ASSERTLINE(714, nameCheck);
 	ArgGasuHiba* gasarg = static_cast<ArgGasuHiba*>(arg);
 	if (gasarg->mIsUnderground) {
@@ -1201,26 +1207,24 @@ void TGasuHiba::setRateLOD(int id)
  */
 bool TDenkiHiba::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgDenkiHiba", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgDenkiHiba");
 	P2ASSERTLINE(751, nameCheck);
 	ArgDenkiHiba* denarg = static_cast<ArgDenkiHiba*>(arg);
 
 	Vector3f pos1 = denarg->mOwnerPos;
 	Vector3f pos2 = denarg->mTargetPos;
 
-	bool made = TSyncGroup3<TForever>::create(denarg);
-	if (made) {
+	if (TSyncGroup3<TForever>::create(denarg)) {
 		Mtx mtx;
 		makeMtxZAxisAlongPosPos(mtx, pos1, pos2);
 		for (int i = 0; i < 3; i++) {
-			TForever* efx = &mItems[i];
-			if (efx) {
-				JPABaseEmitter* emit = efx->mEmitter;
-				JPASetRMtxTVecfromMtx(mtx, emit->mGlobalRot, &emit->mLocalTrs);
-				if (denarg->mType == 1) {
+			JPABaseEmitter* emit = mItems[i].mEmitter;
+			if (emit) {
+				emit->setGlobalRTMatrix(mtx);
+				if (denarg->mType == ArgDenkiHiba::TYPE_VsRed) {
 					emit->setGlobalPrmColor(255, 0, 0);
 					emit->setGlobalEnvColor(255, 0, 0);
-				} else if (denarg->mType == 2) {
+				} else if (denarg->mType == ArgDenkiHiba::TYPE_VsBlue) {
 					emit->setGlobalPrmColor(0, 0, 255);
 					emit->setGlobalEnvColor(0, 0, 255);
 				}
@@ -1231,8 +1235,11 @@ bool TDenkiHiba::create(Arg* arg)
 		mItems[0].mEmitter->setScaleMain(1.0f, 1.0f, dist);
 		mItems[1].mEmitter->setScaleMain(1.0f, dist, 1.0);
 
-		JGeometry::TVec3f scl = mItems[2].mEmitter->mLocalScl;
-		mItems[2].mEmitter->setScaleMain(scl.x, scl.y * dist, scl.z);
+		// same issue as elsewhere in this file
+		JGeometry::TVec3f scl;
+		mItems[2].mEmitter->getLocalScale(scl);
+		scl.y *= dist;
+		mItems[2].mEmitter->setScaleMain(scl);
 		return true;
 	}
 	return false;
@@ -1406,7 +1413,7 @@ void TDenkiHiba::setRateLOD(int)
  */
 bool TDenkiHibaMgr::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgDenkiHiba", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgDenkiHiba");
 	P2ASSERTLINE(832, nameCheck);
 	ArgDenkiHiba* denarg = static_cast<ArgDenkiHiba*>(arg);
 
@@ -1447,9 +1454,25 @@ bool TDenkiHibaMgr::createHiba(int type)
  * @note Address: N/A
  * @note Size: 0x174
  */
-void TDenkiHibaMgr::createHiba()
+bool TDenkiHibaMgr::createHiba()
 {
-	// UNUSED FUNCTION
+	// drought here, this is my best guess for what was here
+
+	// arg.mType is actually never set, so if this function
+	// was ever used, there'd be a small chance to see
+	// a colored elechiba
+	ArgDenkiHiba arg(mOwnerPosition, mTargetCreaturePosition);
+	mHiba.create(&arg);
+
+	Arg arg2(mOwnerPosition);
+	Arg arg3(mTargetCreaturePosition);
+
+	mPoles[0].create(&arg2);
+	mPoles[1].create(&arg3);
+
+	mPolesigns[0].fade();
+	mPolesigns[1].fade();
+	return true;
 }
 
 /**

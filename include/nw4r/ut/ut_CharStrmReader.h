@@ -42,7 +42,7 @@ public:
 		NW4R_ASSERT_PTR(this, 50);
 		NW4R_ASSERT_PTR(pStrm, 51);
 
-		NW4R_ASSERT(mReadFunc == ReadNextCharUTF8 || mReadFunc == ReadNextCharCP1252 || mReadFunc == ReadNextCharSJIS, 54);
+		NW4R_ASSERT(mReadFunc == ReadNextCharUTF16 || mReadFunc == ReadNextCharUTF8 || mReadFunc == ReadNextCharCP1252 || mReadFunc == ReadNextCharSJIS, 54);
 
 		mCharStrm = pStrm;
 	}

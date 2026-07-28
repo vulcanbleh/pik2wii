@@ -6,6 +6,7 @@
 #include "SysTimers.h"
 #include "BitFlag.h"
 #include "node.h"
+#include "nw4r/ut/ut_CharStrmReader.h"
 
 struct RenderModeInfo {
 	u32 mIdentifier; // _00, must be set to 'vald' for saved render mode to be used

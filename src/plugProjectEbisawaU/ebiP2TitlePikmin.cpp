@@ -6,11 +6,14 @@
 #include "nans.h"
 #include "types.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "ebiP2TitlePikmin";
+}
+
 namespace ebi {
 namespace title {
-
-static const int unusedArray[]            = { 0, 0, 0 };
-static const char unusedPikminTitleName[] = "ebiP2TitlePikmin";
 
 /**
  * @note Address: N/A
@@ -101,25 +104,25 @@ void Pikmin::TAnimator::setArchive(JKRArchive* arc)
 {
 	void* file;
 	file = arc->getResource("pikmin/title_red_piki.bmd");
-	P2ASSERTLINE(176, file);
+	P2ASSERTLINE(179, file);
 	mModelDataRed = J3DModelLoaderDataBase::load(file, J3DMLF_Material_PE_FogOff | J3DMLF_21);
 	file          = arc->getResource("pikmin/title_yellow_piki.bmd");
-	P2ASSERTLINE(186, file);
+	P2ASSERTLINE(189, file);
 	mModelDataYellow = J3DModelLoaderDataBase::load(file, J3DMLF_Material_PE_FogOff | J3DMLF_21);
 	file             = arc->getResource("pikmin/title_blue_piki.bmd");
-	P2ASSERTLINE(196, file);
+	P2ASSERTLINE(199, file);
 	mModelDataBlue = J3DModelLoaderDataBase::load(file, J3DMLF_Material_PE_FogOff | J3DMLF_21);
 	file           = arc->getResource("pikmin/title_black_piki.bmd");
-	P2ASSERTLINE(206, file);
+	P2ASSERTLINE(209, file);
 	mModelDataPurple = J3DModelLoaderDataBase::load(file, J3DMLF_Material_PE_FogOff | J3DMLF_21);
 	file             = arc->getResource("pikmin/title_white_piki.bmd");
-	P2ASSERTLINE(216, file);
+	P2ASSERTLINE(219, file);
 	mModelDataWhite = J3DModelLoaderDataBase::load(file, J3DMLF_Material_PE_FogOff | J3DMLF_21);
 	file            = arc->getResource("pikmin/wait.bck");
-	P2ASSERTLINE(228, file);
+	P2ASSERTLINE(231, file);
 	mWaitAnim = (J3DAnmTransform*)J3DAnmLoaderDataBase::load(file);
 	file      = arc->getResource("pikmin/wave.bck");
-	P2ASSERTLINE(233, file);
+	P2ASSERTLINE(236, file);
 	mWaveAnim           = (J3DAnmTransform*)J3DAnmLoaderDataBase::load(file);
 	mAnmCalcWait        = J3DNewMtxCalcAnm(mModelDataRed->mJointTree.mFlags & J3DMLF_MtxTypeMask, mWaitAnim);
 	mAnmCalcWave        = J3DUNewMtxCalcAnm(mModelDataRed->mJointTree.mFlags & J3DMLF_MtxTypeMask, mWaitAnim, mWaveAnim, nullptr, nullptr,
@@ -164,7 +167,7 @@ void Pikmin::TAnimator::setAnmWave(J3DModel* model, f32 weight, f32 frameA, f32 
  */
 J3DModel* Pikmin::TAnimator::newJ3DModel(s32 color)
 {
-	P2ASSERTBOUNDSLINE(292, 0, color, Game::AllPikmin);
+	P2ASSERTBOUNDSLINE(295, 0, color, Game::AllPikmin);
 	switch (color) {
 	case Game::Red:
 		return new J3DModel(mModelDataRed, 0x20000, 1);
@@ -526,7 +529,7 @@ void Pikmin::TUnit::init(ebi::title::Pikmin::TMgr* mgr, s32 color)
 	mParms[2] = mManager->mParams.mCollRadius();
 
 	mFrameControlA.mFrame = 5.0f * randEbisawaFloat();
-	mRandAnimSpeeds.y     = 0.8f * randEbisawaFloat() + 0.40000004f;
+	mRandAnimSpeeds.y     = 0.40000004f * randEbisawaFloat() + 0.8f;
 	mIsDead               = false;
 }
 
@@ -543,10 +546,6 @@ void Pikmin::TUnit::goDestination()
 		return;
 	}
 
-	if (comp < mManager->mParams.mConvDist.mValue) {
-		startState(STATE_Unk2);
-		return;
-	}
 	startState(STATE_Unk2);
 }
 

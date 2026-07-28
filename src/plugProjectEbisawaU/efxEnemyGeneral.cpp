@@ -20,7 +20,7 @@ static void _Print(char* format, ...) { OSReport(format, __FILE__); }
  */
 bool TEnemyPiyo::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgEnemyType", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgEnemyType");
 	P2ASSERTLINE(17, nameCheck);
 
 	ArgEnemyType* argt = static_cast<ArgEnemyType*>(arg);
@@ -255,7 +255,7 @@ bool TEnemyPiyo::create(Arg* arg)
  */
 bool TEnemyPoisonL::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(199, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -283,7 +283,7 @@ bool TEnemyPoisonL::create(Arg* arg)
  */
 bool TEnemyPoisonS::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(214, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -310,7 +310,7 @@ bool TEnemyPoisonS::create(Arg* arg)
  */
 bool TSekikaLOff::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(231, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -337,7 +337,7 @@ bool TSekikaLOff::create(Arg* arg)
  */
 bool TSekikaLOn::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(246, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -364,7 +364,7 @@ bool TSekikaLOn::create(Arg* arg)
  */
 bool TSekikaSOff::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(261, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -391,7 +391,7 @@ bool TSekikaSOff::create(Arg* arg)
  */
 bool TSekikaSOn::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(276, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -418,7 +418,7 @@ bool TSekikaSOn::create(Arg* arg)
  */
 bool TEnemyDead_ArgScale::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(295, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -446,7 +446,7 @@ bool TEnemyDead_ArgScale::create(Arg* arg)
 bool TEnemyDead::create(Arg* arg)
 {
 	bool docreate;
-	bool nameCheck = strcmp("ArgEnemyType", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgEnemyType");
 	P2ASSERTLINE(312, nameCheck);
 
 	ArgEnemyType* argt = static_cast<ArgEnemyType*>(arg);
@@ -671,7 +671,7 @@ bool TEnemyDead::create(Arg* arg)
 bool TEnemyWalkSmoke::create(Arg* arg)
 {
 	int isSmall;
-	bool nameCheck = strcmp("ArgEnemyType", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgEnemyType");
 	P2ASSERTLINE(491, nameCheck);
 
 	ArgEnemyType* argt = static_cast<ArgEnemyType*>(arg);
@@ -881,7 +881,7 @@ bool TEnemyWalkSmoke::create(Arg* arg)
  */
 bool TEnemyWalkSmokeM::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(686, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -952,7 +952,7 @@ bool TEnemyDownSmoke::create(Arg* arg)
  */
 bool TEnemyDownWat::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(734, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -981,7 +981,7 @@ bool TEnemyDownWat::create(Arg* arg)
  */
 bool TEnemyDive::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(750, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -1273,7 +1273,7 @@ TEnemyBombScaleTable::TEnemyBombScaleTable(Game::EnemyTypeID::EEnemyTypeID id)
  */
 bool TEnemyBomb::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgEnemyType", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgEnemyType");
 	P2ASSERTLINE(987, nameCheck);
 
 	ArgEnemyType* argt = static_cast<ArgEnemyType*>(arg);
@@ -1305,7 +1305,7 @@ bool TEnemyBomb::create(Arg* arg)
  */
 bool TEnemyBombM::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(1012, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -1335,7 +1335,7 @@ bool TEnemyBombM::create(Arg* arg)
  */
 bool TEnemyBombS::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(1029, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -1365,7 +1365,7 @@ bool TEnemyBombS::create(Arg* arg)
  */
 bool TEnemyApsmoke::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgEnemyType", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgEnemyType");
 	P2ASSERTLINE(1047, nameCheck);
 
 	ArgEnemyType* argt = static_cast<ArgEnemyType*>(arg);
@@ -1397,7 +1397,7 @@ bool TEnemyApsmoke::create(Arg* arg)
  */
 bool TEnemyApsmokeM::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(1072, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -1425,7 +1425,7 @@ bool TEnemyApsmokeM::create(Arg* arg)
  */
 bool TEnemyApsmokeS::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(1089, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -1453,7 +1453,7 @@ bool TEnemyApsmokeS::create(Arg* arg)
  */
 bool TEnemyHamonM::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(1108, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -1480,7 +1480,7 @@ bool TEnemyHamonM::create(Arg* arg)
  */
 bool TEnemyHamonMInd::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(1122, nameCheck);
 
 	ArgScale* args = static_cast<ArgScale*>(arg);
@@ -1507,7 +1507,7 @@ bool TEnemyHamonMInd::create(Arg* arg)
  */
 bool TEnemyHamonChasePos::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgEnemyType", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgEnemyType");
 	P2ASSERTLINE(1136, nameCheck);
 
 	ArgEnemyType* argt = static_cast<ArgEnemyType*>(arg);
@@ -1682,6 +1682,7 @@ bool TEnemyHamonChasePos::create(Arg* arg)
 		break;
 
 	case Game::EnemyTypeID::EnemyID_UmiMushi:
+	case Game::EnemyTypeID::EnemyID_UmiMushiBlind:
 		docreate = false;
 		return docreate;
 
@@ -1754,7 +1755,7 @@ void TEnemyHamon::update(Vector3f& pos)
 		f32 y2 = mScale * getLimitDepth_();
 
 		if ((0.0f <= y) && y < y2) {
-			mPosition = Vector3f(pos.x, *mSeaHeightPtr, pos.z);
+			mPosition.set(pos.x, *mSeaHeightPtr, pos.z);
 			ArgEnemyType arg(Vector3f::zero, mEnemyID, mScale);
 			mHamonChasePos.create(&arg);
 		} else {
@@ -1769,8 +1770,8 @@ void TEnemyHamon::update(Vector3f& pos)
  */
 bool TEnemyHamon::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgEnemyType", arg->getName()) == 0;
-	P2ASSERTLINE(1351, nameCheck);
+	bool nameCheck = arg->is("ArgEnemyType");
+	P2ASSERTLINE(1352, nameCheck);
 
 	ArgEnemyType* argt = static_cast<ArgEnemyType*>(arg);
 

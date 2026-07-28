@@ -4,6 +4,12 @@
 #include "P2Macros.h"
 #include "TParticle2dMgr.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "efx2dBase";
+}
+
 namespace efx2d {
 
 /**

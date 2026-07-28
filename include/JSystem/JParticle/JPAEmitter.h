@@ -295,6 +295,8 @@ struct JPABaseEmitter {
 	void getLocalTranslation(JGeometry::TVec3f& vec) { vec.set(mLocalTrs); }
 	void setGlobalRotation(const JGeometry::TVec3<s16>& rot) { JPAGetXYZRotateMtx(rot.x, rot.y, rot.z, mGlobalRot); }
 	void setGlobalRotation(s16 x, s16 y, s16 z) { JPAGetXYZRotateMtx(x, y, z, mGlobalRot); }
+	void getLocalScale(JGeometry::TVec3f& vec) { vec.set(mLocalScl); }
+	JGeometry::TVec3f getLocalScale() { return mLocalScl; }
 	void setGlobalAlpha(u8 alpha) { mGlobalPrmClr.a = alpha; }
 	u8 getGlobalAlpha() { return mGlobalPrmClr.a; }
 	void getGlobalPrmColor(GXColor& color) { color = mGlobalPrmClr; }

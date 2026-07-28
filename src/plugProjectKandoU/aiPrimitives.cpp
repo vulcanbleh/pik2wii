@@ -3262,7 +3262,7 @@ bool ActPathMove::crMove()
 	}
 
 	if (!contextCheck(mCurrGraphIdx)) {
-		mNewVelocity.set(0.0f, 0.0f, 0.0f);
+		mNewVelocity = Vector3f(0.0f);
 
 		if (mContextHandle) {
 			Game::testPathfinder->release(mContextHandle);
@@ -3291,25 +3291,21 @@ bool ActPathMove::crMove()
 		factor = 1.0f;
 	}
 
-	sep.x *= factor * dist;
-	sep.z *= factor * dist;
-	Vector3f newPoint = (sep + point0) - pelletPos; // f23, f24, f25
+	pelletPos         = Vector3f(sep.x * (factor * dist), 0.0f, sep.z * (factor * dist)) + point0 - pelletPos;
+	Vector3f newPoint = pelletPos; // f23, f24, f25
 	newPoint.y        = 0.0f;
 	f32 newDist       = newPoint.normalise(); // f28
 
-	f32 rad0 = crGetRadius(mCurrGraphIdx);     // f26
-	f32 rad1 = crGetRadius(mCurrGraphIdx + 1); // f0
-
-	f32 lerp = (1.0f - factor) * rad0 + (factor * rad1);
+	f32 lerp = (1.0f - factor) * crGetRadius(mCurrGraphIdx) + (factor * crGetRadius(mCurrGraphIdx + 1));
 	if (lerp == 0.0f) {
 		lerp = 1.0f;
 	}
 
-	f32 comp = FABS(newDist) / lerp; // f26
+	f32 comp = absF(newDist) / lerp; // f26
 	if (comp < 0.3f) {
 		comp = 0.0f;
 	}
-	if (comp > 2.0f && FABS(newDist) > 130.0f) {
+	if (comp > 2.0f && absF(newDist) > 130.0f) {
 		return true;
 	}
 
