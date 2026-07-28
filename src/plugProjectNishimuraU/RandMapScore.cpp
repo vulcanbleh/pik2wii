@@ -1,6 +1,12 @@
 #include "Game/Cave/RandMapMgr.h"
 #include "RevoSDK/rand.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "246-RandMapScore";
+}
+
 namespace Game {
 namespace Cave {
 
@@ -192,8 +198,8 @@ void RandMapScore::setUnitAndDoorScore()
 {
 
 	MapNode* minScoreNode = nullptr;
-	int minScoreDoor      = -1;
 	int minScore          = 12800000;
+	int minScoreDoor      = -1;
 
 	FOREACH_NODE(MapNode, mGenerator->getPlacedNodes()->mChild, currNode)
 	{
@@ -847,13 +853,17 @@ void RandMapScore::setChallengeFixObjNormal()
 		return;
 	}
 
-	MapNode* placedNodes  = mGenerator->getPlacedNodes();
-	int fixObjIdx[2]      = { FIXNODE_Hole, FIXNODE_Fountain };
-	bool fixObjEnabled[2] = { false, false };
+	MapNode* placedNodes = mGenerator->getPlacedNodes();
+	int fixObjIdx[2]     = { FIXNODE_Hole, FIXNODE_Fountain };
+
+	// include hole and geyser by default
+	bool fixObjEnabled[2] = { true, true };
 
 	if (mGenerator->mIsFinalFloor) {
+		// disable hole on the final floor
 		fixObjEnabled[0] = false;
 	} else if (!mGenerator->mHasEscapeFountain) {
+		// disable geyser if one is not enabled (and this is not the final floor)
 		fixObjEnabled[1] = false;
 	}
 
@@ -889,10 +899,10 @@ void RandMapScore::setChallengeFixObjNormal()
 									FOREACH_NODE(BaseGen, gen->mChild, currGen)
 									{
 										if (currGen->mSpawnType == BaseGen::CGT_HoleOrGeyser && isFixObjSet(currNode, currGen)) {
-											scoreList[counter] = score;
-											tally += scoreList[counter];
 											mapList[counter] = currNode;
 											genList[counter] = currGen;
+											scoreList[counter] = score;
+											tally += scoreList[counter];
 											counter++;
 										}
 									}
@@ -900,17 +910,17 @@ void RandMapScore::setChallengeFixObjNormal()
 
 							} else if (roomTypes[j] == UNITKIND_Cap) {
 								if (IS_SAME_STRING_PREFIX(currNode->getUnitName(), "item") && isFixObjSet(currNode, nullptr)) {
-									scoreList[counter] = score;
-									tally += scoreList[counter];
 									mapList[counter] = currNode;
 									genList[counter] = nullptr;
+									scoreList[counter] = score;
+									tally += scoreList[counter];
 									counter++;
 								}
 							} else if (isFixObjSet(currNode, nullptr)) {
-								scoreList[counter] = score;
-								tally += scoreList[counter];
 								mapList[counter] = currNode;
 								genList[counter] = nullptr;
+								scoreList[counter] = score;
+								tally += scoreList[counter];
 								counter++;
 							}
 						}
@@ -1230,9 +1240,10 @@ void RandMapScore::setChallengeFixObjHard()
 		return;
 	}
 
-	MapNode* placedNodes  = mGenerator->getPlacedNodes();
-	int fixObjIdx[2]      = { FIXNODE_Hole, FIXNODE_Fountain };
-	bool fixObjEnabled[2] = { false, false };
+	MapNode* placedNodes = mGenerator->getPlacedNodes();
+	int fixObjIdx[2]     = { FIXNODE_Hole, FIXNODE_Fountain };
+
+	bool fixObjEnabled[2] = { true, true };
 
 	if (mGenerator->mIsFinalFloor) {
 		fixObjEnabled[0] = false;
@@ -1312,252 +1323,6 @@ void RandMapScore::setChallengeFixObjHard()
 			}
 		}
 	}
-	/*
-	stwu     r1, -0x1070(r1)
-	mflr     r0
-	stw      r0, 0x1074(r1)
-	stmw     r18, 0x1038(r1)
-	mr       r20, r3
-	lwz      r3, 4(r3)
-	lwz      r0, 4(r3)
-	cmplwi   r0, 0
-	bne      lbl_8024DF2C
-	lwz      r0, 8(r3)
-	cmplwi   r0, 0
-	beq      lbl_8024DC50
-	b        lbl_8024DF2C
-
-lbl_8024DC50:
-	lwz      r6, 0(r20)
-	lwz      r5, lbl_8051A828@sda21(r2)
-	lbz      r0, 0(r6)
-	lwz      r4, lbl_8051A82C@sda21(r2)
-	lhz      r3, lbl_8051A830@sda21(r2)
-	cmplwi   r0, 0
-	stw      r5, 0xc(r1)
-	lwz      r31, 0x28(r6)
-	stw      r4, 0x10(r1)
-	sth      r3, 8(r1)
-	beq      lbl_8024DC88
-	li       r0, 0
-	stb      r0, 8(r1)
-	b        lbl_8024DC9C
-
-lbl_8024DC88:
-	lbz      r0, 1(r6)
-	cmplwi   r0, 0
-	bne      lbl_8024DC9C
-	li       r0, 0
-	stb      r0, 9(r1)
-
-lbl_8024DC9C:
-	addi     r29, r1, 8
-	addi     r28, r1, 0xc
-	li       r27, 0
-
-lbl_8024DCA8:
-	lbz      r0, 0(r29)
-	cmplwi   r0, 0
-	beq      lbl_8024DF18
-	lwz      r0, 0(r28)
-	lwz      r3, 4(r20)
-	slwi     r0, r0, 2
-	lwzx     r0, r3, r0
-	cmplwi   r0, 0
-	bne      lbl_8024DF18
-	lis      r3, lbl_80484118@ha
-	li       r0, 0
-	addi     r5, r3, lbl_80484118@l
-	stw      r0, 0x820(r1)
-	lwz      r4, 0(r5)
-	addi     r30, r1, 0x14
-	lwz      r3, 4(r5)
-	li       r26, 0
-	lwz      r0, 8(r5)
-	li       r25, -1
-	stw      r4, 0x14(r1)
-	li       r24, 0
-	stw      r3, 0x18(r1)
-	stw      r0, 0x1c(r1)
-
-lbl_8024DD04:
-	lwz      r0, 0x820(r1)
-	cmplwi   r0, 0
-	beq      lbl_8024DD18
-	cmpwi    r24, 2
-	bge      lbl_8024DE88
-
-lbl_8024DD18:
-	lwz      r23, 0x10(r31)
-	b        lbl_8024DE80
-
-lbl_8024DD20:
-	lwz      r3, 0x18(r23)
-	bl       getUnitKind__Q34Game4Cave8UnitInfoFv
-	lwz      r0, 0(r30)
-	cmpw     r0, r3
-	bne      lbl_8024DE7C
-	mr       r3, r23
-	bl       getNodeScore__Q34Game4Cave7MapNodeFv
-	lwz      r0, 0(r30)
-	mr       r22, r3
-	cmpwi    r0, 1
-	bne      lbl_8024DDC4
-	lwz      r3, 0x18(r23)
-	bl       getBaseGen__Q34Game4Cave8UnitInfoFv
-	cmplwi   r3, 0
-	beq      lbl_8024DE7C
-	lwz      r21, 0x10(r3)
-	addi     r18, r1, 0x820
-	addi     r19, r1, 0x20
-	b        lbl_8024DDB8
-
-lbl_8024DD6C:
-	lwz      r0, 0x18(r21)
-	cmpwi    r0, 4
-	bne      lbl_8024DDB4
-	mr       r3, r20
-	mr       r4, r23
-	mr       r5, r21
-	bl
-isFixObjSet__Q34Game4Cave12RandMapScoreFPQ34Game4Cave7MapNodePQ34Game4Cave7BaseGen
-	clrlwi.  r0, r3, 0x18
-	beq      lbl_8024DDB4
-	cmpw     r22, r25
-	blt      lbl_8024DDB4
-	ble      lbl_8024DDA4
-	li       r26, 0
-	mr       r25, r22
-
-lbl_8024DDA4:
-	slwi     r0, r26, 2
-	addi     r26, r26, 1
-	stwx     r23, r18, r0
-	stwx     r21, r19, r0
-
-lbl_8024DDB4:
-	lwz      r21, 4(r21)
-
-lbl_8024DDB8:
-	cmplwi   r21, 0
-	bne      lbl_8024DD6C
-	b        lbl_8024DE7C
-
-lbl_8024DDC4:
-	cmpwi    r0, 0
-	bne      lbl_8024DE34
-	mr       r3, r23
-	bl       getUnitName__Q34Game4Cave7MapNodeFv
-	addi     r4, r2, lbl_8051A820@sda21
-	li       r5, 4
-	bl       strncmp
-	cmpwi    r3, 0
-	bne      lbl_8024DE7C
-	mr       r3, r20
-	mr       r4, r23
-	li       r5, 0
-	bl
-isFixObjSet__Q34Game4Cave12RandMapScoreFPQ34Game4Cave7MapNodePQ34Game4Cave7BaseGen
-	clrlwi.  r0, r3, 0x18
-	beq      lbl_8024DE7C
-	cmpw     r22, r25
-	blt      lbl_8024DE7C
-	ble      lbl_8024DE14
-	li       r26, 0
-	mr       r25, r22
-
-lbl_8024DE14:
-	slwi     r5, r26, 2
-	addi     r4, r1, 0x820
-	addi     r3, r1, 0x20
-	li       r0, 0
-	stwx     r23, r4, r5
-	addi     r26, r26, 1
-	stwx     r0, r3, r5
-	b        lbl_8024DE7C
-
-lbl_8024DE34:
-	mr       r3, r20
-	mr       r4, r23
-	li       r5, 0
-	bl
-isFixObjSet__Q34Game4Cave12RandMapScoreFPQ34Game4Cave7MapNodePQ34Game4Cave7BaseGen
-	clrlwi.  r0, r3, 0x18
-	beq      lbl_8024DE7C
-	cmpw     r22, r25
-	blt      lbl_8024DE7C
-	ble      lbl_8024DE60
-	li       r26, 0
-	mr       r25, r22
-
-lbl_8024DE60:
-	slwi     r5, r26, 2
-	addi     r4, r1, 0x820
-	addi     r3, r1, 0x20
-	li       r0, 0
-	stwx     r23, r4, r5
-	addi     r26, r26, 1
-	stwx     r0, r3, r5
-
-lbl_8024DE7C:
-	lwz      r23, 4(r23)
-
-lbl_8024DE80:
-	cmplwi   r23, 0
-	bne      lbl_8024DD20
-
-lbl_8024DE88:
-	addi     r24, r24, 1
-	addi     r30, r30, 4
-	cmpwi    r24, 3
-	blt      lbl_8024DD04
-	cmpwi    r26, 0
-	beq      lbl_8024DF18
-	bl       rand
-	lis      r7, 0x4330
-	xoris    r0, r3, 0x8000
-	stw      r0, 0x1024(r1)
-	xoris    r5, r26, 0x8000
-	lwz      r0, 0(r28)
-	addi     r6, r1, 0x820
-	stw      r7, 0x1020(r1)
-	addi     r3, r1, 0x20
-	lfd      f2, lbl_8051A800@sda21(r2)
-	slwi     r4, r0, 2
-	lfd      f1, 0x1020(r1)
-	lfs      f0, lbl_8051A7F8@sda21(r2)
-	fsubs    f1, f1, f2
-	stw      r5, 0x102c(r1)
-	lwz      r5, 4(r20)
-	stw      r7, 0x1028(r1)
-	fdivs    f1, f1, f0
-	lfd      f0, 0x1028(r1)
-	fsubs    f0, f0, f2
-	fmuls    f0, f0, f1
-	fctiwz   f0, f0
-	stfd     f0, 0x1030(r1)
-	lwz      r0, 0x1034(r1)
-	slwi     r0, r0, 2
-	lwzx     r6, r6, r0
-	lwzx     r0, r3, r0
-	stwx     r6, r5, r4
-	lwz      r3, 8(r20)
-	stwx     r0, r3, r4
-
-lbl_8024DF18:
-	addi     r27, r27, 1
-	addi     r28, r28, 4
-	cmpwi    r27, 2
-	addi     r29, r29, 1
-	blt      lbl_8024DCA8
-
-lbl_8024DF2C:
-	lmw      r18, 0x1038(r1)
-	lwz      r0, 0x1074(r1)
-	mtlr     r0
-	addi     r1, r1, 0x1070
-	blr
-	*/
 }
 
 /**

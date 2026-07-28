@@ -15,6 +15,11 @@ struct Arg : Vector2f {
 	}
 
 	Arg(Vector2f vec) { (Vector2f)(*this) = vec; }
+	
+	// fabricated
+	inline bool is(const char* argtype) {
+		return strcmp(argtype, getName()) == 0;
+	}
 
 	virtual const char* getName() // _08 (weak)
 	{

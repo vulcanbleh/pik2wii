@@ -512,7 +512,7 @@ void PelletGoalState::exec(Pellet* pelt)
 	f32 scale      = suckRemain * mScale;
 
 	f32 sinTheta = sinf(8.0f * (TAU * suckRemain));
-	sinTheta *= 0.03f; // regswap here for f1 and f0
+	sinTheta     = 0.03f * sinTheta;
 	scale += sinTheta;
 	pelt->mScale = Vector3f(scale);
 

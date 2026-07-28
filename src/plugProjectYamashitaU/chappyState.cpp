@@ -53,8 +53,7 @@ void StateCautionBase::cautionProc(EnemyBase* enemy)
 	bool doAlert;
 	switch (enemy->getEnemyTypeID()) {
 	case EnemyTypeID::EnemyID_BlueChappy: {
-		f32 wakeRadius = CG_PROPERPARMS(OBJ(enemy)).mBulborbWakeRadius();
-		doAlert        = EnemyFunc::isPikminOrNaviInRange(enemy, wakeRadius);
+		doAlert = EnemyFunc::isPikminOrNaviInRange(enemy, CG_PROPERPARMS(OBJ(enemy)).mBulborbWakeRadius.mValue);
 
 		if (!doAlert) {
 			doAlert = enemy->mHealth < CG_GENERALPARMS(enemy).mLifeBeforeAlert();
@@ -63,8 +62,7 @@ void StateCautionBase::cautionProc(EnemyBase* enemy)
 	}
 
 	default: {
-		f32 wakeRadius = CG_GENERALPARMS(enemy).mPrivateRadius();
-		doAlert        = EnemyFunc::isPikminOrNaviInRange(enemy, wakeRadius);
+		doAlert = EnemyFunc::isPikminOrNaviInRange(enemy, CG_GENERALPARMS(enemy).mPrivateRadius.mValue);
 
 		if (!doAlert) {
 			doAlert = enemy->mHealth < CG_GENERALPARMS(enemy).mLifeBeforeAlert();

@@ -32,13 +32,7 @@ ActBreakGate::ActBreakGate(Game::Piki* parent)
  */
 void ActBreakGate::init(ActionArg* actionArg)
 {
-	bool isCorrectArg = false;
-	if (actionArg) {
-		bool strCheck = strcmp("ActBreakGateArg", actionArg->getName()) == 0;
-		if (strCheck) {
-			isCorrectArg = true;
-		}
-	}
+	bool isCorrectArg = actionArg && actionArg->is("ActBreakGateArg");
 
 	P2ASSERTLINE(98, isCorrectArg);
 

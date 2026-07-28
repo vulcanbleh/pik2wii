@@ -9,9 +9,13 @@
 
 #include "PikiAI.h"
 
-namespace PikiAI {
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "actBridge";
+}
 
-static const char aiBridgeName[] = "actBridge";
+namespace PikiAI {
 
 /**
  * @note Address: 0x80212288
@@ -35,13 +39,7 @@ ActBridge::ActBridge(Game::Piki* parent)
  */
 void ActBridge::init(ActionArg* actionArg)
 {
-	bool isCorrectArg = false;
-	if (actionArg) {
-		bool strCheck = strcmp("ActBridgeArg", actionArg->getName()) == 0;
-		if (strCheck) {
-			isCorrectArg = true;
-		}
-	}
+	bool isCorrectArg = actionArg && actionArg->is("ActBridgeArg");
 
 	P2ASSERTLINE(62, isCorrectArg);
 

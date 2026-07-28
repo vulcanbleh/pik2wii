@@ -6,9 +6,13 @@
 #include "JSystem/J3D/J3DModelLoader.h"
 #include "Game/Entities/ItemOnyon.h"
 
-namespace efx {
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "efxModelObjects";
+}
 
-static const char efxModelObjectsName[] = "efxModelObjects";
+namespace efx {
 
 void OnyonSpot::initAnimators(Sys::MatTexAnimation* texanim, Sys::MatTevRegAnimation* tevanim)
 {
@@ -41,7 +45,7 @@ void OnyonSpot::getLODCylinder(Sys::Cylinder& cyl)
 	cyl.mRadius   = 20.0f;
 	cyl.mLength   = 200.0f;
 	cyl.mCenter.y += cyl.mLength * 0.5f;
-	cyl.mAxis = Vector3f(0.0f, 1.0f, 0.0f);
+	cyl.mAxis.set(0.0f, 1.0f, 0.0f);
 }
 
 /**

@@ -4,26 +4,28 @@
 #include "string.h"
 #include "ARAM.h"
 
-ARAM::Mgr* gAramMgr;
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "aramMgr";
+}
 
-#if MATCHING
-static const char* SDATA2_FIX = "";
-#endif
+ARAM::Mgr* gAramMgr;
 
 namespace ARAM {
 /**
  * @note Address: N/A
  * @note Size: 0x3C
  */
-inline Node::Node()
+Node::Node()
     : CNode("")
 {
 	mMemoryBlock = 0;
 }
 
-inline u32 Node::dvdToAram(char const* name, bool forceFail)
+u32 Node::dvdToAram(char const* name, bool forceFail)
 {
-	P2ASSERTLINE(105, name);
+	P2ASSERTLINE(114, name);
 	mName = const_cast<char*>(name);
 
 	if (!mMemoryBlock) {
@@ -42,12 +44,13 @@ void* Node::aramToMainRam(u8* buf, u32 address, u32 offset, JKRExpandSwitch expa
 {
 	void* addr;
 	u32 tempByteVal;
+	u32* out = byteCnt;
 
 	tempByteVal = 0;
 	addr        = 0;
 
-	if (byteCnt == nullptr) {
-		byteCnt = &tempByteVal;
+	if (out == nullptr) {
+		out = &tempByteVal;
 	}
 
 	if (!mMemoryBlock) {
@@ -55,11 +58,11 @@ void* Node::aramToMainRam(u8* buf, u32 address, u32 offset, JKRExpandSwitch expa
 	}
 
 	if (mMemoryBlock) {
-		addr = JKRAram::aramToMainRam(mMemoryBlock, buf, address, offset, expandSwitch, maxExpandSize, heap, id, byteCnt);
-		DCFlushRange(addr, *byteCnt);
+		addr = JKRAram::aramToMainRam(mMemoryBlock, buf, address, offset, expandSwitch, maxExpandSize, heap, id, out);
+		DCFlushRange(addr, *out);
 		if (allocDir == JKRDvdRipper::ALLOC_DIR_BOTTOM) {
-			char* newAddr = new (heap, -0x20) char[*byteCnt];
-			memcpy(newAddr, addr, *byteCnt);
+			char* newAddr = new (heap, -0x20) char[*out];
+			memcpy(newAddr, addr, *out);
 			delete addr;
 			addr = newAddr;
 		}
@@ -87,7 +90,7 @@ void Mgr::init() { new Mgr(); }
 Mgr::Mgr()
     : mRootNode("root")
 {
-	P2ASSERTLINE(248, gAramMgr == nullptr);
+	P2ASSERTLINE(264, gAramMgr == nullptr);
 	gAramMgr = this;
 }
 
@@ -133,13 +136,7 @@ u32 Mgr::dvdToAram(char const* name, bool forceAddNode)
 /**
  * @note Address: 0x80432E74
  * @note Size: 0x154
- * TODO: Match
  */
-inline u32* validPointer(u32* p)
-{
-	u32 zero = 0;
-	return !p ? &zero : p;
-}
 
 void* Mgr::aramToMainRam(char const* name, u8* buf, u32 address, u32 offset, JKRExpandSwitch expandSwitch, u32 maxExpandSize, JKRHeap* heap,
                          JKRDvdRipper::EAllocDirection allocDir, int id, u32* byteCnt)
@@ -167,8 +164,6 @@ void ARAM::Mgr::dump()
 {
 	u32 max = 0xFFFFFFFF;
 	u32 min = 0;
-	JKRAram::sAramObject->mAramHeap->getFreeSize();
-	JKRAram::sAramObject->mAramHeap->getFreeSize();
 	JKRAramBlock* status;
 	FOREACH_NODE(Node, mRootNode.mChild, node)
 	{

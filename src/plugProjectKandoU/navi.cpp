@@ -30,7 +30,12 @@
 #include "nans.h"
 #include "utilityU.h"
 
-static const u32 fillerbytes[3] = { 0, 0, 0 };
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "navi";
+}
+
 int numSearch;
 
 namespace Game {

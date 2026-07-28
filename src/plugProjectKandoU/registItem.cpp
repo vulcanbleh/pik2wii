@@ -2,20 +2,14 @@
 #include "System.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "registItem";
+}
+
 namespace Game {
 
-static const int someArray[3] = { 0, 0, 0 };
-static const char fileName[]  = "registItem";
-
-template <typename T, typename T2>
-inline void GenerateMgr(T2& mgr, char* name)
-{
-	sys->heapStatusStart(name, nullptr);
-	mgr = new T();
-	mgr->loadResources();
-	itemMgr->addMgr(mgr);
-	sys->heapStatusEnd(name);
-}
 
 /**
  * @note Address: 0x801E4B98
@@ -26,8 +20,17 @@ void ItemMgr::createManagers(u32 flags)
 	bool isGround = (flags >> 1) & 1;
 	bool isCave   = flags & 1;
 
-	GenerateMgr<ItemBarrel::Mgr>(ItemBarrel::mgr, "-Barrel-");
-	GenerateMgr<ItemUjamushi::Mgr>(ItemUjamushi::mgr, "-Ujamushi-");
+	sys->heapStatusStart("-Barrel-", nullptr);
+	ItemBarrel::mgr = new ItemBarrel::Mgr();
+	ItemBarrel::mgr->loadResources();
+	itemMgr->addMgr(ItemBarrel::mgr);
+	sys->heapStatusEnd("-Barrel-");
+
+	sys->heapStatusStart("-Ujamushi-", nullptr);
+	ItemUjamushi::mgr = new ItemUjamushi::Mgr();
+	ItemUjamushi::mgr->loadResources();
+	itemMgr->addMgr(ItemUjamushi::mgr);
+	sys->heapStatusEnd("-Ujamushi-");
 
 	sys->heapStatusStart("-Weed-", nullptr);
 	if (isGround) {
@@ -39,9 +42,23 @@ void ItemMgr::createManagers(u32 flags)
 	}
 	sys->heapStatusEnd("-Weed-");
 
-	GenerateMgr<ItemDownFloor::Mgr>(ItemDownFloor::mgr, "-DownFloor-");
-	GenerateMgr<ItemTreasure::Mgr>(ItemTreasure::mgr, "-Treasure-");
-	GenerateMgr<ItemPikihead::Mgr>(ItemPikihead::mgr, "-PikiHead-");
+	sys->heapStatusStart("-DownFloor-", nullptr);
+	ItemDownFloor::mgr = new ItemDownFloor::Mgr();
+	ItemDownFloor::mgr->loadResources();
+	itemMgr->addMgr(ItemDownFloor::mgr);
+	sys->heapStatusEnd("-DownFloor-");
+
+	sys->heapStatusStart("-Treasure-", nullptr);
+	ItemTreasure::mgr = new ItemTreasure::Mgr();
+	ItemTreasure::mgr->loadResources();
+	itemMgr->addMgr(ItemTreasure::mgr);
+	sys->heapStatusEnd("-Treasure-");
+
+	sys->heapStatusStart("-PikiHead-", nullptr);
+	ItemPikihead::mgr = new ItemPikihead::Mgr();
+	ItemPikihead::mgr->loadResources();
+	itemMgr->addMgr(ItemPikihead::mgr);
+	sys->heapStatusEnd("-PikiHead-");
 
 	sys->heapStatusStart("-Plant-", nullptr);
 	if (isGround) {
@@ -63,7 +80,11 @@ void ItemMgr::createManagers(u32 flags)
 	}
 	sys->heapStatusEnd("-Rock-");
 
-	GenerateMgr<ItemHoney::Mgr>(ItemHoney::mgr, "-Honey-");
+	sys->heapStatusStart("-Honey-", nullptr);
+	ItemHoney::mgr = new ItemHoney::Mgr();
+	ItemHoney::mgr->loadResources();
+	itemMgr->addMgr(ItemHoney::mgr);
+	sys->heapStatusEnd("-Honey-");
 
 	// Had to be custom
 	sys->heapStatusStart("-Onyon-", nullptr);

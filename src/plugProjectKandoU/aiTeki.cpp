@@ -5,6 +5,12 @@
 #include "PikiAI.h"
 #include "RevoSDK/rand.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "actTeki";
+}
+
 #define FOLLOW_DISTANCE 100.0f
 
 namespace PikiAI {
@@ -31,7 +37,7 @@ void ActTeki::init(PikiAI::ActionArg* arg)
 
 	mFollowingTeki = static_cast<Game::EnemyBase*>(cArg->mCreature);
 
-	mUnusedZeroVector = Vector3f(0.0f, 0.0f, 0.0f);
+	mUnusedZeroVector.set(0.0f, 0.0f, 0.0f);
 
 	mUnused1 = 0.0f;
 	mUnused2 = 0.0f;

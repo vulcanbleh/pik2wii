@@ -80,12 +80,7 @@ struct BaseFlockMgr {
 
 	inline bool isAttackable()
 	{
-		bool check = false;
-		if (mMaxAttackers == -1 || mNumAttackers < mMaxAttackers) {
-			check = true;
-		}
-
-		return check;
+		return mMaxAttackers == -1 || mNumAttackers < mMaxAttackers;
 	}
 
 	void update();

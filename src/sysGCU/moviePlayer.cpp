@@ -126,9 +126,10 @@ void MoviePlayer::allocMovieHeap(u32 size)
  * @note Address: N/A
  * @note Size: 0x38
  */
-void MoviePlayer::clearMovieHeap()
+int MoviePlayer::clearMovieHeap()
 {
-	// UNUSED FUNCTION
+	mMovieHeap->freeAll();
+	return mMovieHeap->getTotalFreeSize();
 }
 
 /**
@@ -341,9 +342,9 @@ void MoviePlayer::clearSuspendedDemo()
  * @note Address: N/A
  * @note Size: 0x20
  */
-void MoviePlayer::hasSuspendedDemo()
+bool MoviePlayer::hasSuspendedDemo()
 {
-	// UNUSED FUNCTION
+	return mActiveContextNum > 0;
 }
 
 /**
@@ -365,7 +366,7 @@ MovieContext* MoviePlayer::getNewContext()
  * @note Address: N/A
  * @note Size: 0x38
  */
-void MoviePlayer::hasSuspendedContext()
+bool MoviePlayer::hasSuspendedContext()
 {
 	// UNUSED FUNCTION
 }
@@ -751,8 +752,7 @@ bool MoviePlayer::stop()
 			}
 			mSection = nullptr;
 		}
-		mMovieHeap->freeAll();
-		int size = mMovieHeap->getTotalFreeSize();
+		int size = clearMovieHeap();
 		JUT_ASSERTLINE(1404, size == (int)mMovieHeapFreeSize, "curr=%d init=%d free invalid\n", size, mMovieHeapFreeSize);
 		mCurrentConfig = nullptr;
 	}

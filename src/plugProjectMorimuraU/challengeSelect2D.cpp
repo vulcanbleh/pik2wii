@@ -9,9 +9,13 @@
 #include "efx2d/T2DChangesmoke.h"
 #include "trig.h"
 
-namespace Morimura {
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "challengeSelect2D";
+}
 
-static const char name[] = "challengeSelect2D";
+namespace Morimura {
 
 bool TChallengeSelect::mSelected1p       = true;
 f32 TChallengeSelect::mAlphaSpeed        = 0.05f;
@@ -514,17 +518,22 @@ void TChallengePiki::draw()
 		max = 50;
 	}
 
-	for (int i = 0; i < max; i++) {
-		static_cast<J2DPicture*>(mPanes[0])->draw(mPosInfo[i].mCurrentPos.x, mPosInfo[i].mCurrentPos.y, mPanes[0]->getWidth(),
-		                                          mPanes[0]->getHeight(), false, false, false);
-		mPanes[0]->calcMtx();
-		static_cast<J2DPicture*>(mPanes[1])->draw(mPosInfo[i].mCurrentPos.x - mVec[0].x, mPosInfo[i].mCurrentPos.y - mVec[0].y,
-		                                          mPanes[1]->getWidth(), mPanes[1]->getHeight(), false, false, false);
-		mPanes[1]->calcMtx();
+	for (int i = max - 1; i >= 0; i--) {
+		J2DPicture* p;
 
-		static_cast<J2DPicture*>(mPanes[2])->draw(mPosInfo[i].mCurrentPos.x - mVec[1].x, mPosInfo[i].mCurrentPos.y - mVec[1].y,
-		                                          mPanes[2]->getWidth(), mPanes[2]->getHeight(), false, false, false);
-		mPanes[2]->calcMtx();
+		p = static_cast<J2DPicture*>(mPanes[0]);
+		p->draw(mPosInfo[i].mCurrentPos.x, mPosInfo[i].mCurrentPos.y, p->getWidth(), p->getHeight(), false, false, false);
+		p->calcMtx();
+
+		p = static_cast<J2DPicture*>(mPanes[1]);
+		p->draw(mPosInfo[i].mCurrentPos.x - mVec[0].x, mPosInfo[i].mCurrentPos.y - mVec[0].y, -p->getWidth(), p->getHeight(), false, false,
+		        false);
+		p->calcMtx();
+
+		p = static_cast<J2DPicture*>(mPanes[2]);
+		p->draw(mPosInfo[i].mCurrentPos.x - mVec[1].x, mPosInfo[i].mCurrentPos.y - mVec[1].y, p->getWidth(), p->getHeight(), false, false,
+		        false);
+		p->calcMtx();
 	}
 }
 
@@ -534,7 +543,7 @@ void TChallengePiki::draw()
  */
 void TChallengePiki::setGoalPos(Vector2f& pos)
 {
-	mGoalXPos = pos.x;
+	mGoalXPos = pos.x - 10.0f;
 	mGoalYPos = pos.y;
 }
 
@@ -761,17 +770,33 @@ void TChallengePanel::update(int index, bool flag)
 		mTimer -= TAU;
 	}
 
-	int id  = mIndex;
-	int sel = (index / 5) % 5; // uhhhh something like this
-	if (index != sel) {
-		mXOffset += (1.0f * TChallengeSelect::mPanelMoveVal * FABS(sinf(mTimer)) - mXOffset) * 0.2f;
-		mYOffset *= 0.9f;
-	} else if (index == id) {
-		mXOffset += (1.0f * TChallengeSelect::mPanelMoveVal * FABS(sinf(mTimer)) - mXOffset) * 0.2f;
-		mYOffset *= 0.9f;
-	} else if (index == id) {
-		mXOffset *= 0.9f;
-		mYOffset *= 0.9f;
+	int id = mIndex;
+	// this is wrong, I hate it here
+	int a2 = (index / 5);
+	int a1 = (a2 % 5);
+	int a4 = (id / 5);
+	int a3 = (a4 % 5);
+
+	if (index != id) {
+		if (a1 == a3) {
+			f32 dir = 1.0f;
+			if (a2 < a4)
+				dir = -1.0f;
+			f32 s = FABS(sinf(mTimer));
+			mYOffset += (TChallengeSelect::mPanelMoveVal * dir * s - mYOffset) * 0.2f;
+			mXOffset *= 0.9f;
+		} else if (a2 == a4) {
+			f32 dir = 1.0f;
+			if (a1 < a3)
+				dir = -1.0f;
+			f32 s = FABS(sinf(mTimer));
+
+			mXOffset += (TChallengeSelect::mPanelMoveVal * dir * s - mXOffset) * 0.2f;
+			mYOffset *= 0.9f;
+		} else {
+			mXOffset *= 0.9f;
+			mYOffset *= 0.9f;
+		}
 	} else {
 		mXOffset *= 0.9f;
 		mYOffset *= 0.9f;
@@ -779,17 +804,17 @@ void TChallengePanel::update(int index, bool flag)
 
 	f32 scale = mScaleMgr->calc();
 
-	mPane1->addOffset(mXOffset, mYOffset);
+	mPane1->setOffset(mPane1->getOffsetX() + mXOffset, mPane1->getOffsetY() + mYOffset);
 	mPane1->setBasePosition(J2DPOS_Center);
-	mPane1->multScale(mCurrentScale * scale);
+	mPane1->updateScale(mPane1->getScaleX() * scale * mCurrentScale, mPane1->getScaleY() * scale * mCurrentScale);
 
-	mPane2->addOffset(mXOffset, mYOffset);
+	mPane2->setOffset(mPane2->getOffsetX() + mXOffset, mPane2->getOffsetY() + mYOffset);
 	mPane2->setBasePosition(J2DPOS_Center);
-	mPane2->multScale(mCurrentScale * scale);
+	mPane2->updateScale(mPane2->getScaleX() * scale, mPane2->getScaleY() * scale);
 
-	mPane3->addOffset(mXOffset, mYOffset);
+	mPane3->setOffset(mPane3->getOffsetX() + mXOffset, mPane3->getOffsetY() + mYOffset);
 	mPane3->setBasePosition(J2DPOS_Center);
-	mPane3->multScale(mCurrentScale * scale);
+	mPane3->updateScale(mPane3->getScaleX() * scale * mCurrentScale, mPane3->getScaleY() * scale * mCurrentScale);
 	/*
 	stwu     r1, -0x30(r1)
 	mflr     r0
@@ -2353,15 +2378,15 @@ void TChallengeSelect::doCreate(JKRArchive* arc)
  */
 bool TChallengeSelect::doUpdate()
 {
-	if (mPlayModeScreen->isState(TChallengePlayModeScreen::PlayModeScreen_Active)) {
-		// Check that player 2s controller is plugged in
-		if (JUTGamePad::mPadStatus[1].err == -1) {
-			mConnect2p = false;
-		} else {
+	if (mPlayModeScreen->isState(TChallengePlayModeScreen::PlayModeScreen_Active) != 0) {
+		// Check that player 2s controller is connected
+		if (EGG_INSTANCE(EGG::CoreControllerMgr)->getNthController(1)->isConnected()) {
 			if (!mConnect2p) {
 				mPlayModeScreen->mDoShowNoController = false;
 			}
 			mConnect2p = true;
+		} else {
+			mConnect2p = false;
 		}
 	}
 
@@ -2376,52 +2401,48 @@ bool TChallengeSelect::doUpdate()
 	if (mCanInput && mDisp->mStatus == Screen::Game2DMgr::CHECK2D_ChallengeSelect_Default
 	    && !static_cast<TChallengeSelectScene*>(getOwner())->mConfirmEndWindow->mHasDrawn) {
 		Controller* input = mControls;
-		if (input->getButtonDown() & Controller::PRESS_Z) {
-			if (mPlayModeScreen->mState == 0) {
-				if (mRulesScreen->mScaleGrowRate <= 0.0f) {
-					openWindow();
-					PSSystem::spSysIF->playSystemSe(PSSE_SY_MESSAGE_EXIT, 0);
-				} else {
-					closeWindow();
-					PSSystem::spSysIF->playSystemSe(PSSE_SY_MESSAGE_EXIT, 0);
-				}
+		if (input->getButtonDown() & Controller::PRESS_Z && mPlayModeScreen->mState == 0) {
+			if (mRulesScreen->mScaleGrowRate <= 0.0f) {
+				openWindow();
+				PSSystem::spSysIF->playSystemSe(PSSE_SY_MESSAGE_EXIT, 0);
+			} else {
+				closeWindow();
+				PSSystem::spSysIF->playSystemSe(PSSE_SY_MESSAGE_EXIT, 0);
 			}
-		} else if (input->getButtonDown() & (Controller::PRESS_A | Controller::PRESS_START)) {
-			if (!rulesClosed) {
-				TChallengePlayModeScreen* screen = mPlayModeScreen;
-				int state                        = screen->mState;
-				if ((u8)state != false) {
-					if (state == 2) {
-						if (mSelected1p || (mConnect2p && !mSelected1p)) {
-							screen->setState(TChallengePlayModeScreen::PlayModeScreen_Close);
-							if (!mIsSection) {
-								_134 = true;
-								demoStart();
-								mDisp->mStatus = Screen::Game2DMgr::CHECK2D_ChallengeSelect_InDemo;
-							}
-							mDisp->mStageNumber = mCurrentSelection;
-							mDisp->mPlayType    = 0;
-							if (!mSelected1p) {
-								mDisp->mPlayType = 1;
-							}
-							PSSystem::spSysIF->playSystemSe(PSSE_SY_MENU_DECIDE, 0);
-						} else {
-							screen->mDoShowNoController = true;
-							PSSystem::spSysIF->playSystemSe(PSSE_SY_MENU_ERROR, 0);
+		} else if (input->getButtonDown() & (Controller::PRESS_A | Controller::PRESS_START) && rulesClosed) {
+			TChallengePlayModeScreen* screen = mPlayModeScreen;
+			int state                        = screen->mState;
+			if ((bool)state != false) {
+				if (state == 2) {
+					if (mSelected1p || (mConnect2p && !mSelected1p)) {
+						screen->setState(TChallengePlayModeScreen::PlayModeScreen_Close);
+						if (!mIsSection) {
+							_134 = true;
+							demoStart();
+							mDisp->mStatus = Screen::Game2DMgr::CHECK2D_ChallengeSelect_InDemo;
 						}
-					}
-				} else {
-					if (TChallengeSelect::mSelected1p) {
-						screen->mAnimScreen[1]->blink(TChallengeSelect::mTextFlashVal, 0.0f);
-						screen->mAnimScreen[2]->blink(0.0f, 0.0f);
+						mDisp->mStageNumber = mCurrentSelection;
+						mDisp->mPlayType    = 0;
+						if (!mSelected1p) {
+							mDisp->mPlayType = 1;
+						}
+						PSSystem::spSysIF->playSystemSe(PSSE_SY_MENU_DECIDE, 0);
 					} else {
-						screen->mAnimScreen[1]->blink(0.0f, 0.0f);
-						screen->mAnimScreen[2]->blink(TChallengeSelect::mTextFlashVal, 0.0f);
+						screen->mDoShowNoController = true;
+						PSSystem::spSysIF->playSystemSe(PSSE_SY_MENU_ERROR, 0);
 					}
-					mPlayModeScreen->mDoShowNoController = false;
-					mPlayModeScreen->setState(TChallengePlayModeScreen::PlayModeScreen_Open);
-					PSSystem::spSysIF->playSystemSe(PSSE_SY_MESSAGE_EXIT, 0);
 				}
+			} else {
+				if (TChallengeSelect::mSelected1p) {
+					screen->mAnimScreen[1]->blink(TChallengeSelect::mTextFlashVal, 0.0f);
+					screen->mAnimScreen[2]->blink(0.0f, 0.0f);
+				} else {
+					screen->mAnimScreen[1]->blink(0.0f, 0.0f);
+					screen->mAnimScreen[2]->blink(TChallengeSelect::mTextFlashVal, 0.0f);
+				}
+				mPlayModeScreen->mDoShowNoController = false;
+				mPlayModeScreen->setState(TChallengePlayModeScreen::PlayModeScreen_Open);
+				PSSystem::spSysIF->playSystemSe(PSSE_SY_MESSAGE_EXIT, 0);
 			}
 		} else if (input->getButtonDown() & Controller::PRESS_B) {
 			TChallengePlayModeScreen* screen = mPlayModeScreen;
@@ -2447,18 +2468,15 @@ bool TChallengeSelect::doUpdate()
 					u32 button = input->getButton();
 					if ((button & Controller::ANALOG_DOWN) || (button & Controller::PRESS_DPAD_DOWN)) {
 						if (mStageChangeCounter == 0) {
-							if (mLevelNameMoveState < 0) {
+							if (mLevelNameMoveState < 0)
 								mLevelNameMoveState = 1;
-
-								if (mDownOffset < mMaxStages / 5) {
-									mDownOffset++;
-									if (mRightOffset + mDownOffset * 5 <= mMaxStages) {
-										updatePanel = true;
-									}
-								} else {
-									updatePanel = true;
-									mDownOffset = 0;
-								}
+							int max = mMaxStages;
+							if (mDownOffset < max / 5 && mRightOffset + (mDownOffset + 1) * 5 <= max) {
+								mDownOffset++;
+								updatePanel = true;
+							} else {
+								updatePanel = true;
+								mDownOffset = 0;
 							}
 						}
 						mStageChangeCounter++;
@@ -2466,17 +2484,16 @@ bool TChallengeSelect::doUpdate()
 						if (mStageChangeCounter == 0) {
 							if (mLevelNameMoveState < 0) {
 								mLevelNameMoveState = 0;
-
-								if (mDownOffset > 0) {
+							}
+							if (mDownOffset > 0) {
+								mDownOffset--;
+								updatePanel = true;
+							} else {
+								int max     = mMaxStages;
+								updatePanel = true;
+								mDownOffset = max / 5;
+								if (mRightOffset + mDownOffset * 5 > mMaxStages) {
 									mDownOffset--;
-									updatePanel = true;
-								} else {
-									int max     = mMaxStages;
-									updatePanel = true;
-									mDownOffset = max / 5;
-									if (mRightOffset + mDownOffset * 5 > mMaxStages) {
-										mDownOffset--;
-									}
 								}
 							}
 						}
@@ -2500,14 +2517,14 @@ bool TChallengeSelect::doUpdate()
 						if (mStageChangeCounter == 0) {
 							if (mLevelNameMoveState < 0) {
 								mLevelNameMoveState = 2;
+							}
 
-								if (mRightOffset > 1) {
-									mRightOffset--;
-									updatePanel = true;
-								} else {
-									mRightOffset = 4;
-									updatePanel  = true;
-								}
+							if (mRightOffset > 0) {
+								mRightOffset--;
+								updatePanel = true;
+							} else {
+								mRightOffset = 4;
+								updatePanel  = true;
 							}
 						}
 						mStageChangeCounter++;
@@ -2524,35 +2541,34 @@ bool TChallengeSelect::doUpdate()
 				}
 			} else {
 				u32 button = input->getButton();
-				if ((button & Controller::PRESS_DPAD_DOWN) || (button & Controller::ANALOG_DOWN)) {
+				if ((button & Controller::ANALOG_DOWN) || (button & Controller::PRESS_DPAD_DOWN)) {
 					if (mSelected1p) {
 						screen->setBlink(mTextFlashVal);
 						PSSystem::spSysIF->playSystemSe(PSSE_SY_MENU_CURSOR, 0);
 					}
 					mSelected1p = false;
-				} else if ((button & Controller::PRESS_DPAD_UP) || (button & Controller::ANALOG_UP)) {
+				} else if ((button & Controller::ANALOG_UP) || (button & Controller::PRESS_DPAD_UP)) {
 					if (!mSelected1p) {
 						screen->setBlink(mTextFlashVal);
 						PSSystem::spSysIF->playSystemSe(PSSE_SY_MENU_CURSOR, 0);
 					}
-					mSelected1p                 = true;
-					screen->mDoShowNoController = false;
+					mSelected1p                          = true;
+					mPlayModeScreen->mDoShowNoController = false;
 				}
 			}
 		}
 	}
 
-	if (mDisp->mTitleInfo->mCount == 1 && !mIsSection) {
+	if (mDisp->mDispWorldMapInfoWin0->mResult == 1 && !mIsSection) {
 		_134           = false;
 		mDisp->mStatus = Screen::Game2DMgr::CHECK2D_ChallengeSelect_InDemo;
 		getOwner()->endScene(nullptr);
 	}
 
-	int max = mMaxStages;
-	if (max <= mRightOffset + mDownOffset * 5) {
-		mDownOffset  = max / 5;
-		mRightOffset = max % 5;
-		if (mRightOffset > mMaxStages) {
+	if (mRightOffset + mDownOffset * 5 >= mMaxStages) {
+		mDownOffset  = mMaxStages / 5;
+		mRightOffset = mMaxStages % 5;
+		if (mRightOffset >= mMaxStages) {
 			mRightOffset = mMaxStages;
 		}
 		mCurrentSelection = mRightOffset + mDownOffset * 5;
@@ -2561,12 +2577,12 @@ bool TChallengeSelect::doUpdate()
 		}
 	}
 
-	if (oldSelState >= 0 && oldSelState != mCurrentSelection) {
+	if (oldSelState >= 0 && oldSelState != mLevelNameMoveState) {
 		mStageChangeCounter = 0;
 		_14C                = 2.0f;
 	}
 
-	if (_14C * 8.0f < (f32)mStageChangeCounter) {
+	if (mStageChangeCounter > _14C * 8.0f) {
 		mStageChangeCounter = 0;
 		_14C *= 0.7f;
 		if (_14C < 0.25f) {
@@ -2651,9 +2667,9 @@ bool TChallengeSelect::doUpdate()
 
 		// update the movement of the level name as needed
 		mPaneLevelName[i]->setAlpha(255);
-		f32 calc  = 1.0f - mLevelNameMoveTimer;
 		f32 XGoal = 0.0f;
 		f32 YGoal = 0.0f;
+		f32 calc  = 1.0f - mLevelNameMoveTimer;
 		switch (mLevelNameMoveState) {
 		case 0:
 			XGoal = 1.3f;
@@ -4346,13 +4362,13 @@ void TChallengeSelect::doDraw(Graphics& gfx)
 				}
 			} else {
 				mBgAlpha += 20;
-			}
-			if (mBgAlpha > 200) {
-				mBgAlpha = 200;
+				if (mBgAlpha > 200) {
+					mBgAlpha = 200;
+				}
 			}
 		} else {
 			rulestate = mPlayModeScreen->mState;
-			if (!mPlayModeScreen->isState(0)) {
+			if (mPlayModeScreen->isState(0) >> 0 == 0) {
 				drawBg = true;
 				if (rulestate == 3) {
 					if (mBgAlpha > 30) {
@@ -5033,7 +5049,9 @@ void TChallengeSelect::jumpStart()
 {
 	for (int i = 0; i < 5; i++) {
 		J2DPane* pane = mPanelList[mCurrentSelection]->mPane2;
-		Vector2f pos(pane->mGlobalMtx[0][3], pane->mGlobalMtx[1][3]);
+		Vector2f pos;
+		pos.x = pane->mGlobalMtx[0][3];
+		pos.y = pane->mGlobalMtx[1][3];
 		mChallengePiki[i]->setGoalPos(pos);
 		mChallengePiki[i]->jumpStart(-0.5f * (f32)i);
 	}

@@ -6,9 +6,13 @@
 #include "types.h"
 #include "utilityU.h"
 
-#define PIKIATTACK_JUMP_CHANCE (0.2f)
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "actAttack";
+}
 
-static const char aiAttackName[] = "actAttack";
+#define PIKIATTACK_JUMP_CHANCE (0.2f)
 
 namespace PikiAI {
 
@@ -50,13 +54,7 @@ ActAttack::ActAttack(Game::Piki* piki)
  */
 void ActAttack::init(ActionArg* initarg)
 {
-	bool incorrectArg = false;
-	if (initarg) {
-		bool comp = (strcmp("ActAttackArg", initarg->getName()) == 0);
-		if (comp) {
-			incorrectArg = true;
-		}
-	}
+	bool incorrectArg = initarg && initarg->is("ActAttackArg");
 	P2ASSERTLINE(144, incorrectArg);
 	ActAttackArg* attackArg = static_cast<ActAttackArg*>(initarg);
 	mCreature               = attackArg->mCreature;
@@ -100,7 +98,7 @@ void ActAttack::initAdjust()
 	// extra radius, no time limit
 	f32 radius   = mAttackSphere.mRadius;
 	f32 modifier = 10.0f;
-	ApproachPosActionArg approachArg(mAttackSphere.mPosition, modifier + radius, -1.0f);
+	ApproachPosActionArg approachArg(mAttackSphere.mPosition,  modifier + radius, -1.0f);
 	approachArg.mIsElasticSpeed = true;
 	approachArg.mIsCheck3D      = true;
 	mAttackID                   = ATTACK_Adjust;
@@ -115,8 +113,8 @@ void ActAttack::initJumpAdjust()
 {
 	calcAttackPos();
 	// extra radius, time out after 2s
-	f32 radius   = mAttackSphere.mRadius;
 	f32 modifier = 10.0f;
+	f32 radius   = mAttackSphere.mRadius;
 	ApproachPosActionArg approachArg(mAttackSphere.mPosition, modifier + radius, 2.0f);
 	approachArg.mIsElasticSpeed = true;
 	approachArg.mIsCheck3D      = true;
@@ -251,7 +249,7 @@ int ActAttack::exec()
 		if (!mParent->assertMotion(mSearchAnimIdx)) {
 			mIsSearchAnimFinished = true;
 		}
-		mParent->mTargetVelocity = 0.0f;
+		mParent->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 		if (mIsSearchAnimFinished) {
 			return ACTEXEC_Fail;
 		}
@@ -266,7 +264,7 @@ int ActAttack::exec()
  */
 void ActAttack::cleanup()
 {
-	mParent->mTargetVelocity = 0.0f;
+	mParent->mTargetVelocity.set(0.0f, 0.0f, 0.0f);
 	switch (mAttackID) {
 	case ATTACK_Stick:
 		mStickAttack->cleanup();

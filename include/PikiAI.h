@@ -123,6 +123,11 @@ struct ActionArg {
 		return "ActionArg";
 	}
 
+	// fabricated
+	inline bool is(const char* argtype) {
+		return strcmp(argtype, getName()) == 0;
+	}
+
 	// _00 = VTBL
 };
 
@@ -139,6 +144,38 @@ struct CreatureActionArg : public ActionArg {
 
 	// _00 VTBL
 	Game::Creature* mCreature; // _04
+};
+
+struct ActBreakGateArg : public ActionArg {
+	virtual const char* getName() { return "ActBreakGateArg"; } // _08 (weak)
+
+	// _00 = VTBL
+	Game::ItemGate* mGate; // _04
+};
+
+struct ActTransportArg : public ActionArg {
+	virtual const char* getName() { return "ActTransportArg"; } // _08 (weak)
+
+	// _00 = VTBL
+	Game::Pellet* mPellet; // _04
+	Game::Onyon* mGoal;    // _08
+	Vector3f mUnusedPos;   // _0C
+	s16 mUnusedSlotVal;    // _18, slot maybe?
+};
+
+struct FollowVectorFieldActionArg : public ActionArg {
+	inline FollowVectorFieldActionArg(Game::BaseItem* item)
+	    : mItem(item)
+	{
+	}
+
+	virtual const char* getName() // _08 (weak) uncomment this when linking aiBreakGate.cpp
+	{
+		return "FollowVectorFieldActionArg";
+	}
+
+	// _00 = VTBL
+	Game::BaseItem* mItem; // _04
 };
 
 struct Action {
@@ -163,7 +200,7 @@ struct Action {
 
 	inline bool checkArg(ActionArg* settings, const char* typeName)
 	{
-		return (settings != nullptr && (strcmp(typeName, settings->getName()) == 0));
+		return settings && settings->is(typeName);
 	}
 
 	inline bool checkName(ActionArg* settings, const char* typeName) { return strcmp(typeName, settings->getName()) != 0; }
@@ -370,13 +407,6 @@ struct ActBore : public Action {
 	f32 mOneshotTimer;        // _14, must do oneshot while this timer is < 2.0f
 	BitFlag<u8> mFlag;        // _18
 	ActBoreBase* mActions[2]; // _1C
-};
-
-struct ActBreakGateArg : public ActionArg {
-	virtual const char* getName() { return "ActBreakGateArg"; } // _08 (weak)
-
-	// _00 = VTBL
-	Game::ItemGate* mGate; // _04
 };
 
 struct ActBreakGate : public Action, virtual SysShape::MotionListener {
@@ -716,21 +746,6 @@ struct ActFlockAttack : public Action, virtual SysShape::MotionListener {
 	// _28 = MotionListener
 };
 
-struct FollowVectorFieldActionArg : public ActionArg {
-	inline FollowVectorFieldActionArg(Game::BaseItem* item)
-	    : mItem(item)
-	{
-	}
-
-	virtual const char* getName() // _08 (weak) uncomment this when linking aiBreakGate.cpp
-	{
-		return "FollowVectorFieldActionArg";
-	}
-
-	// _00 = VTBL
-	Game::BaseItem* mItem; // _04
-};
-
 struct ActFollowVectorField : public Action {
 	ActFollowVectorField(Game::Piki* p);
 
@@ -912,6 +927,50 @@ struct ActGotoPos : public Action {
 	// _00-_0C = Action
 	f32 mRadius;        // _0C
 	Vector3f mPosition; // _10
+};
+
+struct ActTransport : public Action, virtual SysShape::MotionListener {
+	enum TransportState {
+		TRANSPORT_Slot = 0, // finding a slot
+		TRANSPORT_Lift = 1, // lifting pellet
+		TRANSPORT_Move = 2, // moving with pellet
+	};
+
+	ActTransport(Game::Piki* parent);
+
+	virtual void init(ActionArg* settings);                   // _08
+	virtual int exec();                                       // _0C
+	virtual void cleanup();                                   // _10
+	virtual void emotion_success();                           // _14
+	virtual void emotion_fail();                              // _18
+	virtual void getInfo(char* infoStringBuffer);             // _38
+	virtual void onKeyEvent(const SysShape::KeyEvent& event); // _3C (weak)
+
+	bool isStickLeader();
+	void initLift();
+	int execLift();
+
+	// unused/inlined:
+	int getNumStickers();
+
+	inline bool isPelletSatisfied(int pikiCount) { return (pikiCount >= mPellet->getPelletConfigMin()); }
+
+	// _00     = VTBL
+	// _00-_0C = Action
+	// _0C-_10 = MotionListener*
+	Game::Pellet* mPellet;  // _10
+	Game::Onyon* mGoal;     // _14
+	u16 mState;             // _18
+	Vector3f _1C;           // _1C, gets passed to PathMove
+	s16 _28;                // _28, gets passed to PathMove
+	ActGotoSlot* mGotoSlot; // _2C
+	ActPathMove* mPathMove; // _30
+	bool mIsLiftAnimReady;  // _34, has reached point in lift anim to actually lift
+	s16 mLiftTimer;         // _36
+	bool mIsPathMoveActive; // _38
+	bool mIsMoving;         // _39
+	bool mIsCaptured;       // _3A
+	                        // _3C = MotionListener
 };
 
 enum GotoSlotSearchType {
@@ -1282,60 +1341,6 @@ struct ActTeki : public Action, virtual SysShape::MotionListener {
 	f32 mUnused3;               // _40
 	f32 mUnusedDotProduct;      // _44
 	                            // _48 = MotionListener
-};
-
-struct ActTransportArg : public ActionArg {
-	virtual const char* getName() { return "ActTransportArg"; } // _08 (weak)
-
-	// _00 = VTBL
-	Game::Pellet* mPellet; // _04
-	Game::Onyon* mGoal;    // _08
-	Vector3f mUnusedPos;   // _0C
-	s16 mUnusedSlotVal;    // _18, slot maybe?
-};
-
-struct ActTransport : public Action, virtual SysShape::MotionListener {
-	enum TransportState {
-		TRANSPORT_Slot = 0, // finding a slot
-		TRANSPORT_Lift = 1, // lifting pellet
-		TRANSPORT_Move = 2, // moving with pellet
-	};
-
-	ActTransport(Game::Piki* parent);
-
-	virtual void init(ActionArg* settings);                   // _08
-	virtual int exec();                                       // _0C
-	virtual void cleanup();                                   // _10
-	virtual void emotion_success();                           // _14
-	virtual void emotion_fail();                              // _18
-	virtual void getInfo(char* infoStringBuffer);             // _38
-	virtual void onKeyEvent(const SysShape::KeyEvent& event); // _3C (weak)
-
-	bool isStickLeader();
-	void initLift();
-	int execLift();
-
-	// unused/inlined:
-	int getNumStickers();
-
-	inline bool isPelletSatisfied(int pikiCount) { return (pikiCount >= mPellet->getPelletConfigMin()); }
-
-	// _00     = VTBL
-	// _00-_0C = Action
-	// _0C-_10 = MotionListener*
-	Game::Pellet* mPellet;  // _10
-	Game::Onyon* mGoal;     // _14
-	u16 mState;             // _18
-	Vector3f _1C;           // _1C, gets passed to PathMove
-	s16 _28;                // _28, gets passed to PathMove
-	ActGotoSlot* mGotoSlot; // _2C
-	ActPathMove* mPathMove; // _30
-	bool mIsLiftAnimReady;  // _34, has reached point in lift anim to actually lift
-	s16 mLiftTimer;         // _36
-	bool mIsPathMoveActive; // _38
-	bool mIsMoving;         // _39
-	bool mIsCaptured;       // _3A
-	                        // _3C = MotionListener
 };
 
 struct ActWeedArg : public ActionArg {

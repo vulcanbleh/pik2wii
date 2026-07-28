@@ -300,7 +300,7 @@ struct J2DTevSwapModeTableInfo {
 	u8 mA; // _03
 };
 
-inline u8 J2DCalcTevSwapTable(u32 r, u32 g, u32 b, u32 a)
+inline u8 J2DCalcTevSwapTable(u8 r, u8 g, u8 b, u8 a)
 {
 	return (r << 6) + (g << 4) + (b << 2) + a;
 }
@@ -320,14 +320,7 @@ struct J2DTevSwapModeTable {
 
 	J2DTevSwapModeTable(const J2DTevSwapModeTableInfo& info) { _00 = J2DCalcTevSwapTable(info.mR, info.mG, info.mB, info.mA); }
 
-	void setTevSwapModeTableInfo(const J2DTevSwapModeTableInfo& info)
-	{
-		u8 r = info.mR;
-		u8 g = info.mG;
-		u8 b = info.mB;
-		u8 a = info.mA;
-		_00  = J2DCalcTevSwapTable(r, g, b, a);
-	}
+	void setTevSwapModeTableInfo(const J2DTevSwapModeTableInfo& info) { _00 = J2DCalcTevSwapTable(info.mR, info.mG, info.mB, info.mA); }
 
 	u8 getR() { return _00 >> 6 & 3; }
 	u8 getG() { return _00 >> 4 & 3; }
@@ -344,17 +337,19 @@ struct J2DTevStage {
 		setTevSwapModeInfo(j2dDefaultTevSwapMode);
 	}
 
-	J2DTevStage() {
-        setTevStageInfo(j2dDefaultTevStageInfo);
-        setTevSwapModeInfo(j2dDefaultTevSwapMode);
-    }
-	
-	void setTevStageInfo(J2DTevStageInfo const& info) {
-        setColorABCD(info.mColorA, info.mColorB, info.mColorC, info.mColorD);
-        setTevColorOp(info.mCOp, info.mCBias, info.mCScale, info.mCClamp, info.mCReg);
-        setAlphaABCD(info.mAlphaA, info.mAlphaB, info.mAlphaC, info.mAlphaD);
-        setTevAlphaOp(info.mAOp, info.mABias, info.mAScale, info.mAClamp, info.mAReg);
-    }
+	J2DTevStage()
+	{
+		setTevStageInfo(j2dDefaultTevStageInfo);
+		setTevSwapModeInfo(j2dDefaultTevSwapMode);
+	}
+
+	void setTevStageInfo(J2DTevStageInfo const& info)
+	{
+		setColorABCD(info.mColorA, info.mColorB, info.mColorC, info.mColorD);
+		setTevColorOp(info.mCOp, info.mCBias, info.mCScale, info.mCClamp, info.mCReg);
+		setAlphaABCD(info.mAlphaA, info.mAlphaB, info.mAlphaC, info.mAlphaD);
+		setTevAlphaOp(info.mAOp, info.mABias, info.mAScale, info.mAClamp, info.mAReg);
+	}
 
 	void setStageNo(u32 param_0)
 	{
@@ -577,8 +572,6 @@ struct J2DTextureSRTInfo {
 	f32 mTranslationX; // _0C
 	f32 mTranslationY; // _10
 };
-
-
 
 enum J2DTextBoxHBinding {
 	J2DHBIND_Center = 0,

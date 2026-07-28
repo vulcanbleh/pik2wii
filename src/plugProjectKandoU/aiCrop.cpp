@@ -5,7 +5,11 @@
 #include "RevoSDK/rand.h"
 #include "types.h"
 
-static const char unusedName[] = "actBreakWall";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "actBreakWall";
+}
 
 namespace PikiAI {
 
@@ -27,13 +31,8 @@ ActCrop::ActCrop(Game::Piki* parent)
  */
 void ActCrop::init(ActionArg* arg)
 {
-	bool isCropArg = false;
-	if (arg) {
-		bool strCheck = strcmp("ActCropArg", arg->getName()) == 0;
-		if (strCheck) {
-			isCropArg = true;
-		}
-	}
+	bool isCropArg = arg && arg->is("ActCropArg");
+	
 	P2ASSERTLINE(69, isCropArg);
 
 	ActCropArg* cropArg = static_cast<ActCropArg*>(arg);

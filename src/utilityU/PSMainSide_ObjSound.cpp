@@ -685,7 +685,7 @@ void CreatureAnime::startSound(u8 id, u32 soundID, u32 a3)
  */
 void CreatureAnime::startSound(JAISound** se, u32 soundID, u32 a3)
 {
-	JUT_PANICLINE(482, "使用禁止再生関数"); // "Disabled playback functions"
+	JUT_PANICLINE(487, "使用禁止再生関数"); // "Disabled playback functions"
 
 	JAIBasic::msBasic->startSoundVecT(soundID, se, _24, a3, 0, PSSystem::SingletonBase<ObjCalcBase>::sInstance->getPlayerNo(this));
 }
@@ -2467,7 +2467,7 @@ void WorkItem::eventFinish()
  */
 void Otakara::setGoalOnyon(Game::Creature* onyon)
 {
-	if ((int)mBedamaType == PSMBedama_Blue || (int)mBedamaType == PSMBedama_Red || (int)mBedamaType == PSMBedama_Yellow) {
+	if (mBedamaType == PSMBedama_Yellow || mBedamaType == PSMBedama_Blue || mBedamaType == PSMBedama_Red) {
 		return;
 	}
 
@@ -2477,21 +2477,21 @@ void Otakara::setGoalOnyon(Game::Creature* onyon)
 	if (mOtaEvent->is2PBattle()) {
 
 		if (!mOnyon) {
-			if ((int)mBedamaType == PSMBedama_Blue || (int)mBedamaType == PSMBedama_Red) {
-				P2ASSERTLINE(2014, mOtaEvent);
+			if (mBedamaType == PSMBedama_Red || mBedamaType == PSMBedama_Blue) {
+				P2ASSERTLINE(2019, mOtaEvent);
 				ListDirectorActor* actor
 				    = static_cast<ListDirectorActor*>(static_cast<OtakaraEventLink_2PBattle*>(mOtaEvent)->getTargetDirector()->mActor);
 				actor->remove(mOtaEvent);
 			}
 		} else if (old && old != mOnyon && (int)mBedamaType == PSMBedama_Yellow) {
 			mOnyon = static_cast<Game::Onyon*>(old);
-			P2ASSERTLINE(2030, mOtaEvent);
+			P2ASSERTLINE(2035, mOtaEvent);
 			ListDirectorActor* actor
 			    = static_cast<ListDirectorActor*>(static_cast<OtakaraEventLink_2PBattle*>(mOtaEvent)->getTargetDirector()->mActor);
 			actor->remove(mOtaEvent);
 			mOnyon = static_cast<Game::Onyon*>(onyon);
 
-			P2ASSERTLINE(2041, mOtaEvent);
+			P2ASSERTLINE(2046, mOtaEvent);
 			actor = static_cast<ListDirectorActor*>(static_cast<OtakaraEventLink_2PBattle*>(mOtaEvent)->getTargetDirector()->mActor);
 			actor->append(mOtaEvent);
 		}
@@ -2973,11 +2973,12 @@ int Navi::getManType()
 	if (mRappa.mId == 13) {
 		return 0;
 	}
-
+	
+	int ret = 2;
 	if (mRappa.mId == 14) {
-		return 4; // should be 1 but everything breaks
+		ret = 1;
 	}
-	return 2;
+	return ret;
 	/*
 	lwz      r0, 0x88(r3)
 	cmplwi   r0, 0xd
@@ -3147,7 +3148,7 @@ lbl_80462EE0:
  */
 void Navi::playWalkSound(PSM::Navi::FootType type, int id)
 {
-	int test               = type + (id * 2);
+	id                     = type + (id * 2);
 	PSGame::RandId& randid = PSSystem::getSeMgrInstance()->mRandid;
 
 	if (static_cast<Game::Navi*>(mGameObj)->isWalking()) {
@@ -3155,87 +3156,12 @@ void Navi::playWalkSound(PSM::Navi::FootType type, int id)
 	}
 
 	randid.mId   = 0.7f;
-	JAISe* sound = randid.startSound(this, test, 2, 0);
+	JAISe* sound = randid.startSound(this, id, 2, 0);
 	randid.mId   = -1.0f;
 
 	if (sound) {
 		sound->setPortData(10, getManType());
 	}
-	/*
-	stwu     r1, -0x20(r1)
-	mflr     r0
-	slwi     r5, r5, 1
-	stw      r0, 0x24(r1)
-	stw      r31, 0x1c(r1)
-	stw      r30, 0x18(r1)
-	add      r30, r4, r5
-	stw      r29, 0x14(r1)
-	mr       r29, r3
-	lwz      r0,
-"sInstance__Q28PSSystem30SingletonBase<Q26PSGame5SeMgr>"@sda21(r13) cmplwi   r0,
-0 bne      lbl_80462F50 lis      r3, lbl_8049CFD0@ha lis      r5,
-lbl_8049CFB8@ha addi     r3, r3, lbl_8049CFD0@l li       r4, 0x237 addi     r5,
-r5, lbl_8049CFB8@l crclr    6 bl       panic_f__12JUTExceptionFPCciPCce
-
-lbl_80462F50:
-	lwz      r3, 0x2c(r29)
-	lwz      r4,
-"sInstance__Q28PSSystem30SingletonBase<Q26PSGame5SeMgr>"@sda21(r13) lwz r12,
-0(r3) addi     r31, r4, 0x24 lwz      r12, 0x21c(r12) mtctr    r12 bctrl clrlwi.
-r0, r3, 0x18 beq      lbl_80462F9C lwz      r3, 0x90(r29) cmplwi   r3, 0 beq
-lbl_80462F9C lwz      r12, 0x10(r3) li       r4, 0 lwz      r12, 0x14(r12) mtctr
-r12 bctrl li       r0, 0 stw      r0, 0x90(r29)
-
-lbl_80462F9C:
-	lfs      f0, lbl_80520C88@sda21(r2)
-	cmplwi   r29, 0
-	mr       r4, r29
-	stfs     f0, 0(r31)
-	beq      lbl_80462FB4
-	addi     r4, r29, 0x30
-
-lbl_80462FB4:
-	mr       r3, r31
-	mr       r5, r30
-	li       r6, 2
-	li       r7, 0
-	bl       startSound__Q26PSGame6RandIdFPQ27JAInter6ObjectUlUlUl
-	lfs      f0, cNotUsingMasterIdRatio__Q26PSGame6RandId@sda21(r13)
-	cmplwi   r3, 0
-	stfs     f0, 0(r31)
-	beq      lbl_80463018
-	lwz      r0, 0x88(r29)
-	cmplwi   r0, 0xd
-	bne      lbl_80462FEC
-	li       r0, 0
-	b        lbl_80463000
-
-lbl_80462FEC:
-	cmplwi   r0, 0xe
-	bne      lbl_80462FFC
-	li       r0, 1
-	b        lbl_80463000
-
-lbl_80462FFC:
-	li       r0, 2
-
-lbl_80463000:
-	lwz      r12, 0x10(r3)
-	clrlwi   r5, r0, 0x10
-	li       r4, 0xa
-	lwz      r12, 8(r12)
-	mtctr    r12
-	bctrl
-
-lbl_80463018:
-	lwz      r0, 0x24(r1)
-	lwz      r31, 0x1c(r1)
-	lwz      r30, 0x18(r1)
-	lwz      r29, 0x14(r1)
-	mtlr     r0
-	addi     r1, r1, 0x20
-	blr
-	*/
 }
 
 /**

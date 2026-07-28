@@ -32,6 +32,11 @@ struct Arg {
 	inline Arg(Game::EnemyBase*); // defined in Game/EnemyBase.h header to avoid include loops
 
 	inline Arg(Game::BaseItem*); // defined in Game/BaseItem.h header to avoid include loops
+	
+	// fabricated
+	inline bool is(const char* argtype) {
+		return strcmp(argtype, getName()) == 0;
+	}
 
 	/**
 	 * @reifiedAddress{80108200}
@@ -139,6 +144,8 @@ struct ArgDenkiHiba : public Arg {
 	{
 		return "ArgDenkiHiba";
 	}
+	
+	enum DenkiHibaType { TYPE_Denki = 0, TYPE_VsRed = 1, TYPE_VsBlue = 2 };
 
 	// _00     = VTBL
 	// _00-_10 = Arg

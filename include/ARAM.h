@@ -13,7 +13,7 @@ namespace ARAM {
  * This struct extends the CNode struct and provides additional functionality for managing ARAM data.
  */
 struct Node : CNode {
-	inline Node();
+	Node();
 	virtual ~Node() { } // _08
 
 	/**
@@ -29,7 +29,7 @@ struct Node : CNode {
 	 *
 	 * @return The number of bytes loaded to ARAM.
 	 */
-	inline u32 dvdToAram(char const* path, bool forceFail);
+	u32 dvdToAram(char const* path, bool forceFail);
 
 	/**
 	 * @brief Transfers data from the ARAM to the main RAM.

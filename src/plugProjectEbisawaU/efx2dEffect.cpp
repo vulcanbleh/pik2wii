@@ -8,7 +8,11 @@
 #include "efx2d/T2DSprayset.h"
 #include "efx2d/WorldMap.h"
 
-static const char name[] = "efx2dEffect";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "efx2dEffect";
+}
 
 namespace efx2d {
 /**
@@ -56,7 +60,7 @@ bool T2DSensorAct_forVS::create(Arg*)
  */
 bool T2DSensorGet_forVS::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(59, nameCheck);
 	ArgScale* args = static_cast<ArgScale*>(arg);
 
@@ -75,7 +79,7 @@ bool T2DSensorGet_forVS::create(Arg* arg)
  */
 bool T2DSprayset_forVS::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScaleColorColor", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScaleColorColor");
 	P2ASSERTLINE(79, nameCheck);
 	ArgScaleColorColor* args = static_cast<ArgScaleColorColor*>(arg);
 
@@ -100,7 +104,7 @@ bool T2DSprayset_forVS::create(Arg* arg)
  */
 bool FileSelect::T2DFilecopied::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgColor", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgColor");
 	P2ASSERTLINE(111, nameCheck);
 	ArgColor* args = static_cast<ArgColor*>(arg);
 
@@ -118,7 +122,7 @@ bool FileSelect::T2DFilecopied::create(Arg* arg)
  */
 bool FileSelect::T2DFiledelete::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgColor", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgColor");
 	P2ASSERTLINE(127, nameCheck);
 	ArgColor* args = static_cast<ArgColor*>(arg);
 
@@ -136,7 +140,7 @@ bool FileSelect::T2DFiledelete::create(Arg* arg)
  */
 bool FileSelect::T2DFiledeleteM::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgColor", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgColor");
 	P2ASSERTLINE(143, nameCheck);
 	ArgColor* args = static_cast<ArgColor*>(arg);
 
@@ -154,7 +158,7 @@ bool FileSelect::T2DFiledeleteM::create(Arg* arg)
  */
 bool FileSelect::T2DFilecopyBase::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgFilecopy", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgFilecopy");
 	P2ASSERTLINE(160, nameCheck);
 	ArgFilecopy* args    = static_cast<ArgFilecopy*>(arg);
 	JUtility::TColor col = args->mColor;
@@ -197,7 +201,7 @@ bool FileSelect::T2DFilecopyBase::create(Arg* arg)
  */
 bool WorldMap::T2DShstar2::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(201, nameCheck);
 	ArgScale* args = static_cast<ArgScale*>(arg);
 
@@ -218,7 +222,7 @@ bool WorldMap::T2DShstar2::create(Arg* arg)
  */
 bool WorldMap::T2DNewmap::create(Arg* arg)
 {
-	bool nameCheck = strcmp("ArgScale", arg->getName()) == 0;
+	bool nameCheck = arg->is("ArgScale");
 	P2ASSERTLINE(219, nameCheck);
 	ArgScale* args = static_cast<ArgScale*>(arg);
 

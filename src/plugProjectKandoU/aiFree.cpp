@@ -43,7 +43,7 @@ void ActFree::init(ActionArg* settings)
 
 	mState = PIKIAI_FREE_DEFAULT;
 	if (freeArg) {
-		bool isFreeArg = strcmp("ActFreeArg", settings->getName()) == 0;
+		bool isFreeArg = freeArg->is("ActFreeArg");
 		P2ASSERTLINE(119, isFreeArg);
 
 		freeArg = static_cast<ActFreeArg*>(settings);
