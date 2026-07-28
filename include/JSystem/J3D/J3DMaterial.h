@@ -66,7 +66,7 @@ struct J3DCurrentMtx : public J3DCurrentMtxInfo {
 
 	void setCurrentTexMtx(u8 param_1, u8 param_2, u8 param_3, u8 param_4, u8 param_5, u8 param_6, u8 param_7, u8 param_8)
 	{
-		mMtxIdxRegA = ((param_1 & 0xff) << 6) | (param_2 << 0xc) | (param_3 << 0x12) | (param_4 << 0x18);
+		mMtxIdxRegA = (param_1 << 6) | (param_2 << 0xc) | (param_3 << 0x12) | (param_4 << 0x18);
 		mMtxIdxRegB = (param_5) | param_6 << 6 | param_7 << 0xc | param_8 << 0x12;
 	}
 
@@ -114,6 +114,7 @@ struct J3DMaterial {
 	J3DTevBlock* getTevBlock() const { return mTevBlock; }
 	J3DColorBlock* getColorBlock() const { return mColorBlock; }
 	J3DTexGenBlock* getTexGenBlock() const { return mTexGenBlock; }
+	J3DTexCoord* getTexCoord(u32 idx) { return mTexGenBlock->getTexCoord(idx); }
 	J3DDisplayListObj* getSharedDisplayListObj() const { return mSharedDLObj; }
 	J3DShape* getShape() { return mShape; }
 	J3DJoint* getJoint() { return mJoint; }
