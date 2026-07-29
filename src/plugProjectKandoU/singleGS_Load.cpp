@@ -8,17 +8,13 @@
 #include "Game/GameSystem.h"
 #include "Radar.h"
 
+static void _Print(char* format, ...)
+{
+	OSReport(format, "SingleGS_Load");
+}
+
 namespace Game {
 namespace SingleGame {
-
-/**
- * @note Address: N/A
- * @note Size: 0xE4
- */
-// void _Print(char*, ...)
-//{
-// UNUSED FUNCTION
-//}
 
 /**
  * @note Address: 0x80239E84
@@ -51,17 +47,7 @@ void LoadState::init(SingleGameSection* game, StateArg* arg)
  */
 void LoadState::initNext(SingleGameSection* game)
 {
-	// UNUSED FUNCTION
-}
-
-/**
- * @note Address: 0x80239F38
- * @note Size: 0x238
- */
-void LoadState::exec(SingleGameSection* game)
-{
-	if (!mIsInitialized) {
-		mIsInitialized = true;
+	mIsInitialized = true;
 		if (!mDontClearHeap) {
 			game->clearHeap();
 		}
@@ -92,7 +78,16 @@ void LoadState::exec(SingleGameSection* game)
 		_10           = 0;
 		mHasLoadBegun = false;
 		mHasDrawn     = false;
+}
 
+/**
+ * @note Address: 0x80239F38
+ * @note Size: 0x238
+ */
+void LoadState::exec(SingleGameSection* game)
+{
+	if (!mIsInitialized) {
+		initNext(game);
 	} else {
 		if (mHasDrawn && !mHasLoadBegun) {
 			sys->dvdLoadUseCallBack(&game->mDvdThread, game->mLoadGameCallback);

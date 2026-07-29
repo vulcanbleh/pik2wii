@@ -8,6 +8,8 @@
 #include "PSSystem/PSSystemIF.h"
 #include "System.h"
 
+PSSystem::ArcMgr<PSGame::BASARC>* PSSystem::ArcMgr<PSGame::BASARC>::sInstance;
+
 namespace Game {
 
 /**
@@ -535,7 +537,7 @@ void EnemyMgrBase::loadModelData()
 	}
 
 	char file[250];
-	sprintf(file, "/enemy/data/%s/model.szs", modelName);
+	sprintf(file, "enemy/data/%s/model.szs", modelName);
 
 	LoadResource::Arg arg(file);
 	LoadResource::Node* node = gLoadResourceMgr->mountArchive(arg);
@@ -555,7 +557,7 @@ void EnemyMgrBase::loadAnimData()
 	}
 
 	char file[PATH_MAX];
-	sprintf(file, "/enemy/data/%s/anim.szs", animName);
+	sprintf(file, "enemy/data/%s/anim.szs", animName);
 
 	JKRArchive* archive = nullptr;
 	LoadResource::Arg arg(file);

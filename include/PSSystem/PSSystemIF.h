@@ -210,7 +210,7 @@ struct ArcMgr : public JKRDisposer {
 
 inline JKRFileLoader* getLoaderInstance()
 {
-	P2ASSERTLINE(80, PSSystem::ArcMgr<PSGame::BASARC>::sInstance);
+	P2ASSERTLINE(88, PSSystem::ArcMgr<PSGame::BASARC>::sInstance);
 	return PSSystem::ArcMgr<PSGame::BASARC>::sInstance->mArchive;
 }
 

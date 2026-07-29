@@ -101,7 +101,7 @@ void JPACalcScaleAnmReverseY(JPAEmitterWorkData* work, JPABaseParticle* ptcl)
 void JPACalcAlphaAnm(JPAEmitterWorkData* work, JPABaseParticle* ptcl)
 {
 	JPAExtraShape* esp = work->mResource->mExtraShape;
-	f32 alpha;
+	f32 alpha = 0.0f;
 	if (ptcl->mTime < esp->getAlphaInTiming()) {
 		alpha = 255.0f * (esp->getAlphaInValue() + esp->getAlphaIncRate() * ptcl->mTime);
 	} else if (ptcl->mTime > esp->getAlphaOutTiming()) {
