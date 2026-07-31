@@ -3,6 +3,12 @@
 #include "P2Macros.h"
 #include "Sys/DrawBuffers.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "drawbuffer";
+}
+
 namespace Sys {
 
 /**
@@ -47,7 +53,7 @@ void DrawBuffer::create(CreateArg& arg)
  */
 void DrawBuffer::draw()
 {
-	P2ASSERTLINE(57, mBuffer != nullptr);
+	P2ASSERTLINE(58, mBuffer != nullptr);
 	if (isFlag(DRAWBUFF_Unk1)) {
 		j3dSys.mDrawMode = J3DSys::SYSDRAW_Unk4;
 	} else {
@@ -63,7 +69,7 @@ void DrawBuffer::draw()
  */
 void DrawBuffer::frameInit()
 {
-	P2ASSERTLINE(69, mBuffer != nullptr);
+	P2ASSERTLINE(70, mBuffer != nullptr);
 	mBuffer->frameInit();
 }
 
@@ -108,7 +114,7 @@ DrawBuffer* DrawBuffers::get(int index)
 	if (mBuffers != nullptr && 0 <= index && index < mCount) {
 		check = true;
 	}
-	P2ASSERTLINE(148, check);
+	P2ASSERTLINE(149, check);
 	return &mBuffers[index];
 }
 

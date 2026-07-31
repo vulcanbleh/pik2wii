@@ -4,10 +4,14 @@
 #include "PSM/WorkItem.h"
 #include "RevoSDK/rand.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "itemRock";
+}
+
 namespace Game {
 namespace ItemRock {
-
-static const char unusedName[] = "itemRock";
 
 Mgr* mgr;
 
@@ -337,6 +341,8 @@ void Item::startLoopEffect()
 	default:
 		isAlive(); // probably debug
 	}
+	
+	FORCE_DONT_INLINE;
 }
 
 /**

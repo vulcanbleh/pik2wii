@@ -44,16 +44,13 @@
 
 // Archives
 JKRArchive* Game::gParmArc;
-PSSystem::ArcMgr<PSGame::BASARC>* PSSystem::ArcMgr<PSGame::BASARC>::sInstance;
 
 // SingletonBase instances
 PSM::BossBgmFader::Mgr* PSSystem::SingletonBase<PSM::BossBgmFader::Mgr>::sInstance;
-PSM::ObjCalcBase* PSSystem::SingletonBase<PSM::ObjCalcBase>::sInstance;
 PSM::CreaturePrm* PSSystem::SingletonBase<PSM::CreaturePrm>::sInstance;
 PSM::ObjMgr* PSSystem::SingletonBase<PSM::ObjMgr>::sInstance;
 PSM::BgmTrackMapFile* PSSystem::SingletonBase<PSM::BgmTrackMapFile>::sInstance;
 PSGame::SoundTable::CategoryMgr* PSSystem::SingletonBase<PSGame::SoundTable::CategoryMgr>::sInstance;
-PSGame::SeMgr* PSSystem::SingletonBase<PSGame::SeMgr>::sInstance;
 PSSystem::SeqDataList* PSSystem::SingletonBase<PSSystem::SeqDataList>::sInstance;
 PSSystem::StreamDataList* PSSystem::SingletonBase<PSSystem::StreamDataList>::sInstance;
 

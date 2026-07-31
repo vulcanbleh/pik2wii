@@ -141,7 +141,22 @@ void PelletCropMemory::clear()
  * @note Address: N/A
  * @note Size: 0x288
  */
-void PelletCropMemory::obtainPellet(Pellet*) { }
+bool PelletCropMemory::obtainPellet(Pellet* pellet) 
+{ 
+	if ((pellet->getKind() == PelletType::Treasure) ? true : false) {
+		int id = pellet->getConfigIndex();
+		(mOtakara(id))++;
+	} else if ((pellet->getKind() == PelletType::Upgrade) ? true : false) {
+		int id = pellet->getConfigIndex();
+		(mItem(id))++;
+	} else if ((pellet->getKind() == PelletType::Carcass) ? true : false) {
+		int id = pellet->getConfigIndex();
+		(mCarcass(id))++;
+	}
+	return true;
+	
+	FORCE_DONT_INLINE;
+}
 
 /**
  * @note Address: 0x801E58B0
@@ -170,20 +185,18 @@ PelletFirstMemory::PelletFirstMemory(int p1, int p2, int p3)
  */
 bool PelletFirstMemory::firstCarryPellet(Pellet* pellet)
 {
-	if (pellet->getKind() == PelletType::Treasure) {
+	if ((pellet->getKind() == PelletType::Treasure) ? true : false) {
 		int id = pellet->getConfigIndex();
 
 		if (!(mOtakara(id) & 2)) {
 			mOtakara(id) |= 2;
-			pellet->getConfigName();
 			return true;
 		}
 
-	} else if (pellet->getKind() == PelletType::Upgrade) {
+	} else if ((pellet->getKind() == PelletType::Upgrade) ? true : false) {
 		int id = pellet->getConfigIndex();
 		if (!(mItem(id) & 2)) {
 			mItem(id) |= 2;
-			pellet->getConfigName();
 			return true;
 		}
 
@@ -191,7 +204,6 @@ bool PelletFirstMemory::firstCarryPellet(Pellet* pellet)
 		int id = pellet->getConfigIndex();
 		if (!(mCarcass(id) & 2)) {
 			mCarcass(id) |= 2;
-			pellet->getConfigName();
 			return true;
 		}
 	}
@@ -207,11 +219,9 @@ void PelletFirstMemory::obtainPellet(BasePelletMgr* mgr, int id)
 {
 	if (mgr->getMgrID() == PelletType::Treasure) {
 		mOtakara(id) |= 2;
-		mgr->getPelletConfig(id);
 
 	} else if (mgr->getMgrID() == PelletType::Upgrade) {
 		mItem(id) |= 2;
-		mgr->getPelletConfig(id);
 
 	} else {
 		mgr->getMgrID();
@@ -226,11 +236,9 @@ void PelletFirstMemory::losePellet(Game::BasePelletMgr* mgr, int id)
 {
 	if (mgr->getMgrID() == PelletType::Treasure) {
 		mOtakara(id) &= ~0x2;
-		mgr->getPelletConfig(id);
 
 	} else if (mgr->getMgrID() == PelletType::Upgrade) {
 		mItem(id) &= ~0x2;
-		mgr->getPelletConfig(id);
 
 	} else {
 		mgr->getMgrID();
@@ -257,7 +265,7 @@ bool PlayData::isCompletePelletTrigger()
  */
 bool PelletCropMemory::completeAll()
 {
-	return (!mOtakara.completeAll()) ? false : mItem.completeAll() > 0; // sure.
+	return (!mOtakara.completeAll()) ? false : mItem.completeAll();
 }
 
 /**
@@ -762,30 +770,12 @@ void PlayData::losePellet(Game::BasePelletMgr* mgr, int p2) { mZukanStat->losePe
  */
 void PlayData::obtainPellet_Main(Game::Pellet* pellet)
 {
-	PelletCropMemory* mem = mMainCropMemory;
-	if (pellet->getKind() == PelletType::Treasure) {
-		int id = pellet->getConfigIndex();
-		(mem->mOtakara(id))++;
-		pellet->getConfigName();
-		(mem->mOtakara(id));
-
-	} else if (pellet->getKind() == PelletType::Upgrade) {
-		int id = pellet->getConfigIndex();
-		(mem->mItem(id))++;
-		pellet->getConfigName();
-		(mem->mItem(id));
-
-	} else if (pellet->getKind() == PelletType::Carcass) {
-		int id = pellet->getConfigIndex();
-		(mem->mCarcass(id))++;
-		pellet->getConfigName();
-		(mem->mCarcass(id));
-	}
+	mMainCropMemory->obtainPellet(pellet);
 
 	BasePelletMgr* mgr = 0;
-	if (pellet->getKind() == PelletType::Treasure) {
+	if ((pellet->getKind() == PelletType::Treasure) ? true : false) {
 		mgr = PelletOtakara::mgr;
-	} else if (pellet->getKind() == PelletType::Upgrade) {
+	} else if ((pellet->getKind() == PelletType::Upgrade) ? true : false) {
 		mgr = PelletItem::mgr;
 	}
 
@@ -801,25 +791,7 @@ void PlayData::obtainPellet_Main(Game::Pellet* pellet)
  */
 void PlayData::obtainPellet_Cave(Game::Pellet* pellet)
 {
-	PelletCropMemory* mem = mCaveCropMemory;
-	if (pellet->getKind() == PelletType::Treasure) {
-		int id = pellet->getConfigIndex();
-		(mem->mOtakara(id))++;
-		pellet->getConfigName();
-		(mem->mOtakara(id));
-
-	} else if (pellet->getKind() == PelletType::Upgrade) {
-		int id = pellet->getConfigIndex();
-		(mem->mItem(id))++;
-		pellet->getConfigName();
-		(mem->mItem(id));
-
-	} else if (pellet->getKind() == PelletType::Carcass) {
-		int id = pellet->getConfigIndex();
-		(mem->mCarcass(id))++;
-		pellet->getConfigName();
-		(mem->mCarcass(id));
-	}
+	mCaveCropMemory->obtainPellet(pellet);
 }
 
 /**
@@ -848,7 +820,8 @@ bool PlayData::isPelletEverGot(u8 type, u8 id)
 		int treasureID = mZukanStat->mOtakara(id);
 		return treasureID > 0;
 	}
-	JUT_PANICLINE(1406, "otakara or item !");
+	JUT_PANICLINE(1407, "otakara or item !");
+	return false;
 }
 
 /**
@@ -967,7 +940,7 @@ int PlayData::getTekiCarcassMoney(int id)
  */
 int PlayData::getGroundOtakaraNum(int id)
 {
-	P2ASSERTBOUNDSLINE(1543, 0, id, stageList->getCourseCount());
+	P2ASSERTBOUNDSLINE(1545, 0, id, stageList->getCourseCount());
 	return mGroundOtakaraCollected[id];
 }
 
@@ -977,7 +950,7 @@ int PlayData::getGroundOtakaraNum(int id)
  */
 int PlayData::getGroundOtakaraMax(int id)
 {
-	P2ASSERTBOUNDSLINE(1550, 0, id, stageList->getCourseCount());
+	P2ASSERTBOUNDSLINE(1552, 0, id, stageList->getCourseCount());
 	CourseInfo* info = stageList->getCourseInfo(id);
 	return info->mGroundOtakaraMax;
 }
@@ -988,7 +961,7 @@ int PlayData::getGroundOtakaraMax(int id)
  */
 void PlayData::incGroundOtakara(int index)
 {
-	P2ASSERTBOUNDSLINE(1558, 0, index, stageList->getCourseCount());
+	P2ASSERTBOUNDSLINE(1560, 0, index, stageList->getCourseCount());
 	mGroundOtakaraCollected[index]++;
 }
 
@@ -998,7 +971,7 @@ void PlayData::incGroundOtakara(int index)
  */
 int PlayData::getDopeCount(int sprayIndex)
 {
-	P2ASSERTBOUNDSLINE(1572, 0, sprayIndex, 2);
+	P2ASSERTBOUNDSLINE(1574, 0, sprayIndex, 2);
 	return mSprayCount[sprayIndex];
 }
 
@@ -1008,7 +981,7 @@ int PlayData::getDopeCount(int sprayIndex)
  */
 void PlayData::setDopeCount(int sprayIndex, int sprayCount)
 {
-	P2ASSERTBOUNDSLINE(1578, 0, sprayIndex, 2);
+	P2ASSERTBOUNDSLINE(1580, 0, sprayIndex, 2);
 	mSprayCount[sprayIndex] = sprayCount;
 }
 
@@ -1018,7 +991,7 @@ void PlayData::setDopeCount(int sprayIndex, int sprayCount)
  */
 void PlayData::incDopeCount(int sprayIndex)
 {
-	P2ASSERTBOUNDSLINE(1584, 0, sprayIndex, 2);
+	P2ASSERTBOUNDSLINE(1586, 0, sprayIndex, 2);
 	mSprayCount[sprayIndex]++;
 }
 
@@ -1032,7 +1005,7 @@ bool PlayData::hasDope(int sprayIndex)
 	if (0 <= sprayIndex && sprayIndex < 2) {
 		isValidIndex = true;
 	}
-	P2ASSERTLINE(1590, isValidIndex);
+	P2ASSERTLINE(1592, isValidIndex);
 	return (0 < mSprayCount[sprayIndex]);
 }
 
@@ -1046,7 +1019,7 @@ int PlayData::getDopeFruitCount(int sprayIndex)
 	if (0 <= sprayIndex && sprayIndex < 2) {
 		isValidIndex = true;
 	}
-	P2ASSERTLINE(1596, isValidIndex);
+	P2ASSERTLINE(1598, isValidIndex);
 	return mBerryCount[sprayIndex];
 }
 
@@ -1060,7 +1033,7 @@ bool PlayData::addDopeFruit(int sprayIndex)
 	if (0 <= sprayIndex && sprayIndex < 2) {
 		isValidIndex = true;
 	}
-	P2ASSERTLINE(1602, isValidIndex);
+	P2ASSERTLINE(1604, isValidIndex);
 
 	mBerryCount[sprayIndex]++;
 	if (mBerryCount[sprayIndex] >= _aiConstants->mDopeCount.mData) {
@@ -1082,7 +1055,7 @@ void PlayData::useDope(int sprayIndex)
 	if (0 <= sprayIndex && sprayIndex < 2) {
 		isValidIndex = true;
 	}
-	P2ASSERTLINE(1614, isValidIndex);
+	P2ASSERTLINE(1616, isValidIndex);
 	if (hasDope(sprayIndex)) {
 		mSprayCount[sprayIndex]--;
 	}
@@ -1107,7 +1080,7 @@ bool PlayData::isCaveFirstTime(int courseIndex, ID32& caveID)
 	}
 	ID32 caveIDCopy;
 	caveIDCopy.setID(caveID.getID());
-	JUT_PANICLINE(1645, "no cave info : course(%d):[%s]\n", courseIndex, caveID.getStr());
+	JUT_PANICLINE(1647, "no cave info : course(%d):[%s]\n", courseIndex, caveID.getStr());
 	return false;
 }
 
@@ -1136,7 +1109,7 @@ void PlayData::setCaveVisit(int courseIndex, ID32& caveID)
 			return;
 		}
 	}
-	JUT_PANICLINE(1680, "no cave info : course(%d):[%s]\n", courseIndex, caveID.getStr());
+	JUT_PANICLINE(1682, "no cave info : course(%d):[%s]\n", courseIndex, caveID.getStr());
 }
 
 /**
@@ -1182,7 +1155,7 @@ int PlayData::getOtakaraNum_Course_CaveID(int courseIndex, ID32& caveID)
 			return -1;
 		}
 	} else {
-		JUT_PANICLINE(1727, "course index error:%d (getOtakaraNum_*)\n", courseIndex);
+		JUT_PANICLINE(1729, "course index error:%d (getOtakaraNum_*)\n", courseIndex);
 	}
 	return -1;
 }
@@ -1270,7 +1243,7 @@ void PlayData::CaveOtakara::read(Stream& input)
 {
 	u8 existingCaveCount = mCaveCount;
 	mCaveCount           = input.readByte();
-	JUT_ASSERTLINE(1797, existingCaveCount == mCaveCount, "セーブしたときと洞窟の数があいません\n");
+	JUT_ASSERTLINE(1799, existingCaveCount == mCaveCount, "セーブしたときと洞窟の数があいません\n");
 	for (int i = 0; i < mCaveCount; i++) {
 		mOtakaraCountsOld[i] = input.readByte();
 		mVisitStatus[i]      = input.readByte();
@@ -1386,7 +1359,7 @@ void PlayData::initCourses(bool type)
  */
 void PlayData::openCourse(int index)
 {
-	P2ASSERTBOUNDSLINE(1905, 0, index, stageList->getCourseCount());
+	P2ASSERTBOUNDSLINE(1907, 0, index, stageList->getCourseCount());
 	if (!courseOpen(index)) {
 		mBitfieldPerCourse[index] = PDCF_Open;
 	}
@@ -1398,7 +1371,7 @@ void PlayData::openCourse(int index)
  */
 void PlayData::visitCourse(int index)
 {
-	P2ASSERTBOUNDSLINE(1918, 0, index, stageList->getCourseCount());
+	P2ASSERTBOUNDSLINE(1920, 0, index, stageList->getCourseCount());
 	mBitfieldPerCourse[index] |= PDCF_Visited;
 }
 
@@ -1410,7 +1383,7 @@ bool PlayData::closeCourse(int) { }
  */
 bool PlayData::courseOpen(int index)
 {
-	P2ASSERTBOUNDSLINE(1930, 0, index, stageList->getCourseCount());
+	P2ASSERTBOUNDSLINE(1932, 0, index, stageList->getCourseCount());
 	return (mBitfieldPerCourse[index] & PDCF_Open);
 }
 
@@ -1420,7 +1393,7 @@ bool PlayData::courseOpen(int index)
  */
 bool PlayData::courseJustOpen(int index)
 {
-	P2ASSERTBOUNDSLINE(1936, 0, index, stageList->getCourseCount());
+	P2ASSERTBOUNDSLINE(1938, 0, index, stageList->getCourseCount());
 	bool open = courseOpen(index);
 	if (!open) {
 		return false;
@@ -1437,7 +1410,7 @@ bool PlayData::courseJustOpen(int index)
  */
 bool PlayData::courseFirstTime(int index)
 {
-	P2ASSERTBOUNDSLINE(1955, 0, index, stageList->getCourseCount());
+	P2ASSERTBOUNDSLINE(1957, 0, index, stageList->getCourseCount());
 
 	if (!courseOpen(index)) {
 		return false;
@@ -1452,7 +1425,7 @@ bool PlayData::courseFirstTime(int index)
  */
 bool PlayData::courseVisited(int index)
 {
-	P2ASSERTBOUNDSLINE(1965, 0, index, stageList->getCourseCount());
+	P2ASSERTBOUNDSLINE(1967, 0, index, stageList->getCourseCount());
 	return mBitfieldPerCourse[index] & PDCF_Visited;
 }
 
@@ -1472,6 +1445,7 @@ CaveSaveData::CaveSaveData()
 	mCurrentCaveID.setID('none');
 	mIsWaterwraithAlive = 1;
 	mWaterwraithTimer   = 0.0f;
+	mActiveNaviID   = 0;
 }
 
 /**
@@ -1487,6 +1461,7 @@ void CaveSaveData::clear()
 	mCurrentCaveID.setID('none');
 	mIsWaterwraithAlive = 1;
 	mWaterwraithTimer   = 0.0f;
+	mActiveNaviID   = 0;
 }
 
 /**
@@ -1518,7 +1493,7 @@ bool PlayData::doneWorldMapEffect()
  */
 int PlayData::getGroundOtakaraNum_Old(int index)
 {
-	P2ASSERTBOUNDSLINE(2040, 0, index, stageList->getCourseCount());
+	P2ASSERTBOUNDSLINE(2044, 0, index, stageList->getCourseCount());
 	return mGroundOtakaraCollectedOld[index];
 }
 
@@ -1539,7 +1514,7 @@ int PlayData::getOtakaraNum_Course_CaveID_Old(int courseIndex, ID32& caveID)
 			return -1;
 		}
 	} else {
-		JUT_PANICLINE(2057, "course index error:%d (getOtakaraNum_*)\n", courseIndex);
+		JUT_PANICLINE(2061, "course index error:%d (getOtakaraNum_*)\n", courseIndex);
 	}
 	return -1;
 }
@@ -1604,7 +1579,7 @@ void PlayData::write_CaveOtakara_Old(Stream& ram)
  */
 int PlayData::getPikminCount_Today(int pikminColor)
 {
-	P2ASSERTBOUNDSLINE(2114, FirstPikmin, pikminColor, StoredPikiCount + 1);
+	P2ASSERTBOUNDSLINE(2118, FirstPikmin, pikminColor, StoredPikiCount + 1);
 	return mPikminToday[pikminColor];
 }
 
@@ -1614,7 +1589,7 @@ int PlayData::getPikminCount_Today(int pikminColor)
  */
 int PlayData::getPikminCount_Yesterday(int pikminColor)
 {
-	P2ASSERTBOUNDSLINE(2121, FirstPikmin, pikminColor, StoredPikiCount + 1);
+	P2ASSERTBOUNDSLINE(2125, FirstPikmin, pikminColor, StoredPikiCount + 1);
 	return mPikminYesterday[pikminColor];
 }
 

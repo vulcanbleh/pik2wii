@@ -17,28 +17,28 @@ char* sAramResName2D[]
 	    "res_challenge_1p.szs", "res_challenge_2p.szs", "res_vs.szs",         "res_s_menu_pause_doukutu.szs", "res_s_menu_pause_VS.szs",
 	    "res_ana_demo.szs",     "res_contena.szs",      "res_ufo.szs" };
 
-char* sAramResName2DCmn[] = { "/new_screen/cmn/res_map_image_tutorial.szs", "/new_screen/cmn/res_map_image_forest.szs",
-	                          "/new_screen/cmn/res_map_image_yakushima.szs", "/new_screen/cmn/res_map_image_last.szs" };
+char* sAramResName2DCmn[] = { "new_screen/cmn/res_map_image_tutorial.szs", "new_screen/cmn/res_map_image_forest.szs",
+	                          "new_screen/cmn/res_map_image_yakushima.szs", "new_screen/cmn/res_map_image_last.szs" };
 
-char* sAramResDemo[] = { "/user/Mukki/movie/s00_coursein/demo.szs",
-	                     "/user/Mukki/movie/s0B_cv_coursein/demo.szs",
-	                     "/user/Mukki/movie/s09_holein/demo.szs",
-	                     "/user/Mukki/movie/g2F_appear_hole/demo.szs",
-	                     "/user/Mukki/movie/g30_appear_fountain/demo.szs",
-	                     "/user/Mukki/movie/s10_suck_treasure/demo.szs",
-	                     "/user/Mukki/movie/s17_suck_equipment/demo.szs",
-	                     "/user/Mukki/movie/s22_cv_suck_equipment/demo.szs",
-	                     "/user/Mukki/movie/s22_cv_suck_treasure/demo.szs",
-	                     "/user/Mukki/movie/s01_dayend/demo.szs",
-	                     "/user/Mukki/movie/s02_dayend_result/demo.szs",
-	                     "/user/Mukki/movie/s03_orimadown/demo.szs",
-	                     "/user/Mukki/movie/s04_dayend_orimadown/demo.szs",
-	                     "/user/Mukki/movie/s05_pikminzero/demo.szs",
-	                     "/user/Mukki/movie/s06_dayend_pikminzero/demo.szs",
-	                     "/user/Mukki/movie/s0C_cv_escape/demo.szs",
-	                     "/user/Mukki/movie/s0E_return_cave/demo.szs",
-	                     "/user/Mukki/movie/s12_cv_giveup/demo.szs",
-	                     "/user/Mukki/movie/s21_dayend_takeoff/demo.szs" };
+char* sAramResDemo[] = { "user/Mukki/movie/s00_coursein/demo.szs",
+	                     "user/Mukki/movie/s0B_cv_coursein/demo.szs",
+	                     "user/Mukki/movie/s09_holein/demo.szs",
+	                     "user/Mukki/movie/g2F_appear_hole/demo.szs",
+	                     "user/Mukki/movie/g30_appear_fountain/demo.szs",
+	                     "user/Mukki/movie/s10_suck_treasure/demo.szs",
+	                     "user/Mukki/movie/s17_suck_equipment/demo.szs",
+	                     "user/Mukki/movie/s22_cv_suck_equipment/demo.szs",
+	                     "user/Mukki/movie/s22_cv_suck_treasure/demo.szs",
+	                     "user/Mukki/movie/s01_dayend/demo.szs",
+	                     "user/Mukki/movie/s02_dayend_result/demo.szs",
+	                     "user/Mukki/movie/s03_orimadown/demo.szs",
+	                     "user/Mukki/movie/s04_dayend_orimadown/demo.szs",
+	                     "user/Mukki/movie/s05_pikminzero/demo.szs",
+	                     "user/Mukki/movie/s06_dayend_pikminzero/demo.szs",
+	                     "user/Mukki/movie/s0C_cv_escape/demo.szs",
+	                     "user/Mukki/movie/s0E_return_cave/demo.szs",
+	                     "user/Mukki/movie/s12_cv_giveup/demo.szs",
+	                     "user/Mukki/movie/s21_dayend_takeoff/demo.szs" };
 
 char* sAramResItem[] = { "user/Kando/onyon/arc.szs",
 	                     "user/Kando/onyon/texts.szs",
@@ -64,15 +64,16 @@ char* sAramResItem[] = { "user/Kando/onyon/arc.szs",
 	                     "user/Kando/bridge/slope_u/texts.szs",
 	                     "user/Kando/bridge/l_bridge/arc.szs",
 	                     "user/Kando/bridge/l_bridge/texts.szs" };
+						 
+//unused
+char* sAramResEnemyException[] = { "enemy/data/Queen/queenchappy_model.btk",
+								   "enemy/data/Queen/model.szs",
+	                     "enemy/data/Queen/anim.szs",
+	                     "enemy/data/BigTreasure/model.szs",
+	                     "enemy/data/BigTreasure/anim.szs",
+	                     "enemy/data/Baby/model.szs",
+	                     "enemy/data/Baby/anim.szs" };
 } // namespace
-
-static const char unusedQueenModelBtk[] = "/enemy/data/Queen/queenchappy_model.btk";
-static const char unusedQueenModelSzs[] = "/enemy/data/Queen/model.szs";
-static const char unusedQueenAnim[]     = "/enemy/data/Queen/anim.szs";
-static const char unusedTDModelSzs[]    = "/enemy/data/BigTreasure/model.szs";
-static const char unusedTDAnim[]        = "/enemy/data/BigTreasure/anim.szs";
-static const char unusedBabyModelSzs[]  = "/enemy/data/Baby/model.szs";
-static const char unusedBabyAnim[]      = "/enemy/data/Baby/anim.szs";
 
 /**
  * @note Address: 0x80455C30
@@ -80,7 +81,7 @@ static const char unusedBabyAnim[]      = "/enemy/data/Baby/anim.szs";
  */
 void Mgr::init()
 {
-	P2ASSERTLINE(190, !gPikmin2AramMgr);
+	P2ASSERTLINE(193, !gPikmin2AramMgr);
 	gPikmin2AramMgr = new Pikmin2ARAM::Mgr;
 }
 
@@ -137,13 +138,13 @@ void Mgr::loadEnemy()
 	OSDisableScheduler();
 
 	u32 freeSize = JKRGetSystemHeap()->getFreeSize() - 31040;
-	P2ASSERTLINE(290, freeSize);
+	P2ASSERTLINE(293, freeSize);
 
 	JKRExpHeap* heap1 = makeExpHeap(freeSize, JKRGetSystemHeap(), true);
-	P2ASSERTLINE(293, heap1);
+	P2ASSERTLINE(296, heap1);
 
 	JKRExpHeap* heap2 = makeExpHeap(30880, JKRGetSystemHeap(), true);
-	P2ASSERTLINE(295, heap2);
+	P2ASSERTLINE(298, heap2);
 
 	heap1->destroy();
 	OSEnableScheduler();
@@ -151,7 +152,7 @@ void Mgr::loadEnemy()
 
 	heap2->becomeCurrentHeap();
 
-	RamStream stream(JKRLoadToMainRAM("/enemy/enemyResList.txt"), -1);
+	RamStream stream(JKRLoadToMainRAM("enemy/enemyResList.txt"), -1);
 	stream.setMode(STREAM_MODE_TEXT, 1);
 
 	JKRAram::getAramHeap()->getFreeSize();

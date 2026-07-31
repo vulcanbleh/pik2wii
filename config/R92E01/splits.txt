@@ -1529,7 +1529,7 @@ JSystem/JParticle/JPAExTexShape.cpp:
 
 JSystem/JParticle/JPAExtraShape.cpp:
 	.text       start:0x800F6FB4 end:0x800F7520
-	.sdata2     start:0x8066E400 end:0x8066E428
+	.sdata2     start:0x8066E400 end:0x8066E424
 
 JSystem/JParticle/JPAFieldBlock.cpp:
 	.text       start:0x800F7520 end:0x800F9584
@@ -1542,7 +1542,7 @@ JSystem/JParticle/JPAKeyBlock.cpp:
 
 JSystem/JParticle/JPAMath.cpp:
 	.text       start:0x800F9628 end:0x800F9B14
-	.sdata2     start:0x8066E448 end:0x8066E458
+	.sdata2     start:0x8066E448 end:0x8066E454
 
 JSystem/JParticle/JPAParticle.cpp:
 	.text       start:0x800F9B14 end:0x800FB054
@@ -2933,7 +2933,7 @@ plugProjectYamashitaU/YellowChappy.cpp:
 	.text       start:0x801BF650 end:0x801BFECC
 	.rodata     start:0x80547470 end:0x805474A0
 	.data       start:0x8058E498 end:0x8058E830
-	.sdata2     start:0x8066F2F0 end:0x8066F2F8
+	.sdata2     start:0x8066F2F0 end:0x8066F2F4
 
 plugProjectYamashitaU/BlueKochappyMgr.cpp:
 	.text       start:0x801BFECC end:0x801C0158
@@ -2964,7 +2964,7 @@ plugProjectYamashitaU/KochappyBase.cpp:
 	.text       start:0x801C0C50 end:0x801C1234
 	.rodata     start:0x805475C8 end:0x805475E8
 	.data       start:0x8058F168 end:0x8058F4A8
-	.sdata2     start:0x8066F2F8 end:0x8066F318
+	.sdata2     start:0x8066F2F8 end:0x8066F314
 
 plugProjectYamashitaU/enemyBlendAnimatorBase.cpp:
 	.text       start:0x801C1234 end:0x801C1430
@@ -2986,13 +2986,14 @@ plugProjectYamashitaU/enemyEffectNode.cpp:
 
 plugProjectYamashitaU/enemyMgrBase.cpp:
 	.text       start:0x801C1AC4 end:0x801C3560
-	.rodata     start:0x80547630 end:0x80547770
+	.rodata     start:0x80547630 end:0x80547768
 	.data       start:0x8058F518 end:0x8058F638
-	.sbss       start:0x8066C840 end:0x8066C848
-	.sdata2     start:0x8066F328 end:0x8066F330
+	.sbss       start:0x8066C840 end:0x8066C844
+	.sdata2     start:0x8066F328 end:0x8066F32C
 
 plugProjectYamashitaU/enemyFSM.cpp:
 	.text       start:0x801C3560 end:0x801C39D4
+	.rodata     start:0x80547768 end:0x80547770
 
 plugProjectYamashitaU/singleGS_ZukanParms.cpp:
 	.text       start:0x801C39D4 end:0x801C55C8
@@ -3824,7 +3825,7 @@ plugProjectKandoU/vsGS_VSGame.cpp:
 	.text       start:0x802B2E80 end:0x802B2FBC
 	.ctors      start:0x80534E44 end:0x80534E48
 	.data       start:0x805A03D8 end:0x805A0430
-	.bss        start:0x80638D88 end:0x80638D98
+	.bss        start:0x80638D88 end:0x80638D94
 	.sbss       start:0x8066CC18 end:0x8066CC20
 
 plugProjectKandoU/gameSoundEvent.cpp:
@@ -3917,13 +3918,15 @@ plugProjectKandoU/baseGameSectionDraw.cpp:
 plugProjectKandoU/singleGS_Load.cpp:
 	.text       start:0x802BE834 end:0x802BEC48
 	.ctors      start:0x80534E58 end:0x80534E5C
+	.rodata     start:0x8054D010 end:0x8054D040
 	.data       start:0x805A0800 end:0x805A0860
-	.bss        start:0x80638DC8 end:0x80638DD8
+	.bss        start:0x80638DC8 end:0x80638DD4
 	.sbss       start:0x8066CC40 end:0x8066CC48
 
 plugProjectKandoU/singleGS_DayEnd.cpp:
 	.text       start:0x802BEC48 end:0x802BFFBC
 	.ctors      start:0x80534E5C end:0x80534E60
+	.rodata     start:0x8054D040 end:0x8054D150
 	.data       start:0x805A0860 end:0x805A08A8
 	.bss        start:0x80638DD8 end:0x80638DE8
 	.sbss       start:0x8066CC48 end:0x8066CC50
@@ -3937,19 +3940,20 @@ plugProjectKandoU/baseGameSectionKantei.cpp:
 	.sbss       start:0x8066CC50 end:0x8066CC58
 	.sdata2     start:0x80670CE8 end:0x80670D40
 
-plugProjectKandoU/vsCoinOtakaraName.cpp:
-	.rodata     start:0x8054D198 end:0x8054D1D8
-	.sdata      start:0x8066B390 end:0x8066B3A8
-
 plugProjectKandoU/sweepPrune.cpp:
 	.text       start:0x802C1284 end:0x802C162C
 	.sdata2     start:0x80670D40 end:0x80670D48
 
 plugProjectKandoU/texCaster.cpp:
 	.text       start:0x802C162C end:0x802C21F8
+	.rodata     start:0x8054D150 end:0x8054D198
 	.data       start:0x805A0958 end:0x805A0968
 	.sbss       start:0x8066CC58 end:0x8066CC60
 	.sdata2     start:0x80670D48 end:0x80670D68
+
+plugProjectKandoU/vsCoinOtakaraName.cpp:
+	.rodata     start:0x8054D198 end:0x8054D1D8
+	.sdata      start:0x8066B390 end:0x8066B3A4
 
 plugProjectKandoU/pelletBirthBuffer.cpp:
 	.text       start:0x802C21F8 end:0x802C23EC

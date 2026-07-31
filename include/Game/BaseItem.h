@@ -205,10 +205,10 @@ struct FSMItem : public BaseItem {
 
 	// vtable 1
 	// vtable 2
+	virtual void doAI() { mFsm->exec((ItemClass*)this); }    // _10
 	virtual void bounceCallback(Sys::Triangle* tri);         // _E0
 	virtual void collisionCallback(CollEvent& event);        // _E4
 	virtual void platCallback(PlatEvent& event);             // _E8
-	virtual void doAI() { mFsm->exec((ItemClass*)this); }    // _10
 	virtual void onKeyEvent(const SysShape::KeyEvent& event) // _68 (thunked at _00)
 	{
 		if (mCurrentState) {

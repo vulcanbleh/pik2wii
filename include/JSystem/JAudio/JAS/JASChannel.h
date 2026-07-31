@@ -95,7 +95,7 @@ struct JASChannel : public JSULink<JASChannel>,
 	static f32 calcPan(const PanVector* params, const PanVector* power, u8);
 
 	// unused/inlined:
-	void effectOsc(int, JASChannel::EffectOscParam*);
+	void effectOsc(int, JASChannel::EffectOscParam*) DECOMP_DONT_INLINE; 
 
 	static const u8 calc_sw_table[27][3];
 
