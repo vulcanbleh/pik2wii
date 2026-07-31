@@ -72,8 +72,8 @@ struct DirectorBase : public JADHioNode {
 };
 
 struct OneShotDirector : public DirectorBase {
-	inline OneShotDirector()
-	    : DirectorBase(1, "damageD  ")
+	inline OneShotDirector(int numTracks, const char* name)
+	    : DirectorBase(numTracks, name)
 	{
 	}
 

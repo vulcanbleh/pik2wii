@@ -132,7 +132,7 @@ struct KindCounter {
 
 	// Unused/inlined:
 	void copyFrom(KindCounter&);
-	inline void addTo(KindCounter&);
+	void addTo(KindCounter&);
 
 	inline int getNumKinds() const { return mNumKinds; }
 
@@ -224,7 +224,7 @@ struct PelletCropMemory {
 	PelletCropMemory* createClone();
 
 	// Unused/inlined:
-	void obtainPellet(Pellet*);
+	bool obtainPellet(Pellet*);
 	int calcNumKinds();
 
 	KindCounter& getOtakara() { return mOtakara; }

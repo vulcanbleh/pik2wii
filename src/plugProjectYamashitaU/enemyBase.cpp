@@ -47,7 +47,6 @@ JKRArchive* Game::gParmArc;
 
 // SingletonBase instances
 PSM::BossBgmFader::Mgr* PSSystem::SingletonBase<PSM::BossBgmFader::Mgr>::sInstance;
-PSM::ObjCalcBase* PSSystem::SingletonBase<PSM::ObjCalcBase>::sInstance;
 PSM::CreaturePrm* PSSystem::SingletonBase<PSM::CreaturePrm>::sInstance;
 PSM::ObjMgr* PSSystem::SingletonBase<PSM::ObjMgr>::sInstance;
 PSM::BgmTrackMapFile* PSSystem::SingletonBase<PSM::BgmTrackMapFile>::sInstance;

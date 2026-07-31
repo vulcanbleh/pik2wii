@@ -2379,7 +2379,7 @@ config.libs = [
             Object(NonMatching, "sysGCU/JSTObjectParticleActor.cpp"),
             Object(NonMatching, "sysGCU/moviePlayerAudio.cpp"),
             Object(NonMatching, "sysGCU/illustratedBookMessage.cpp"),
-            Object(NonMatching, "sysGCU/sysDrawBuffer.cpp"),
+            Object(Matching, "sysGCU/sysDrawBuffer.cpp"),
             Object(NonMatching, "sysGCU/pikmin2AramMgr.cpp"),
             Object(Matching, "sysGCU/messageAnalyzer.cpp"),
             Object(NonMatching, "sysGCU/controller.cpp"),

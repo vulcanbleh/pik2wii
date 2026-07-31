@@ -9,14 +9,17 @@
 #include "utilityU.h"
 #include "PSM/BossSeq.h"
 
+
 namespace PSM {
 
+ObjCalcBase* PSSystem::SingletonBase<ObjCalcBase>::sInstance;
 /**
  * @note Address: 0x80456AF8
  * @note Size: 0x80
  */
 DamageDirector::DamageDirector()
-    : mPitchMod1(0.1f)
+	: OneShotDirector(1, "damageD  ")
+    , mPitchMod1(0.1f)
     , mPitchMod2(5.0f)
     , mDuration(225)
 {
@@ -42,6 +45,14 @@ void DamageDirector::execInner()
 	}
 }
 
+inline TempoChangeDirectorBase::TempoChangeDirectorBase(const char* name, u32 id)
+	: SwitcherDirector(id, name)
+	, mTempoValue(0.7f)
+	, mTimeBase(100)
+	, mActor(nullptr)
+{
+}
+
 /**
  * @note Address: 0x80456CE8
  * @note Size: 0x30
@@ -64,7 +75,10 @@ void TempoChangeDirectorBase::directOffTrack(PSSystem::SeqTrackBase& seqTrack)
  * @note Address: 0x80456D48
  * @note Size: 0x84
  */
-ActorDirector_TempoChange::ActorDirector_TempoChange() { }
+ActorDirector_TempoChange::ActorDirector_TempoChange()
+	: TempoChangeDirectorBase("lifeD    ", 1) 
+{
+}
 
 /**
  * @note Address: 0x80456E5C
@@ -857,9 +871,6 @@ f32 ActorDirector_Kehai::getVolMaxDist(Game::EnemyBase* enemy)
 	int id = enemy->mSoundObj->getCastType() - 2;
 	return CreaturePrm::cVolMaxDist_Kehai[id];
 }
-
-// exists here but doesnt seem to be used by any panics
-static const char* unusedpath = "PSMainSide_ObjSound.h";
 
 /**
  * @note Address: 0x804583B8

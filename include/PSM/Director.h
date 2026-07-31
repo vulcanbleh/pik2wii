@@ -23,8 +23,8 @@ struct Track;
 
 namespace PSM {
 struct OneShotDirector : public ::PSSystem::OneShotDirector {
-	inline OneShotDirector()
-	    : ::PSSystem::OneShotDirector()
+	inline OneShotDirector(int numTracks, const char* name)
+	    : ::PSSystem::OneShotDirector(numTracks, name)
 	    , mActor(nullptr)
 	{
 	}
@@ -108,13 +108,8 @@ struct PikminNumberDirector_AutoBgm : public PikminNumberDirector {
 };
 
 struct TempoChangeDirectorBase : public SwitcherDirector {
-	inline TempoChangeDirectorBase()
-	    : SwitcherDirector(1, "lifeD    ")
-	    , mTempoValue(0.7f)
-	    , mTimeBase(100)
-	    , mActor(nullptr)
-	{
-	}
+	TempoChangeDirectorBase(const char* name, u32 id);
+	
 	virtual ~TempoChangeDirectorBase() { }                  // _08 (weak)
 	virtual void directOnTrack(::PSSystem::SeqTrackBase&);  // _20
 	virtual void directOffTrack(::PSSystem::SeqTrackBase&); // _24

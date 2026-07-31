@@ -4,6 +4,13 @@
 #include "Game/MapMgr.h"
 #include "PSM/Otakara.h"
 #include "nans.h"
+
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "pelletOtakara";
+}
+
 namespace Game {
 namespace PelletOtakara {
 

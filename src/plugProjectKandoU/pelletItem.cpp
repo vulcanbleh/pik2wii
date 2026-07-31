@@ -3,6 +3,12 @@
 #include "PSM/Otakara.h"
 #include "Game/MapMgr.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "pelletItem";
+}
+
 namespace Game {
 namespace PelletItem {
 

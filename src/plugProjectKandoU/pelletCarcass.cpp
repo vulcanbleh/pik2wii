@@ -1,5 +1,11 @@
 #include "Game/Entities/PelletCarcass.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "pelletCarcass";
+}
+
 namespace Game {
 namespace PelletCarcass {
 

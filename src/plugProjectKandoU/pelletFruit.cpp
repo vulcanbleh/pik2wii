@@ -4,6 +4,12 @@
 #include "efx/TFruitsDown.h"
 #include "nans.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "pelletFruit";
+}
+
 namespace Game {
 namespace PelletFruit {
 

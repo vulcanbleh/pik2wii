@@ -11,6 +11,12 @@
 #include "nans.h"
 #include "stl/string.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "ObjectParticleActor";
+}
+
 namespace Game {
 namespace P2JST {
 
@@ -61,7 +67,7 @@ void ObjectParticleActor::reset()
 	mEmitter         = nullptr;
 	mEfxID           = 0;
 	mModelJointIndex = -1;
-	mTranslation2    = 0.0f;
+	mTranslation2.set(0.0f, 0.0f, 0.0f);
 }
 
 /**
@@ -130,7 +136,6 @@ void ObjectParticleActor::parseUserData_(u32 p1, void const* rawData)
 	char* idx        = (char*)data.mData;
 	mModelJointIndex = -1;
 	for (u32 i = 0; i < data.mFileCount; i++, idx = strchr(idx, 0) + 1) {
-		OSReport("string:%u,%s\n", i, idx);
 		if (i == 0) {
 			if (strcmp(idx, "kill") == 0) {
 				mEfxFlag |= 2;
