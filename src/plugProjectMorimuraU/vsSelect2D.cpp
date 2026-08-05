@@ -8,7 +8,12 @@
 #include "og/Screen/ArrowAlphaBlink.h"
 #include "og/newScreen/ogUtil.h"
 
-static const char unusedName[] = "vsSelect2D";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "vsSelect2D";
+}
+
 namespace Morimura {
 bool TVsSelect::mCanCancel      = false;
 bool TVsSelect::mLoopDrum       = false;

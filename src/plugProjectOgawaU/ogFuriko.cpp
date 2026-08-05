@@ -36,10 +36,10 @@ void CallBack_Furiko::stop()
 {
 	mCanUpdate      = false;
 	mDoResetPane    = true;
-	mCurrPosition   = Vector2f(0.0f);
+	mCurrPosition.set(0.0f, 0.0f);
 	mGoalPosition.x = mCurrPosition.x;
 	mGoalPosition.y = mCurrPosition.y + mOffset;
-	mChangeModifier = Vector2f(0.0f);
+	mChangeModifier.set(0.0f, 0.0f);
 }
 
 /**

@@ -227,7 +227,7 @@ struct CallBack_DrawAfter : public P2DScreen::CallBackNode {
 
 // Size: 0x4C
 struct CallBack_Furiko : public P2DScreen::CallBackNode {
-	inline CallBack_Furiko();
+	CallBack_Furiko();
 
 	virtual ~CallBack_Furiko() { }                 // _08 (weak)
 	virtual void update();                         // _10

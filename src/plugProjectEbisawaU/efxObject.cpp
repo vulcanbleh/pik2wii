@@ -8,9 +8,11 @@
 #include "JSystem/JParticle/JPAMath.h"
 #include "Game/Entities/ItemOnyon.h"
 
+static void _Printf(char* format) { OSReport(format, __FILE__); }
+
 namespace efx {
 
-static void _Printf(char* format) { OSReport(format, __FILE__); }
+
 
 /**
  * @note Address: 0x803B57BC
@@ -18,7 +20,7 @@ static void _Printf(char* format) { OSReport(format, __FILE__); }
  */
 bool TOtakaraDive::create(Arg* arg)
 {
-	bool argCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool argCheck = arg->is("ArgScale");
 	P2ASSERTLINE(123, argCheck);
 	f32 scale = static_cast<ArgScale*>(arg)->mScale;
 	scale     = scale / 35.0f;
@@ -38,7 +40,7 @@ bool TOtakaraDive::create(Arg* arg)
  */
 bool TTsuyuGrow0::create(Arg* arg)
 {
-	bool argCheck = strcmp("ArgRotY", static_cast<ArgRotY*>(arg)->getName()) == 0;
+	bool argCheck = arg->is("ArgRotY");
 	P2ASSERTLINE(143, argCheck);
 	Matrixf mtxRot;
 	Vector3f pos = arg->mPosition;
@@ -58,7 +60,7 @@ bool TTsuyuGrow0::create(Arg* arg)
  */
 bool TOtakaraApL::create(Arg* arg)
 {
-	bool argCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool argCheck = arg->is("ArgScale");
 	P2ASSERTLINE(166, argCheck);
 	ArgScale* argScale = static_cast<ArgScale*>(arg);
 	f32 scale          = argScale->mScale;
@@ -78,7 +80,7 @@ bool TOtakaraApL::create(Arg* arg)
  */
 bool TOtakaraApS::create(Arg* arg)
 {
-	bool argCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool argCheck = arg->is("ArgScale");
 	P2ASSERTLINE(183, argCheck);
 	ArgScale* argScale = static_cast<ArgScale*>(arg);
 	f32 scale          = argScale->mScale;
@@ -98,7 +100,7 @@ bool TOtakaraApS::create(Arg* arg)
  */
 bool TOtakaraAp::create(Arg* arg)
 {
-	bool argCheck = strcmp("ArgScale", static_cast<ArgScale*>(arg)->getName()) == 0;
+	bool argCheck = arg->is("ArgScale");
 	P2ASSERTLINE(200, argCheck);
 	f32 oldScale = static_cast<ArgScale*>(arg)->mScale;
 	Vector3f pos = arg->mPosition;
@@ -122,7 +124,7 @@ bool TOtakaraAp::create(Arg* arg)
  */
 bool TEgateBC::create(Arg* arg)
 {
-	bool argCheck = strcmp("ArgRotY", static_cast<ArgRotY*>(arg)->getName()) == 0;
+	bool argCheck = arg->is("ArgRotY");
 	P2ASSERTLINE(223, argCheck);
 	Matrixf mtxRot;
 	Vector3f pos = arg->mPosition;
@@ -147,7 +149,7 @@ bool TEgateBC::create(Arg* arg)
  */
 bool TKouhaiDamage::create(Arg* arg)
 {
-	bool argCheck = strcmp("ArgKouhai", static_cast<ArgKouhai*>(arg)->getName()) == 0;
+	bool argCheck = arg->is("ArgKouhai");
 	P2ASSERTLINE(249, argCheck);
 
 	ArgKouhai* argKouhai = static_cast<ArgKouhai*>(arg);
@@ -181,7 +183,7 @@ bool TKouhaiDamage::create(Arg* arg)
  */
 bool TPelkira_ver01::create(Arg* arg)
 {
-	bool argCheck = strcmp("ArgPelType", static_cast<ArgPelType*>(arg)->getName()) == 0;
+	bool argCheck = arg->is("ArgPelType");
 	P2ASSERTLINE(275, argCheck);
 
 	ArgPelType* argpel = static_cast<ArgPelType*>(arg);
@@ -209,7 +211,7 @@ bool TPelkira_ver01::create(Arg* arg)
  */
 bool Container::create(efx::Arg* arg)
 {
-	bool argCheck = strcmp("ArgType", static_cast<ArgType*>(arg)->getName()) == 0;
+	bool argCheck = arg->is("ArgType");
 	P2ASSERTLINE(301, argCheck);
 
 	ArgType* argtype = static_cast<ArgType*>(arg);
@@ -234,7 +236,7 @@ bool Container::create(efx::Arg* arg)
  */
 bool ContainerAct::create(efx::Arg* arg)
 {
-	bool argCheck = strcmp("ArgType", static_cast<ArgType*>(arg)->getName()) == 0;
+	bool argCheck = arg->is("ArgType");
 	P2ASSERTLINE(322, argCheck);
 
 	ArgType* argtype = static_cast<ArgType*>(arg);

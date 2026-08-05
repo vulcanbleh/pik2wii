@@ -8,8 +8,6 @@
 namespace og {
 namespace newScreen {
 
-static const char objChall1PUnusedArray[] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-
 /**
  * @note Address: 0x80327D48
  * @note Size: 0x74

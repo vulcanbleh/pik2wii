@@ -1,6 +1,12 @@
 #include "Morimura/ScrollList.h"
 #include "Morimura/Zukan.h"
 
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "scrollList";
+}
+
 namespace Morimura {
 int TScrollList::mRightOffset;
 bool TScrollList::mForceResetParm;

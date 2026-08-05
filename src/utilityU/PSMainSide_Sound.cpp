@@ -9,8 +9,6 @@
 #include "PSM/CreaturePrm.h"
 #include "nans.h"
 
-static const u32 padding[] = { 0, 0, 0 };
-
 namespace PSM {
 
 f32 SeSound::cDol_0Rad    = 1.0316;
