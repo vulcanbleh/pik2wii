@@ -224,11 +224,9 @@ struct TSinCosTable {
 		}
 	}
 
-	inline f32 radsToLUT() const
-	{
-		// inline f32 radsToLUTConstant() const {
-		return ((f32)length) / TAU;
-	}
+	inline T radsToLUT() const { return ((T)length) / TAngleConstant_<T>::RADIAN_DEG360(); }
+
+	inline T radsToLUTInv() const { return (-(T)length) / TAngleConstant_<T>::RADIAN_DEG360(); }
 
 	// inline int radsToLUT(f32 theta) {
 	//     return theta < 0.0f ? theta *
@@ -269,7 +267,14 @@ struct TSinCosTable {
 
 	f32 sinShort(s16 v) const { return mTable[static_cast<u16>(v) >> 5].first; }
 	f32 cosShort(s16 v) const { return mTable[static_cast<u16>(v) >> 5].second; }
-
+	
+	// used in JASChannel::updateMixer
+	// some questionable differences here compared to the TP version, but it works
+	inline T sinRadian(T radian) const
+	{
+		return (radian < 0.0f) ? -mTable[(int)(radsToLUTInv() * radian) & 0x7ff & ((1 << length) - 1)].first
+		                       : mTable[(int)(radsToLUT() * radian) & 0x7ff & ((1 << length) - 1)].first;
+	}
 	/**
 	 * elements are pairs of {sine, cosine}
 	 */
@@ -441,6 +446,11 @@ inline f32 JMACos(f32 v)
 inline f32 JMASin(f32 v)
 {
 	return JMath::sincosTable_.sin(v);
+}
+
+inline f32 JMASinRadian(f32 v)
+{
+	return JMath::sincosTable_.sinRadian(v);
 }
 
 inline f32 JMAFastSqrt(register f32 x)
