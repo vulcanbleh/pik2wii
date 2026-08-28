@@ -224,7 +224,7 @@ struct TSinCosTable {
 		}
 	}
 
-	inline T radsToLUT() const { return ((T)length) / TAngleConstant_<T>::RADIAN_DEG360(); }
+	inline T radsToLUT() const { return ((f32)length) / TAU; }
 
 	inline T radsToLUTInv() const { return (-(T)length) / TAngleConstant_<T>::RADIAN_DEG360(); }
 

@@ -19,10 +19,9 @@ struct DataNavi {
 		mNaviLifeRatio = 1.0f;
 		mFollowPikis   = 1;
 		mNextThrowPiki = 2;
-		mDope1Count    = 10;
-		mDope0Count    = 10;
+		mDope1Count    = -1;
+		mDope0Count    = -1;
 		mActiveNaviID  = 1;
-		_18  = 0;
 	}
 
 	inline void update(int naviIdx); // defined in Game/Navi.h to avoid include loops
@@ -33,7 +32,7 @@ struct DataNavi {
 	u32 mDope1Count;    // _0C, bitter sprays
 	u32 mDope0Count;    // _10, spicy sprays
 	u8 mActiveNaviID;   // _14
-	u32 _18; // _08
+	u32 _18;            // _18
 };
 
 struct DataGame {
