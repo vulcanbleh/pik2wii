@@ -5,8 +5,6 @@
 namespace og {
 namespace newScreen {
 
-static const int someSMenuMapArray[] = { 0, 0, 0 };
-
 /**
  * @note Address: 0x80312BFC
  * @note Size: 0x50
@@ -31,19 +29,19 @@ void SMenuMap::doUserCallBackFunc(Resource::MgrCommand* command)
 
 	switch (courseIndex) {
 	case 0:
-		filePath = "/new_screen/cmn/res_map_image_tutorial.szs";
+		filePath = "new_screen/cmn/res_map_image_tutorial.szs";
 		break;
 	case 1:
-		filePath = "/new_screen/cmn/res_map_image_forest.szs";
+		filePath = "new_screen/cmn/res_map_image_forest.szs";
 		break;
 	case 2:
-		filePath = "/new_screen/cmn/res_map_image_yakushima.szs";
+		filePath = "new_screen/cmn/res_map_image_yakushima.szs";
 		break;
 	case 3:
-		filePath = "/new_screen/cmn/res_map_image_last.szs";
+		filePath = "new_screen/cmn/res_map_image_last.szs";
 		break;
 	default:
-		filePath = "/new_screen/cmn/res_map_image_tutorial.szs";
+		filePath = "new_screen/cmn/res_map_image_tutorial.szs";
 		break;
 	}
 
@@ -105,7 +103,11 @@ bool SMenuMap::doConfirmSetScene(::Screen::SetSceneArg& sceneArg)
  */
 void SMenuMap::doSetBackupScene(::Screen::SetSceneArg& sceneArg) { sceneArg.mDoCreateBackup = false; }
 
-static const char DONOTDOTHAT[] = "だめです"; // 'do not do that' lmao
+
+static void dummy()
+{
+	OSReport("だめです"); // 'do not do that' lmao
+}
 
 } // namespace newScreen
 } // namespace og

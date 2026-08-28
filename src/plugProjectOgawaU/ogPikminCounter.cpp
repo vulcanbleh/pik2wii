@@ -46,7 +46,18 @@ void PikminCounter::setCallBackCommon(JKRArchive* arc, bool flag)
 	mCatchPiki->init(this, 'piki', &mDataNavi.mNextThrowPiki, arc);
 	addCallBack('piki', mCatchPiki);
 	og::Screen::setCallBack_CounterRV(this, 'c_mr', 'c_mc', 'c_ml', &mDataNavi.mFollowPikis, 4, 3, 1, arc);
-	mIsTotalPokoActive = flag;
+	mIsTotalPokoActive = false;
+	if (flag){
+		mPaneSublevel = search('Ndayicon');
+		if (mPaneSublevel) {
+			mStandardPos.x = mPaneSublevel->mOffset.x;
+			mStandardPos.y = mPaneSublevel->mOffset.y;
+			mCurrPos       = mStandardPos;
+			mPaneSublevel->setOffset(mCurrPos.x, mCurrPos.y);
+			mScaleMgr = new ScaleMgr;
+		}
+	}
+	FORCE_DONT_INLINE;
 }
 
 /**
@@ -101,15 +112,7 @@ void PikminCounter::setCallBack(JKRArchive* arc)
  */
 void PikminCounterCave::setCallBack(JKRArchive* arc)
 {
-	setCallBackCommon(arc, false);
-	mPaneSublevel = search('Ndayicon');
-	if (mPaneSublevel) {
-		mStandardPos.x = mPaneSublevel->mOffset.x;
-		mStandardPos.y = mPaneSublevel->mOffset.y;
-		mCurrPos       = mStandardPos;
-		mPaneSublevel->setOffset(mCurrPos.x, mCurrPos.y);
-		mScaleMgr = new ScaleMgr;
-	}
+	setCallBackCommon(arc, true);
 
 	u32* days = &mDataGame.mFloorNum;
 	setCallBack_CounterDay(this, 'dc_r', 'dc_l', 'dc_c', days, 4, arc);
@@ -126,15 +129,7 @@ void PikminCounterCave::setCallBack(JKRArchive* arc)
  */
 void PikminCounterChallenge1P::setCallBack(JKRArchive* arc)
 {
-	setCallBackCommon(arc, false);
-	mPaneSublevel = search('Ndayicon');
-	if (mPaneSublevel) {
-		mStandardPos.x = mPaneSublevel->mOffset.x;
-		mStandardPos.y = mPaneSublevel->mOffset.y;
-		mCurrPos       = mStandardPos;
-		mPaneSublevel->setOffset(mCurrPos.x, mCurrPos.y);
-		mScaleMgr = new ScaleMgr;
-	}
+	setCallBackCommon(arc, true);
 
 	search('Ndayicon')->hide();
 

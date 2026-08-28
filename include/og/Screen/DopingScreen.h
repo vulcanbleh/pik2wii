@@ -3,9 +3,9 @@
 
 #include "JSystem/J2D/J2DPane.h"
 #include "P2DScreen.h"
-#include "og/Screen/Data.h"
 #include "Vector2.h"
 #include "efx2d/T2DExtractUp.h"
+#include "og/Screen/Data.h"
 #include "types.h"
 
 namespace og {
@@ -38,6 +38,7 @@ struct DopingCheck {
 	ScaleMgr* mBitterScaleMgr;        // _38
 	f32 mXOffset;                     // _3C
 	u8 mIsUpdateCount;                // _40
+	u32 _44;                          // _44, unknown
 };
 
 struct DopingScreen : public P2DScreen::Mgr_tuning {

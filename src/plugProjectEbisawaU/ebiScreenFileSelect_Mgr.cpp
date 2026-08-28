@@ -3,7 +3,11 @@
 #include "PSSystem/PSSystemIF.h"
 #include "ebi/FS.h"
 
-static const char className[] = "ebiScreenFileSelect_Mgr";
+// TODO: fix this up
+static void __Print(const char** fmt, ...)
+{
+	*fmt = "ebiScreenFileSelect_Mgr";
+}
 
 namespace ebi {
 namespace FS {

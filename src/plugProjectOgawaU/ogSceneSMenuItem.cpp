@@ -1,5 +1,7 @@
 #include "og/newScreen/SMenu.h"
 
+static void _Print(char* format, ...) { OSReport(format, __FILE__); }
+
 namespace og {
 namespace newScreen {
 

@@ -97,12 +97,6 @@ JASChannel::JASChannel(Callback callback, void* cbData)
 }
 
 /**
- * @note Address: 0x800A3364
- * @note Size: 0x30
- */
-JASOscillator::JASOscillator() { init(); }
-
-/**
  * @note Address: 0x800A3438
  * @note Size: 0x10C
  */

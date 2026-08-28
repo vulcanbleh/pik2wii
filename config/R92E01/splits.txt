@@ -5325,12 +5325,12 @@ plugProjectOgawaU/ogObjSMenuItem.cpp:
 
 plugProjectOgawaU/ogSceneSMenuItem.cpp:
 	.text       start:0x8038E494 end:0x8038E5F8
-	.data       start:0x805B88D8 end:0x805B8A20
+	.data       start:0x805B88D8 end:0x805B89B0
 
 plugProjectOgawaU/ogSceneSMenuPause.cpp:
 	.text       start:0x8038E5F8 end:0x8038E77C
 	.ctors      start:0x80534EFC end:0x80534F00
-	.data       start:0x805B8A20 end:0x805B8A88
+	.data       start:0x805B89B0 end:0x805B8A88
 	.bss        start:0x80639258 end:0x80639268
 	.sbss       start:0x8066CDF0 end:0x8066CDF8
 
@@ -5358,13 +5358,13 @@ plugProjectOgawaU/ogUtil.cpp:
 
 plugProjectOgawaU/ogSceneCourseName.cpp:
 	.text       start:0x80392B38 end:0x80392D2C
-	.data       start:0x805B8C88 end:0x805B8D70
+	.data       start:0x805B8C88 end:0x805B8D48
 	.sdata      start:0x8066B450 end:0x8066B458
 
 plugProjectOgawaU/ogObjKantei.cpp:
 	.text       start:0x80392D2C end:0x80394A00
 	.ctors      start:0x80534F10 end:0x80534F14
-	.data       start:0x805B8D70 end:0x805B8E30
+	.data       start:0x805B8D48 end:0x805B8E30
 
 plugProjectOgawaU/ogSceneKantei.cpp:
 	.text       start:0x80394A00 end:0x80394AE8

@@ -130,7 +130,7 @@ struct ObjChallenge1P : public ObjChallengeBase {
 	virtual void doDraw(Graphics&);                       // _68
 
 	// unused/inline
-	inline void commonUpdate();
+	void commonUpdate();
 
 	// _00     = VTBL1
 	// _18     = VTBL2
